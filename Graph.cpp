@@ -383,7 +383,7 @@ void Graph::kPlex_exact() {
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
 					for(auto e: vp){
-		cout<<rid[e.first]<<","<<rid[e.second]<<" ";
+		cout<<"["<<e.first<<","<<e.second<<"] ";
 	}
 	cout<<endl;
 				kplex_solver->load_graph(ids_n, vp);
@@ -531,6 +531,7 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,
 		}
 		pend[u] = u_n;
 	}
+	cout<<"1-hop size "<<old_size<<endl;
 	for(ui i = 0;i < old_size;i ++) {
 		u = ids[i];
 		for(ept j = pstart[u];j < pend[u];j ++) if(edges[j] > u) {
