@@ -44,8 +44,7 @@ int main(int argc, char *argv[]) {
 	}
 	ui k = 2;
 	if(!k_option->is_set()) {
-		printf("!!! k is not provided! Exit !!!\n");
-		return 0;
+		printf("k value not provided, using k=2\n");
 	}
 	else
 		k=k_option->value();
