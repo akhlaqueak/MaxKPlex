@@ -383,7 +383,7 @@ void Graph::kPlex_exact() {
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
 					for(auto e: vp){
-		cout<<e.first<<","<<e.second<<" ";
+		cout<<rid[e.first]<<","<<rid[e.second]<<" ";
 	}
 	cout<<endl;
 				kplex_solver->load_graph(ids_n, vp);
