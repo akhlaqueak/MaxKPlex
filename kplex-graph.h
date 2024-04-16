@@ -35,6 +35,10 @@ public:
         V = 0;
         E = 0;
         adjList.resize(n);
+        cnMat.resize(n * n);
+        adjMat.resize(n*n);
+        cn.resize(n);
+        initVectors(n);
     }
 
     int k, tau_e, tau_v;
@@ -48,8 +52,8 @@ public:
     vecui peelSeq;
     vecui rec;
     MBitSet vis;
-    vecui cnMat;
-    ui rv = 0, re = 0;
+    vecui cnMat, adjMat;
+    ui rv = 0, re = 0, n;
     ui lb = 0, minindex = 0;
     ListLinearHeap heap;
 
@@ -57,10 +61,37 @@ public:
     {
         // this constructor is called for two-hop graph gi, hence allocating such large memory here.
         adjList.resize(n);
+        for(auto& adj: adjList)
+            adj.reserve(n);
         cnMat.resize(n * n);
         cn.resize(n);
         initVectors(n);
     }
+    void load(const std::vector<std::pair<int,int> > &vp, ui _n) {
+        n = _n;
+        for(ui i = 0;i < vp.size();i ++) {
+            assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
+        	ui a = vp[i].first, b = vp[i].second;
+            adjMat[a*n + b] = adjMat[b*n + a] = 1;
+        }
+        for(ui i=0;i<n;i++)
+            for(ui j=0;j<n;j++){
+                if(adjMat[i*n+j])
+                    adjList[i].push_back(j);
+            }
+    }
+
+    void unload(const std::vector<std::pair<int,int> > &vp, ui _n) {
+        n = _n;
+        for(ui i = 0;i < vp.size();i ++) {
+            assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
+        	ui a = vp[i].first, b = vp[i].second;
+            adjMat[a*n + b] = adjMat[b*n + a] = 0;
+        }
+        for(ui i=0;i<n;i++)
+            adjList[i].clear();
+    }
+
     ui popMin()
     {
         ui v, key;

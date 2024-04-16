@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include "KPlex_BB_matrix.h"
+#include "kplex-solver.h"
 
 using namespace std;
 
@@ -327,8 +328,9 @@ void Graph::kPlex_exact() {
 		s_active_edgelist = new ui[m/2];
 		s_deleted = new char[m/2];
 
-		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
-		kplex_solver->allocateMemory(max_n, m/2);
+		// KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
+		// kplex_solver->allocateMemory(max_n, m/2);
+		MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
 
 		vector<pair<int,int> > vp; vp.reserve(m/2);
 		ui *t_degree = new ui[n];
@@ -355,12 +357,12 @@ void Graph::kPlex_exact() {
 			assert(degree[u] == key);
 
 			ui *ids = Qv;
-			ui ids_n = 0;
+			ui ids_n = 0, sz1h=0;
 #ifndef NDEBUG
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
 			if(kplex.size()+1 >= 2*K) {
-				extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
 				if(ids_n) {
 					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 					total_density_prune += density; ++ prune_cnt;
@@ -370,7 +372,7 @@ void Graph::kPlex_exact() {
 			}
 			else 
 			{
-				extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
+				sz1h = extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
 				if(density < min_density_prune) min_density_prune = density;
@@ -385,8 +387,9 @@ void Graph::kPlex_exact() {
 				for(auto e: vp)
 					cout<<"["<<e.first<<","<<e.second<<"] ";
 				cout<<endl;
-				kplex_solver->load_graph(ids_n, vp);
-				kplex_solver->kPlex(K, kplex, true);
+				kplex_solver->solve_instance(ids_n, sz1h, vp);
+				// kplex_solver->load_graph(ids_n, vp);
+				// kplex_solver->kPlex(K, kplex, true);
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
@@ -508,7 +511,7 @@ void Graph::load_graph_from_edgelist(ui _n, const vector<pair<int,int> > &edge_l
 	for(ui i = 0;i < n;i ++) pstart[i] -= degree[i];
 }
 
-void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+ui Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	ids[ids_n++] = u; exists[u] = 1; rid[u] = 0;
 	ui u_n = pstart[u];
@@ -530,7 +533,6 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,
 		}
 		pend[u] = u_n;
 	}
-	cout<<"1-hop size "<<old_size<<endl;
 	for(ui i = 0;i < old_size;i ++) {
 		u = ids[i];
 		for(ept j = pstart[u];j < pend[u];j ++) if(edges[j] > u) {
@@ -547,6 +549,7 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,
 		pend[u] = u_n;
 	}
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
+	return old_size;
 }
 
 void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
@@ -564,7 +567,7 @@ void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
+ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
@@ -601,7 +604,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 	if(ids_n - 1 - Q_n + K <= kplex.size()) {
 		for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 		ids_n = 0;
-		return ;
+		return 0;
 	}
 	
 	ui nr_size = ids_n;
@@ -681,8 +684,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(exists[i] == 0);
 #endif
-	cout<<"1-hopej size is : "<<nr_size<<endl;
-
+	return nr_size;
 }
 
 // max-degree-based heuristic k-plex computation
