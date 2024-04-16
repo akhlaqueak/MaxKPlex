@@ -42,15 +42,19 @@ int main(int argc, char *argv[]) {
 		printf("!!! Path to input graph file is not provided! Exit !!!\n");
 		return 0;
 	}
+	ui k = 2;
 	if(!k_option->is_set()) {
 		printf("!!! k is not provided! Exit !!!\n");
 		return 0;
 	}
+	else
+		k=k_option->value();
+
 
 	string alg = "exact";
 	if(alg_option->is_set()) alg = alg_option->value();
 
-	Graph *graph = new Graph(graph_option->value().c_str(), k_option->value());
+	Graph *graph = new Graph(graph_option->value().c_str(), k);
 	if(binary_input) graph->read_graph_binary();
 	else graph->read_graph();
 
