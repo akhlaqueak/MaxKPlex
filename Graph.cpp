@@ -573,7 +573,6 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 		ui v = edges[i];
 		ids[ids_n++] = v; exists[v] = 2;
 	}
-	cout<<"1-hopej size is : "<<ids_n<<endl;
 	pend[u] = u_n;
 	
 	ui Q_n = 0;
@@ -682,6 +681,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(exists[i] == 0);
 #endif
+	cout<<"1-hopej size is : "<<nr_size<<endl;
 
 }
 
