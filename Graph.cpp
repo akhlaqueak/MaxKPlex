@@ -359,16 +359,17 @@ void Graph::kPlex_exact() {
 #ifndef NDEBUG
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
-			if(kplex.size()+1 >= 2*K) {
-				extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
-				if(ids_n) {
-					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
-					total_density_prune += density; ++ prune_cnt;
-					if(density < min_density_prune) min_density_prune = density;
-					if(ids_n > max_n_prune) max_n_prune = ids_n;
-				}
-			}
-			else {
+			// if(kplex.size()+1 >= 2*K) {
+			// 	extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+			// 	if(ids_n) {
+			// 		double density = (double(vp.size()*2))/ids_n/(ids_n-1);
+			// 		total_density_prune += density; ++ prune_cnt;
+			// 		if(density < min_density_prune) min_density_prune = density;
+			// 		if(ids_n > max_n_prune) max_n_prune = ids_n;
+			// 	}
+			// }
+			// else 
+			{
 				extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
