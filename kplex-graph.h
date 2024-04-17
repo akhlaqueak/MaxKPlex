@@ -127,8 +127,9 @@ public:
                 if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
-            // cout<<adjList[i].size()<<" ";
+            cout<<adjList[i].size()<<" ";
         }
+        cout<<endl;
     }
 
     void unload(const std::vector<std::pair<int, int>> &vp, ui _n)
