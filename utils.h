@@ -2,6 +2,11 @@
 #define UTILS
 #include "stdc++.h"
 using namespace std;
+using namespace chrono;
+typedef unsigned int ui;
+typedef vector<ui> vecui;
+typedef pair<ui, ui> Edge;
+
 enum RecLevel{FIRST, OTHER};
 
 class Timer

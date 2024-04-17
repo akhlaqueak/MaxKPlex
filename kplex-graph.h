@@ -1,12 +1,7 @@
 #ifndef KPLEX_GRAPH_H
 #define KPLEX_GRAPH_H
-#include <stdc++.h>
 #include "utils.h"
-using namespace std;
-using namespace chrono;
-typedef unsigned int ui;
-typedef vector<ui> vecui;
-typedef pair<ui, ui> Edge;
+
 
 enum : uint8_t
 { // 奇数表示连接
