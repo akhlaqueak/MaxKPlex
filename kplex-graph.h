@@ -2,7 +2,6 @@
 #define KPLEX_GRAPH_H
 #include "utils.h"
 
-
 enum : uint8_t
 { // 奇数表示连接
     UNLINK2LESS = 0,
@@ -19,20 +18,19 @@ enum MODE
     NONE
 };
 
-
-class KPlexGraph 
+class KPlexGraph
 {
 public:
     vector<vecui> adjList;
     ui V, E;
 
-    KPlexGraph(ui n)
+    KPlexGraph(ui n) : heap(n, n - 1)
     {
         V = 0;
         E = 0;
         adjList.resize(n);
         cnMat.resize(n * n);
-        adjMat.resize(n*n);
+        adjMat.resize(n * n);
         cn.resize(n);
         initVectors(n);
     }
@@ -44,48 +42,94 @@ public:
     vecui degree, minv;
     vecui pruned;
     vecui lookup;
-    vecui kplex;
     vecui peelSeq;
     vecui rec;
     MBitSet vis;
     vecui cnMat, adjMat;
     ui rv = 0, re = 0, n;
     ui lb = 0, minindex = 0;
-    // ListLinearHeap heap;
+    ListLinearHeap heap;
 
-    KPlexGraph(ui _k, ui n) : k(_k)
+    KPlexGraph(ui _k, ui n) : k(_k), heap(n, n - 1)
     {
         // this constructor is called for two-hop graph gi, hence allocating such large memory here.
         adjList.resize(n);
-        for(auto& adj: adjList)
+        for (auto &adj : adjList)
             adj.reserve(n);
         cnMat.resize(n * n);
         cn.resize(n);
         initVectors(n);
     }
-    void load(const std::vector<std::pair<int,int> > &vp, ui _n) {
+
+    ui degeneracyKPlex(vecui& kplex)
+    {
+        Timer t;
+        vis.reset();
+        ui ub = 0;
+        heap.init(adjList);
+        ui max_core = 0;
+        ui idx = V;
+        for (ui i = 0; i < V; i++)
+        {
+            ui u, key;
+            heap.pop_min(u, key);
+            if (key > max_core)
+                max_core = key;
+            peelSeq[u] = i;
+            ui t_UB = min(max_core + k, V - i);
+            // if (V - i < t_UB)
+            //     t_UB = V - i;
+            if (t_UB > ub)
+                ub = t_UB;
+
+            if (idx == V && key + k >= V - i)
+                idx = i;
+            vis.set(u);
+
+            for (ui v : adjList[u])
+                if (!vis.test(v))
+                    heap.decrement(v, 1);
+        }
+
+        // printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V - idx, max_core, ub, t.elapsed());
+
+        if (V - idx > kplex.size())
+        {
+            kplex.clear();
+            for (ui i = idx; i < V; i++)
+                kplex.push_back(peelSeq[i]);
+        }
+        return ub;
+    }
+
+    void load(const std::vector<std::pair<int, int>> &vp, ui _n)
+    {
         n = _n;
         V = n;
-        for(ui i = 0;i < vp.size();i ++) {
-            assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
-        	ui a = vp[i].first, b = vp[i].second;
-            adjMat[a*n + b] = adjMat[b*n + a] = 1;
+        for (ui i = 0; i < vp.size(); i++)
+        {
+            assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
+            ui a = vp[i].first, b = vp[i].second;
+            adjMat[a * n + b] = adjMat[b * n + a] = 1;
         }
-        for(ui i=0;i<n;i++)
-            for(ui j=0;j<n;j++){
-                if(adjMat[i*n+j])
+        for (ui i = 0; i < n; i++)
+            for (ui j = 0; j < n; j++)
+            {
+                if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
     }
 
-    void unload(const std::vector<std::pair<int,int> > &vp, ui _n) {
+    void unload(const std::vector<std::pair<int, int>> &vp, ui _n)
+    {
         n = _n;
-        for(ui i = 0;i < vp.size();i ++) {
-            assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
-        	ui a = vp[i].first, b = vp[i].second;
-            adjMat[a*n + b] = adjMat[b*n + a] = 0;
+        for (ui i = 0; i < vp.size(); i++)
+        {
+            assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
+            ui a = vp[i].first, b = vp[i].second;
+            adjMat[a * n + b] = adjMat[b * n + a] = 0;
         }
-        for(ui i=0;i<n;i++)
+        for (ui i = 0; i < n; i++)
             adjList[i].clear();
     }
 
@@ -228,18 +272,18 @@ public:
         Qe.reserve(sz); // todo need to comeup with better estimate for Qe.
         vis.init(sz);
     }
-        void addEdge(ui u, ui v)
+    void addEdge(ui u, ui v)
     {
         adjList[u].push_back(v);
         adjList[v].push_back(u);
-
     }
     void resize(ui n)
     {
         V = n;
         adjList.resize(n);
     }
-    ui addVertex(){
+    ui addVertex()
+    {
         return V++;
     }
 
@@ -248,7 +292,7 @@ public:
         for (auto &adj : adjList)
             std::sort(adj.begin(), adj.end());
     }
-        void clear()
+    void clear()
     {
         for (ui u = 0; u < V; u++)
         {
@@ -260,5 +304,5 @@ public:
         //     adjList[u].clear();
         V = 0;
     }
- };
+};
 #endif // KPLEX_GRAPH_H

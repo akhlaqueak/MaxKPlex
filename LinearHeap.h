@@ -70,6 +70,31 @@ public:
 		}
 	}
 
+	void init(const vector<vecui>& adjList) {
+		ui _n = adjList.size();
+		ui _key_cap = _n-1;
+		if(key_s == nullptr) key_s = new ui[n];
+		if(pre_s == nullptr) pre_s = new ui[n];
+		if(next_s == nullptr) next_s = new ui[n];
+		if(head_s == nullptr) head_s = new ui[key_cap+1];
+
+		//assert(_key_cap <= key_cap);
+		min_key = max_key = _key_cap;
+		for(ui i = 0;i <= _key_cap;i ++) head_s[i] = n;
+
+		for(ui i = 0;i < _n;i ++) {
+			ui id = i;
+			ui key = adjList[i].size();
+			//assert(id < n); assert(key <= _key_cap);
+
+			key_s[id] = key; pre_s[id] = n; next_s[id] = head_s[key];
+			if(head_s[key] != n) pre_s[head_s[key]] = id;
+			head_s[key] = id;
+
+			if(key < min_key) min_key = key;
+		}
+	}
+
 	ui get_key(ui id) { return key_s[id]; }
 
 	void get_ids(ui *vs, ui &vs_size) {

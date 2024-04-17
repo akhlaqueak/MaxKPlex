@@ -32,9 +32,8 @@ class MaxKPlex
     ui n, sz1h, k;
 
 public:
-
-    MaxKPlex(ui m, ui _k, vecui& kp)
-        :  g(m), kplex(kp), k(_k)
+    MaxKPlex(ui m, ui _k, vecui &kp)
+        : g(m), kplex(kp), k(_k)
     {
         P.init(m);
         C.init(m);
@@ -46,18 +45,19 @@ public:
         dG.resize(m);
         PI.resize(m);
         lookup.resize(m);
-        
+
         kplex.reserve(m);
         ISc.reserve(m);
         ISp.reserve(m);
     }
-    void solve_instance(ui n, ui sz1h, const auto& vp){
+    void solve_instance(ui n, ui sz1h, const auto &vp)
+    {
         g.load(vp, n);
         g.buildCommonMatrix(sz1h);
         initContainers(sz1h);
-
-        kSearch(k-1);
-
+        ui ub = g.degeneracyKPlex(kplex);
+        if (ub > kplex.size())
+            kSearch(k - 1);
         g.unload(vp, n);
         reset();
     }
@@ -170,7 +170,8 @@ public:
                 cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
                 flag = true;
                 // checking validity of kplex
-                for (ui i = 0; i < P.size(); i++){
+                for (ui i = 0; i < P.size(); i++)
+                {
                     ui u = P[i];
                     if (dP[u] < P.size() - k)
                         cout << " Invalid " << u;
@@ -637,17 +638,16 @@ public:
         C.swapElements(ind, C.size());
         return bn;
     }
-    
 
     void initContainers(ui sz1h)
     {
         addToP_K(0);
         for (ui u = 1; u < g.V; u++)
         {
-                if (u <= sz1h)
-                    addToC(u);
-                else
-                    M.add(u);
+            if (u <= sz1h)
+                addToC(u);
+            else
+                M.add(u);
         }
     }
 
@@ -764,7 +764,7 @@ public:
                         cout << " Invalid " << P[i];
                     else
                         kplex.push_back(P[i]);
-                    
+
                 cout << endl;
             }
             C.fakeRecover(rc);
