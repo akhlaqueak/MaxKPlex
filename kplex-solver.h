@@ -54,8 +54,6 @@ public:
     void solve_instance(ui n, ui sz1h, const auto& vp){
         g.load(vp, n);
         g.buildCommonMatrix(sz1h);
-        printvec("dP", dP);
-        printvec("dP", dG);
         initContainers(sz1h);
 
         kSearch(k-1);
