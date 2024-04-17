@@ -67,7 +67,7 @@ public:
         Timer t;
         vis.reset();
         ui ub = 0;
-        heap.init(adjList);
+        heap.init(V, adjList);
         ui max_core = 0;
         ui idx = V;
         for (ui i = 0; i < V; i++)
@@ -78,12 +78,12 @@ public:
                 max_core = key;
             peelSeq[i] = u;
             core[u]=max_core;
-            ui t_UB = min(max_core + k, V - i);
+            // ui t_UB = min(max_core + k, V - i);
             // if (V - i < t_UB)
             //     t_UB = V - i;
-            if (t_UB > ub)
-                ub = t_UB;
-
+            // if (t_UB > ub)
+            //     ub = t_UB;
+            ub = max(ub, min(max_core + k, V - i));
             if (idx == V && key + k >= V - i)
                 idx = i;
             vis.set(u);

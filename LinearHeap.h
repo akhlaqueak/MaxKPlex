@@ -70,8 +70,7 @@ public:
 		}
 	}
 
-	void init(const vector<vecui>& adjList) {
-		ui _n = adjList.size();
+	void init(ui _n, const vector<vecui>& adjList) {
 		ui _key_cap = _n-1;
 		if(key_s == nullptr) key_s = new ui[n];
 		if(pre_s == nullptr) pre_s = new ui[n];
