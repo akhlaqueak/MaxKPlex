@@ -20,7 +20,6 @@ class MaxKPlex
 {
     KPlexGraph g;
     vecui &kplex;
-    ListLinearHeap heap;
     vecui dG, dP;
     RandList P, C, M;
     // Partition upper bound vectors...
@@ -41,7 +40,6 @@ public:
         C.init(m);
         block.init(m);
         M.init(m);
-        heap.init(m);
         bmp.init(m);
 
         dP.resize(m);
@@ -639,143 +637,8 @@ public:
         C.swapElements(ind, C.size());
         return bn;
     }
-    ui createBlk(ui v)
-    {
-        reset();
-        block.add(v);
-        ui vid = 0;
-        for (ui i = 0; i < G.adjList[v].size(); i++)
-        {
-            ui u = G.adjList[v][i];
-            // cout<<u<<" "<<G.V<<endl;
-            if (G.exists(u) and G.exists(G.getEdge(v, i)))
-            {
-                block.add(u);
-                g.adjList[0].push_back(++vid);
-            }
-        }
-        ui sz1h = vid;
-        temp.reserve(sz1h);
-        temp.clear();
-        // 0 is seed vertex ID, [1...sz1h] is 1hop neighbors, then 2hop neighbors
-        for (ui i = 1; i <= sz1h; i++)
-        {
-            ui u = block[i];
-            g.adjList[i].push_back(0);
-            for (ui j = 0; j < G.adjList[u].size(); j++)
-            {
-                ui w = G.adjList[u][j];
-                if (w == v or !G.exists(w) or !G.exists(G.getEdge(u, j)))
-                    continue;
+    
 
-                if (not block.contains(w))
-                    // it's a newly discovered two hope neighbor, so add it to block
-                    block.add(w);
-                vid = block.getIndex(w);
-                // it's a two-hop neighbor, put them in temp and insert in the end after sorting
-                if (vid > sz1h)
-                    temp.push_back(vid);
-                else
-                    g.adjList[i].push_back(vid);
-            }
-            sort(temp.begin(), temp.end());
-            g.adjList[i].insert(g.adjList[i].end(), temp.begin(), temp.end());
-            temp.clear();
-        }
-
-        for (ui i = sz1h + 1; i < block.size(); i++)
-        {
-            ui w = block[i];
-            for (ui j = 0; j < G.adjList[w].size(); j++)
-            {
-                ui z = G.adjList[w][j];
-                // z and w both are two-hop neighbors
-                if (block.contains(z) and G.exists(G.getEdge(w, j)))
-                {
-                    vid = block.getIndex(z);
-                    // it's a two-hop neighbor, put them in temp and insert in the end after sorting
-                    if (vid > sz1h)
-                        temp.push_back(vid);
-                    else
-                        g.adjList[i].push_back(vid);
-                }
-            }
-            sort(temp.begin(), temp.end());
-            g.adjList[i].insert(g.adjList[i].end(), temp.begin(), temp.end());
-            temp.clear();
-        }
-        g.V = block.size();
-        // g.sort();
-        // block.clear();
-        // g.print();
-
-        return sz1h;
-    }
-
-    ui createBlock(ui v)
-    {
-        reset();
-        block.add(v);
-        ui vid = g.addVertex();
-
-        for (ui i = 0; i < G.adjList[v].size(); i++)
-        {
-            ui u = G.adjList[v][i];
-            // cout<<u<<" "<<G.V<<endl;
-            if (G.exists(u) and G.exists(G.getEdge(v, i)))
-            {
-                block.add(u);
-                vid = g.addVertex();
-                g.addEdge(0, vid);
-            }
-        }
-        ui sz1h = vid;
-        // 0 is seed vertex ID, [1...sz1h] is 1hop neighbors, then 2hop neighbors
-        for (ui i = 1; i <= sz1h; i++)
-        {
-            ui u = block[i];
-            for (ui j = 0; j < G.adjList[u].size(); j++)
-            {
-                ui w = G.adjList[u][j];
-                if (w == v or !G.exists(w) or !G.exists(G.getEdge(u, j)))
-                    continue;
-
-                if (block.contains(w))
-                {
-                    ui ind = block.getIndex(w);
-                    // it's a one hope neighbor
-                    if (ind > i and ind <= sz1h)
-                        g.addEdge(i, ind);
-                    // else this edge is already added by i
-                }
-                else
-                {
-                    // it's a 2 hope neighbor
-                    block.add(w);
-                    vid = g.addVertex();
-                    // g.addEdge(i, vid);
-                }
-            }
-        }
-
-        for (ui i = sz1h + 1; i < block.size(); i++)
-        {
-            ui w = block[i];
-            for (ui j = 0; j < G.adjList[w].size(); j++)
-            {
-                ui z = G.adjList[w][j];
-                // z and w both are two-hop neighbors
-                if (G.exists(G.getEdge(w, j)))
-                    if (block.contains(z) and block.getIndex(z) < i)
-                        g.addEdge(i, block.getIndex(z));
-            }
-        }
-        g.sort();
-        block.clear();
-        // g.print();
-
-        return sz1h;
-    }
     void initContainers(ui sz1h)
     {
         addToP_K(0);
