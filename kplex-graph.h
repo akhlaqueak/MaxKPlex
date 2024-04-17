@@ -92,7 +92,7 @@ public:
             //     ub = t_UB;
             ub = max(ub, min(max_core + k, V - i));
             if (idx == V && key + k >= V - i){
-                cout<<V<<"vertices"<<key<<"key"<<i<<"i";
+                cout<<V<<"vertices"<<key<<"key"<<k<<"i";
                 idx = i;
             }
             vis.set(u);

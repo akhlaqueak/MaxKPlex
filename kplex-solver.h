@@ -33,7 +33,7 @@ class MaxKPlex
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
-        : g(m), kplex(kp), k(_k)
+        : g(k, m), kplex(kp), k(_k)
     {
         P.init(m);
         C.init(m);
