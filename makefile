@@ -1,21 +1,10 @@
 # ********     Author: Lijun Chang    ******
 # ******** Email: ljchang@outlook.com ******
 #
-CC=g++ -flto -O3
-CFLAGS=-c -I. -std=c++17
+CC=g++ -flto -O3 -std=c++17 -I.
 
 all: kPlexS
 
-kPlexS: .obj/main.o .obj/Graph.o
-	${CC} .obj/main.o .obj/Graph.o -o kPlexS
-	rm .obj/*.o
+kPlexS: main.cpp
+	${CC}  -o kPlexS
 
-.obj/main.o: main.cpp
-	${CC} ${CFLAGS} -o .obj/main.o main.cpp
-
-.obj/Graph.o: Graph.cpp
-	${CC} ${CFLAGS} -o .obj/Graph.o Graph.cpp
-
-clean:
-	rm -rf *o .obj/
-	mkdir .obj
