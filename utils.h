@@ -101,7 +101,6 @@ public:
 		return defaultValue;
 	}
 };
-Timer check2;
 class MBitSet
 {
 private:
@@ -442,13 +441,13 @@ inline ui isNeighbor(auto &vec, ui x)
 {
 	return binary_search(vec.begin(), vec.end(), x);
 }
-void printvec(string st, vecui vec)
-{
-	cout << st << " : ";
-	for (ui v : vec)
-		cout << v << " ";
-	cout << endl;
-}
+// void printvec(string st, vecui vec)
+// {
+// 	cout << st << " : ";
+// 	for (ui v : vec)
+// 		cout << v << " ";
+// 	cout << endl;
+// }
 
 
 #endif
