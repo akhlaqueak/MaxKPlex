@@ -367,7 +367,7 @@ public:
         sum += j;
         stp.push_back(edges.size());
     }
-    cout << "sum is: " << edges.size()<<" "<<sum << endl;
+    // cout << "sum is: " << edges.size()<<" "<<sum << endl;
     // printvec("deg", degrees);
     vector<ui> cnm(V, 0);
     // counting common neighbors
@@ -429,7 +429,7 @@ public:
             lookup[v] = 0;
         }
     }
-    cout << sum;
+    // cout << sum;
     // check.tock();
     // cout << "initialized in " << check.ticktock() << endl;
 }
