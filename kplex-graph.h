@@ -351,13 +351,12 @@ public:
         // fill(cn[u].begin(), cn[u].begin()+sz, 0);
     }
     cnMat.resize(V*V);
-    heap.init(*this);
+    heap.init(V, adjList);
     vecui edges, degrees(V, 0), stp;
     edges.reserve(E);
     stp.reserve(V + 1);
     stp.push_back(0);
     ui sum = 0;
-    degenerate();
     for (ui i = 0; i < V; i++)
     {
         ui j = 0;
@@ -372,7 +371,7 @@ public:
     // printvec("deg", degrees);
     vector<ui> cnm(V, 0);
     // counting common neighbors
-    check.tick();
+    // check.tick();
 
     // for (ui u = 0; u < V; u++)
     // {
