@@ -90,6 +90,122 @@ public:
         V = 0;
     }
 
+    ui &cnMatrix(ui i, ui j)
+    {
+        return cnMat[i * V + j];
+    }
+    void buildCommonMatrix(ui sz1h)
+    {
+
+        auto intersect = [](const vecui &lst1, const vecui &lst2, const ui sz)
+        {
+            int i = 0, j = 0;
+            int common = 0;
+            while (i < lst1.size() and j < lst2.size() and lst1[i] < sz and lst2[j] < sz)
+            {
+                if (lst1[i] < lst2[j])
+                    ++i;
+                else if (lst1[i] > lst2[j])
+                    ++j;
+                else
+                {
+                    if (lst1[i] != 0)
+                        common++;
+                    i++, j++;
+                }
+            }
+            return common;
+        };
+
+        // 0 is seed vertex, 1...sz1h is 1-hop vertices, sz1h+1...end is 2-hop
+        // const ui sz1h = adjList[0].size() + 1;
+        const int thresPP1 = lb - k - 2 * max(k - 2, 0), thresPP2 = lb - k - 2 * max(k - 3, 0);
+        const int thresPC1 = lb - 2 * k - max(k - 2, 0), thresPC2 = lb - k - 1 - max(k - 2, 0) - max((int)k - 3, 0);
+        const int thresCC1 = lb - 2 * k - (k - 1), thresCC2 = lb - 2 * k + 2 - (k - 1);
+        // 两个1-hop或本身
+        for (int i = 1; i < sz1h; ++i)
+        {
+            for (int j = 1; j < i; ++j)
+            {
+                const int common = intersect(adjList[i], adjList[j], sz1h);
+
+                if (isNeighbor(adjList[i], j))
+                {
+                    if (common > thresCC1)
+                        cnMatrix(i, j) = LINK2MORE;
+                    else if (common == thresCC1)
+                        cnMatrix(i, j) = LINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = LINK2LESS;
+                }
+                else
+                {
+                    if (common > thresCC2)
+                        cnMatrix(i, j) = UNLINK2MORE;
+                    else if (common == thresCC2)
+                        cnMatrix(i, j) = UNLINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = UNLINK2LESS;
+                }
+                cnMatrix(j, i) = cnMatrix(i, j);
+            }
+        }
+        // 一个1-hop 一个2-hop
+        for (int i = sz1h; i < V; ++i)
+        {
+            for (int j = 1; j < sz1h; ++j)
+            {
+                const int common = intersect(adjList[i], adjList[j], sz1h);
+
+                if (isNeighbor(adjList[i], j))
+                {
+                    if (common > thresPC1)
+                        cnMatrix(i, j) = LINK2MORE;
+                    else if (common == thresPC1)
+                        cnMatrix(i, j) = LINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = LINK2LESS;
+                }
+                else
+                {
+                    if (common > thresPC2)
+                        cnMatrix(i, j) = UNLINK2MORE;
+                    else if (common == thresPC2)
+                        cnMatrix(i, j) = UNLINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = UNLINK2LESS;
+                }
+                cnMatrix(j, i) = cnMatrix(i, j);
+            }
+            if (k == 2)
+                continue; // why
+            // 两个2-hop点在lead顶点的1-hop集合中的交集数量
+            for (int j = sz1h; j < i; ++j)
+            {
+                const int common = intersect(adjList[i], adjList[j], sz1h);
+
+                if (isNeighbor(adjList[i], j))
+                {
+                    if (common > thresPP1)
+                        cnMatrix(i, j) = LINK2MORE;
+                    else if (common == thresPP1)
+                        cnMatrix(i, j) = LINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = LINK2LESS;
+                }
+                else
+                {
+                    if (common > thresPP2)
+                        cnMatrix(i, j) = UNLINK2MORE;
+                    else if (common == thresPP2)
+                        cnMatrix(i, j) = UNLINK2EQUAL;
+                    else
+                        cnMatrix(i, j) = UNLINK2LESS;
+                }
+                cnMatrix(j, i) = cnMatrix(i, j);
+            }
+        }
+    }
 
     void initMin()
     {
@@ -133,5 +249,5 @@ public:
         for (auto &adj : adjList)
             std::sort(adj.begin(), adj.end());
     }
-};
+ };
 #endif // KPLEX_GRAPH_H
