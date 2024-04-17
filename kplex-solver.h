@@ -192,7 +192,7 @@ public:
         ub = seesawUB();
         if (ub > kplex.size())
 #endif
-            // if (secondOrderUB())
+            if (secondOrderUB())
             {
                 auto B = getBranchings();
                 while (B.first < B.second)
