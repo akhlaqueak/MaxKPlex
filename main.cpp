@@ -2,7 +2,7 @@
 #include "Utility.h"
 // #include "Timer.h"
 #include "popl.hpp"
-// #include "KPlex_BB_matrix.h"
+#include "KPlex_BB_matrix.h"
 #include "kplex-solver.h"
 using namespace std;
 using namespace popl;
@@ -331,9 +331,9 @@ void Graph::kPlex_exact() {
 		s_active_edgelist = new ui[m/2];
 		s_deleted = new char[m/2];
 
-		// KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
-		// kplex_solver->allocateMemory(max_n, m/2);
-		MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
+		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
+		kplex_solver->allocateMemory(max_n, m/2);
+		// MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
 
 		vector<pair<int,int> > vp; vp.reserve(m/2);
 		ui *t_degree = new ui[n];
@@ -390,9 +390,9 @@ void Graph::kPlex_exact() {
 				// for(auto e: vp)
 				// 	cout<<"["<<e.first<<","<<e.second<<"] ";
 				// cout<<endl;
-				kplex_solver->solve_instance(ids_n, sz1h, vp);
-				// kplex_solver->load_graph(ids_n, vp);
-				// kplex_solver->kPlex(K, kplex, true);
+				// kplex_solver->solve_instance(ids_n, sz1h, vp);
+				kplex_solver->load_graph(ids_n, vp);
+				kplex_solver->kPlex(K, kplex, true);
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {

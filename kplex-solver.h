@@ -55,6 +55,7 @@ public:
         g.load(vp, n);
         g.buildCommonMatrix(sz1h);
         initContainers(sz1h);
+        cout
         g.print();
         ui ub = g.degeneracyKPlex(kplex);
         if (ub > kplex.size())
