@@ -168,7 +168,7 @@ public:
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
-        // rc += updateC_SecondOrder();
+        rc += updateC_SecondOrder();
         if (C.empty())
         {
             if (P.size() > kplex.size())
@@ -192,7 +192,7 @@ public:
         ub = seesawUB();
         if (ub > kplex.size())
 #endif
-            if (secondOrderUB())
+            // if (secondOrderUB())
             {
                 auto B = getBranchings();
                 while (B.first < B.second)
