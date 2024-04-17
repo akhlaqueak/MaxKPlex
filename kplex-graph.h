@@ -56,7 +56,7 @@ public:
     vecui cnMat, adjMat;
     ui rv = 0, re = 0, n;
     ui lb = 0, minindex = 0;
-    ListLinearHeap heap;
+    // ListLinearHeap heap;
 
     KPlexGraph(ui _k, ui n) : k(_k)
     {
@@ -95,37 +95,7 @@ public:
         V = 0;
     }
 
-    ui popMin()
-    {
-        ui v, key;
 
-        return heap.pop_min(v, key) ? v : V;
-
-        // ui mv = V, ind = V;
-
-        // for (ui i = 0; i < minv.size();)
-        // {
-        //     ui u = minv[i];
-        //     if (!exists(u))
-        //     {
-        //         minv[i] = minv.back();
-        //         minv.pop_back();
-        //         continue;
-        //     }
-        //     else if (mv == V or degree[u] < degree[mv])
-        //     {
-        //         mv = u;
-        //         ind = i;
-        //     }
-        //     i++;
-        // }
-        // if (ind != V)
-        // {
-        //     minv[ind] = minv.back();
-        //     minv.pop_back();
-        // }
-        // return mv;
-    }
     void initMin()
     {
         minv.reserve(V);
@@ -147,7 +117,6 @@ public:
         Qv.reserve(sz);
         Qe.reserve(sz); // todo need to comeup with better estimate for Qe.
         vis.init(sz);
-        heap.init(sz);
     }
         void addEdge(ui u, ui v)
     {
@@ -175,7 +144,6 @@ public:
             removeVertex();
     }
     void maxDegreeKplex(ui thresh);
-    void degenerate();
     void corePrune(ui);
     void applyCTCP(MODE);
     void initCTCP();
@@ -184,7 +152,6 @@ public:
     void decDegree(ui);
     void decCN(Edge);
     void populate();
-    ui degeneracyKPlex();
 
     Edge getEdge(ui u, ui j)
     {
@@ -478,7 +445,6 @@ void KPlexGraph::initCTCP()
         // fill(cn[u].begin(), cn[u].begin()+sz, 0);
     }
     cnMat.resize(V*V);
-    heap.init(*this);
     vecui edges, degrees(V, 0), stp;
     edges.reserve(E);
     stp.reserve(V + 1);
@@ -618,7 +584,7 @@ void KPlexGraph::decDegree(ui u)
     if (not pruned[u])
     {
         degree[u]--;
-        heap.decrement(u, 1);
+        // heap.decrement(u, 1);
         if (degree[u] == tau_v)
             scheduleRemoval(u);
     }
@@ -702,66 +668,7 @@ void KPlexGraph::removeVertex()
     degree[u] = 0;
 }
 
-void KPlexGraph::degenerate()
-{
-    Timer t;
-    heap.init(*this);
-    vis.reset();
-    ui max_core = 0;
-    ui idx = V;
-    for (ui i = 0; i < V; i++)
-    {
-        ui u, key;
-        heap.pop_min(u, key);
-        peelSeq[u] = i;
-        vis.set(u);
-        for (ui v : adjList[u])
-            if (!vis.test(v))
-                heap.decrement(v, 1);
-    }
-}
 
-ui KPlexGraph::degeneracyKPlex()
-{
-    Timer t;
-    vis.reset();
-    ui ub = 0;
-    heap.init(*this);
-    ui max_core = 0;
-    ui idx = V;
-    for (ui i = 0; i < V; i++)
-    {
-        ui u, key;
-        heap.pop_min(u, key);
-        if (key > max_core)
-            max_core = key;
-        peelSeq[u] = i;
-        ui t_UB = min(max_core + k, V - i);
-        // if (V - i < t_UB)
-        //     t_UB = V - i;
-        if (t_UB > ub)
-            ub = t_UB;
-
-        if (idx == V && key + k >= V - i)
-            idx = i;
-        vis.set(u);
-
-        for (ui v : adjList[u])
-            if (!vis.test(v))
-                heap.decrement(v, 1);
-    }
-
-    // printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V - idx, max_core, ub, t.elapsed());
-
-    if (V - idx > lb)
-    {
-        kplex.clear();
-        for (ui i = idx; i < V; i++)
-            kplex.push_back(peelSeq[i]);
-        lb = max(kplex.size(), (size_t)2 * k - 2);
-    }
-    return ub;
-}
 
 void KPlexGraph::maxDegreeKplex(ui thresh)
 {

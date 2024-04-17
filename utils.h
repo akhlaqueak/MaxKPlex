@@ -1,9 +1,8 @@
 #ifndef UTILS
 #define UTILS
-#include "kplex-graph.h"
 enum RecLevel{FIRST, OTHER};
 
-class ListLinearHeap
+// class ListLinearHeap
 {
 private:
 	ui n;		// number vertices
@@ -50,41 +49,41 @@ public:
 		for (ui i = 0; i <= key_cap; i++)
 			head_s[i] = n;
 	}
-	void init(Graph &g)
-	{
-		n = g.V;
-		assert(n);
-		key_cap = n - 1;
-		min_key = max_key = key_cap;
-		if (key_s == nullptr)
-			key_s = new ui[n];
-		if (pre_s == nullptr)
-			pre_s = new ui[n];
-		if (next_s == nullptr)
-			next_s = new ui[n];
-		if (head_s == nullptr)
-			head_s = new ui[key_cap + 1];
-		for (ui i = 0; i <= key_cap; i++)
-			head_s[i] = n;
+	// void init(Graph &g)
+	// {
+	// 	n = g.V;
+	// 	assert(n);
+	// 	key_cap = n - 1;
+	// 	min_key = max_key = key_cap;
+	// 	if (key_s == nullptr)
+	// 		key_s = new ui[n];
+	// 	if (pre_s == nullptr)
+	// 		pre_s = new ui[n];
+	// 	if (next_s == nullptr)
+	// 		next_s = new ui[n];
+	// 	if (head_s == nullptr)
+	// 		head_s = new ui[key_cap + 1];
+	// 	for (ui i = 0; i <= key_cap; i++)
+	// 		head_s[i] = n;
 
-		for (ui i = 0; i < n; i++)
-		{
-			ui id = i;
-			ui key = g.adjList[i].size();
-			assert(id < n);
-			assert(key <= key_cap);
+	// 	for (ui i = 0; i < n; i++)
+	// 	{
+	// 		ui id = i;
+	// 		ui key = g.adjList[i].size();
+	// 		assert(id < n);
+	// 		assert(key <= key_cap);
 
-			key_s[id] = key;
-			pre_s[id] = n;
-			next_s[id] = head_s[key];
-			if (head_s[key] != n)
-				pre_s[head_s[key]] = id;
-			head_s[key] = id;
+	// 		key_s[id] = key;
+	// 		pre_s[id] = n;
+	// 		next_s[id] = head_s[key];
+	// 		if (head_s[key] != n)
+	// 			pre_s[head_s[key]] = id;
+	// 		head_s[key] = id;
 
-			if (key < min_key)
-				min_key = key;
-		}
-	}
+	// 		if (key < min_key)
+	// 			min_key = key;
+	// 	}
+	// }
 	~ListLinearHeap()
 	{
 		if (head_s != nullptr)

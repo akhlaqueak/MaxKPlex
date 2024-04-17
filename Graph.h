@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "Utility.h"
 // #include "Timer.h"
-// #include "LinearHeap.h"
+#include "LinearHeap.h"
 
 class Graph {
 private:
