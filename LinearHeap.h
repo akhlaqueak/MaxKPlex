@@ -73,7 +73,6 @@ public:
 	void init(const vector<vecui>& adjList) {
 		ui _n = adjList.size();
 		ui _key_cap = _n-1;
-		cout<<"n "<<_n<<"key cap "<<key_cap;
 		if(key_s == nullptr) key_s = new ui[n];
 		if(pre_s == nullptr) pre_s = new ui[n];
 		if(next_s == nullptr) next_s = new ui[n];

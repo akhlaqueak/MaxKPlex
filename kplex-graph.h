@@ -76,9 +76,9 @@ public:
             if (key > max_core)
                 max_core = key;
             peelSeq[u] = i;
-            ui t_UB = min(max_core + k, V - i);
-            // if (V - i < t_UB)
-            //     t_UB = V - i;
+            // ui t_UB = min(max_core + k, V - i);
+            if (V - i < t_UB)
+                t_UB = V - i;
             if (t_UB > ub)
                 ub = t_UB;
 
