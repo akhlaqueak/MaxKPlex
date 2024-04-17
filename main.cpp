@@ -397,9 +397,9 @@ void Graph::kPlex_exact() {
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, kplex, true);
 				#else 
-				Timer t;
+				// Timer t;
 				kplex_solver->solve_instance(ids_n, sz1h, vp);
-				cout<<t.elapsed()<<endl;
+				// cout<<t.elapsed()<<endl;
 				#endif
 			}
 			Qv[0] = u; Qv_n = 1;

@@ -317,5 +317,375 @@ public:
         //     adjList[u].clear();
         V = 0;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    void KPlexGraph::initCTCP()
+{
+    // number of common neighbors are stored in one direction only i.e. for an edge (u, v)
+    // where u > v, the cn[u][ind(v)] stores number of common neighbors of (u, v)
+    // tau_e = lb + 1 - 2 * k;
+    // tau_v = lb + 1 - k;
+    if (cn.empty())
+        cn.resize(V); // this condition is true only for G graph, the gi graph will allocate cn in its constructor
+    for (ui u = 0; u < V; u++)
+    {
+        degree[u] = adjList[u].size();
+        ui sz = 0;
+        for (ui v : adjList[u])
+            if (u > v)
+                sz++;
+            else
+                break;
+        cn[u].clear();
+        cn[u].resize(sz);
+        // fill(cn[u].begin(), cn[u].begin()+sz, 0);
+    }
+    cnMat.resize(V*V);
+    heap.init(*this);
+    vecui edges, degrees(V, 0), stp;
+    edges.reserve(E);
+    stp.reserve(V + 1);
+    stp.push_back(0);
+    ui sum = 0;
+    degenerate();
+    for (ui i = 0; i < V; i++)
+    {
+        ui j = 0;
+        for(ui v:adjList[i])
+            if(peelSeq[v]>peelSeq[i])
+                edges.push_back(v), j++;
+        degrees[i] = j;
+        sum += j;
+        stp.push_back(edges.size());
+    }
+    cout << "sum is: " << edges.size()<<" "<<sum << endl;
+    // printvec("deg", degrees);
+    vector<ui> cnm(V, 0);
+    // counting common neighbors
+    check.tick();
+
+    // for (ui u = 0; u < V; u++)
+    // {
+    //     Lookup neigh(&lookup, &adjList[u]);
+    //     for (ui i = stp[u]; i < stp[u+1]; i++)
+    //     {
+    //         ui v = edges[i];
+    //         for (ui j = stp[v]; j < stp[v+1]; j++)
+    //         {
+    //             ui w = edges[j];
+    //             cnm[u]++;
+    //         }
+    //     }
+    // }
+
+    // ui sum=0;
+    for (ui u = 0; u < V; u++)
+    {
+        for (ui i = 0; i < degrees[u]; i++)
+        {
+            // ui v = adjList[u][i];
+            ui v = edges[stp[u] + i];
+            // if(v>u) break;
+            lookup[v] = i + 1;
+        }
+
+        for (ui i = 0; i < degrees[u]; i++)
+        {
+            // ui v = adjList[u][i];
+            ui v = edges[stp[u] + i];
+            // if (v > u)
+            //     break;
+            for (ui j = 0; j < degrees[v]; j++)
+            {
+                // ui w = adjList[v][j];
+                ui w = edges[stp[v] + j];
+                // if (w > v)
+                //     break;
+                if (lookup[w])
+                {
+                    cnMat[u*V+i]++;
+                    cnMat[i*V+i]++;
+                    cnMat[j*V+i]++;
+                    // cn[u][i]++;
+                    // cn[u][j]++;
+                    // cn[u][lookup[w] - 1]++;
+                }
+            }
+        }
+        for (ui i = 0; i < degrees[u]; i++)
+        {
+            ui v = edges[stp[u] + i];
+            // ui v = adjList[u][i];
+            // if(v>u) break;
+            lookup[v] = 0;
+        }
+    }
+    cout << sum;
+    check.tock();
+    cout << "initialized in " << check.ticktock() << endl;
+}
+
+void KPlexGraph::populate()
+{
+    tau_e = lb + 1 - 2 * k;
+    tau_v = lb + 1 - k;
+    // cout << "tau_v: " << tau_v << " tau_e: " << tau_e << endl;
+    // populate Qe based on cn[u][v] < lb+1-2k
+    for (ui u = 0; u < V; u++)
+    {
+        if (degree[u] < tau_v and exists(u))
+        {
+            scheduleRemoval(u);
+            continue;
+        }
+        for (ui j = 0; j < adjList[u].size(); j++)
+        {
+            if (adjList[u][j] > u)
+                break;
+            if (cn[u][j] < tau_e)
+            {
+                scheduleRemoval({u, j});
+            }
+        }
+    }
+    // cout << "intialization Qe: " << Qe.size() << endl;
+}
+
+void KPlexGraph::applyCTCP(MODE md)
+{
+
+    if (md == INIT)
+    {
+        initCTCP();
+        populate();
+    }
+    else if (md == LBCHANGE)
+        populate();
+    // printvec("degree: ", degree);
+    while (true)
+    {
+        // if (!Qe.empty())
+        //     trussPrune();
+        // else
+        if (!Qv.empty())
+            removeVertex();
+        else if (!Qe.empty())
+            trussPrune();
+        else
+            break;
+    }
+}
+
+void KPlexGraph::decDegree(ui u)
+{
+    if (not pruned[u])
+    {
+        degree[u]--;
+        heap.decrement(u, 1);
+        if (degree[u] == tau_v)
+            scheduleRemoval(u);
+    }
+}
+void KPlexGraph::decCN(Edge e)
+{
+    if (exists(e) and getCN(e)-- == tau_e)
+    {
+        scheduleRemoval(e);
+    }
+}
+
+void KPlexGraph::trussPrune()
+{
+    for (ui i = 0; i < Qe.size(); i++)
+    {
+        auto e = Qe[i];
+        ui u = e.first;
+        ui j = e.second;
+        ui v = adjList[u][j];
+        // if ((not exists(u))  or (not exists(v)))
+        if (pruned[u] or pruned[v] or not exists(e))
+            continue;
+        removeEdge(e);
+        decDegree(u);
+        decDegree(v);
+
+        Lookup neigh(&lookup, &adjList[u]);
+        for (ui j = 0; j < adjList[v].size(); j++)
+        {
+            ui w = adjList[v][j];
+            // if (!exists(w))
+            if (pruned[w])
+                continue;
+            if (neigh[w])
+            {
+                Edge e1 = getEdge(v, j);
+                Edge e2 = getEdge(u, neigh[w] - 1);
+                if (exists(e1) and exists(e2))
+                {
+                    // w is a common neighbor of u, v
+                    decCN(e1);
+                    decCN(e2);
+                }
+            }
+        }
+    }
+    re += Qe.size();
+    // cout<<"edges removed: "<<Qe.size()<<endl;
+    Qe.clear();
+}
+    Edge getEdge(ui u, ui j)
+    {
+        ui v = adjList[u][j];
+        if (u > v)
+            return {u, j};
+        else
+        {
+            ui k = getLowerBound(adjList[v], u);
+            return {v, k};
+        }
+    }
+void KPlexGraph::removeVertex()
+{
+    ui u = Qv.back();
+    Qv.pop_back();
+
+    rv++;
+    Lookup neigh(&lookup, &(adjList[u]));
+    for (ui i = 0; i < adjList[u].size(); i++)
+    {
+        Edge e = getEdge(u, i);
+        if (!exists(e))
+            continue;
+        removeEdge(e);
+        ui v = adjList[u][i];
+        decDegree(v);
+        for (ui j = 0; j < adjList[v].size(); j++)
+        {
+            ui w = adjList[v][j];
+            if (!exists(w))
+                continue;
+            auto e = getEdge(v, j);
+            // if(pruned[w] or !exists(e))
+            if (neigh[w] and exists(getEdge(u, neigh[w] - 1)))
+                // w is a common neighbor of u, v
+                decCN(e);
+        }
+    }
+    neigh.erase();
+    adjList[u].clear();
+    degree[u] = 0;
+}
+    bool exists(Edge e)
+    {
+        return cn[e.first][e.second] != V + 1;
+    }
+
+    bool exists(ui u)
+    {
+        return degree[u];
+        // return not pruned[u];
+    }
+
+    void removeEdge(Edge e)
+    {
+        cn[e.first][e.second] = V + 1;
+    }
+
+    void scheduleRemoval(Edge e)
+    {
+        if (cn[e.first][e.second] != V)
+        {
+            Qe.push_back(e);
+            cn[e.first][e.second] = V;
+        }
+    }
+    void scheduleRemoval(ui v)
+    {
+        if (pruned[v])
+            return;
+        pruned[v] = 1;
+        Qv.push_back(v);
+    }
+    ui &getCN(Edge e)
+    {
+        return cn[e.first][e.second];
+    }
+
+    void shrinkEdges()
+    {
+        for (ui u = 0; u < V; u++)
+        {
+            ui j = 0;
+            for (ui i = 0; i < adjList[u].size(); i++)
+            {
+                ui v = adjList[u][i];
+                if (exists(v) and exists(getEdge(u, i)))
+                    adjList[u][j++] = v;
+            }
+            adjList[u].resize(j);
+            pruned[u] = 0;
+        }
+    }
+
+    void shrink(bool checkEdge = false)
+    {
+        rec.resize(V);
+        ui rid = 0;
+        E = 0;
+        for (ui i = 0; i < V; i++)
+        {
+            if (exists(i))
+                rec[i] = rid++;
+            // recoded ids are also in increasing order in any adjacency list. hence no need to sort after shrinking
+        }
+
+        for (ui u = 0; u < V; u++)
+        {
+            ui j = 0;
+            if (not exists(u))
+                continue;
+            for (ui i = 0; i < adjList[u].size(); i++)
+            {
+                ui v = adjList[u][i];
+                if (exists(v))
+                    if (!checkEdge or exists(getEdge(u, i)))
+                        adjList[u][j++] = rec[v];
+            }
+
+            adjList[u].resize(j);
+            // if(j>100) cout<<j<<" ";
+            E += j;
+        }
+        // removing zero degree vertices.
+        ui nu = 0;
+        // check2.tick();
+        for (ui u = 0; u < V; u++)
+        {
+            if (checkEdge)
+                cn[u].clear();
+            if (exists(u))
+                swap(adjList[u], adjList[nu++]);
+            // adjList[u].swap(adjList[nu++]);
+            pruned[u] = 0;
+        }
+        // check2.tock();
+        V = nu;
+        E = 0;
+        for (ui u = 0; u < V; u++)
+            E += adjList[u].size();
+        cout << nu << " rcoded " << E / 2 << endl;
+        E /= 2;
+        rec.clear();
+    }
 };
 #endif // KPLEX_GRAPH_H

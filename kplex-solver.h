@@ -58,6 +58,7 @@ public:
 
         // g.print();
         ui ub = g.degeneracyKPlex(kplex);
+        g.lb = kplex.size();
         if (ub > kplex.size())
             kSearch(k - 1);
         g.unload(vp, n);
