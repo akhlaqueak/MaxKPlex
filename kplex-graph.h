@@ -430,8 +430,8 @@ public:
         }
     }
     cout << sum;
-    check.tock();
-    cout << "initialized in " << check.ticktock() << endl;
+    // check.tock();
+    // cout << "initialized in " << check.ticktock() << endl;
 }
 
 void populate()
