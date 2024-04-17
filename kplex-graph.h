@@ -367,27 +367,7 @@ public:
         sum += j;
         stp.push_back(edges.size());
     }
-    // cout << "sum is: " << edges.size()<<" "<<sum << endl;
-    // printvec("deg", degrees);
-    vector<ui> cnm(V, 0);
-    // counting common neighbors
-    // check.tick();
 
-    // for (ui u = 0; u < V; u++)
-    // {
-    //     Lookup neigh(&lookup, &adjList[u]);
-    //     for (ui i = stp[u]; i < stp[u+1]; i++)
-    //     {
-    //         ui v = edges[i];
-    //         for (ui j = stp[v]; j < stp[v+1]; j++)
-    //         {
-    //             ui w = edges[j];
-    //             cnm[u]++;
-    //         }
-    //     }
-    // }
-
-    // ui sum=0;
     for (ui u = 0; u < V; u++)
     {
         for (ui i = 0; i < degrees[u]; i++)
@@ -411,13 +391,10 @@ public:
                 // if (w > v)
                 //     break;
                 if (lookup[w])
-                {
-                    cnMat[u*V+i]++;
-                    cnMat[i*V+i]++;
-                    cnMat[j*V+i]++;
-                    // cn[u][i]++;
-                    // cn[u][j]++;
-                    // cn[u][lookup[w] - 1]++;
+                {                    
+                    cn[u][i]++;
+                    cn[v][j]++;
+                    cn[u][lookup[w] - 1]++;
                 }
             }
         }
