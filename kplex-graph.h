@@ -1,6 +1,7 @@
 #ifndef KPLEX_GRAPH_H
 #define KPLEX_GRAPH_H
 #include <stdc++.h>
+#include "utils.h"
 using namespace std;
 using namespace chrono;
 typedef unsigned int ui;
