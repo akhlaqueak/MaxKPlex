@@ -156,7 +156,7 @@ public:
 
     ui &soMatrix(ui i, ui j)
     {
-        if (i < j)
+        if (j < i)
             return soMat[i * V + j];
         else
             return soMat[j * V + i];
@@ -185,7 +185,7 @@ public:
         for (ui i = 0; i < V; i++)
         {
             for (ui j = 0; j < V; j++)
-                if (i < j)
+                if (j < i)
                     soMatrix(i, j) = commNeighbors(adjList[i], adjList[j]);
                 else
                     break;
