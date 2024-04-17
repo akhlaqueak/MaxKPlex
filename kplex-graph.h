@@ -61,7 +61,14 @@ public:
         cn.resize(n);
         initVectors(n);
     }
-
+    void print(){
+        for(ui i=0;i<V;i++){
+            cout<<i<<"["<<adjList[i].size()<<"]: ";
+            for(ui u: adjList[i])
+                cout<<u<<" ";
+            cout<<endl;
+        }
+    }
     ui degeneracyKPlex(vecui& kplex)
     {
         Timer t;

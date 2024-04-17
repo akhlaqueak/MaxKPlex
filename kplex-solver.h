@@ -55,6 +55,7 @@ public:
         g.load(vp, n);
         g.buildCommonMatrix(sz1h);
         initContainers(sz1h);
+        g.print();
         ui ub = g.degeneracyKPlex(kplex);
         if (ub > kplex.size())
             kSearch(k - 1);
