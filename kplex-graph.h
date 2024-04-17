@@ -43,6 +43,7 @@ public:
     vecui pruned;
     vecui lookup;
     vecui peelSeq;
+    vecui core;
     vecui rec;
     MBitSet vis;
     vecui cnMat, adjMat;
@@ -75,10 +76,11 @@ public:
             heap.pop_min(u, key);
             if (key > max_core)
                 max_core = key;
-            peelSeq[u] = i;
-            // ui t_UB = min(max_core + k, V - i);
-            if (V - i < t_UB)
-                t_UB = V - i;
+            peelSeq[i] = u;
+            core[u]=max_core;
+            ui t_UB = min(max_core + k, V - i);
+            // if (V - i < t_UB)
+            //     t_UB = V - i;
             if (t_UB > ub)
                 ub = t_UB;
 
@@ -93,12 +95,12 @@ public:
 
         printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V - idx, max_core, ub, t.elapsed());
 
-        if (V - idx > kplex.size())
-        {
-            kplex.clear();
-            for (ui i = idx; i < V; i++)
-                kplex.push_back(peelSeq[i]);
-        }
+        // if (V - idx > kplex.size())
+        // {
+        //     kplex.clear();
+        //     for (ui i = idx; i < V; i++)
+        //         kplex.push_back(peelSeq[i]);
+        // }
         return ub;
     }
 
@@ -265,6 +267,7 @@ public:
     void initVectors(ui sz)
     {
         peelSeq.resize(sz);
+        core.resize(sz);
         degree.resize(sz);
         lookup.resize(sz);
         pruned.resize(sz);
