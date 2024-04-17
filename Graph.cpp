@@ -384,9 +384,9 @@ void Graph::kPlex_exact() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
-				for(auto e: vp)
-					cout<<"["<<e.first<<","<<e.second<<"] ";
-				cout<<endl;
+				// for(auto e: vp)
+				// 	cout<<"["<<e.first<<","<<e.second<<"] ";
+				// cout<<endl;
 				kplex_solver->solve_instance(ids_n, sz1h, vp);
 				// kplex_solver->load_graph(ids_n, vp);
 				// kplex_solver->kPlex(K, kplex, true);
