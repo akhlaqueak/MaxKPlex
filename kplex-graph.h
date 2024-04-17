@@ -77,7 +77,6 @@ public:
         heap.init(V, adjList);
         ui max_core = 0;
         ui idx = V;
-        cout<<V<<"vertices";
         for (ui i = 0; i < V; i++)
         {
             ui u, key;
@@ -92,8 +91,10 @@ public:
             // if (t_UB > ub)
             //     ub = t_UB;
             ub = max(ub, min(max_core + k, V - i));
-            if (idx == V && key + k >= V - i)
+            if (idx == V && key + k >= V - i){
+                cout<<V<<"vertices"<<key<<"key"<<i<<"i";
                 idx = i;
+            }
             vis.set(u);
 
             for (ui v : adjList[u])
