@@ -1,5 +1,6 @@
 #ifndef UTILS
 #define UTILS
+#include "stdc++.h"
 enum RecLevel{FIRST, OTHER};
 
 class Timer
