@@ -77,6 +77,7 @@ public:
         heap.init(V, adjList);
         ui max_core = 0;
         ui idx = V;
+        cout<<V<<"vertices";
         for (ui i = 0; i < V; i++)
         {
             ui u, key;
