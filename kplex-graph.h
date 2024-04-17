@@ -113,8 +113,7 @@ public:
 
     void load(const std::vector<std::pair<int, int>> &vp, ui _n)
     {
-        n = _n;
-        V = n;
+        V = n = _n;
         for (ui i = 0; i < vp.size(); i++)
         {
             assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
@@ -140,6 +139,8 @@ public:
         }
         for (ui i = 0; i < n; i++)
             adjList[i].clear();
+        for(ui i=0;i<n*n;i++)
+            if(adjMat[i]) cout<<"*";
     }
 
     ui &cnMatrix(ui i, ui j)
