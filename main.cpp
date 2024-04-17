@@ -440,7 +440,7 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
+		printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
 	}
 	else {
 		delete[] core;

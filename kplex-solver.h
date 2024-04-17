@@ -59,7 +59,9 @@ public:
         // g.print();
         ui ub = g.degeneracyKPlex(kplex);
         g.lb = kplex.size();
-        // g.applyCTCP(INIT);
+        #ifdef CTCP
+        g.applyCTCP(INIT);
+        #endif
         if (ub > kplex.size())
             kSearch(k - 1);
         g.unload(vp, n);
