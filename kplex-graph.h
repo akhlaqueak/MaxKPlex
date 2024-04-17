@@ -329,7 +329,7 @@ public:
 
 
 
-    void KPlexGraph::initCTCP()
+    void initCTCP()
 {
     // number of common neighbors are stored in one direction only i.e. for an edge (u, v)
     // where u > v, the cn[u][ind(v)] stores number of common neighbors of (u, v)
@@ -435,7 +435,7 @@ public:
     cout << "initialized in " << check.ticktock() << endl;
 }
 
-void KPlexGraph::populate()
+void populate()
 {
     tau_e = lb + 1 - 2 * k;
     tau_v = lb + 1 - k;
@@ -461,7 +461,7 @@ void KPlexGraph::populate()
     // cout << "intialization Qe: " << Qe.size() << endl;
 }
 
-void KPlexGraph::applyCTCP(MODE md)
+void applyCTCP(MODE md)
 {
 
     if (md == INIT)
@@ -486,7 +486,7 @@ void KPlexGraph::applyCTCP(MODE md)
     }
 }
 
-void KPlexGraph::decDegree(ui u)
+void decDegree(ui u)
 {
     if (not pruned[u])
     {
@@ -496,7 +496,7 @@ void KPlexGraph::decDegree(ui u)
             scheduleRemoval(u);
     }
 }
-void KPlexGraph::decCN(Edge e)
+void decCN(Edge e)
 {
     if (exists(e) and getCN(e)-- == tau_e)
     {
@@ -504,7 +504,7 @@ void KPlexGraph::decCN(Edge e)
     }
 }
 
-void KPlexGraph::trussPrune()
+void trussPrune()
 {
     for (ui i = 0; i < Qe.size(); i++)
     {
@@ -554,7 +554,7 @@ void KPlexGraph::trussPrune()
             return {v, k};
         }
     }
-void KPlexGraph::removeVertex()
+void removeVertex()
 {
     ui u = Qv.back();
     Qv.pop_back();
