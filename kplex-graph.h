@@ -58,6 +58,7 @@ public:
         for (auto &adj : adjList)
             adj.reserve(n);
         cnMat.resize(n * n);
+        adjMat.resize(n * n);
         cn.resize(n);
         initVectors(n);
     }
