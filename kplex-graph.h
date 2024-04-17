@@ -120,12 +120,15 @@ public:
             ui a = vp[i].first, b = vp[i].second;
             adjMat[a * n + b] = adjMat[b * n + a] = 1;
         }
-        for (ui i = 0; i < n; i++)
+        for (ui i = 0; i < n; i++){
+
             for (ui j = 0; j < n; j++)
             {
                 if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
+            cout<<adjList[i].size()<<" ";
+        }
     }
 
     void unload(const std::vector<std::pair<int, int>> &vp, ui _n)
