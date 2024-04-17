@@ -1,6 +1,6 @@
 #ifndef UTILS
 #define UTILS
-#include "graph.h"
+#include "kplex-graph.h"
 enum RecLevel{FIRST, OTHER};
 
 class ListLinearHeap
