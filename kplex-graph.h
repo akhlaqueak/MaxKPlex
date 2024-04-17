@@ -249,5 +249,17 @@ public:
         for (auto &adj : adjList)
             std::sort(adj.begin(), adj.end());
     }
+        void clear()
+    {
+        for (ui u = 0; u < V; u++)
+        {
+            cn[u].clear();
+            pruned[u] = 0;
+        }
+        peelSeq.clear();
+        // for(ui u=0;u<V; u++)
+        //     adjList[u].clear();
+        V = 0;
+    }
  };
 #endif // KPLEX_GRAPH_H
