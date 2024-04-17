@@ -126,6 +126,8 @@ public:
                 if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
+        for(ui i=0;i<n*n;i++)
+            if(adjMat[i]) cout<<"*";
     }
 
     void unload(const std::vector<std::pair<int, int>> &vp, ui _n)
@@ -139,8 +141,6 @@ public:
         }
         for (ui i = 0; i < n; i++)
             adjList[i].clear();
-        for(ui i=0;i<n*n;i++)
-            if(adjMat[i]) cout<<"*";
     }
 
     ui &cnMatrix(ui i, ui j)
