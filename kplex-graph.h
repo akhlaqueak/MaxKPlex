@@ -69,6 +69,7 @@ public:
     }
     void load(const std::vector<std::pair<int,int> > &vp, ui _n) {
         n = _n;
+        V = n;
         for(ui i = 0;i < vp.size();i ++) {
             assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
         	ui a = vp[i].first, b = vp[i].second;
@@ -90,6 +91,7 @@ public:
         }
         for(ui i=0;i<n;i++)
             adjList[i].clear();
+        V = 0;
     }
 
     ui popMin()
@@ -202,8 +204,8 @@ public:
             pruned[u] = 0;
         }
         peelSeq.clear();
-        for(ui u=0;u<V; u++)
-            adjList[u].clear();
+        // for(ui u=0;u<V; u++)
+        //     adjList[u].clear();
         V = 0;
     }
     bool exists(Edge e)
