@@ -91,7 +91,7 @@ public:
 
     void kSearch(ui m)
     {
-        if (PuCuMSize <= g.lb or TIMEOVER)
+        if (PuCuMSize <= kplex.size() or TIMEOVER)
             return;
 
         if (M.size() == 0)
@@ -158,13 +158,13 @@ public:
     }
     void recSearch(RecLevel level)
     {
-        if ((level == OTHER and flag) or PuCSize <= g.lb or TIMEOVER)
+        if ((level == OTHER and flag) or PuCSize <= kplex.size() or TIMEOVER)
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
         if (C.empty())
         {
-            if (P.size() > g.lb)
+            if (P.size() > kplex.size())
             {
                 kplex.clear();
                 cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
@@ -182,7 +182,7 @@ public:
         // ui ub = relaxGCB();
 #ifdef SEESAW
         ub = seesawUB();
-        if (ub > g.lb)
+        if (ub > kplex.size())
 #endif
         {
             auto B = getBranchings();
@@ -241,7 +241,7 @@ public:
                     PI[u].push_back(v);
             }
         }
-        ui beta = g.lb - P.size();
+        ui beta = kplex.size() - P.size();
         ui cend = 0;
         while (true)
         {
@@ -549,10 +549,10 @@ public:
     //             cnt++;
     //             nonadjInP[max_index]++;
     //         }
-    //         if (cnt >= G.lb)
+    //         if (cnt >= kplex.size())
     //             return true;
     //     }
-    //     if (cnt >= G.lb)
+    //     if (cnt >= kplex.size())
     //         return true;
     //     return false;
     // }
@@ -749,21 +749,22 @@ public:
     }
     void naiveSearch()
     {
-        if (PuCSize < g.lb)
+        if (PuCSize < kplex.size())
             return;
         ui rc = updateC();
         if (C.empty())
         {
-            if (P.size() > g.lb)
+            if (P.size() > kplex.size())
             {
+                kplex.clear();
                 cout << P.size() << " kp:";
                 P.print();
-                g.lb = P.size();
                 for (ui i = 0; i < P.size(); i++)
                     if (dP[P[i]] < P.size() - k)
-                    {
                         cout << " Invalid " << P[i];
-                    }
+                    else
+                        kplex.push_back(P[i]);
+                    
                 cout << endl;
             }
             C.fakeRecover(rc);
