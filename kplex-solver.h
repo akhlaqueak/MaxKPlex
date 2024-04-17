@@ -741,6 +741,7 @@ public:
     }
     void reset()
     {
+        cout<<"V: "
         fill(dP.begin(), dP.begin() + g.V, 0);
         fill(dG.begin(), dG.begin() + g.V, 0);
         M.clear();
