@@ -102,10 +102,10 @@ public:
                     heap.decrement(v, 1);
         }
 
-        // printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V-idx , max_core, ub, t.elapsed());
 
         if (V - idx > kplex.size())
         {
+        printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V-idx , max_core, ub, t.elapsed());
             kplex.clear();
             for (ui i = idx; i < V; i++)
                 kplex.push_back(peelSeq[i]);
