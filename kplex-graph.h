@@ -93,7 +93,6 @@ public:
             //     ub = t_UB;
             ub = max(ub, min(max_core + k, V - i));
             if (idx == V && key + k >= V - i){
-                cout<<V<<"vertices"<<key<<"key"<<k<<"i";
                 idx = i;
             }
             vis.set(u);
@@ -103,7 +102,7 @@ public:
                     heap.decrement(v, 1);
         }
 
-        printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V , max_core, ub, t.elapsed());
+        printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V-idx , max_core, ub, t.elapsed());
 
         if (V - idx > kplex.size())
         {
@@ -130,9 +129,7 @@ public:
                 if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
-            cout<<adjList[i].size()<<" ";
         }
-        cout<<endl;
     }
 
     void unload(const std::vector<std::pair<int, int>> &vp, ui _n)
