@@ -7,9 +7,9 @@ bool flag = false;
 // #define NAIVE
 // #define INIT_SEESAW
 
-#define RULE2
-#define SEESAW
-#define CTCP
+// #define RULE2
+// #define SEESAW
+// #define CTCP
 
 #ifdef NAIVE
 #define RECSEARCH naiveSearch
