@@ -87,7 +87,6 @@ public:
         }
         for(ui i=0;i<n;i++)
             adjList[i].clear();
-        V = 0;
     }
 
     ui &cnMatrix(ui i, ui j)
