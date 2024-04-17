@@ -127,7 +127,7 @@ public:
                 if (adjMat[i * n + j])
                     adjList[i].push_back(j);
             }
-            cout<<adjList[i].size()<<" ";
+            // cout<<adjList[i].size()<<" ";
         }
     }
 
