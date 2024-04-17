@@ -46,7 +46,7 @@ public:
     vecui core;
     vecui rec;
     MBitSet vis;
-    vecui cnMat, adjMat;
+    vecui cnMat, adjMat, soMat;
     ui rv = 0, re = 0, n;
     ui lb = 0, minindex = 0;
     ListLinearHeap heap;
@@ -59,18 +59,21 @@ public:
             adj.reserve(n);
         cnMat.resize(n * n);
         adjMat.resize(n * n);
+        soMat.resize(n * n);
         cn.resize(n);
         initVectors(n);
     }
-    void print(){
-        for(ui i=0;i<V;i++){
-            cout<<i<<"["<<adjList[i].size()<<"]: ";
+    void print()
+    {
+        for (ui i = 0; i < V; i++)
+        {
+            cout << i << "[" << adjList[i].size() << "]: ";
             // for(ui u: adjList[i])
             //     cout<<u<<" ";
-            cout<<endl;
+            cout << endl;
         }
     }
-    ui degeneracyKPlex(vecui& kplex)
+    ui degeneracyKPlex(vecui &kplex)
     {
         Timer t;
         vis.reset();
@@ -85,14 +88,15 @@ public:
             if (key > max_core)
                 max_core = key;
             peelSeq[i] = u;
-            core[u]=max_core;
+            core[u] = max_core;
             // ui t_UB = min(max_core + k, V - i);
             // if (V - i < t_UB)
             //     t_UB = V - i;
             // if (t_UB > ub)
             //     ub = t_UB;
             ub = max(ub, min(max_core + k, V - i));
-            if (idx == V && key + k >= V - i){
+            if (idx == V && key + k >= V - i)
+            {
                 idx = i;
             }
             vis.set(u);
@@ -102,10 +106,9 @@ public:
                     heap.decrement(v, 1);
         }
 
-
         if (V - idx > kplex.size())
         {
-        printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V-idx , max_core, ub, t.elapsed());
+            printf("*** Degeneracy k-plex size: %u, max_core: %u, ub: %u, Time: %lu (microseconds)\n", V - idx, max_core, ub, t.elapsed());
             kplex.clear();
             for (ui i = idx; i < V; i++)
                 kplex.push_back(peelSeq[i]);
@@ -122,7 +125,8 @@ public:
             ui a = vp[i].first, b = vp[i].second;
             adjMat[a * n + b] = adjMat[b * n + a] = 1;
         }
-        for (ui i = 0; i < n; i++){
+        for (ui i = 0; i < n; i++)
+        {
 
             for (ui j = 0; j < n; j++)
             {
@@ -149,8 +153,43 @@ public:
     {
         return cnMat[i * V + j];
     }
+
+    ui &soMatrix(ui i, ui j)
+    {
+        if (i < j)
+            return soMat[i * V + j];
+        else
+            return soMat[j * V + i];
+    }
     void buildCommonMatrix(ui sz1h)
     {
+        auto commNeighbors = [](const vecui &lst1, const vecui &lst2)
+        {
+            int i = 0, j = 0;
+            int common = 0;
+            while (i < lst1.size() and j < lst2.size())
+            {
+                if (lst1[i] < lst2[j])
+                    ++i;
+                else if (lst1[i] > lst2[j])
+                    ++j;
+                else
+                {
+                    common++;
+                    i++, j++;
+                }
+            }
+            return common;
+        };
+
+        for (ui i = 0; i < V; i++)
+        {
+            for (ui j = 0; j < V; j++)
+                if (i < j)
+                    soMatrix(i, j) = commNeighbors(adjList[i], adjList[j]);
+                else
+                    break;
+        }
 
         auto intersect = [](const vecui &lst1, const vecui &lst2, const ui sz)
         {
@@ -318,207 +357,196 @@ public:
         V = 0;
     }
 
-
-
-
-
-
-
-
-
-
-
-
     void initCTCP()
-{
-    // number of common neighbors are stored in one direction only i.e. for an edge (u, v)
-    // where u > v, the cn[u][ind(v)] stores number of common neighbors of (u, v)
-    // tau_e = lb + 1 - 2 * k;
-    // tau_v = lb + 1 - k;
-    if (cn.empty())
-        cn.resize(V); // this condition is true only for G graph, the gi graph will allocate cn in its constructor
-    for (ui u = 0; u < V; u++)
     {
-        degree[u] = adjList[u].size();
-        ui sz = 0;
-        for (ui v : adjList[u])
-            if (u > v)
-                sz++;
+        // number of common neighbors are stored in one direction only i.e. for an edge (u, v)
+        // where u > v, the cn[u][ind(v)] stores number of common neighbors of (u, v)
+        // tau_e = lb + 1 - 2 * k;
+        // tau_v = lb + 1 - k;
+        if (cn.empty())
+            cn.resize(V); // this condition is true only for G graph, the gi graph will allocate cn in its constructor
+        for (ui u = 0; u < V; u++)
+        {
+            degree[u] = adjList[u].size();
+            ui sz = 0;
+            for (ui v : adjList[u])
+                if (u > v)
+                    sz++;
+                else
+                    break;
+            cn[u].clear();
+            cn[u].resize(sz);
+            // fill(cn[u].begin(), cn[u].begin()+sz, 0);
+        }
+        cnMat.resize(V * V);
+        heap.init(V, adjList);
+        vecui edges, degrees(V, 0), stp;
+        edges.reserve(E);
+        stp.reserve(V + 1);
+        stp.push_back(0);
+        ui sum = 0;
+        for (ui i = 0; i < V; i++)
+        {
+            ui j = 0;
+            for (ui v : adjList[i])
+                if (peelSeq[v] > peelSeq[i])
+                    edges.push_back(v), j++;
+            degrees[i] = j;
+            sum += j;
+            stp.push_back(edges.size());
+        }
+
+        for (ui u = 0; u < V; u++)
+        {
+            for (ui i = 0; i < degrees[u]; i++)
+            {
+                // ui v = adjList[u][i];
+                ui v = edges[stp[u] + i];
+                // if(v>u) break;
+                lookup[v] = i + 1;
+            }
+
+            for (ui i = 0; i < degrees[u]; i++)
+            {
+                // ui v = adjList[u][i];
+                ui v = edges[stp[u] + i];
+                // if (v > u)
+                //     break;
+                for (ui j = 0; j < degrees[v]; j++)
+                {
+                    // ui w = adjList[v][j];
+                    ui w = edges[stp[v] + j];
+                    // if (w > v)
+                    //     break;
+                    if (lookup[w])
+                    {
+                        cn[u][i]++;
+                        cn[v][j]++;
+                        cn[u][lookup[w] - 1]++;
+                    }
+                }
+            }
+            for (ui i = 0; i < degrees[u]; i++)
+            {
+                ui v = edges[stp[u] + i];
+                // ui v = adjList[u][i];
+                // if(v>u) break;
+                lookup[v] = 0;
+            }
+        }
+        // cout << sum;
+        // check.tock();
+        // cout << "initialized in " << check.ticktock() << endl;
+    }
+
+    void populate()
+    {
+        tau_e = lb + 1 - 2 * k;
+        tau_v = lb + 1 - k;
+        // cout << "tau_v: " << tau_v << " tau_e: " << tau_e << endl;
+        // populate Qe based on cn[u][v] < lb+1-2k
+        for (ui u = 0; u < V; u++)
+        {
+            if (degree[u] < tau_v and exists(u))
+            {
+                scheduleRemoval(u);
+                continue;
+            }
+            for (ui j = 0; j < adjList[u].size(); j++)
+            {
+                if (adjList[u][j] > u)
+                    break;
+                if (cn[u][j] < tau_e)
+                {
+                    scheduleRemoval({u, j});
+                }
+            }
+        }
+        // cout << "intialization Qe: " << Qe.size() << endl;
+    }
+
+    void applyCTCP(MODE md)
+    {
+
+        if (md == INIT)
+        {
+            initCTCP();
+            populate();
+        }
+        else if (md == LBCHANGE)
+            populate();
+        // printvec("degree: ", degree);
+        while (true)
+        {
+            // if (!Qe.empty())
+            //     trussPrune();
+            // else
+            if (!Qv.empty())
+                removeVertex();
+            else if (!Qe.empty())
+                trussPrune();
             else
                 break;
-        cn[u].clear();
-        cn[u].resize(sz);
-        // fill(cn[u].begin(), cn[u].begin()+sz, 0);
-    }
-    cnMat.resize(V*V);
-    heap.init(V, adjList);
-    vecui edges, degrees(V, 0), stp;
-    edges.reserve(E);
-    stp.reserve(V + 1);
-    stp.push_back(0);
-    ui sum = 0;
-    for (ui i = 0; i < V; i++)
-    {
-        ui j = 0;
-        for(ui v:adjList[i])
-            if(peelSeq[v]>peelSeq[i])
-                edges.push_back(v), j++;
-        degrees[i] = j;
-        sum += j;
-        stp.push_back(edges.size());
-    }
-
-    for (ui u = 0; u < V; u++)
-    {
-        for (ui i = 0; i < degrees[u]; i++)
-        {
-            // ui v = adjList[u][i];
-            ui v = edges[stp[u] + i];
-            // if(v>u) break;
-            lookup[v] = i + 1;
-        }
-
-        for (ui i = 0; i < degrees[u]; i++)
-        {
-            // ui v = adjList[u][i];
-            ui v = edges[stp[u] + i];
-            // if (v > u)
-            //     break;
-            for (ui j = 0; j < degrees[v]; j++)
-            {
-                // ui w = adjList[v][j];
-                ui w = edges[stp[v] + j];
-                // if (w > v)
-                //     break;
-                if (lookup[w])
-                {                    
-                    cn[u][i]++;
-                    cn[v][j]++;
-                    cn[u][lookup[w] - 1]++;
-                }
-            }
-        }
-        for (ui i = 0; i < degrees[u]; i++)
-        {
-            ui v = edges[stp[u] + i];
-            // ui v = adjList[u][i];
-            // if(v>u) break;
-            lookup[v] = 0;
         }
     }
-    // cout << sum;
-    // check.tock();
-    // cout << "initialized in " << check.ticktock() << endl;
-}
 
-void populate()
-{
-    tau_e = lb + 1 - 2 * k;
-    tau_v = lb + 1 - k;
-    // cout << "tau_v: " << tau_v << " tau_e: " << tau_e << endl;
-    // populate Qe based on cn[u][v] < lb+1-2k
-    for (ui u = 0; u < V; u++)
+    void decDegree(ui u)
     {
-        if (degree[u] < tau_v and exists(u))
+        if (not pruned[u])
         {
-            scheduleRemoval(u);
-            continue;
-        }
-        for (ui j = 0; j < adjList[u].size(); j++)
-        {
-            if (adjList[u][j] > u)
-                break;
-            if (cn[u][j] < tau_e)
-            {
-                scheduleRemoval({u, j});
-            }
+            degree[u]--;
+            heap.decrement(u, 1);
+            if (degree[u] == tau_v)
+                scheduleRemoval(u);
         }
     }
-    // cout << "intialization Qe: " << Qe.size() << endl;
-}
-
-void applyCTCP(MODE md)
-{
-
-    if (md == INIT)
+    void decCN(Edge e)
     {
-        initCTCP();
-        populate();
-    }
-    else if (md == LBCHANGE)
-        populate();
-    // printvec("degree: ", degree);
-    while (true)
-    {
-        // if (!Qe.empty())
-        //     trussPrune();
-        // else
-        if (!Qv.empty())
-            removeVertex();
-        else if (!Qe.empty())
-            trussPrune();
-        else
-            break;
-    }
-}
-
-void decDegree(ui u)
-{
-    if (not pruned[u])
-    {
-        degree[u]--;
-        heap.decrement(u, 1);
-        if (degree[u] == tau_v)
-            scheduleRemoval(u);
-    }
-}
-void decCN(Edge e)
-{
-    if (exists(e) and getCN(e)-- == tau_e)
-    {
-        scheduleRemoval(e);
-    }
-}
-
-void trussPrune()
-{
-    for (ui i = 0; i < Qe.size(); i++)
-    {
-        auto e = Qe[i];
-        ui u = e.first;
-        ui j = e.second;
-        ui v = adjList[u][j];
-        // if ((not exists(u))  or (not exists(v)))
-        if (pruned[u] or pruned[v] or not exists(e))
-            continue;
-        removeEdge(e);
-        decDegree(u);
-        decDegree(v);
-
-        Lookup neigh(&lookup, &adjList[u]);
-        for (ui j = 0; j < adjList[v].size(); j++)
+        if (exists(e) and getCN(e)-- == tau_e)
         {
-            ui w = adjList[v][j];
-            // if (!exists(w))
-            if (pruned[w])
+            scheduleRemoval(e);
+        }
+    }
+
+    void trussPrune()
+    {
+        for (ui i = 0; i < Qe.size(); i++)
+        {
+            auto e = Qe[i];
+            ui u = e.first;
+            ui j = e.second;
+            ui v = adjList[u][j];
+            // if ((not exists(u))  or (not exists(v)))
+            if (pruned[u] or pruned[v] or not exists(e))
                 continue;
-            if (neigh[w])
+            removeEdge(e);
+            decDegree(u);
+            decDegree(v);
+
+            Lookup neigh(&lookup, &adjList[u]);
+            for (ui j = 0; j < adjList[v].size(); j++)
             {
-                Edge e1 = getEdge(v, j);
-                Edge e2 = getEdge(u, neigh[w] - 1);
-                if (exists(e1) and exists(e2))
+                ui w = adjList[v][j];
+                // if (!exists(w))
+                if (pruned[w])
+                    continue;
+                if (neigh[w])
                 {
-                    // w is a common neighbor of u, v
-                    decCN(e1);
-                    decCN(e2);
+                    Edge e1 = getEdge(v, j);
+                    Edge e2 = getEdge(u, neigh[w] - 1);
+                    if (exists(e1) and exists(e2))
+                    {
+                        // w is a common neighbor of u, v
+                        decCN(e1);
+                        decCN(e2);
+                    }
                 }
             }
         }
+        re += Qe.size();
+        // cout<<"edges removed: "<<Qe.size()<<endl;
+        Qe.clear();
     }
-    re += Qe.size();
-    // cout<<"edges removed: "<<Qe.size()<<endl;
-    Qe.clear();
-}
     Edge getEdge(ui u, ui j)
     {
         ui v = adjList[u][j];
@@ -530,37 +558,37 @@ void trussPrune()
             return {v, k};
         }
     }
-void removeVertex()
-{
-    ui u = Qv.back();
-    Qv.pop_back();
-
-    rv++;
-    Lookup neigh(&lookup, &(adjList[u]));
-    for (ui i = 0; i < adjList[u].size(); i++)
+    void removeVertex()
     {
-        Edge e = getEdge(u, i);
-        if (!exists(e))
-            continue;
-        removeEdge(e);
-        ui v = adjList[u][i];
-        decDegree(v);
-        for (ui j = 0; j < adjList[v].size(); j++)
+        ui u = Qv.back();
+        Qv.pop_back();
+
+        rv++;
+        Lookup neigh(&lookup, &(adjList[u]));
+        for (ui i = 0; i < adjList[u].size(); i++)
         {
-            ui w = adjList[v][j];
-            if (!exists(w))
+            Edge e = getEdge(u, i);
+            if (!exists(e))
                 continue;
-            auto e = getEdge(v, j);
-            // if(pruned[w] or !exists(e))
-            if (neigh[w] and exists(getEdge(u, neigh[w] - 1)))
-                // w is a common neighbor of u, v
-                decCN(e);
+            removeEdge(e);
+            ui v = adjList[u][i];
+            decDegree(v);
+            for (ui j = 0; j < adjList[v].size(); j++)
+            {
+                ui w = adjList[v][j];
+                if (!exists(w))
+                    continue;
+                auto e = getEdge(v, j);
+                // if(pruned[w] or !exists(e))
+                if (neigh[w] and exists(getEdge(u, neigh[w] - 1)))
+                    // w is a common neighbor of u, v
+                    decCN(e);
+            }
         }
+        neigh.erase();
+        adjList[u].clear();
+        degree[u] = 0;
     }
-    neigh.erase();
-    adjList[u].clear();
-    degree[u] = 0;
-}
     bool exists(Edge e)
     {
         return cn[e.first][e.second] != V + 1;

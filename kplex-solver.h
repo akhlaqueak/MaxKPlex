@@ -166,6 +166,7 @@ public:
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
+        rc += updateC_SecondOrder();
         if (C.empty())
         {
             if (P.size() > kplex.size())
@@ -189,28 +190,29 @@ public:
         ub = seesawUB();
         if (ub > kplex.size())
 #endif
-        {
-            auto B = getBranchings();
-            while (B.first < B.second)
+            if (secondOrderUB())
             {
-                if (level == FIRST)
-                    flag = false;
-                else if (flag)
+                auto B = getBranchings();
+                while (B.first < B.second)
                 {
-                    // return to root level of branchings, but before that recover all branching vertices to C
-                    while (B.first++ < B.second)
-                        addToC(0, true);
-                    break;
+                    if (level == FIRST)
+                        flag = false;
+                    else if (flag)
+                    {
+                        // return to root level of branchings, but before that recover all branching vertices to C
+                        while (B.first++ < B.second)
+                            addToC(0, true);
+                        break;
+                    }
+                    ui bn = maxDegenVertex(B.first++, B.second);
+                    addToP_K(bn);
+                    ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                    recSearch(OTHER);
+                    recoverC(rc);
+                    removeFromP(bn);
+                    C.fakeRecPop();
                 }
-                ui bn = maxDegenVertex(B.first++, B.second);
-                addToP_K(bn);
-                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
-                recSearch(OTHER);
-                recoverC(rc);
-                removeFromP(bn);
-                C.fakeRecPop();
             }
-        }
     RECOVER:
         recoverC(rc);
         // recover cp number of vertices directly moved to P
@@ -228,6 +230,37 @@ public:
             for (ui v : g.adjList[u])
                 dG[v]++;
         }
+    }
+    ui updateC_SecondOrder()
+    {
+        ui sz = C.size();
+        for (ui j = 0; j < P.size(); j++)
+            for (ui i = 0; i < C.size();)
+            {
+                ui u = C[i], v = P[j];
+                if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= kplex.size())
+                    removeFromC(u, true);
+                else
+                    i++;
+            }
+
+        return sz - C.size();
+    }
+    ui secondOrderUB()
+    {
+        ui ub = PuCSize;
+        for (ui i = 0; i < P.size(); i++)
+        {
+            for (ui j = 0; j < P.size(); j++)
+                if (i != j)
+                {
+                    ui u = P[i], v = P[j];
+                    ui b = support(u) + support(v) + g.soMatrix(u, v) + P.size();
+                    if (b < ub)
+                        ub = b;
+                }
+        }
+        return ub > kplex.size();
     }
     pair<ui, ui> getBranchings()
     {
@@ -679,13 +712,19 @@ public:
     {
         P.add(u);
         for (ui v : g.adjList[u])
+        {
             dP[v]++;
+            g.soMatrix(u, v)--;
+        }
     }
     void removeFromP(ui u)
     {
         P.remove(u);
         for (ui v : g.adjList[u])
+        {
             dP[v]--;
+            g.soMatrix(u, v)++;
+        }
     }
 
     ui addToP_K(ui u)
