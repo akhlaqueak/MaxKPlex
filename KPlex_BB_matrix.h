@@ -152,6 +152,7 @@ public:
             degree[b] ++;
             matrix[a*n + b] = matrix[b*n + a] = 1;
         }
+        for(ui i = 0; i < n; i++) std::cout<<degree[i]<<' ';
 
 #ifndef NDEBUG
         printf("load graph of size n=%lld, m=%lu\n", n, vp.size());

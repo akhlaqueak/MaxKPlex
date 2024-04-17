@@ -6,6 +6,7 @@
 #include "kplex-solver.h"
 using namespace std;
 using namespace popl;
+#define bbmatrix
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
@@ -330,10 +331,12 @@ void Graph::kPlex_exact() {
 		s_edge_list = new ui[m];
 		s_active_edgelist = new ui[m/2];
 		s_deleted = new char[m/2];
-
+		#ifdef bbmatrix
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
 		kplex_solver->allocateMemory(max_n, m/2);
-		// MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
+		#else
+		MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
+		#endif
 
 		vector<pair<int,int> > vp; vp.reserve(m/2);
 		ui *t_degree = new ui[n];
@@ -390,9 +393,12 @@ void Graph::kPlex_exact() {
 				// for(auto e: vp)
 				// 	cout<<"["<<e.first<<","<<e.second<<"] ";
 				// cout<<endl;
-				// kplex_solver->solve_instance(ids_n, sz1h, vp);
+				#ifdef bbmatrix
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, kplex, true);
+				#else 
+				kplex_solver->solve_instance(ids_n, sz1h, vp);
+				#endif
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
