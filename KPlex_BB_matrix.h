@@ -153,7 +153,7 @@ public:
             matrix[a*n + b] = matrix[b*n + a] = 1;
         }
         for(ui i = 0; i < n; i++) std::cout<<degree[i]<<' ';
-		std::cout<<endl;
+		std::cout<<std::endl;
 
 #ifndef NDEBUG
         printf("load graph of size n=%lld, m=%lu\n", n, vp.size());
