@@ -1052,7 +1052,7 @@ public:
             {
                 ui u = SR[i], v = SR[j];
                 // if (matrix[u * n + v])
-                if(adjMat(SR[i], SR[j]))
+                if(u!=v and adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
             }
         }
