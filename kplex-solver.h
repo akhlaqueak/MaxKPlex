@@ -1052,11 +1052,12 @@ public:
             {
                 ui u = SR[i], v = SR[j];
                 // if (matrix[u * n + v])
-                if(u!=v and adjMat(SR[i], SR[j]))
+                if(adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
             }
         }
         g.V = R_end;
+        g.print();
 
         addToP_K(0);
         for (ui i = 1; i < R_end; i++)
