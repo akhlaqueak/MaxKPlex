@@ -55,8 +55,8 @@ public:
     {
         // this constructor is called for two-hop graph gi, hence allocating such large memory here.
         adjList.resize(n);
-        for (auto &adj : adjList)
-            adj.reserve(n);
+        // for (auto &adj : adjList)
+        //     adj.reserve(n);
         cnMat.resize(2 * n);
         adjMat.resize(2 * n);
         soMat.resize(2 * n);
