@@ -104,6 +104,7 @@ public:
                 matrix_size *= 2;
             } while (((long long)n) * n > matrix_size);
             delete[] matrix;
+            cout<<matrix_size<<" ";
             matrix = new char[matrix_size];
             fill(matrix, matrix + (matrix_size), 0);
 #ifdef _SECOND_ORDER_PRUNING_
