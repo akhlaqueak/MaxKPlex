@@ -4,7 +4,6 @@ Timer gtime, check, sr;
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
 #define TIMEOVER (gtime.elapsed() / 1000000 > 60 * 60)
-// #define NAIVE
 // #define INIT_SEESAW
 
 // #define RULE2
@@ -12,6 +11,7 @@ bool flag = false;
 // #define CTCP
 // #defeine _SECOND_ORDER_PRUNING_
 
+// #define NAIVE
 #ifdef NAIVE
 #define RECSEARCH naiveSearch
 #else
@@ -252,7 +252,7 @@ public:
                 // char *t_matrix = matrix + u * n;
                 for (ui i = 0; i < R_end; i++)
                     // if (t_matrix[SR[i]])
-                    if(adjMat(SR[i], u))
+                    if (adjMat(SR[i], u))
                     {
                         ui w = SR[i];
                         neighbors[neighbors_n++] = w;
@@ -472,7 +472,11 @@ public:
         if (M.size() == 0)
         {
             flag = false;
-            RECSEARCH(FIRST);
+#ifdef NAIVE
+            naiveSearch();
+#else
+            recSearch(FIRST);
+#endif
             return;
         }
         // first branch
@@ -521,7 +525,11 @@ public:
             rc += updateC_K(u);
             // recSearch();
             flag = false;
-            RECSEARCH(FIRST);
+#ifdef NAIVE
+            naiveSearch();
+#else
+            recSearch(FIRST);
+#endif
         }
         while (br >= 1)
         {
@@ -530,6 +538,21 @@ public:
         }
         M.fakeRecover(rsn);
         recoverC(rc);
+    }
+    void reportSolution()
+    {
+        kplex.clear();
+        best_size = P.size();
+        cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
+        flag = true;
+        // checking validity of kplex
+        for (ui i = 0; i < P.size(); i++)
+        {
+            ui u = P[i];
+            if (dP[u] < P.size() - K)
+                cout << " Invalid " << u;
+            kplex.push_back(u);
+        }
     }
     void recSearch(RecLevel level)
     {
@@ -542,17 +565,7 @@ public:
         {
             if (P.size() > best_size)
             {
-                kplex.clear();
-                cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
-                flag = true;
-                // checking validity of kplex
-                for (ui i = 0; i < P.size(); i++)
-                {
-                    ui u = P[i];
-                    if (dP[u] < P.size() - K)
-                        cout << " Invalid " << u;
-                    kplex.push_back(u);
-                }
+                reportSolution();
             }
             goto RECOVER;
         }
@@ -1065,11 +1078,15 @@ public:
         addToP_K(0);
         for (ui i = 1; i < R_end; i++)
         {
-            ui u = SR[i];
-            if (u <= sz1h)
+            ui u = i;
+#ifdef NAIVE
+            addToC(u);
+#else
+            if (u <= SR_rid[sz1h])
                 addToC(u);
             else
                 M.add(u);
+#endif
         }
     }
 
@@ -1193,16 +1210,7 @@ public:
         {
             if (P.size() > best_size)
             {
-                best_solution.clear();
-                best_size = P.size();
-                P.copyDataTo(best_solution);
-                cout << P.size() << " kp:";
-                P.print();
-                for (ui i = 0; i < P.size(); i++)
-                    if (dP[P[i]] < P.size() - K)
-                        cout << " Invalid " << P[i];
-
-                cout << endl;
+                reportSolution();
             }
             C.fakeRecover(rc);
             return;
