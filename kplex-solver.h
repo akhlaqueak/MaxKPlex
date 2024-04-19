@@ -90,7 +90,6 @@ public:
         SR_rid = new ui[m];
         level_id = new ui[m];
         peelOrder = new ui[m];
-        best_solution.size() = best_solution.size();
         R_end=0;
     }
 
@@ -153,7 +152,6 @@ public:
         }
         if (n - idx > best_solution.size())
         {
-            best_solution.size() = n - idx;
             best_solution.clear();
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
@@ -1187,7 +1185,6 @@ public:
         {
             if (P.size() > best_solution.size())
             {
-                best_solution.size()=P.size();
                 best_solution.clear();
                 P.copyDataTo(best_solution);
                 cout << P.size() << " kp:";
