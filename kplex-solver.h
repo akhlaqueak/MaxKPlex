@@ -29,7 +29,7 @@ class MaxKPlex
     vecui lookup, ISc, ISp;
     RandList block;
     vecui temp;
-    ui sz1h, k;
+    ui sz1h;
 
     // BBMATRIX Stuff
 
@@ -64,7 +64,7 @@ class MaxKPlex
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
-        : g(_k, m), kplex(kp), k(_k)
+        : g(_k, m), kplex(kp), K(_k)
     {
         P.init(m);
         C.init(m);
@@ -147,8 +147,6 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-            if(u)
-            if(n)
                 if (!vis[j] && matrix[u * n + j])
                     --degree[j];
         }
@@ -426,7 +424,7 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-            kSearch(k - 1);
+            kSearch(K - 1);
         }
         reset(vp);
     }
@@ -543,7 +541,7 @@ public:
                 for (ui i = 0; i < P.size(); i++)
                 {
                     ui u = P[i];
-                    if (dP[u] < P.size() - k)
+                    if (dP[u] < P.size() - K)
                         cout << " Invalid " << u;
                     kplex.push_back(u);
                 }
@@ -839,7 +837,7 @@ public:
     }
     ui support(ui u)
     {
-        return k - (P.size() - dP[u]);
+        return K - (P.size() - dP[u]);
     }
 
     ui TISUB()
@@ -947,7 +945,7 @@ public:
     //                 max_index = j;
     //             }
     //         }
-    //         if (max_noadj < k)
+    //         if (max_noadj < K)
     //         {
     //             cnt++;
     //             nonadjInP[max_index]++;
@@ -988,14 +986,14 @@ public:
                 for (ui i = 0; flag and i < P.size(); i++)
                 {
                     ui v = P[i];
-                    if (!bmp.test(v) and dG[v] + k < PuCSize)
+                    if (!bmp.test(v) and dG[v] + K < PuCSize)
                         flag = false;
                 }
 
                 for (ui i = 0; flag and i < C.size(); i++)
                 {
                     ui v = C[i];
-                    if (!bmp.test(v) and dG[v] + k < PuCSize)
+                    if (!bmp.test(v) and dG[v] + K < PuCSize)
                         flag = false;
                 }
                 if (flag)
@@ -1137,12 +1135,12 @@ public:
     bool canMoveToP(ui u)
     {
         // u is not yet in P, hence checking <=
-        if (dP[u] + k <= P.size())
+        if (dP[u] + K <= P.size())
             return false;
         for (ui i = 0; i < P.size(); i++)
         {
             ui v = P.get(i);
-            if (dP[v] + k == P.size() && !isNeighbor(g.adjList[u], v))
+            if (dP[v] + K == P.size() && !isNeighbor(g.adjList[u], v))
                 return false;
         }
         return true;
@@ -1182,7 +1180,7 @@ public:
                 cout << P.size() << " kp:";
                 P.print();
                 for (ui i = 0; i < P.size(); i++)
-                    if (dP[P[i]] < P.size() - k)
+                    if (dP[P[i]] < P.size() - K)
                         cout << " Invalid " << P[i];
                     else
                         kplex.push_back(P[i]);
