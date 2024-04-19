@@ -82,6 +82,7 @@ public:
         ISp.reserve(m);
 
         matrix = new char[m * m];
+        fill(matrix, matrix+(n*n), 0);
         neighbors = new ui[m];
         nonneighbors = new ui[m];
         degree = new ui[m];
@@ -104,7 +105,6 @@ public:
         memset(cn, 0, sizeof(ui) * ((long long)n) * n);
 #endif
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
-        fill(matrix, matrix+(n*n), 0);
 
         fill(degree, degree+n, 0);
         for (auto & e: vp)
@@ -148,7 +148,7 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (u!=j && !vis[j] && matrix[u * n + j])
+                if (&& !vis[j] && matrix[u * n + j])
                     --degree[j];
         }
         if (n - idx > best_solution_size)
