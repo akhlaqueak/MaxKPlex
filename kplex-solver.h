@@ -48,6 +48,7 @@ class MaxKPlex
 
     ui K;
     vecui best_solution;
+    ui best_size;
 
     ui *neighbors;
     ui *nonneighbors;
@@ -149,13 +150,14 @@ public:
                 if (!vis[j] && adjMat(u, j))
                     --degree[j];
         }
-        if (n - idx > best_solution.size())
+        if (n - idx > best_size)
         {
             best_solution.clear();
+            best_size = n-idx;
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
-            printf("Degen find a solution of size %u\n", best_solution.size());
+            printf("Degen find a solution of size %u\n", best_size);
         }
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
@@ -163,7 +165,7 @@ public:
         for (ui i = 0; i < n; i++)
             SR_rid[i] = n;
         for (ui i = 0; i < n; i++)
-            if (core[i] + K > best_solution.size())
+            if (core[i] + K > best_size)
             {
                 SR[R_end] = i;
                 SR_rid[i] = R_end;
@@ -254,7 +256,7 @@ public:
                         ui w = SR[i];
                         neighbors[neighbors_n++] = w;
                         --degree[w];
-                        if (degree[w] + K <= best_solution.size())
+                        if (degree[w] + K <= best_size)
                         {
                             if (i < S_end)
                                 terminate = true; // UB1
@@ -334,12 +336,12 @@ public:
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
-            if (degree[v] + K <= best_solution.size() + 1)
+            if (degree[v] + K <= best_size + 1)
             {
                 level_id[v] = level;
                 Qv.push(v);
             }
-            if (degree[w] + K <= best_solution.size() + 1)
+            if (degree[w] + K <= best_size + 1)
             {
                 level_id[w] = level;
                 Qv.push(w);
@@ -417,12 +419,13 @@ public:
     void solve_instance(ui _n, ui sz1h, const auto &vp)
     {
         n = _n;
+        best_size = kplex.size();
         initialization(vp, true);
         if (R_end)
         {
             initContainers(sz1h);
             kSearch(K - 1);
-            if(best_solution.size()>kplex.size()){
+            if(best_size>kplex.size()){
                 kplex.clear();
                 for(ui u: best_solution)
                     kplex.push_back(SR[u]);
@@ -460,7 +463,7 @@ public:
 
     void kSearch(ui m)
     {
-        if (PuCuMSize <= best_solution.size() or TIMEOVER)
+        if (PuCuMSize <= best_size or TIMEOVER)
             return;
 
         if (M.size() == 0)
@@ -527,14 +530,14 @@ public:
     }
     void recSearch(RecLevel level)
     {
-        if ((level == OTHER and flag) or PuCSize <= best_solution.size() or TIMEOVER)
+        if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
         rc += updateC_SecondOrder();
         if (C.empty())
         {
-            if (P.size() > best_solution.size())
+            if (P.size() > best_size)
             {
                 kplex.clear();
                 cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
@@ -553,7 +556,7 @@ public:
         // ui ub = relaxGCB();
 #ifdef SEESAW
         ub = seesawUB();
-        if (ub > best_solution.size())
+        if (ub > best_size)
 #endif
             if (secondOrderUB())
             {
@@ -603,7 +606,7 @@ public:
             for (ui i = 0; i < C.size();)
             {
                 ui u = C[i], v = P[j];
-                if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_solution.size())
+                if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_size)
                     removeFromC(u, true);
                 else
                     i++;
@@ -625,7 +628,7 @@ public:
                         ub = b;
                 }
         }
-        return ub > best_solution.size();
+        return ub > best_size;
     }
     pair<ui, ui> getBranchings()
     {
@@ -644,7 +647,7 @@ public:
                     PI[u].push_back(v);
             }
         }
-        ui beta = best_solution.size() - P.size();
+        ui beta = best_size - P.size();
         ui cend = 0;
         while (true)
         {
@@ -952,10 +955,10 @@ public:
     //             cnt++;
     //             nonadjInP[max_index]++;
     //         }
-    //         if (cnt >= best_solution.size())
+    //         if (cnt >= best_size)
     //             return true;
     //     }
-    //     if (cnt >= best_solution.size())
+    //     if (cnt >= best_size)
     //         return true;
     //     return false;
     // }
@@ -1177,14 +1180,15 @@ public:
     }
     void naiveSearch()
     {
-        if (PuCSize < best_solution.size())
+        if (PuCSize < best_size)
             return;
         ui rc = updateC();
         if (C.empty())
         {
-            if (P.size() > best_solution.size())
+            if (P.size() > best_size)
             {
                 best_solution.clear();
+                best_size = P.size();
                 P.copyDataTo(best_solution);
                 cout << P.size() << " kp:";
                 P.print();
