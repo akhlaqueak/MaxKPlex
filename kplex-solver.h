@@ -1051,8 +1051,8 @@ public:
             for (ui j = 0; j < R_end; j++)
             {
                 ui u = SR[i], v = SR[j];
-                if (matrix[u * n + v])
-                // if(adjMat(SR[i], SR[j]))
+                // if (matrix[u * n + v])
+                if(adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
             }
         }
