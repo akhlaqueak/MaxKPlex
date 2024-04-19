@@ -570,7 +570,7 @@ public:
         ub = seesawUB();
         if (ub > best_size)
 #endif
-            if (secondOrderUB())
+            // if (secondOrderUB())
             {
                 auto B = getBranchings();
                 while (B.first < B.second)
