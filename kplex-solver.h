@@ -113,7 +113,7 @@ public:
             ui a = e.first, b = e.second;
             degree[a]++;
             degree[b]++;
-            matrix[a * n + b] = matrix[b * n + a] = 1;
+            adjMat(a, b) = 1;
         }
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
@@ -148,7 +148,7 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!vis[j] && matrix[u * n + j])
+                if (!vis[j] && adjMat(u, j))
                     --degree[j];
         }
         if (n - idx > best_solution_size)
@@ -184,7 +184,7 @@ public:
             ui u = SR[i];
             degree[u] = 0;
             for (ui j = 0; j < R_end; j++)
-                if (matrix[u * n + SR[j]])
+                if (adjMat(u, SR[j]))
                     ++degree[u];
         }
 
@@ -420,7 +420,6 @@ public:
     void solve_instance(ui _n, ui sz1h, const auto &vp)
     {
         n = _n;
-        cout<<n<<" "<<_n;
         initialization(vp, true);
         if (R_end)
         {
@@ -1146,6 +1145,12 @@ public:
         }
         return true;
     }
+    char& adjMat(ui i, ui j){
+        if(i<j)
+        return matrix[i*n+j];
+        else
+        return matrix[j*n+i];
+    }
     void CToP(ui u)
     {
         C.remove(u);
@@ -1159,7 +1164,7 @@ public:
     void reset(const auto& vp)
     {
         for (auto &e : vp)
-            matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
+            adjMat(e.first, e.second) = 0;
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
         M.clear();
