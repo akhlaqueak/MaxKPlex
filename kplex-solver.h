@@ -147,6 +147,8 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
+            if(u)
+            if(n)
                 if (!vis[j] && matrix[u * n + j])
                     --degree[j];
         }
