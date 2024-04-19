@@ -68,8 +68,8 @@ public:
         for (ui i = 0; i < V; i++)
         {
             cout << i << "[" << adjList[i].size() << "]: ";
-            // for(ui u: adjList[i])
-            //     cout<<u<<" ";
+            for(ui u: adjList[i])
+                cout<<u<<" ";
             cout << endl;
         }
     }
