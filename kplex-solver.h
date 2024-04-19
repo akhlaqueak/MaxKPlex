@@ -534,7 +534,7 @@ public:
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
-        // rc += updateC_SecondOrder();
+        rc += updateC_SecondOrder();
         if (C.empty())
         {
             if (P.size() > best_size)
@@ -569,7 +569,7 @@ public:
                     {
                         // return to root level of branchings, but before that recover all branching vertices to C
                         while (B.first++ < B.second)
-                        // 0 is only a placeholder, infact it fake recorvers C
+                        // 0 is only a placeholder, infact it fake recorvers 
                             addToC(0, true);
                         break;
                     }
