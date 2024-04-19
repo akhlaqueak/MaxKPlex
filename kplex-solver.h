@@ -419,7 +419,7 @@ public:
     void solve_instance(ui _n, ui sz1h, const auto &vp)
     {
         n = _n;
-        cout<<n<<" ";
+        cout<<n<<" "<<_n;
         initialization(vp, true);
         if (R_end)
         {
