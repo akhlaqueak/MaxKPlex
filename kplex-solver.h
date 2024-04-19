@@ -60,7 +60,7 @@ class MaxKPlex
 
     std::vector<ui> must_include_vertices;
     ui *peelOrder;
-    ui R_end = 0;
+    ui R_end;
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
@@ -90,6 +90,7 @@ public:
         level_id = new ui[m];
         peelOrder = new ui[m];
         best_solution_size = 0;
+        R_end=0;
     }
 
     void initialization(const auto &vp, bool must_include_0)
