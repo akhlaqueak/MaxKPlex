@@ -10,6 +10,7 @@ bool flag = false;
 // #define RULE2
 // #define SEESAW
 // #define CTCP
+// #defeine _SECOND_ORDER_PRUNING_
 
 #ifdef NAIVE
 #define RECSEARCH naiveSearch
@@ -28,8 +29,38 @@ class MaxKPlex
     vecui lookup, ISc, ISp;
     RandList block;
     vecui temp;
-    vecui matrix;
-    ui n, sz1h, k;
+    ui sz1h, k;
+
+    // BBMATRIX Stuff
+
+    ui n;
+    char *matrix;
+    long long matrix_size;
+#ifdef _SECOND_ORDER_PRUNING_
+    ui *cn;
+    std::queue<std::pair<ui, ui>> Qe;
+    std::vector<std::pair<ui, ui>> removed_edges;
+    long long removed_edges_n;
+#endif
+
+    ui *degree;
+    ui *degree_in_S;
+
+    ui K;
+    vecui best_solution;
+    ui best_solution_size;
+
+    ui *neighbors;
+    ui *nonneighbors;
+
+    ui *SR;     // union of S and R, where S is at the front
+    ui *SR_rid; // reverse ID for SR
+    std::queue<ui> Qv;
+    ui *level_id;
+
+    std::vector<ui> must_include_vertices;
+    ui *peelOrder;
+    ui R_end = 0;
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
@@ -49,23 +80,351 @@ public:
         kplex.reserve(m);
         ISc.reserve(m);
         ISp.reserve(m);
-    }
-    void solve_instance(ui n, ui sz1h, const auto &vp)
-    {
-        g.load(vp, n);
-        g.buildCommonMatrix(sz1h);
-        initContainers(sz1h);
 
-        // g.print();
-        ui ub = g.degeneracyKPlex(kplex);
-        g.lb = kplex.size();
-        #ifdef CTCP
-        g.applyCTCP(INIT);
-        #endif
-        if (ub > kplex.size())
+        matrix = new char[m * m];
+        neighbors = new ui[m];
+        nonneighbors = new ui[m];
+        SR = new ui[m];
+        SR_rid = new ui[m];
+        level_id = new ui[m];
+        peelOrder = new ui[m];
+        best_solution_size = 0;
+    }
+
+    void initialization(const auto &vp, bool must_include_0)
+    {
+#ifdef _SECOND_ORDER_PRUNING_
+        delete[] cn;
+        cn = new ui[matrix_size];
+#endif
+
+#ifdef _SECOND_ORDER_PRUNING_
+        memset(cn, 0, sizeof(ui) * ((long long)n) * n);
+#endif
+        // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
+        // fill(matrix, matrix+(n*n), 0);
+
+        for (ui i = 0; i < n; i++)
+            degree[i] = 0;
+        for (ui i = 0; i < vp.size(); i++)
+        {
+            assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
+            ui a = vp[i].first, b = vp[i].second;
+            degree[a]++;
+            degree[b]++;
+            matrix[a * n + b] = matrix[b * n + a] = 1;
+        }
+        // the following computes a degeneracy ordering and a heuristic solution
+        ui *peel_sequence = neighbors;
+        ui *core = nonneighbors;
+        ui *vis = SR;
+        memset(vis, 0, sizeof(ui) * n);
+        ui max_core = 0, UB = 0, idx = n;
+        for (ui i = 0; i < n; i++)
+        {
+            ui u, min_degree = n;
+            for (ui j = 0; j < n; j++)
+                if (!vis[j] && degree[j] < min_degree)
+                {
+                    u = j;
+                    min_degree = degree[j];
+                }
+            if (min_degree > max_core)
+                max_core = min_degree;
+            core[u] = max_core;
+            peel_sequence[i] = u;
+            peelOrder[u] = i;
+            vis[u] = 1;
+
+            ui t_UB = core[u] + K;
+            if (n - i < t_UB)
+                t_UB = n - i;
+            if (t_UB > UB)
+                UB = t_UB;
+
+            if (idx == n && min_degree + K >= n - i)
+                idx = i;
+
+            for (ui j = 0; j < n; j++)
+                if (!vis[j] && matrix[u * n + j])
+                    --degree[j];
+        }
+        if (n - idx > best_solution_size)
+        {
+            best_solution_size = n - idx;
+            best_solution.clear();
+            for (ui i = idx; i < n; i++)
+                // best_solution[i-idx] = peel_sequence[i];
+                best_solution.push_back(peel_sequence[i]);
+            printf("Degen find a solution of size %u\n", best_solution_size);
+        }
+
+        // memset(degree_in_S, 0, sizeof(ui)*n);
+        R_end = 0;
+        for (ui i = 0; i < n; i++)
+            SR_rid[i] = n;
+        for (ui i = 0; i < n; i++)
+            if (core[i] + K > best_solution_size)
+            {
+                SR[R_end] = i;
+                SR_rid[i] = R_end;
+                ++R_end;
+            }
+
+        if (must_include_0 && SR_rid[0] == n)
+        {
+            R_end = 0;
+            return;
+        }
+
+        for (ui i = 0; i < R_end; i++)
+        {
+            ui u = SR[i];
+            degree[u] = 0;
+            for (ui j = 0; j < R_end; j++)
+                if (matrix[u * n + SR[j]])
+                    ++degree[u];
+        }
+
+        memset(level_id, 0, sizeof(ui) * n);
+        for (ui i = 0; i < R_end; i++)
+            level_id[SR[i]] = n;
+
+        assert(Qv.empty());
+
+#ifdef _SECOND_ORDER_PRUNING_
+        for (ui i = 0; i < R_end; i++)
+        {
+            ui neighbors_n = 0;
+            char *t_matrix = matrix + SR[i] * n;
+            for (ui j = 0; j < R_end; j++)
+                if (t_matrix[SR[j]])
+                    neighbors[neighbors_n++] = SR[j];
+            for (ui j = 0; j < neighbors_n; j++)
+                for (ui k = j + 1; k < neighbors_n; k++)
+                {
+                    ++cn[neighbors[j] * n + neighbors[k]];
+                    ++cn[neighbors[k] * n + neighbors[j]];
+                }
+        }
+
+        while (!Qe.empty())
+            Qe.pop();
+        for (ui i = 0; i < R_end; i++)
+            for (ui j = i + 1; j < R_end; j++)
+            {
+                if (matrix[SR[i] * n + SR[j]] && upper_bound_based_prune(0, SR[i], SR[j]))
+                {
+                    Qe.push(std::make_pair(SR[i], SR[j]));
+                }
+            }
+        removed_edges_n = 0;
+#endif
+
+        must_include_vertices.resize(n);
+
+        if (remove_vertices_and_edges_with_prune(0, R_end, 0))
+            R_end = 0;
+    }
+
+    bool
+    remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level)
+    {
+#ifdef _SECOND_ORDER_PRUNING_
+        while (!Qv.empty() || !Qe.empty())
+        {
+#else
+        while (!Qv.empty())
+        {
+#endif
+            while (!Qv.empty())
+            {
+                ui u = Qv.front();
+                Qv.pop(); // remove u
+                assert(SR[SR_rid[u]] == u);
+                assert(SR_rid[u] >= S_end && SR_rid[u] < R_end);
+                --R_end;
+                swap_pos(SR_rid[u], R_end);
+
+                bool terminate = false;
+                ui neighbors_n = 0;
+                char *t_matrix = matrix + u * n;
+                for (ui i = 0; i < R_end; i++)
+                    if (t_matrix[SR[i]])
+                    {
+                        ui w = SR[i];
+                        neighbors[neighbors_n++] = w;
+                        --degree[w];
+                        if (degree[w] + K <= best_solution_size)
+                        {
+                            if (i < S_end)
+                                terminate = true; // UB1
+                            else if (level_id[w] > level)
+                            { // RR3
+                                level_id[w] = level;
+                                Qv.push(w);
+                            }
+                        }
+                    }
+                // UB1
+                if (terminate)
+                {
+                    for (ui i = 0; i < neighbors_n; i++)
+                        ++degree[neighbors[i]];
+                    level_id[u] = n;
+                    ++R_end;
+                    return true;
+                }
+
+#ifdef _SECOND_ORDER_PRUNING_
+                for (ui i = 1; i < neighbors_n; i++)
+                {
+                    ui w = neighbors[i];
+                    for (ui j = 0; j < i; j++)
+                    {
+                        ui v = neighbors[j];
+                        assert(cn[v * n + w]);
+#ifndef NDEBUG
+                        ui common_neighbors = 0;
+                        for (ui k = S_end; k <= R_end; k++)
+                            if (matrix[SR[k] * n + v] && matrix[SR[k] * n + w])
+                                ++common_neighbors;
+                        assert(cn[v * n + w] == common_neighbors);
+                        assert(cn[w * n + v] == common_neighbors);
+#endif
+                        --cn[v * n + w];
+                        --cn[w * n + v];
+#ifndef NDEBUG
+                        common_neighbors = 0;
+                        for (ui k = S_end; k < R_end; k++)
+                            if (matrix[SR[k] * n + v] && matrix[SR[k] * n + w])
+                                ++common_neighbors;
+                        assert(cn[v * n + w] == common_neighbors);
+                        assert(cn[w * n + v] == common_neighbors);
+#endif
+
+                        if (!upper_bound_based_prune(S_end, v, w))
+                            continue;
+
+                        if (SR_rid[w] < S_end)
+                            terminate = true; // v, w \in S --- UB2
+                        else if (SR_rid[v] >= S_end)
+                        { // v, w, \in R --- RR5
+                            if (matrix[v * n + w])
+                                Qe.push(std::make_pair(v, w));
+                        }
+                        else if (level_id[w] > level)
+                        { // RR4
+                            level_id[w] = level;
+                            Qv.push(w);
+                        }
+                    }
+                }
+                if (terminate)
+                    return true;
+#endif
+            }
+
+#ifdef _SECOND_ORDER_PRUNING_
+            if (Qe.empty())
+                break;
+
+            ui v = Qe.front().first, w = Qe.front().second;
+            Qe.pop();
+            if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
+                continue;
+            assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
+
+            if (degree[v] + K <= best_solution_size + 1)
+            {
+                level_id[v] = level;
+                Qv.push(v);
+            }
+            if (degree[w] + K <= best_solution_size + 1)
+            {
+                level_id[w] = level;
+                Qv.push(w);
+            }
+            if (!Qv.empty())
+                continue;
+
+#ifndef NDEBUG
+                // printf("remove edge between %u and %u\n", v, w);
+#endif
+
+            assert(matrix[v * n + w]);
+            matrix[v * n + w] = matrix[w * n + v] = 0;
+            --degree[v];
+            --degree[w];
+
+            if (removed_edges.size() == removed_edges_n)
+            {
+                removed_edges.push_back(std::make_pair(v, w));
+                ++removed_edges_n;
+            }
+            else
+                removed_edges[removed_edges_n++] = std::make_pair(v, w);
+
+            char *t_matrix = matrix + v * n;
+            for (ui i = 0; i < R_end; i++)
+                if (t_matrix[SR[i]])
+                {
+                    --cn[w * n + SR[i]];
+                    --cn[SR[i] * n + w];
+                    if (!upper_bound_based_prune(S_end, w, SR[i]))
+                        continue;
+                    if (i < S_end)
+                    {
+                        if (level_id[w] > level)
+                        {
+                            level_id[w] = level;
+                            Qv.push(w);
+                        }
+                    }
+                    else if (matrix[w * n + SR[i]])
+                        Qe.push(std::make_pair(w, SR[i]));
+                }
+            t_matrix = matrix + w * n;
+            for (ui i = 0; i < R_end; i++)
+                if (t_matrix[SR[i]])
+                {
+                    --cn[v * n + SR[i]];
+                    --cn[SR[i] * n + v];
+                    if (!upper_bound_based_prune(S_end, v, SR[i]))
+                        continue;
+                    if (i < S_end)
+                    {
+                        if (level_id[v] > level)
+                        {
+                            level_id[v] = level;
+                            Qv.push(v);
+                        }
+                    }
+                    else if (matrix[v * n + SR[i]])
+                        Qe.push(std::make_pair(v, SR[i]));
+                }
+#endif
+        }
+
+        return false;
+    }
+    void swap_pos(ui i, ui j)
+    {
+        std::swap(SR[i], SR[j]);
+        SR_rid[SR[i]] = i;
+        SR_rid[SR[j]] = j;
+    }
+
+    void solve_instance(ui _n, ui sz1h, const auto &vp)
+    {
+        n = _n;
+        initialization(vp, true);
+        if (R_end)
+        {
+            initContainers(sz1h);
             kSearch(k - 1);
-        g.unload(vp, n);
-        reset();
+        }
+        reset(vp);
     }
 
     ui updateC_K(ui u)
@@ -680,9 +1039,19 @@ public:
 
     void initContainers(ui sz1h)
     {
-        addToP_K(0);
-        for (ui u = 1; u < g.V; u++)
+        for (ui i = 0; i < R_end; i++)
         {
+            for (ui j = 0; j < R_end; j++)
+            {
+                ui u = SR[i], v = SR[j];
+                if (matrix[u * n + v])
+                    g.adjList[i].push_back(j);
+            }
+        }
+        addToP_K(0);
+        for (ui i = 1; i < R_end; i++)
+        {
+            ui u = SR[i];
             if (u <= sz1h)
                 addToC(u);
             else
@@ -782,8 +1151,10 @@ public:
         removeFromP(u);
         C.add(u);
     }
-    void reset()
+    void reset(const auto& vp)
     {
+        for (auto &e : vp)
+            matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
         fill(dP.begin(), dP.begin() + g.V, 0);
         fill(dG.begin(), dG.begin() + g.V, 0);
         M.clear();

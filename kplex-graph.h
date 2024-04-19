@@ -116,15 +116,14 @@ public:
         return ub;
     }
 
-    void load(const std::vector<std::pair<int, int>> &vp, ui _n)
+    void load(const std::vector<std::pair<int, int>> &vp)
     {
-        V = n = _n;
-        for (ui i = 0; i < vp.size(); i++)
-        {
-            assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
-            ui a = vp[i].first, b = vp[i].second;
-            adjMat[a * n + b] = adjMat[b * n + a] = 1;
-        }
+        // for (ui i = 0; i < vp.size(); i++)
+        // {
+        //     assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
+        //     ui a = vp[i].first, b = vp[i].second;
+        //     adjMat[a * n + b] = adjMat[b * n + a] = 1;
+        // }
         for (ui i = 0; i < n; i++)
         {
 
