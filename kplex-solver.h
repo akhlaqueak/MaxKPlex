@@ -48,7 +48,7 @@ class MaxKPlex
 
     ui K;
     vecui best_solution;
-    ui best_solution_size;
+    ui best_solution_size=0;
 
     ui *neighbors;
     ui *nonneighbors;
