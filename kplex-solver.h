@@ -569,7 +569,6 @@ public:
                     {
                         // return to root level of branchings, but before that recover all branching vertices to C
                         while (B.first++ < B.second)
-                        // 0 is only a placeholder, infact it fake recorvers 
                             addToC(0, true);
                         break;
                     }
@@ -1051,7 +1050,8 @@ public:
         {
             for (ui j = 0; j < R_end; j++)
             {
-                if (adjMat(SR[i], SR[j]))
+                ui u = SR[i], v = SR[j];
+                if (matrix[u * n + v])
                     g.adjList[i].push_back(j);
             }
         }
