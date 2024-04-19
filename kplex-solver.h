@@ -105,12 +105,11 @@ public:
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
         // fill(matrix, matrix+(n*n), 0);
 
-        for (ui i = 0; i < n; i++)
-            degree[i] = 0;
-        for (ui i = 0; i < vp.size(); i++)
+        fill(degree, degree+n, 0);
+        for (auto & e: vp)
         {
-            assert(vp[i].first >= 0 && vp[i].first < n && vp[i].second >= 0 && vp[i].second < n);
-            ui a = vp[i].first, b = vp[i].second;
+            assert(e.first >= 0 && e.first < n && e.second >= 0 && e.second < n);
+            ui a = e.first, b = e.second;
             degree[a]++;
             degree[b]++;
             matrix[a * n + b] = matrix[b * n + a] = 1;
@@ -123,6 +122,7 @@ public:
         ui max_core = 0, UB = 0, idx = n;
         for (ui i = 0; i < n; i++)
         {
+            // todo check if heap works better here.
             ui u, min_degree = n;
             for (ui j = 0; j < n; j++)
                 if (!vis[j] && degree[j] < min_degree)
@@ -1049,6 +1049,8 @@ public:
                     g.adjList[i].push_back(j);
             }
         }
+        g.V = R_end;
+        
         addToP_K(0);
         for (ui i = 1; i < R_end; i++)
         {
@@ -1156,8 +1158,8 @@ public:
     {
         for (auto &e : vp)
             matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
-        fill(dP.begin(), dP.begin() + g.V, 0);
-        fill(dG.begin(), dG.begin() + g.V, 0);
+        fill(dP.begin(), dP.begin() + n, 0);
+        fill(dG.begin(), dG.begin() + n, 0);
         M.clear();
         block.clear();
         P.clear();
