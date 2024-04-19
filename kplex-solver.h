@@ -495,8 +495,8 @@ public:
                                         // function
             addToP_K(u);                // u is added to P, that causes C, M and X to
                                         // shrink... as per theorem 9, 10, 11
-            // rc += updateC_K(u);         // Applying Theorem 10 to update C
-            // rsn += updateSecNeigh_K(u); // applying Theorem 9 to update second hop neighbors
+            rc += updateC_K(u);         // Applying Theorem 10 to update C
+            rsn += updateSecNeigh_K(u); // applying Theorem 9 to update second hop neighbors
 
             if (M.empty())
             {
@@ -556,7 +556,7 @@ public:
             return;
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
-        rc += updateC_SecondOrder();
+        // rc += updateC_SecondOrder();
         if (C.empty())
         {
             if (P.size() > best_size)
