@@ -162,33 +162,33 @@ public:
     }
     void buildCommonMatrix(ui sz1h)
     {
-        auto commNeighbors = [](const vecui &lst1, const vecui &lst2)
-        {
-            int i = 0, j = 0;
-            int common = 0;
-            while (i < lst1.size() and j < lst2.size())
-            {
-                if (lst1[i] < lst2[j])
-                    ++i;
-                else if (lst1[i] > lst2[j])
-                    ++j;
-                else
-                {
-                    common++;
-                    i++, j++;
-                }
-            }
-            return common;
-        };
+        // auto commNeighbors = [](const vecui &lst1, const vecui &lst2)
+        // {
+        //     int i = 0, j = 0;
+        //     int common = 0;
+        //     while (i < lst1.size() and j < lst2.size())
+        //     {
+        //         if (lst1[i] < lst2[j])
+        //             ++i;
+        //         else if (lst1[i] > lst2[j])
+        //             ++j;
+        //         else
+        //         {
+        //             common++;
+        //             i++, j++;
+        //         }
+        //     }
+        //     return common;
+        // };
 
-        for (ui i = 0; i < V; i++)
-        {
-            for (ui j = 0; j < V; j++)
-                if (j < i)
-                    soMatrix(i, j) = commNeighbors(adjList[i], adjList[j]);
-                else
-                    break;
-        }
+        // for (ui i = 0; i < V; i++)
+        // {
+        //     for (ui j = 0; j < V; j++)
+        //         if (j < i)
+        //             soMatrix(i, j) = commNeighbors(adjList[i], adjList[j]);
+        //         else
+        //             break;
+        // }
 
         auto intersect = [](const vecui &lst1, const vecui &lst2, const ui sz)
         {

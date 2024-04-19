@@ -424,6 +424,7 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
+            g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
             if(best_size>kplex.size()){
                 kplex.clear();
