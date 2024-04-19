@@ -1,10 +1,17 @@
-# ********     Author: Lijun Chang    ******
-# ******** Email: ljchang@outlook.com ******
-#
-CC=g++ -flto -O3 -std=c++17 -I.
+CC=g++ -I../common/ -std=c++20 -O3
 
-all: kPlexS
+all: main
 
-kPlexS: main.cpp
-	${CC} main.cpp -o kPlexS
+debug: CC+= -g
+debug: main
 
+run: main
+	./kplex -g ..\datasets\as-caida20071105.bin -k 2
+
+main: main.cpp
+	git pull
+	${CC}  main.cpp -o kplex
+
+local: main.cpp
+	${CC}  main.cpp -o kplex
+	.\kplex.exe -g ..\datasets\as-caida20071105.bin -k 2
