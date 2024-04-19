@@ -351,8 +351,8 @@ public:
             pruned[u] = 0;
         }
         peelSeq.clear();
-        // for(ui u=0;u<V; u++)
-        //     adjList[u].clear();
+        for(ui u=0;u<V; u++)
+            adjList[u].clear();
         V = 0;
     }
 
