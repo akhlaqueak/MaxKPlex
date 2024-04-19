@@ -12,7 +12,6 @@ bool flag = false;
 // #defeine _SECOND_ORDER_PRUNING_
 
 // #define NAIVE
-#ifdef NAIVE
 
 class MaxKPlex
 {
