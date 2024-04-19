@@ -76,13 +76,13 @@ public:
         kplex.reserve(m);
         ISc.reserve(m);
         ISp.reserve(m);
-
-        matrix = new char[m * m];
-        fill(matrix, matrix + (m * m), 0);
-        #ifdef _SECOND_ORDER_PRUNING_
-        cn = new ui[m * m];
-        fill(cn, cn + (m * m), 0);
-        #endif
+        matrix_size = m * 2;
+        matrix = new char[matrix_size];
+        fill(matrix, matrix + (matrix_size), 0);
+#ifdef _SECOND_ORDER_PRUNING_
+        cn = new ui[matrix_size];
+        fill(cn, cn + (matrix_size), 0);
+#endif
 
         neighbors = new ui[m];
         nonneighbors = new ui[m];
@@ -97,7 +97,21 @@ public:
     void initialization(const auto &vp, bool must_include_0)
     {
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
-
+        if (((long long)n) * n > matrix_size)
+        {
+            do
+            {
+                matrix_size *= 2;
+            } while (((long long)n) * n > matrix_size);
+            delete[] matrix;
+            matrix = new char[matrix_size];
+            fill(matrix, matrix + (matrix_size), 0);
+#ifdef _SECOND_ORDER_PRUNING_
+            delete[] cn;
+            cn = new ui[matrix_size];
+            fill(cn, cn + (matrix_size), 0);
+#endif
+        }
         fill(degree, degree + n, 0);
         for (auto &e : vp)
         {
@@ -193,7 +207,7 @@ public:
             // char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
                 // if (t_matrix[SR[j]])
-                if(adjMat(SR[i], SR[j]))
+                if (adjMat(SR[i], SR[j]))
                     neighbors[neighbors_n++] = SR[j];
             for (ui j = 0; j < neighbors_n; j++)
                 for (ui k = j + 1; k < neighbors_n; k++)
@@ -307,7 +321,7 @@ public:
                         else if (SR_rid[v] >= S_end)
                         { // v, w, \in R --- RR5
                             // if (matrix[v * n + w])
-                            if (adjMat(v,w))
+                            if (adjMat(v, w))
                                 Qe.push(std::make_pair(v, w));
                         }
                         else if (level_id[w] > level)
@@ -328,8 +342,8 @@ public:
 
             ui v = Qe.front().first, w = Qe.front().second;
             Qe.pop();
-            if (level_id[v] <= level || level_id[w] <= level || !adjMat(v,w))
-            // if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
+            if (level_id[v] <= level || level_id[w] <= level || !adjMat(v, w))
+                // if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
@@ -352,8 +366,8 @@ public:
 
             // assert(matrix[v * n + w]);
             // matrix[v * n + w] = matrix[w * n + v] = 0;
-            assert(adjMat(v,w));
-            adjMat(v,w) = 0;
+            assert(adjMat(v, w));
+            adjMat(v, w) = 0;
             --degree[v];
             --degree[w];
 
@@ -367,7 +381,7 @@ public:
 
             char *t_matrix = matrix + v * n;
             for (ui i = 0; i < R_end; i++)
-                if (adjMat(v,SR[i]))
+                if (adjMat(v, SR[i]))
                 // if (t_matrix[SR[i]])
                 {
                     --cn[w * n + SR[i]];
@@ -383,13 +397,13 @@ public:
                         }
                     }
                     else if (adjMat(w, SR[i]))
-                    // else if (matrix[w * n + SR[i]])
+                        // else if (matrix[w * n + SR[i]])
                         Qe.push(std::make_pair(w, SR[i]));
                 }
             // t_matrix = matrix + w * n;
             for (ui i = 0; i < R_end; i++)
                 // if (t_matrix[SR[i]])
-                if(adjMat(w, SR[i]))
+                if (adjMat(w, SR[i]))
                 {
                     --cn[v * n + SR[i]];
                     --cn[SR[i] * n + v];
@@ -404,7 +418,7 @@ public:
                         }
                     }
                     else if (adjMat(v, SR[i]))
-                    // else if (matrix[v * n + SR[i]])
+                        // else if (matrix[v * n + SR[i]])
                         Qe.push(std::make_pair(v, SR[i]));
                 }
 #endif
@@ -576,29 +590,29 @@ public:
         ub = seesawUB();
         if (ub > best_size)
 #endif
-            // if (secondOrderUB())
+        // if (secondOrderUB())
+        {
+            auto B = getBranchings();
+            while (B.first < B.second)
             {
-                auto B = getBranchings();
-                while (B.first < B.second)
+                if (level == FIRST)
+                    flag = false;
+                else if (flag)
                 {
-                    if (level == FIRST)
-                        flag = false;
-                    else if (flag)
-                    {
-                        // return to root level of branchings, but before that recover all branching vertices to C
-                        while (B.first++ < B.second)
-                            addToC(0, true);
-                        break;
-                    }
-                    ui bn = maxDegenVertex(B.first++, B.second);
-                    addToP_K(bn);
-                    ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
-                    recSearch(OTHER);
-                    recoverC(rc);
-                    removeFromP(bn);
-                    C.fakeRecPop();
+                    // return to root level of branchings, but before that recover all branching vertices to C
+                    while (B.first++ < B.second)
+                        addToC(0, true);
+                    break;
                 }
+                ui bn = maxDegenVertex(B.first++, B.second);
+                addToP_K(bn);
+                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                recSearch(OTHER);
+                recoverC(rc);
+                removeFromP(bn);
+                C.fakeRecPop();
             }
+        }
     RECOVER:
         recoverC(rc);
         // recover cp number of vertices directly moved to P
