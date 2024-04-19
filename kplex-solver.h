@@ -184,6 +184,7 @@ public:
             ui u = SR[i];
             degree[u] = 0;
             for (ui j = 0; j < R_end; j++)
+            if(n)
                 if (matrix[u * n + SR[j]])
                     ++degree[u];
         }
