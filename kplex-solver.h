@@ -148,7 +148,7 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!vis[j] && matrix[u * n + j])
+                if (u!=j && !vis[j] && matrix[u * n + j])
                     --degree[j];
         }
         if (n - idx > best_solution_size)
@@ -184,7 +184,6 @@ public:
             ui u = SR[i];
             degree[u] = 0;
             for (ui j = 0; j < R_end; j++)
-            if(u)
                 if (matrix[u * n + SR[j]])
                     ++degree[u];
         }
