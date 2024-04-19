@@ -1054,7 +1054,7 @@ public:
         for (ui i = st + 1; i < en; i++)
         {
             ui v = C.get(i);
-            if (g.core[v] > g.core[bn])
+            if (peelOrder[v] > peelOrder[bn])
                 // if(g.adjList[v].size()>g.adjList[bn].size())
                 bn = v, ind = i;
         }
