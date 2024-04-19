@@ -104,7 +104,7 @@ public:
         memset(cn, 0, sizeof(ui) * ((long long)n) * n);
 #endif
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
-        // fill(matrix, matrix+(n*n), 0);
+        fill(matrix, matrix+(n*n), 0);
 
         fill(degree, degree+n, 0);
         for (auto & e: vp)
