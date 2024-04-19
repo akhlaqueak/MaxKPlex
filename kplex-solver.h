@@ -11,7 +11,7 @@ bool flag = false;
 // #define CTCP
 // #defeine _SECOND_ORDER_PRUNING_
 
-// #define NAIVE
+#define NAIVE
 #ifdef NAIVE
 #define RECSEARCH naiveSearch
 #else
