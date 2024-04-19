@@ -84,6 +84,7 @@ public:
         matrix = new char[m * m];
         neighbors = new ui[m];
         nonneighbors = new ui[m];
+        degree = new ui[m];
         SR = new ui[m];
         SR_rid = new ui[m];
         level_id = new ui[m];
