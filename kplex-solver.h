@@ -79,9 +79,10 @@ public:
 
         matrix = new char[m * m];
         fill(matrix, matrix + (m * m), 0);
-        
+        #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[m * m];
         fill(cn, cn + (m * m), 0);
+        #endif
 
         neighbors = new ui[m];
         nonneighbors = new ui[m];
@@ -95,14 +96,6 @@ public:
 
     void initialization(const auto &vp, bool must_include_0)
     {
-#ifdef _SECOND_ORDER_PRUNING_
-        delete[] cn;
-        cn = new ui[matrix_size];
-#endif
-
-#ifdef _SECOND_ORDER_PRUNING_
-        memset(cn, 0, sizeof(ui) * ((long long)n) * n);
-#endif
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
 
         fill(degree, degree + n, 0);
