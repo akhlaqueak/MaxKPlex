@@ -82,7 +82,7 @@ public:
         ISp.reserve(m);
 
         matrix = new char[m * m];
-        fill(matrix, matrix+(n*n), 0);
+        fill(matrix, matrix+(m*m), 0);
         neighbors = new ui[m];
         nonneighbors = new ui[m];
         degree = new ui[m];
