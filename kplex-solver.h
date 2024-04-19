@@ -90,7 +90,7 @@ public:
         SR_rid = new ui[m];
         level_id = new ui[m];
         peelOrder = new ui[m];
-        best_solution_size = 0;
+        best_solution_size = kplex.size();
         R_end=0;
     }
 
