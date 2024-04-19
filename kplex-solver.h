@@ -9,7 +9,7 @@ bool flag = false;
 // #define RULE2
 // #define SEESAW
 // #define CTCP
-// #defeine _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 
 // #define NAIVE
 
@@ -79,6 +79,10 @@ public:
 
         matrix = new char[m * m];
         fill(matrix, matrix + (m * m), 0);
+        
+        cn = new ui[m * m];
+        fill(cn, cn + (m * m), 0);
+
         neighbors = new ui[m];
         nonneighbors = new ui[m];
         degree = new ui[m];
@@ -193,9 +197,10 @@ public:
         for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0;
-            char *t_matrix = matrix + SR[i] * n;
+            // char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
-                if (t_matrix[SR[j]])
+                // if (t_matrix[SR[j]])
+                if(adjMat(SR[i], SR[j]))
                     neighbors[neighbors_n++] = SR[j];
             for (ui j = 0; j < neighbors_n; j++)
                 for (ui k = j + 1; k < neighbors_n; k++)
@@ -210,7 +215,7 @@ public:
         for (ui i = 0; i < R_end; i++)
             for (ui j = i + 1; j < R_end; j++)
             {
-                if (matrix[SR[i] * n + SR[j]] && upper_bound_based_prune(0, SR[i], SR[j]))
+                if (adjMat(SR[i], SR[j]) && upper_bound_based_prune(0, SR[i], SR[j]))
                 {
                     Qe.push(std::make_pair(SR[i], SR[j]));
                 }
@@ -301,14 +306,15 @@ public:
                         assert(cn[w * n + v] == common_neighbors);
 #endif
 
-                        if (!upper_bound_based_prune(S_end, v, w))
-                            continue;
+                        // if (!upper_bound_based_prune(S_end, v, w))
+                        //     continue;
 
                         if (SR_rid[w] < S_end)
                             terminate = true; // v, w \in S --- UB2
                         else if (SR_rid[v] >= S_end)
                         { // v, w, \in R --- RR5
-                            if (matrix[v * n + w])
+                            // if (matrix[v * n + w])
+                            if (adjMat(v,w))
                                 Qe.push(std::make_pair(v, w));
                         }
                         else if (level_id[w] > level)
@@ -329,7 +335,8 @@ public:
 
             ui v = Qe.front().first, w = Qe.front().second;
             Qe.pop();
-            if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
+            if (level_id[v] <= level || level_id[w] <= level || !adjMat(v,w))
+            // if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
@@ -350,8 +357,10 @@ public:
                 // printf("remove edge between %u and %u\n", v, w);
 #endif
 
-            assert(matrix[v * n + w]);
-            matrix[v * n + w] = matrix[w * n + v] = 0;
+            // assert(matrix[v * n + w]);
+            // matrix[v * n + w] = matrix[w * n + v] = 0;
+            assert(adjMat(v,w));
+            adjMat(v,w) = 0;
             --degree[v];
             --degree[w];
 
@@ -365,12 +374,13 @@ public:
 
             char *t_matrix = matrix + v * n;
             for (ui i = 0; i < R_end; i++)
-                if (t_matrix[SR[i]])
+                if (adjMat(v,SR[i]))
+                // if (t_matrix[SR[i]])
                 {
                     --cn[w * n + SR[i]];
                     --cn[SR[i] * n + w];
-                    if (!upper_bound_based_prune(S_end, w, SR[i]))
-                        continue;
+                    // if (!upper_bound_based_prune(S_end, w, SR[i]))
+                    //     continue;
                     if (i < S_end)
                     {
                         if (level_id[w] > level)
@@ -379,17 +389,19 @@ public:
                             Qv.push(w);
                         }
                     }
-                    else if (matrix[w * n + SR[i]])
+                    else if (adjMat(w, SR[i]))
+                    // else if (matrix[w * n + SR[i]])
                         Qe.push(std::make_pair(w, SR[i]));
                 }
-            t_matrix = matrix + w * n;
+            // t_matrix = matrix + w * n;
             for (ui i = 0; i < R_end; i++)
-                if (t_matrix[SR[i]])
+                // if (t_matrix[SR[i]])
+                if(adjMat(w, SR[i]))
                 {
                     --cn[v * n + SR[i]];
                     --cn[SR[i] * n + v];
-                    if (!upper_bound_based_prune(S_end, v, SR[i]))
-                        continue;
+                    // if (!upper_bound_based_prune(S_end, v, SR[i]))
+                    //     continue;
                     if (i < S_end)
                     {
                         if (level_id[v] > level)
@@ -398,7 +410,8 @@ public:
                             Qv.push(v);
                         }
                     }
-                    else if (matrix[v * n + SR[i]])
+                    else if (adjMat(v, SR[i]))
+                    // else if (matrix[v * n + SR[i]])
                         Qe.push(std::make_pair(v, SR[i]));
                 }
 #endif
@@ -1062,7 +1075,6 @@ public:
         {
             for (ui j = 0; j < R_end; j++)
             {
-                ui u = SR[i], v = SR[j];
                 // if (matrix[u * n + v])
                 if (adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
@@ -1072,9 +1084,8 @@ public:
         // g.print();
 
         addToP_K(0);
-        for (ui i = 1; i < R_end; i++)
+        for (ui u = 1; u < R_end; u++)
         {
-            ui u = i;
 #ifdef NAIVE
             addToC(u);
 #else
