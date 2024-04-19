@@ -419,6 +419,7 @@ public:
     void solve_instance(ui _n, ui sz1h, const auto &vp)
     {
         n = _n;
+        cout<<n<<" ";
         initialization(vp, true);
         if (R_end)
         {
@@ -1050,7 +1051,7 @@ public:
             }
         }
         g.V = R_end;
-        
+
         addToP_K(0);
         for (ui i = 1; i < R_end; i++)
         {
