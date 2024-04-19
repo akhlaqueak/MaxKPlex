@@ -82,7 +82,7 @@ public:
         ISp.reserve(m);
 
         matrix = new char[m * m];
-        fill(matrix, matrix+(m*m), 0);
+        fill(matrix, matrix + (m * m), 0);
         neighbors = new ui[m];
         nonneighbors = new ui[m];
         degree = new ui[m];
@@ -90,7 +90,7 @@ public:
         SR_rid = new ui[m];
         level_id = new ui[m];
         peelOrder = new ui[m];
-        R_end=0;
+        R_end = 0;
     }
 
     void initialization(const auto &vp, bool must_include_0)
@@ -105,8 +105,8 @@ public:
 #endif
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
 
-        fill(degree, degree+n, 0);
-        for (auto & e: vp)
+        fill(degree, degree + n, 0);
+        for (auto &e : vp)
         {
             assert(e.first >= 0 && e.first < n && e.second >= 0 && e.second < n);
             ui a = e.first, b = e.second;
@@ -153,7 +153,7 @@ public:
         if (n - idx > best_size)
         {
             best_solution.clear();
-            best_size = n-idx;
+            best_size = n - idx;
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
@@ -249,9 +249,10 @@ public:
 
                 bool terminate = false;
                 ui neighbors_n = 0;
-                char *t_matrix = matrix + u * n;
+                // char *t_matrix = matrix + u * n;
                 for (ui i = 0; i < R_end; i++)
-                    if (t_matrix[SR[i]])
+                    // if (t_matrix[SR[i]])
+                    if(adjMat(SR[i], u))
                     {
                         ui w = SR[i];
                         neighbors[neighbors_n++] = w;
@@ -426,9 +427,10 @@ public:
             initContainers(sz1h);
             g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
-            if(best_size>kplex.size()){
+            if (best_size > kplex.size())
+            {
                 kplex.clear();
-                for(ui u: best_solution)
+                for (ui u : best_solution)
                     kplex.push_back(SR[u]);
             }
         }
@@ -1053,7 +1055,7 @@ public:
             {
                 ui u = SR[i], v = SR[j];
                 // if (matrix[u * n + v])
-                if(adjMat(SR[i], SR[j]))
+                if (adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
             }
         }
@@ -1153,11 +1155,12 @@ public:
         }
         return true;
     }
-    char& adjMat(ui i, ui j){
-        if(i<j)
-        return matrix[i*n+j];
+    char &adjMat(ui i, ui j)
+    {
+        if (i < j)
+            return matrix[i * n + j];
         else
-        return matrix[j*n+i];
+            return matrix[j * n + i];
     }
     void CToP(ui u)
     {
@@ -1169,7 +1172,7 @@ public:
         removeFromP(u);
         C.add(u);
     }
-    void reset(const auto& vp)
+    void reset(const auto &vp)
     {
         for (auto &e : vp)
             adjMat(e.first, e.second) = 0;
@@ -1197,7 +1200,7 @@ public:
                 P.print();
                 for (ui i = 0; i < P.size(); i++)
                     if (dP[P[i]] < P.size() - K)
-                        cout << " Invalid " << P[i];                 
+                        cout << " Invalid " << P[i];
 
                 cout << endl;
             }
