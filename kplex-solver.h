@@ -570,7 +570,7 @@ public:
             ui u = P[i];
             if (dP[u] < P.size() - K)
                 cout << " Invalid " << u;
-            kplex.push_back(u);
+            best_solution.push_back(u);
         }
     }
     void recSearch(RecLevel level)
