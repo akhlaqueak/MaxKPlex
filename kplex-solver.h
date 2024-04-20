@@ -560,7 +560,7 @@ public:
     }
     void reportSolution()
     {
-        kplex.clear();
+        best_solution.clear();
         best_size = P.size();
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
