@@ -440,7 +440,6 @@ public:
         n = _n;
         best_size = kplex.size();
         initialization(vp, true);
-                cout<<"new size "<<kplex.size()<<endl;
         if (R_end)
         {
             initContainers(sz1h);
@@ -452,6 +451,7 @@ public:
                 kplex.clear();
                 for (ui u : best_solution)
                     kplex.push_back(SR[u]);
+                cout<<"new size "<<kplex.size()<<endl;
             }
         reset(vp);
     }
