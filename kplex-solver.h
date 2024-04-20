@@ -160,6 +160,7 @@ public:
         }
         if (n - idx > best_size)
         {
+            printf("Degen find a sqqolution of size %u\n", best_size);
             best_solution.clear();
             best_size = n - idx;
             for (ui i = idx; i < n; i++)
