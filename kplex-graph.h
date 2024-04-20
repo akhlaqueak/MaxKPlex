@@ -64,6 +64,7 @@ public:
         cn.resize(n);
         initVectors(n);
         mat_size = 2*n;
+        V=0;
     }
     void print()
     {
