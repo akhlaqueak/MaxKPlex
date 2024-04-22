@@ -156,8 +156,8 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!vis[j] && matrix[u*n+j])
-                // if (!vis[j] && adjMat(u, j))
+                if (!vis[j] && matrix[u * n + j])
+                    // if (!vis[j] && adjMat(u, j))
                     --degree[j];
         }
         if (n - idx > best_size)
@@ -194,7 +194,7 @@ public:
             degree[u] = 0;
             for (ui j = 0; j < R_end; j++)
                 // if (adjMat(u, SR[j]))
-                if (matrix[u*n+SR[j]])
+                if (matrix[u * n + SR[j]])
                     ++degree[u];
         }
 
@@ -211,7 +211,7 @@ public:
             char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
-                // if (adjMat(SR[i], SR[j]))
+                    // if (adjMat(SR[i], SR[j]))
                     neighbors[neighbors_n++] = SR[j];
             for (ui j = 0; j < neighbors_n; j++)
                 for (ui k = j + 1; k < neighbors_n; k++)
@@ -325,7 +325,7 @@ public:
                         else if (SR_rid[v] >= S_end)
                         { // v, w, \in R --- RR5
                             if (matrix[v * n + w])
-                            // if (adjMat(v, w))
+                                // if (adjMat(v, w))
                                 Qe.push(std::make_pair(v, w));
                         }
                         else if (level_id[w] > level)
@@ -347,7 +347,7 @@ public:
             ui v = Qe.front().first, w = Qe.front().second;
             Qe.pop();
             // if (level_id[v] <= level || level_id[w] <= level || !adjMat(v, w))
-                if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
+            if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
@@ -457,7 +457,7 @@ public:
         reset(vp);
     }
 
-    ui updateC_K(ui u)
+    ui pruneC_K(ui u)
     {
         ui sz = C.size();
         for (int i = 0; i < C.size();)
@@ -470,7 +470,7 @@ public:
         }
         return sz - C.size();
     }
-    ui updateM_K(ui u)
+    ui pruneM_K(ui u)
     {
         ui sz = M.size();
         for (int i = 0; i < M.size();)
@@ -515,12 +515,12 @@ public:
         while (br < m)
         {
             ui u = M.fakePop();
-            rsn++;                      // so that the fakepop here is recoved in the end of this
-                                        // function
-            addToP_K(u);                // u is added to P, that causes C, M and X to
-                                        // shrink... as per theorem 9, 10, 11
-            rc += updateC_K(u);         // Applying Theorem 10 to update C
-            rsn += updateM_K(u); // applying Theorem 9 to update second hop neighbors
+            rsn++;              // so that the fakepop here is recoved in the end of this
+                                // function
+            addToP_K(u);        // u is added to P, that causes C, M and X to
+                                // shrink... as per theorem 9, 10, 11
+            rc += pruneC_K(u);  // Applying Theorem 10 to update C
+            rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
 
             if (M.empty())
             {
@@ -542,8 +542,8 @@ public:
             rsn++;
             // todo prune 1hop neighbors, and then call recSearch if we can find a
             // larger kplex than ub size
-            rc += updateC_K(u);
-            rsn += updateM_K(u); // applying Theorem 9 to update second hop neighbors
+            rc += pruneC_K(u);
+            rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
             // recSearch();
             flag = false;
 #ifdef NAIVE
@@ -1054,12 +1054,18 @@ public:
     }
     ui pruneC(ui u)
     {
-        // apply theorem 11 to remove those vertices in C that can't exist with u.
+        // apply theorem 11 to remove those vertices in C that can't exist with u \in C
+        // const int thresPP1 = best_size - K - 2 * max((int)K - 2, 0), thresPP2 = best_size - K - 2 * max((int)K - 3, 0);
+        // const int thresPC1 = best_size - 2 * K - max((int)K - 2, 0), thresPC2 = best_size - K - 1 - max((int)K - 2, 0) - max((int)K - 3, 0);
+        // const int thresCC1 = best_size - 2 * K - (K - 1), thresCC2 = best_size - 2 * K + 2 - (K - 1);
         ui sz = C.size();
         for (int i = 0; i < C.size();)
         {
-            int ele = C[i];
-            if (UNLINK2EQUAL > g.cnMatrix(u, ele) or !canMoveToP(ele))
+            int ele = C[i], a = SR[u], b = SR[ele];
+            // if (UNLINK2EQUAL > g.cnMatrix(u, ele) or !canMoveToP(ele))
+            if (matrix[a * n + b] and cn[a * n + b] < best_size - 3 * K)
+                removeFromC(ele, true); // fake remove when flag is true
+            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1))
                 removeFromC(ele, true); // fake remove when flag is true
             else
                 ++i;
