@@ -460,7 +460,6 @@ public:
                     kplex.push_back(SR[u]);
             }
         }
-        reset(vp);
     }
 
     ui pruneC_K(ui u)
