@@ -447,7 +447,7 @@ public:
     {
         n = _n;
         best_size = kplex.size();
-        cout<<"kp "<<kplex.size();
+        cout << "kp " << kplex.size();
         initialization(vp, true);
         if (R_end)
         {
@@ -455,12 +455,12 @@ public:
             // g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
         }
-            if (best_size > kplex.size())
-            {
-                kplex.clear();
-                for (ui u : best_solution)
-                    kplex.push_back(u);
-            }
+        if (best_size > kplex.size())
+        {
+            kplex.clear();
+            for (ui u : best_solution)
+                kplex.push_back(u);
+        }
     }
 
     ui pruneC_K(ui u)
@@ -581,6 +581,22 @@ public:
             best_solution.push_back(u);
         }
     }
+    bool lookAheadSolution()
+    {
+        bool iskplex = true;
+        for (ui i = 0; i < C.size(); i++)
+        {
+            if (dG[C[i]] < PuCSize - K)
+            {
+                iskplex = false;
+                break;
+            }
+        }
+        if (iskplex)
+            for (ui i = 0; i < C.size(); i++)
+                CToP(C[i]);
+        return iskplex;
+    }
     void recSearch(RecLevel level)
     {
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
@@ -588,7 +604,7 @@ public:
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
         // rc += updateC_SecondOrder();
-        if (C.empty())
+        if (C.empty() or lookAheadSolution())
         {
             if (P.size() > best_size)
             {
@@ -1070,7 +1086,7 @@ public:
         {
             int v = C[i];
             // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
-            if(!canMoveToP(v))
+            if (!canMoveToP(v))
                 removeFromC(v, true); // fake remove when flag is true
             else if ((matrix[u * n + v] and cn[u * n + v] < best_size - 3 * K))
             {
