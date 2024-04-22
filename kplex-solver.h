@@ -447,6 +447,7 @@ public:
     {
         n = _n;
         best_size = kplex.size();
+        cout<<"kp "<<kplex.size();
         initialization(vp, true);
         if (R_end)
         {
