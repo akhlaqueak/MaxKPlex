@@ -592,7 +592,7 @@ public:
             }
         }
         for (ui i = 0; i < sz; i++)
-            CToP(C[0]);
+            CToP(C.top());
         return sz;
     }
     void recSearch(RecLevel level)
