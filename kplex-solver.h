@@ -1067,8 +1067,10 @@ public:
                 removeFromC(ele, true); // fake remove when flag is true
                 cout<<"-";
             }
-            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1))
+            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1)){
                 removeFromC(ele, true); // fake remove when flag is true
+                cout<<"=";
+            }
             else
                 ++i;
         }
