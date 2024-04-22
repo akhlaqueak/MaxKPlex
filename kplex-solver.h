@@ -447,7 +447,6 @@ public:
     {
         n = _n;
         best_size = kplex.size();
-        cout << "kp " << kplex.size();
         initialization(vp, true);
         if (R_end)
         {
@@ -583,18 +582,15 @@ public:
     }
     ui lookAheadSolution()
     {
-        bool iskplex = true;
         ui sz = C.size();
         for (ui i = 0; i < sz; i++)
         {
             if (dG[C[i]] < PuCSize - K)
             {
-                iskplex = false;
+                sz = 0;
                 break;
             }
         }
-        if (not iskplex)
-            sz = 0;
         for (ui i = 0; i < sz; i++)
             CToP(C[i]);
         return sz;
