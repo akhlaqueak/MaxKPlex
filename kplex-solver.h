@@ -1069,10 +1069,11 @@ public:
         {
             int v = C[i];
             // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
-            if (matrix[u * n + v] and cn[u * n + v] < best_size - 3 * K)
+            if(!canMoveToP(v))
+                removeFromC(v, true); // fake remove when flag is true
+            else if ((matrix[u * n + v] and cn[u * n + v] < best_size - 3 * K))
             {
                 removeFromC(v, true); // fake remove when flag is true
-                cout << "-";
             }
             else if (!matrix[u * n + v] and cn[u * n + v] < best_size - K - 2 * (K - 1))
             {
