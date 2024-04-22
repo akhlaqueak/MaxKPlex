@@ -104,7 +104,7 @@ public:
                 matrix_size *= 2;
             } while (((long long)n) * n > matrix_size);
             delete[] matrix;
-            cout<<matrix_size<<" ";
+            cout << matrix_size << " ";
             matrix = new char[matrix_size];
             fill(matrix, matrix + (matrix_size), 0);
 #ifdef _SECOND_ORDER_PRUNING_
@@ -120,7 +120,8 @@ public:
             ui a = e.first, b = e.second;
             degree[a]++;
             degree[b]++;
-            adjMat(a, b) = 1;
+            matrix[a * n + b] = matrix[b * n + a] = 1;
+            // adjMat(a, b) = 1;
         }
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
@@ -155,7 +156,8 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!vis[j] && adjMat(u, j))
+                if (!vis[j] && matrix[u*n+j])
+                // if (!vis[j] && adjMat(u, j))
                     --degree[j];
         }
         if (n - idx > best_size)
@@ -191,7 +193,8 @@ public:
             ui u = SR[i];
             degree[u] = 0;
             for (ui j = 0; j < R_end; j++)
-                if (adjMat(u, SR[j]))
+                // if (adjMat(u, SR[j]))
+                if (matrix[u*n+SR[j]])
                     ++degree[u];
         }
 
@@ -205,10 +208,10 @@ public:
         for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0;
-            // char *t_matrix = matrix + SR[i] * n;
+            char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
-                // if (t_matrix[SR[j]])
-                if (adjMat(SR[i], SR[j]))
+                if (t_matrix[SR[j]])
+                // if (adjMat(SR[i], SR[j]))
                     neighbors[neighbors_n++] = SR[j];
             for (ui j = 0; j < neighbors_n; j++)
                 for (ui k = j + 1; k < neighbors_n; k++)
@@ -258,10 +261,10 @@ public:
 
                 bool terminate = false;
                 ui neighbors_n = 0;
-                // char *t_matrix = matrix + u * n;
+                char *t_matrix = matrix + u * n;
                 for (ui i = 0; i < R_end; i++)
-                    // if (t_matrix[SR[i]])
-                    if (adjMat(SR[i], u))
+                    if (t_matrix[SR[i]])
+                    // if (adjMat(SR[i], u))
                     {
                         ui w = SR[i];
                         neighbors[neighbors_n++] = w;
@@ -321,8 +324,8 @@ public:
                             terminate = true; // v, w \in S --- UB2
                         else if (SR_rid[v] >= S_end)
                         { // v, w, \in R --- RR5
-                            // if (matrix[v * n + w])
-                            if (adjMat(v, w))
+                            if (matrix[v * n + w])
+                            // if (adjMat(v, w))
                                 Qe.push(std::make_pair(v, w));
                         }
                         else if (level_id[w] > level)
@@ -343,8 +346,8 @@ public:
 
             ui v = Qe.front().first, w = Qe.front().second;
             Qe.pop();
-            if (level_id[v] <= level || level_id[w] <= level || !adjMat(v, w))
-                // if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
+            // if (level_id[v] <= level || level_id[w] <= level || !adjMat(v, w))
+                if (level_id[v] <= level || level_id[w] <= level || !matrix[v * n + w])
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
@@ -365,10 +368,10 @@ public:
                 // printf("remove edge between %u and %u\n", v, w);
 #endif
 
-            // assert(matrix[v * n + w]);
-            // matrix[v * n + w] = matrix[w * n + v] = 0;
-            assert(adjMat(v, w));
-            adjMat(v, w) = 0;
+            assert(matrix[v * n + w]);
+            matrix[v * n + w] = matrix[w * n + v] = 0;
+            // assert(adjMat(v, w));
+            // adjMat(v, w) = 0;
             --degree[v];
             --degree[w];
 
@@ -382,8 +385,8 @@ public:
 
             char *t_matrix = matrix + v * n;
             for (ui i = 0; i < R_end; i++)
-                if (adjMat(v, SR[i]))
-                // if (t_matrix[SR[i]])
+                // if (adjMat(v, SR[i]))
+                if (t_matrix[SR[i]])
                 {
                     --cn[w * n + SR[i]];
                     --cn[SR[i] * n + w];
@@ -397,14 +400,14 @@ public:
                             Qv.push(w);
                         }
                     }
-                    else if (adjMat(w, SR[i]))
-                        // else if (matrix[w * n + SR[i]])
+                    // else if (adjMat(w, SR[i]))
+                    else if (matrix[w * n + SR[i]])
                         Qe.push(std::make_pair(w, SR[i]));
                 }
-            // t_matrix = matrix + w * n;
+            t_matrix = matrix + w * n;
             for (ui i = 0; i < R_end; i++)
-                // if (t_matrix[SR[i]])
-                if (adjMat(w, SR[i]))
+                if (t_matrix[SR[i]])
+                // if (adjMat(w, SR[i]))
                 {
                     --cn[v * n + SR[i]];
                     --cn[SR[i] * n + v];
@@ -418,8 +421,8 @@ public:
                             Qv.push(v);
                         }
                     }
-                    else if (adjMat(v, SR[i]))
-                        // else if (matrix[v * n + SR[i]])
+                    // else if (adjMat(v, SR[i]))
+                    else if (matrix[v * n + SR[i]])
                         Qe.push(std::make_pair(v, SR[i]));
                 }
 #endif
@@ -1083,8 +1086,8 @@ public:
         {
             for (ui j = 0; j < R_end; j++)
             {
-                // if (matrix[u * n + v])
-                if (adjMat(SR[i], SR[j]))
+                if (matrix[SR[i] * n + SR[j]])
+                    // if (adjMat(SR[i], SR[j]))
                     g.adjList[i].push_back(j);
             }
         }
@@ -1187,13 +1190,13 @@ public:
         }
         return true;
     }
-    char &adjMat(ui i, ui j)
-    {
-        if (i < j)
-            return matrix[i * n + j];
-        else
-            return matrix[j * n + i];
-    }
+    // char &adjMat(ui i, ui j)
+    // {
+    //     if (i < j)
+    //         return matrix[i * n + j];
+    //     else
+    //         return matrix[j * n + i];
+    // }
     void CToP(ui u)
     {
         C.remove(u);
@@ -1207,7 +1210,8 @@ public:
     void reset(const auto &vp)
     {
         for (auto &e : vp)
-            adjMat(e.first, e.second) = 0;
+            matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
+
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
         M.clear();
