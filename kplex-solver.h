@@ -582,15 +582,16 @@ public:
     }
     ui lookAheadSolution()
     {
+        ui mindg = dG[P[0]];
+        for (ui i = 1; i < P.size(); i++)
+            if (dG[P[i]] < mindg)
+                mindg = dG[P[i]];
         ui sz = C.size();
         for (ui i = 0; i < sz; i++)
-        {
-            if (dG[C[i]] < PuCSize - K)
-            {
-                sz = 0;
-                break;
-            }
-        }
+            if (dG[C[i]] < mindg)
+                mindg = dG[C[i]];
+        if (mindg + K < PuCSize)
+            sz = 0;
         for (ui i = 0; i < sz; i++)
             CToP(C.top());
         return sz;
