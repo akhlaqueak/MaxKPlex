@@ -1145,7 +1145,7 @@ public:
         for (ui v : g.adjList[u])
         {
             dP[v]++;
-            g.soMatrix(u, v)--;
+            // g.soMatrix(u, v)--;
         }
     }
     void removeFromP(ui u)
@@ -1154,7 +1154,7 @@ public:
         for (ui v : g.adjList[u])
         {
             dP[v]--;
-            g.soMatrix(u, v)++;
+            // g.soMatrix(u, v)++;
         }
     }
 
