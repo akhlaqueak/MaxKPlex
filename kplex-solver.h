@@ -454,13 +454,13 @@ public:
             initContainers(sz1h);
             // g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
+        }
             if (best_size > kplex.size())
             {
                 kplex.clear();
                 for (ui u : best_solution)
                     kplex.push_back(u);
             }
-        }
     }
 
     ui pruneC_K(ui u)
