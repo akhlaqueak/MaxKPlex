@@ -470,7 +470,7 @@ public:
         }
         return sz - C.size();
     }
-    ui updateSecNeigh_K(ui u)
+    ui updateM_K(ui u)
     {
         ui sz = M.size();
         for (int i = 0; i < M.size();)
@@ -520,7 +520,7 @@ public:
             addToP_K(u);                // u is added to P, that causes C, M and X to
                                         // shrink... as per theorem 9, 10, 11
             rc += updateC_K(u);         // Applying Theorem 10 to update C
-            rsn += updateSecNeigh_K(u); // applying Theorem 9 to update second hop neighbors
+            rsn += updateM_K(u); // applying Theorem 9 to update second hop neighbors
 
             if (M.empty())
             {
@@ -543,6 +543,7 @@ public:
             // todo prune 1hop neighbors, and then call recSearch if we can find a
             // larger kplex than ub size
             rc += updateC_K(u);
+            rsn += updateM_K(u); // applying Theorem 9 to update second hop neighbors
             // recSearch();
             flag = false;
 #ifdef NAIVE
