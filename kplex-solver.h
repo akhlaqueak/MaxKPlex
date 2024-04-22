@@ -162,6 +162,7 @@ public:
         }
         if (n - idx > best_size)
         {
+            printf("Degen find a sqqolution of size %u\n", best_size);
             best_solution.clear();
             best_size = n - idx;
             for (ui i = idx; i < n; i++)
@@ -447,13 +448,14 @@ public:
             initContainers(sz1h);
             g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
+        }
             if (best_size > kplex.size())
             {
                 kplex.clear();
                 for (ui u : best_solution)
                     kplex.push_back(SR[u]);
+                cout<<"new size "<<kplex.size()<<endl;
             }
-        }
         reset(vp);
     }
 
@@ -561,7 +563,7 @@ public:
     }
     void reportSolution()
     {
-        kplex.clear();
+        best_solution.clear();
         best_size = P.size();
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
@@ -571,7 +573,7 @@ public:
             ui u = P[i];
             if (dP[u] < P.size() - K)
                 cout << " Invalid " << u;
-            kplex.push_back(u);
+            best_solution.push_back(u);
         }
     }
     void recSearch(RecLevel level)
@@ -1134,7 +1136,7 @@ public:
         for (ui v : g.adjList[u])
         {
             dP[v]++;
-            g.soMatrix(u, v)--;
+            // g.soMatrix(u, v)--;
         }
     }
     void removeFromP(ui u)
@@ -1143,7 +1145,7 @@ public:
         for (ui v : g.adjList[u])
         {
             dP[v]--;
-            g.soMatrix(u, v)++;
+            // g.soMatrix(u, v)++;
         }
     }
 

@@ -49,6 +49,7 @@ public:
     vecui cnMat, adjMat, soMat;
     ui rv = 0, re = 0, n;
     ui lb = 0, minindex = 0;
+    ui mat_size;
     ListLinearHeap heap;
 
     KPlexGraph(ui _k, ui n) : k(_k), heap(n, n - 1)
@@ -62,6 +63,8 @@ public:
         soMat.resize(2 * n);
         cn.resize(n);
         initVectors(n);
+        mat_size = 2*n;
+        V=0;
     }
     void print()
     {
@@ -162,6 +165,15 @@ public:
     }
     void buildCommonMatrix(ui sz1h)
     {
+        if (((long long)V) * V > mat_size)
+        {
+            do
+            {
+                mat_size *= 2;
+            } while (((long long)V) * V > mat_size);
+            cnMat.resize(mat_size);
+            // fill(matrix, matrix + (mat_size), 0);
+        }
         // auto commNeighbors = [](const vecui &lst1, const vecui &lst2)
         // {
         //     int i = 0, j = 0;
