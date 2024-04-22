@@ -1077,7 +1077,7 @@ public:
             else if (!matrix[u * n + v] and cn[u * n + v] < best_size - K - 2 * (K - 1))
             {
                 removeFromC(v, true); // fake remove when flag is true
-                cout << "=";
+                // cout << "=";
             }
             else
                 ++i;
