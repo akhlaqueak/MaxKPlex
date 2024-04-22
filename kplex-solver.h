@@ -1067,16 +1067,16 @@ public:
         ui sz = C.size();
         for (int i = 0; i < C.size();)
         {
-            int ele = C[i], a = SR[u], b = SR[ele];
-            // if (UNLINK2EQUAL > g.cnMatrix(u, ele) or !canMoveToP(ele))
-            if (matrix[a * n + b] and cn[a * n + b] < best_size - 3 * K)
+            int v = C[i];
+            // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
+            if (matrix[u * n + v] and cn[u * n + v] < best_size - 3 * K)
             {
-                removeFromC(ele, true); // fake remove when flag is true
+                removeFromC(v, true); // fake remove when flag is true
                 cout << "-";
             }
-            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1))
+            else if (!matrix[u * n + v] and cn[u * n + v] < best_size - K - 2 * (K - 1))
             {
-                removeFromC(ele, true); // fake remove when flag is true
+                removeFromC(v, true); // fake remove when flag is true
                 cout << "=";
             }
             else
