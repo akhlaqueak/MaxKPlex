@@ -105,14 +105,21 @@ public:
             delete[] matrix;
             cout << matrix_size << " ";
             matrix = new char[matrix_size];
-            fill(matrix, matrix + (matrix_size), 0);
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
             cn = new ui[matrix_size];
-            fill(cn, cn + (matrix_size), 0);
 #endif
         }
+        fill(matrix, matrix + n * n, 0);
+        fill(cn, cn + n * n, 0);
+        fill(dP.begin(), dP.begin() + n, 0);
+        fill(dG.begin(), dG.begin() + n, 0);
         fill(degree, degree + n, 0);
+        M.clear();
+        block.clear();
+        P.clear();
+        C.clear();
+
         for (auto &e : vp)
         {
             assert(e.first >= 0 && e.first < n && e.second >= 0 && e.second < n);
@@ -1223,18 +1230,18 @@ public:
         removeFromP(u);
         C.add(u);
     }
-    void reset(const auto &vp)
-    {
-        // for (auto &e : vp)
-        //     matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
-        fill(matrix, matrix + n * n, 0);
-        fill(dP.begin(), dP.begin() + n, 0);
-        fill(dG.begin(), dG.begin() + n, 0);
-        M.clear();
-        block.clear();
-        P.clear();
-        C.clear();
-    }
+    // void reset(const auto &vp)
+    // {
+    //     // for (auto &e : vp)
+    //     //     matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
+    //     fill(matrix, matrix + n * n, 0);
+    //     fill(dP.begin(), dP.begin() + n, 0);
+    //     fill(dG.begin(), dG.begin() + n, 0);
+    //     M.clear();
+    //     block.clear();
+    //     P.clear();
+    //     C.clear();
+    // }
     void naiveSearch()
     {
         if (PuCSize < best_size)
