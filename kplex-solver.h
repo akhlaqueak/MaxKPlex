@@ -611,9 +611,9 @@ public:
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP_K(bn);
-                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                // ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
                 recSearch(OTHER);
-                recoverC(rc);
+                // recoverC(rc);
                 removeFromP(bn);
                 C.fakeRecPop();
             }
