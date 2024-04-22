@@ -581,10 +581,11 @@ public:
             best_solution.push_back(u);
         }
     }
-    bool lookAheadSolution()
+    ui lookAheadSolution()
     {
         bool iskplex = true;
-        for (ui i = 0; i < C.size(); i++)
+        ui sz = C.size();
+        for (ui i = 0; i < sz; i++)
         {
             if (dG[C[i]] < PuCSize - K)
             {
@@ -592,10 +593,11 @@ public:
                 break;
             }
         }
-        if (iskplex)
-            for (ui i = 0; i < C.size(); i++)
-                CToP(C[i]);
-        return iskplex;
+        if (not iskplex)
+            sz = 0;
+        for (ui i = 0; i < sz; i++)
+            CToP(C[i]);
+        return sz;
     }
     void recSearch(RecLevel level)
     {
@@ -604,7 +606,7 @@ public:
         ui cp = moveDirectlyToP();
         ui rc = updateC(), ub = 0;
         // rc += updateC_SecondOrder();
-        if (C.empty() or lookAheadSolution())
+        if (C.empty())
         {
             if (P.size() > best_size)
             {
@@ -1025,8 +1027,8 @@ public:
 
     ui moveDirectlyToP()
     {
-        ui sz = 0;
-        vecui temp = P.getData();
+        ui sz = lookAheadSolution();
+
         for (ui i = 0; i < C.size();)
         {
             ui u = C[i];
