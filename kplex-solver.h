@@ -15,7 +15,6 @@ bool flag = false;
 
 class MaxKPlex
 {
-    KPlexGraph g;
     vecui &kplex;
     vecui dG, dP;
     RandList P, C, M;
@@ -60,7 +59,7 @@ class MaxKPlex
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
-        : g(_k, m), kplex(kp), K(_k)
+        : kplex(kp), K(_k)
     {
         P.init(m);
         C.init(m);
@@ -445,7 +444,7 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-            g.buildCommonMatrix(sz1h);
+            // g.buildCommonMatrix(sz1h);
             kSearch(K - 1);
             if (best_size > kplex.size())
             {
@@ -463,10 +462,10 @@ public:
         for (int i = 0; i < C.size();)
         {
             int ele = C[i];
-            if (UNLINK2EQUAL > g.cnMatrix(u, ele))
-                removeFromC(ele, true);
-            else
-                ++i;
+            // if (UNLINK2EQUAL > g.cnMatrix(u, ele))
+            //     removeFromC(ele, true);
+            // else
+            ++i;
         }
         return sz - C.size();
     }
@@ -476,10 +475,10 @@ public:
         for (int i = 0; i < M.size();)
         {
             int ele = M[i];
-            if (UNLINK2EQUAL > g.cnMatrix(u, ele))
-                M.fakeRemove(ele);
-            else
-                ++i;
+            // if (UNLINK2EQUAL > g.cnMatrix(u, ele))
+            //     M.fakeRemove(ele);
+            // else
+            ++i;
         }
         return sz - M.size();
     }
@@ -611,9 +610,9 @@ public:
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP_K(bn);
-                // ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
                 recSearch(OTHER);
-                // recoverC(rc);
+                recoverC(rc);
                 removeFromP(bn);
                 C.fakeRecPop();
             }
@@ -632,41 +631,42 @@ public:
         for (ui i = 0; i < rc; i++)
         {
             ui u = C.fakeRecPop();
-            for (ui v : g.adjList[u])
-                dG[v]++;
+            for (ui v = 0; v < n; v++)
+                if (matrix[u * n + v])
+                    dG[v]++;
         }
     }
-    ui updateC_SecondOrder()
-    {
-        ui sz = C.size();
-        for (ui j = 0; j < P.size(); j++)
-            for (ui i = 0; i < C.size();)
-            {
-                ui u = C[i], v = P[j];
-                if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_size)
-                    removeFromC(u, true);
-                else
-                    i++;
-            }
+    // ui updateC_SecondOrder()
+    // {
+    //     ui sz = C.size();
+    //     for (ui j = 0; j < P.size(); j++)
+    //         for (ui i = 0; i < C.size();)
+    //         {
+    //             ui u = C[i], v = P[j];
+    //             if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_size)
+    //                 removeFromC(u, true);
+    //             else
+    //                 i++;
+    //         }
 
-        return sz - C.size();
-    }
-    ui secondOrderUB()
-    {
-        ui ub = PuCSize;
-        for (ui i = 0; i < P.size(); i++)
-        {
-            for (ui j = 0; j < P.size(); j++)
-                if (i != j)
-                {
-                    ui u = P[i], v = P[j];
-                    ui b = support(u) + support(v) + g.soMatrix(u, v) + P.size();
-                    if (b < ub)
-                        ub = b;
-                }
-        }
-        return ub > best_size;
-    }
+    //     return sz - C.size();
+    // }
+    // ui secondOrderUB()
+    // {
+    //     ui ub = PuCSize;
+    //     for (ui i = 0; i < P.size(); i++)
+    //     {
+    //         for (ui j = 0; j < P.size(); j++)
+    //             if (i != j)
+    //             {
+    //                 ui u = P[i], v = P[j];
+    //                 ui b = support(u) + support(v) + g.soMatrix(u, v) + P.size();
+    //                 if (b < ub)
+    //                     ub = b;
+    //             }
+    //     }
+    //     return ub > best_size;
+    // }
     pair<ui, ui> getBranchings()
     {
         for (ui i = 0; i < P.size(); i++)
@@ -676,11 +676,11 @@ public:
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
             // Lookup neig(&lookup, &g.adjList[u]);
-            bmp.setup(g.adjList[u], g.V);
+            // bmp.setup(g.adjList[u], g.V);
             for (ui j = 0; j < C.size(); j++)
             {
                 ui v = C[j];
-                if (!bmp.test(v))
+                if (!matrix[u * n + v])
                     PI[u].push_back(v);
             }
         }
@@ -704,7 +704,7 @@ public:
             if (maxpi != -1)
             {
 
-                bmp.setup(PI[maxpi], g.V);
+                bmp.setup(PI[maxpi], n);
                 // remove pi* from C
                 for (ui i = cend; i < C.size(); i++)
                 {
@@ -766,12 +766,12 @@ public:
             if (support(u) == 0)
                 continue;
             // Lookup neig(&lookup, &g.adjList[u]);
-            bmp.setup(g.adjList[u], g.V);
+            // bmp.setup(g.adjList[u], g.V);
             for (ui j = 0; j < C.size(); j++)
             {
                 // PI[u] = non-neighbors of u in C
                 ui v = C[j];
-                if (!bmp.test(v))
+                if (!matrix[u * n + v])
                     PI[u].push_back(v);
             }
         }
@@ -862,12 +862,12 @@ public:
             //     bm.set(v);
             // Lookup l1(&lookup, &g.adjList[u], true);
             // Lookup neigh(&lookup, &g.adjList[u], true);
-            bmp.setup(g.adjList[u], g.V);
+            // bmp.setup(g.adjList[u], g.V);
             for (ui v : ISc)
                 // if (bmp.test(v))
                 // if(l1[v])
                 // if(isNeighbor(g.adjList[u], v))
-                if (bmp.test(v))
+                if (matrix[u * n + v])
                 {
                     flag = false;
                     break;
@@ -921,7 +921,7 @@ public:
         // ISc[0... vlc) we have loose vertices
 
         // Lookup inIS(&lookup, &ISc, true);
-        bmp.setup(ISc, g.V);
+        bmp.setup(ISc, n);
         for (ui i = 0; vlc < ub and i < C.size(); i++)
         {
             ui u = C[i];
@@ -931,7 +931,7 @@ public:
             for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
             {
                 ui v = ISc[j];
-                if (isNeighbor(g.adjList[v], u))
+                if (matrix[u * n + v])
                 {
                     if (j != vlc + vc)
                         swap(ISc[vlc + vc], ISc[j]);
@@ -952,9 +952,9 @@ public:
             if (bmp.test(u) or support(u) >= ub) // this loop running for C\ISc
                 continue;
             ui nv = 0;
-            for (ui v : g.adjList[u])
+            for (ui v = 0; v < n; v++)
             {
-                if (bmp.test(v))
+                if (matrix[u * n + v])
                     nv++;
             }
             if (nv <= ub - support(u))
@@ -1063,13 +1063,15 @@ public:
         {
             int ele = C[i], a = SR[u], b = SR[ele];
             // if (UNLINK2EQUAL > g.cnMatrix(u, ele) or !canMoveToP(ele))
-            if (matrix[a * n + b] and cn[a * n + b] < best_size - 3 * K){
+            if (matrix[a * n + b] and cn[a * n + b] < best_size - 3 * K)
+            {
                 removeFromC(ele, true); // fake remove when flag is true
-                cout<<"-";
+                cout << "-";
             }
-            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1)){
+            else if (!matrix[a * n + b] and cn[a * n + b] < best_size - K - 2 * (K - 1))
+            {
                 removeFromC(ele, true); // fake remove when flag is true
-                cout<<"=";
+                cout << "=";
             }
             else
                 ++i;
@@ -1093,25 +1095,27 @@ public:
 
     void initContainers(ui sz1h)
     {
-        for (ui i = 0; i < R_end; i++)
-        {
-            for (ui j = 0; j < R_end; j++)
-            {
-                if (matrix[SR[i] * n + SR[j]])
-                    // if (adjMat(SR[i], SR[j]))
-                    g.adjList[i].push_back(j);
-            }
-        }
-        g.V = R_end;
-        // g.print();
+        // for (ui i = 0; i < R_end; i++)
+        // {
+        //     for (ui j = 0; j < R_end; j++)
+        //     {
+        //         ui u=SR[i], v=SR[j];
+        //         if (matrix[u * n + v])
+        //             // if (adjMat(SR[i], SR[j]))
+        //             g.adjList[i].push_back(j);
+        //     }
+        // }
+        // g.V = R_end;
+        // // g.print();
 
         addToP_K(0);
-        for (ui u = 1; u < R_end; u++)
+        for (ui i = 1; i < R_end; i++)
         {
+            ui u = SR[i];
 #ifdef NAIVE
             addToC(u);
 #else
-            if (u <= SR_rid[sz1h])
+            if (u <= sz1h)
                 addToC(u);
             else
                 M.add(u);
@@ -1125,8 +1129,9 @@ public:
             u = C.fakeRecPop();
         else
             C.add(u);
-        for (ui v : g.adjList[u])
-            dG[v]++;
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]++;
     }
 
     void removeFromC(ui u, bool fake = false)
@@ -1135,34 +1140,33 @@ public:
             C.fakeRemove(u);
         else
             C.remove(u);
-        for (ui v : g.adjList[u])
-            dG[v]--;
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]--;
     }
 
     void addToP(ui u)
     {
         P.add(u);
-        for (ui v : g.adjList[u])
-        {
-            dP[v]++;
-            // g.soMatrix(u, v)--;
-        }
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dP[v]++;
     }
     void removeFromP(ui u)
     {
         P.remove(u);
-        for (ui v : g.adjList[u])
-        {
-            dP[v]--;
-            // g.soMatrix(u, v)++;
-        }
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dP[v]--;
     }
 
     ui addToP_K(ui u)
     {
         addToP(u);
-        for (ui v : g.adjList[u])
-            dG[v]++;
+        // for (ui v : g.adjList[u])
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]++;
         return u;
     }
     ui removeFromP_K()
@@ -1170,8 +1174,9 @@ public:
         ui u = P.top();
         removeFromP(u);
         // M.add(u);
-        for (ui v : g.adjList[u])
-            dG[v]--;
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]--;
         return u;
     }
     ui updateC()
@@ -1196,7 +1201,7 @@ public:
         for (ui i = 0; i < P.size(); i++)
         {
             ui v = P.get(i);
-            if (dP[v] + K == P.size() && !isNeighbor(g.adjList[u], v))
+            if (dP[v] + K == P.size() && !matrix[u * n + v])
                 return false;
         }
         return true;
@@ -1220,16 +1225,15 @@ public:
     }
     void reset(const auto &vp)
     {
-        for (auto &e : vp)
-            matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
-
+        // for (auto &e : vp)
+        //     matrix[e.first * n + e.second] = matrix[e.second * n + e.first] = 0;
+        fill(matrix, matrix + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
         M.clear();
         block.clear();
         P.clear();
         C.clear();
-        g.clear();
     }
     void naiveSearch()
     {
