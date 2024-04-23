@@ -461,26 +461,30 @@ public:
         // for (ui i = 0; i < n; i++)
         //     cout << dG[i] << " ";
         // cout<<"*************"<< P.size()<<endl;
-        while (!C.empty()){
+        while (!C.empty())
+        {
             removeFromC(C.top());
         }
-        if(P.size())
-        removeFromP_K();
+        if (P.size())
+            removeFromP_K();
         for (ui i = 0; i < n; i++)
-        if(dG[i])
-            cout << dG[i] << " ";
+            if (dG[i])
+                cout << dG[i] << " ";
     }
 
     ui pruneC_K(ui u)
     {
+        // here u \in M is just added to P, that causes some vertices in C to be kicked out
         ui sz = C.size();
         for (int i = 0; i < C.size();)
         {
-            int ele = C[i];
-            // if (UNLINK2EQUAL > g.cnMatrix(u, ele))
-            //     removeFromC(ele, true);
-            // else
-            ++i;
+            int v = C[i];
+            if ((matrix[u * n + v] and cn[u * n + v] < best_size - 2 * K - 2 * max((int)K - 2, 0)) or
+                (!matrix[u * n + v] and cn[u * n + v] < best_size - K - max((int)K - 2, 0) - max((int)K - 2, 1)) or
+                !canMoveToP(v))
+                removeFromC(v, true); // fake remove when flag is true
+            else
+                ++i;
         }
         return sz - C.size();
     }
@@ -610,10 +614,12 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui rc = updateC(), ub = 0;
-        if(PuCSize<=best_size){
+        if (PuCSize <= best_size)
+        {
             recoverC(rc);
             return;
         }
+        // todo movedirectly to p need to be fixed...
         ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
@@ -632,6 +638,7 @@ public:
         // if (secondOrderUB())
         {
             auto B = getBranchings();
+            // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
                 if (level == FIRST)
@@ -1038,10 +1045,8 @@ public:
     ui moveDirectlyToP()
     {
         ui sz = 0;
-        return sz;
         sz = lookAheadSolution();
-        if(sz)
-        cout<<"lahead"<<P.size()<<endl;
+        return sz;
 
         for (ui i = 0; i < C.size();)
         {
@@ -1093,10 +1098,7 @@ public:
     }
     ui pruneC(ui u)
     {
-        // apply theorem 11 to remove those vertices in C that can't exist with u \in C
-        // const int thresPP1 = best_size - K - 2 * max((int)K - 2, 0), thresPP2 = best_size - K - 2 * max((int)K - 3, 0);
-        // const int thresPC1 = best_size - 2 * K - max((int)K - 2, 0), thresPC2 = best_size - K - 1 - max((int)K - 2, 0) - max((int)K - 3, 0);
-        // const int thresCC1 = best_size - 2 * K - (K - 1), thresCC2 = best_size - 2 * K + 2 - (K - 1);
+
         ui sz = C.size();
         for (int i = 0; i < C.size();)
         {
