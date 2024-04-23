@@ -446,7 +446,6 @@ public:
         n = _n;
         best_size = kplex.size();
         initialization(vp, true);
-        cout<<n<<": "<<endl;
         if (R_end)
         {
             // initContainers(sz1h);
