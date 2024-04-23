@@ -464,7 +464,7 @@ public:
         cout<<"*************"<<endl;
         for (ui i = 0; i < C.size(); i++)
             removeFromC(C.top());
-        removeFromP_K();
+        // removeFromP_K();
         for (ui i = 0; i < n; i++)
             cout << dG[i] << " ";
         cout << P.size() << " :P " << endl;
