@@ -855,7 +855,7 @@ public:
                     if(u==maxpi) continue;
                     ui j = 0;
                     for (ui k = 0; k < psz[u]; k++)
-                        if (bmp.test(LPI[u * n + k]))
+                        if (!bmp.test(LPI[u * n + k]))
                             // if (!bmp.test(PI[u][k]))
                             // PI[u][j++] = PI[u][k];
                             LPI[u * n + j++] = LPI[u * n + k];
