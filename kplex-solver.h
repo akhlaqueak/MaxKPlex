@@ -461,14 +461,14 @@ public:
         // for (ui i = 0; i < n; i++)
         //     cout << dG[i] << " ";
         // cout<<"*************"<< P.size()<<endl;
-        // while (!C.empty()){
-        //     removeFromC(C.top());
-        // }
-        // if(P.size())
-        // removeFromP_K();
-        // for (ui i = 0; i < n; i++)
-        // if(dG[i])
-        //     cout << dG[i] << " ";
+        while (!C.empty()){
+            removeFromC(C.top());
+        }
+        if(P.size())
+        removeFromP_K();
+        for (ui i = 0; i < n; i++)
+        if(dG[i])
+            cout << dG[i] << " ";
     }
 
     ui pruneC_K(ui u)
