@@ -448,13 +448,13 @@ public:
     {
         n = _n;
         best_size = kplex.size();
-        t.tick();
         initialization(vp, true);
-        t.tock();
         if (R_end)
         {
             initContainers(sz1h);
+        t.tick();
             kSearch(K - 1);
+        t.tock();
         }
         if (best_size > kplex.size())
         {
