@@ -60,7 +60,7 @@ class MaxKPlex
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
-        : kplex(kp), K(_k), heap(m, m-1)
+        : kplex(kp), K(_k), heap(m, m - 1)
     {
         P.init(m);
         C.init(m);
@@ -109,7 +109,6 @@ public:
 #endif
         }
 
-
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
@@ -132,8 +131,9 @@ public:
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
-        for(ui i=0;i<n;i++) peel_sequence[i]=i;
-        heap.init(n, n-1, peel_sequence, degree);
+        for (ui i = 0; i < n; i++)
+            peel_sequence[i] = i;
+        heap.init(n, n - 1, peel_sequence, degree);
         ui *vis = SR;
         // memset(vis, 0, sizeof(ui) * n);
         bmp.reset(n);
@@ -458,13 +458,14 @@ public:
                 kplex.push_back(u);
         }
 
-                for(ui i=0;i<C.size();i++)
+        for (ui i = 0; i < C.size(); i++)
             removeFromC(C.top());
-        // removeFromP_K();
-        for(ui i=0;i<n;i++){
-            cout<<dG[i]<<" ";
+        removeFromP_K();
+        for (ui i = 0; i < n; i++)
+        {
+            cout << dG[i] << " ";
         }
-        cout<<P.size()<<" :P "<<endl;
+        cout << P.size() << " :P " << endl;
     }
 
     ui pruneC_K(ui u)
@@ -1123,18 +1124,6 @@ public:
 
     void initContainers(ui sz1h)
     {
-        // for (ui i = 0; i < R_end; i++)
-        // {
-        //     for (ui j = 0; j < R_end; j++)
-        //     {
-        //         ui u=SR[i], v=SR[j];
-        //         if (matrix[u * n + v])
-        //             // if (adjMat(SR[i], SR[j]))
-        //             g.adjList[i].push_back(j);
-        //     }
-        // }
-        // g.V = R_end;
-        // // g.print();
 
         addToP_K(0);
         for (ui i = 1; i < R_end; i++)
@@ -1199,7 +1188,7 @@ public:
     }
     ui removeFromP_K()
     {
-// todo simplify this function by removing removeFromP from here... also other sim functions as well.
+        // todo simplify this function by removing removeFromP from here... also other sim functions as well.
         ui u = P.top();
         removeFromP(u);
         // M.add(u);
