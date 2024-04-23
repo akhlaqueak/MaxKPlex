@@ -449,7 +449,7 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-            // kSearch(K - 1);
+            kSearch(K - 1);
         }
         if (best_size > kplex.size())
         {
@@ -464,10 +464,10 @@ public:
         while (!C.empty()){
             removeFromC(C.top());
         }
-        // removeFromP_K();
+        if(P.size())
+        removeFromP_K();
         for (ui i = 0; i < n; i++)
             cout << dG[i] << " ";
-        // cout << P.size() << " :P " << endl;
     }
 
     ui pruneC_K(ui u)
