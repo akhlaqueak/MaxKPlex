@@ -140,7 +140,7 @@ public:
         for (ui i = 0; i < n; i++)
         {
             // todo check if heap works better here.
-            ui u, min_degree = n;
+            ui u, min_degree;
             heap.pop_min(u, min_degree);
             // for (ui j = 0; j < n; j++)
             //     if (!bmp.test(j) && degree[j] < min_degree)
