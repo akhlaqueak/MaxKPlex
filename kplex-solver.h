@@ -461,14 +461,14 @@ public:
         // for (ui i = 0; i < n; i++)
         //     cout << dG[i] << " ";
         // cout<<"*************"<< P.size()<<endl;
-        while (!C.empty()){
-            removeFromC(C.top());
-        }
-        if(P.size())
-        removeFromP_K();
-        for (ui i = 0; i < n; i++)
-        if(dG[i])
-            cout << dG[i] << " ";
+        // while (!C.empty()){
+        //     removeFromC(C.top());
+        // }
+        // if(P.size())
+        // removeFromP_K();
+        // for (ui i = 0; i < n; i++)
+        // if(dG[i])
+        //     cout << dG[i] << " ";
     }
 
     ui pruneC_K(ui u)
@@ -610,7 +610,7 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui rc = updateC(), ub = 0;
-        // ui cp = moveDirectlyToP();
+        ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
         {
@@ -650,10 +650,10 @@ public:
         }
     RECOVER:
         // recover cp number of vertices directly moved to P
-        // for (ui i = 0; i < cp; i++)
-        // {
-        //     PToC(P.top());
-        // }
+        for (ui i = 0; i < cp; i++)
+        {
+            PToC(P.top());
+        }
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
