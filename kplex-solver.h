@@ -458,13 +458,13 @@ public:
                 kplex.push_back(u);
         }
 
-        for (ui i = 0; i < n; i++)
-            cout << dG[i] << " ";
-        cout<<"*************"<< P.size()<<endl;
+        // for (ui i = 0; i < n; i++)
+        //     cout << dG[i] << " ";
+        // cout<<"*************"<< P.size()<<endl;
         while (!C.empty()){
             removeFromC(C.top());
         }
-        removeFromP_K();
+        // removeFromP_K();
         for (ui i = 0; i < n; i++)
             cout << dG[i] << " ";
         // cout << P.size() << " :P " << endl;
