@@ -132,8 +132,8 @@ public:
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
         for(ui i=0;i<n;i++) peel_sequence[i]=i;
-        heap.init(n, n-1, peel_sequence, degree);
-        // ui *vis = SR;
+        // heap.init(n, n-1, peel_sequence, degree);
+        ui *vis = SR;
         // memset(vis, 0, sizeof(ui) * n);
         bmp.reset(n);
         ui max_core = 0, UB = 0, idx = n;
@@ -142,13 +142,13 @@ public:
             // todo check if heap works better here.
             ui u, min_degree = n;
             heap.pop_min(u, min_degree);
-            // for (ui j = 0; j < n; j++)
-            //     if (!bmp.test(j) && degree[j] < min_degree)
-            //     // if (!vis[j] && degree[j] < min_degree)
-            //     {
-            //         u = j;
-            //         min_degree = degree[j];
-            //     }
+            for (ui j = 0; j < n; j++)
+                if (!bmp.test(j) && degree[j] < min_degree)
+                // if (!vis[j] && degree[j] < min_degree)
+                {
+                    u = j;
+                    min_degree = degree[j];
+                }
             if (min_degree > max_core)
                 max_core = min_degree;
             core[u] = max_core;
@@ -606,7 +606,7 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui rc = updateC(), ub = 0;
-        // ui cp = moveDirectlyToP();
+        ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
         {
@@ -646,10 +646,10 @@ public:
         }
     RECOVER:
         // recover cp number of vertices directly moved to P
-        // for (ui i = 0; i < cp; i++)
-        // {
-        //     PToC(P.top());
-        // }
+        for (ui i = 0; i < cp; i++)
+        {
+            PToC(P.top());
+        }
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
@@ -1030,7 +1030,7 @@ public:
     ui moveDirectlyToP()
     {
         ui sz = 0;
-        // sz = lookAheadSolution();
+        sz = lookAheadSolution();
 
         for (ui i = 0; i < C.size();)
         {
