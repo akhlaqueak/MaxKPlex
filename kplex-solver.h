@@ -11,7 +11,7 @@ bool flag = false;
 // #define CTCP
 #define _SECOND_ORDER_PRUNING_
 
-// #define NAIVE
+#define NAIVE
 
 class MaxKPlex
 {
@@ -110,7 +110,7 @@ public:
         }
         for(ui i=0;i<C.size();i++)
             removeFromC(C.top());
-        // removeFromP_K();
+        removeFromP_K();
         for(ui i=0;i<n;i++){
             cout<<dG[i]<<" ";
         }
