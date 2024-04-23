@@ -22,7 +22,7 @@ class MaxKPlex
     // Partition upper bound vectors...
     MBitSet bmp;
     vector<vecui> PI;
-    vecui lookup, ISc, ISp;
+    vecui lookup, ISc, ISp, psz;
     RandList block;
     vecui temp;
     ui sz1h;
@@ -58,6 +58,7 @@ class MaxKPlex
     std::vector<ui> must_include_vertices;
     ui *peelOrder;
     ui R_end;
+    ui *LPI;
 
 public:
     Timer t;
@@ -73,6 +74,7 @@ public:
         dP.resize(m);
         dG.resize(m);
         PI.resize(m);
+        psz.resize(m);
         lookup.resize(m);
 
         kplex.reserve(m);
@@ -80,6 +82,7 @@ public:
         ISp.reserve(m);
         matrix_size = m * 2;
         matrix = new char[matrix_size];
+        LPI = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[matrix_size];
 #endif
@@ -104,7 +107,9 @@ public:
                 matrix_size *= 2;
             } while (((long long)n) * n > matrix_size);
             delete[] matrix;
+            delete[] LPI;
             matrix = new char[matrix_size];
+            LPI = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
             cn = new ui[matrix_size];
@@ -115,6 +120,7 @@ public:
         fill(cn, cn + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
+        fill(psz.begin(), psz.begin() + n, 0);
         fill(degree, degree + n, 0);
         M.clear();
         block.clear();
@@ -716,9 +722,9 @@ public:
                         addToC(C.top(), true);
                     break;
                 }
-            t.tick();
+                t.tick();
                 ui bn = maxDegenVertex(B.first++, B.second);
-            t.tock();
+                t.tock();
                 addToP_K(bn);
 #ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
@@ -795,7 +801,8 @@ public:
             {
                 ui v = C[j];
                 if (!matrix[u * n + v])
-                    PI[u].push_back(v);
+                    // PI[u].push_back(v);
+                    LPI[u * n + psz[u]++] = v;
             }
         }
         ui beta = best_size - P.size();
@@ -807,18 +814,23 @@ public:
             for (ui i = 0; i < P.size(); i++)
             {
                 ui u = P[i];
-                if (PI[u].empty())
+                // if (PI[u].empty())
+                if (psz[u] == 0)
                     continue;
                 // cost(pi) = P.size()-dP[pi]
-                double cost = min(support(u), (ui)PI[u].size());
-                double dise = PI[u].size() / cost;
+                double cost = min(support(u), psz[u]);
+                // double cost = min(support(u), (ui)PI[u].size());
+                double dise = psz[u] / cost;
                 if (cost <= beta and dise > maxdise)
                     maxpi = u, maxdise = dise;
             }
             if (maxpi != -1)
             {
 
-                bmp.setup(PI[maxpi], n);
+                // bmp.setup(PI[maxpi], n);
+                bmp.reset(n);
+                for (ui i = 0; i < psz[maxpi]; i++)
+                    bmp.set(LPI[maxpi * n + i]);
                 // remove pi* from C
                 for (ui i = cend; i < C.size(); i++)
                 {
@@ -834,20 +846,25 @@ public:
                     //     i++;
                 }
                 // beta-=cost(pi*)
-                beta -= min(support(maxpi), (ui)PI[maxpi].size());
+                beta -= min(support(maxpi), psz[maxpi]);
                 // remove maxpi from every pi
                 for (ui i = 0; i < P.size(); i++)
                 {
                     // Removing pi* from all pi in PI
                     ui u = P[i];
+                    if(u==maxpi) continue;
                     ui j = 0;
-                    for (ui k = 0; k < PI[u].size(); k++)
-                        if (!bmp.test(PI[u][k]))
-                            PI[u][j++] = PI[u][k];
-                    PI[u].resize(j);
+                    for (ui k = 0; k < psz[u]; k++)
+                        if (bmp.test(LPI[u * n + k]))
+                            // if (!bmp.test(PI[u][k]))
+                            // PI[u][j++] = PI[u][k];
+                            LPI[u * n + j++] = LPI[u * n + k];
+                    // PI[u].resize(j);
+                    psz[u] = j;
                 }
                 // remove maxpi...
-                PI[maxpi].clear();
+                // PI[maxpi].clear();
+                psz[maxpi]=0;
             }
             else
                 break;
@@ -868,8 +885,8 @@ public:
         }
 
         // clear PI
-        for (ui i = 0; i < P.size(); i++)
-            PI[P[i]].clear();
+        // for (ui i = 0; i < P.size(); i++)
+        //     PI[P[i]].clear();
         return {cend, sz};
     }
     ui tryPartition()
