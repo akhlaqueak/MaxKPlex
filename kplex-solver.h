@@ -7,7 +7,7 @@ bool flag = false;
 // #define INIT_SEESAW
 
 // #define RULE2
-#define SEESAW
+// #define SEESAW
 // #define CTCP
 #define _SECOND_ORDER_PRUNING_
 
@@ -141,13 +141,6 @@ public:
             // todo check if heap works better here.
             ui u, min_degree;
             heap.pop_min(u, min_degree);
-            // for (ui j = 0; j < n; j++)
-            //     if (!bmp.test(j) && degree[j] < min_degree)
-            //     // if (!vis[j] && degree[j] < min_degree)
-            //     {
-            //         u = j;
-            //         min_degree = degree[j];
-            //     }
             if (min_degree > max_core)
                 max_core = min_degree;
             core[u] = max_core;
@@ -166,11 +159,8 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j]){
-                    --degree[j];
+                if (!bmp.test(j) && matrix[u * n + j])
                     heap.decrement(j, 1);
-                }
-                // if (!vis[j] && matrix[u * n + j])
         }
         if (n - idx > best_size)
         {
