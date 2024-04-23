@@ -60,6 +60,7 @@ class MaxKPlex
     ui R_end;
 
 public:
+    Timer t;
     MaxKPlex(ui m, ui _k, vecui &kp)
         : kplex(kp), K(_k), heap(m, m - 1)
     {
@@ -447,7 +448,9 @@ public:
     {
         n = _n;
         best_size = kplex.size();
+        t.tick();
         initialization(vp, true);
+        t.tock();
         if (R_end)
         {
             initContainers(sz1h);
