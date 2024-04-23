@@ -142,7 +142,10 @@ public:
 	{
 		fill(buf, buf + n, 0);
 	}
-
+	void reset(ui n)
+	{
+		fill(buf, buf + (n>>5)+1, 0);
+	}
 	void setAll()
 	{
 		fill(buf, buf + n, 0xffffffff);

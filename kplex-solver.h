@@ -25,6 +25,7 @@ class MaxKPlex
     RandList block;
     vecui temp;
     ui sz1h;
+    ListLinearHeap heap;
 
     // BBMATRIX Stuff
 
@@ -59,7 +60,7 @@ class MaxKPlex
 
 public:
     MaxKPlex(ui m, ui _k, vecui &kp)
-        : kplex(kp), K(_k)
+        : kplex(kp), K(_k), heap(m, m-1)
     {
         P.init(m);
         C.init(m);
@@ -77,10 +78,8 @@ public:
         ISp.reserve(m);
         matrix_size = m * 2;
         matrix = new char[matrix_size];
-        fill(matrix, matrix + (matrix_size), 0);
 #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[matrix_size];
-        fill(cn, cn + (matrix_size), 0);
 #endif
 
         neighbors = new ui[m];
@@ -132,25 +131,31 @@ public:
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
-        ui *vis = SR;
-        memset(vis, 0, sizeof(ui) * n);
+        for(ui i=0;i<n;i++) peel_sequence[i]=i;
+        heap.init(n, n-1, peel_sequence, degree);
+        // ui *vis = SR;
+        // memset(vis, 0, sizeof(ui) * n);
+        bmp.reset(n);
         ui max_core = 0, UB = 0, idx = n;
         for (ui i = 0; i < n; i++)
         {
             // todo check if heap works better here.
             ui u, min_degree = n;
-            for (ui j = 0; j < n; j++)
-                if (!vis[j] && degree[j] < min_degree)
-                {
-                    u = j;
-                    min_degree = degree[j];
-                }
+            heap.pop_min(u, min_degree);
+            // for (ui j = 0; j < n; j++)
+            //     if (!bmp.test(j) && degree[j] < min_degree)
+            //     // if (!vis[j] && degree[j] < min_degree)
+            //     {
+            //         u = j;
+            //         min_degree = degree[j];
+            //     }
             if (min_degree > max_core)
                 max_core = min_degree;
             core[u] = max_core;
             peel_sequence[i] = u;
             peelOrder[u] = i;
-            vis[u] = 1;
+            // vis[u] = 1;
+            bmp.set(u);
 
             ui t_UB = core[u] + K;
             if (n - i < t_UB)
@@ -162,8 +167,8 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!vis[j] && matrix[u * n + j])
-                    // if (!vis[j] && adjMat(u, j))
+                if (!bmp.test(j) && matrix[u * n + j])
+                // if (!vis[j] && matrix[u * n + j])
                     --degree[j];
         }
         if (n - idx > best_size)
