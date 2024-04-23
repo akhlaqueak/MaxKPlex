@@ -610,7 +610,7 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui rc = updateC(), ub = 0;
-        // ui cp = moveDirectlyToP();
+        ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
         {
@@ -636,7 +636,7 @@ public:
                 {
                     // return to root level of branchings, but before that recover all branching vertices to C
                     while (B.first++ < B.second)
-                        addToC(0, true);
+                        addToC(C.top(), true);
                     break;
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
@@ -650,10 +650,10 @@ public:
         }
     RECOVER:
         // recover cp number of vertices directly moved to P
-        // for (ui i = 0; i < cp; i++)
-        // {
-        //     PToC(P.top());
-        // }
+        for (ui i = 0; i < cp; i++)
+        {
+            PToC(P.top());
+        }
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
@@ -1034,7 +1034,8 @@ public:
     ui moveDirectlyToP()
     {
         ui sz = 0;
-        // sz = lookAheadSolution();
+        sz = lookAheadSolution();
+        return sz;
 
         for (ui i = 0; i < C.size();)
         {
@@ -1118,7 +1119,6 @@ public:
         {
             ui v = C.get(i);
             if (peelOrder[v] > peelOrder[bn])
-                // if(g.adjList[v].size()>g.adjList[bn].size())
                 bn = v, ind = i;
         }
         C.swapElements(ind, C.size());
