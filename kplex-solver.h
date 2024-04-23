@@ -7,7 +7,7 @@ bool flag = false;
 // #define INIT_SEESAW
 
 // #define RULE2
-// #define SEESAW
+#define SEESAW
 // #define CTCP
 #define _SECOND_ORDER_PRUNING_
 
@@ -102,7 +102,6 @@ public:
                 matrix_size *= 2;
             } while (((long long)n) * n > matrix_size);
             delete[] matrix;
-            cout << matrix_size << " ";
             matrix = new char[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
