@@ -458,8 +458,8 @@ public:
                 kplex.push_back(u);
         }
 
-        // for (ui i = 0; i < n; i++)
-        //     cout << dG[i] << " ";
+        for (ui i = 0; i < n; i++)
+            cout << dG[i] << " ";
         cout<<"*************"<<endl;
         while (!C.empty()){
             removeFromC(C.top());
@@ -1131,7 +1131,6 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            cout<<u<<" ";
 #ifdef NAIVE
             addToC(u);
 #else
