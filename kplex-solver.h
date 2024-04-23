@@ -110,7 +110,7 @@ public:
         }
         for(ui i=0;i<C.size();i++)
             removeFromC(C.top());
-        removeFromP_K(0);
+        removeFromP_K();
         for(ui i=0;i<n;i++){
             cout<<dG[i]<<" ";
         }
