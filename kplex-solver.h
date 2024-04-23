@@ -467,6 +467,7 @@ public:
         if(P.size())
         removeFromP_K();
         for (ui i = 0; i < n; i++)
+        if(dG[i])
             cout << dG[i] << " ";
     }
 
