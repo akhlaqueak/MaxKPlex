@@ -460,7 +460,7 @@ public:
 
         for (ui i = 0; i < n; i++)
             cout << dG[i] << " ";
-        cout<<"*************"<<endl;
+        cout<<"*************"<< P.size()<<endl;
         while (!C.empty()){
             removeFromC(C.top());
         }
