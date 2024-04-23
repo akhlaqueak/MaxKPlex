@@ -1182,22 +1182,19 @@ public:
 
     ui addToP_K(ui u)
     {
-        addToP(u);
-        // for (ui v : g.adjList[u])
+        P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]++;
+                dG[v]++, dP[v]++;
         return u;
     }
     ui removeFromP_K()
     {
-        // todo simplify this function by removing removeFromP from here... also other sim functions as well.
         ui u = P.top();
-        removeFromP(u);
-        // M.add(u);
+        P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]--;
+                dG[v]--, dP[v]--;
         return u;
     }
     ui updateC()
