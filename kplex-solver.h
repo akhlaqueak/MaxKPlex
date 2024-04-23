@@ -114,7 +114,7 @@ public:
         for(ui i=0;i<n;i++){
             cout<<dG[i]<<" ";
         }
-        cout<<endl;
+        cout<<P.size()<<" :P "<<endl;
 
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
