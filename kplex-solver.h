@@ -610,6 +610,10 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         ui rc = updateC(), ub = 0;
+        if(PuCSize<=best_size){
+            recoverC(rc);
+            return;
+        }
         ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
