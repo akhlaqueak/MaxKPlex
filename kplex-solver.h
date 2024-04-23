@@ -1038,10 +1038,10 @@ public:
     ui moveDirectlyToP()
     {
         ui sz = 0;
+        return sz;
         sz = lookAheadSolution();
         if(sz)
         cout<<"lahead"<<P.size()<<endl;
-        return sz;
 
         for (ui i = 0; i < C.size();)
         {
