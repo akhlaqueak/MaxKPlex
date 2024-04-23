@@ -9,6 +9,7 @@ bool flag = false;
 // #define RULE2
 // #define SEESAW
 // #define CTCP
+// #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
 
 // #define NAIVE
@@ -598,10 +599,10 @@ public:
             rsn++;              // so that the fakepop here is recovered in the end of this
                                 // function
             addToP_K(u);        // u is added to P, that causes C, M and X to
-                                // shrink... as per theorem 9, 10, 11
+#ifdef CNPRUNE                  // shrink... as per theorem 9, 10, 11
             rc += pruneC_K(u);  // Applying Theorem 10 to update C
             rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
-
+#endif
             if (M.empty())
             {
                 kSearch(m - br);
@@ -620,10 +621,12 @@ public:
             ui u = M.fakePop();
             addToP_K(u);
             rsn++;
-            // todo prune 1hop neighbors, and then call recSearch if we can find a
-            // larger kplex than ub size
+// todo prune 1hop neighbors, and then call recSearch if we can find a
+// larger kplex than ub size
+#ifdef CNPRUNE
             rc += pruneC_K(u);
             rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
+#endif
             // recSearch();
             flag = false;
 #ifdef NAIVE
@@ -637,8 +640,10 @@ public:
             removeFromP_K();
             br--;
         }
+#ifdef CNPRUNE
         M.fakeRecover(rsn);
         recoverC(rc);
+#endif
     }
     void reportSolution()
     {
@@ -714,9 +719,13 @@ public:
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP_K(bn);
+#ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+#endif
                 recSearch(OTHER);
+#ifdef CNPRUNE
                 recoverC(rc);
+#endif
                 removeFromP(bn);
                 C.fakeRecPop();
             }
