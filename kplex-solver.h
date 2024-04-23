@@ -472,15 +472,33 @@ public:
                 cout << dG[i] << " ";
     }
 
+    ui pruneM_K(ui u)
+    {
+        // Theorem 9
+        // here u \in M is just added to P, that causes some vertices in M to be kicked out
+        ui sz = M.size();
+        for (int i = 0; i < M.size();)
+        {
+            int v = M[i];
+            if ((matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 2, 0) < best_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 3, 0) < best_size) or
+                !canMoveToP(v))
+                removeFromC(v, true); // fake remove when flag is true
+            ++i;
+        }
+        return sz - M.size();
+    }
+
     ui pruneC_K(ui u)
     {
+        // Theorem 10
         // here u \in M is just added to P, that causes some vertices in C to be kicked out
         ui sz = C.size();
         for (int i = 0; i < C.size();)
         {
             int v = C[i];
-            if ((matrix[u * n + v] and cn[u * n + v] < best_size - 2 * K - 2 * max((int)K - 2, 0)) or
-                (!matrix[u * n + v] and cn[u * n + v] < best_size - K - max((int)K - 2, 0) - max((int)K - 2, 1)) or
+            if ((matrix[u * n + v] and cn[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_size) or
                 !canMoveToP(v))
                 removeFromC(v, true); // fake remove when flag is true
             else
@@ -488,18 +506,24 @@ public:
         }
         return sz - C.size();
     }
-    ui pruneM_K(ui u)
+
+    ui pruneC(ui u)
     {
-        ui sz = M.size();
-        for (int i = 0; i < M.size();)
+        // Theorem 11
+        // here u \in C is just added to P, that causes some vertices in C to be kicked out
+        ui sz = C.size();
+        for (int i = 0; i < C.size();)
         {
-            int ele = M[i];
-            // if (UNLINK2EQUAL > g.cnMatrix(u, ele))
-            //     M.fakeRemove(ele);
-            // else
-            ++i;
+            int v = C[i];
+            // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
+            if ((matrix[u * n + v] and cn[u * n + v] + 3 * K < best_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * (K - 1) < best_size) or
+                !canMoveToP(v))
+                removeFromC(v, true); // fake remove when flag is true
+            else
+                ++i;
         }
-        return sz - M.size();
+        return sz - C.size();
     }
 
     void kSearch(ui m)
@@ -1096,23 +1120,7 @@ public:
         }
         return sz;
     }
-    ui pruneC(ui u)
-    {
 
-        ui sz = C.size();
-        for (int i = 0; i < C.size();)
-        {
-            int v = C[i];
-            // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
-            if ((matrix[u * n + v] and cn[u * n + v] < best_size - 3 * K) or
-                (!matrix[u * n + v] and cn[u * n + v] < best_size - K - 2 * (K - 1)) or
-                !canMoveToP(v))
-                removeFromC(v, true); // fake remove when flag is true
-            else
-                ++i;
-        }
-        return sz - C.size();
-    }
     ui maxDegenVertex(ui st, ui en)
     {
         // using C.get because this function can return even those vertices which are fake-removed from C
