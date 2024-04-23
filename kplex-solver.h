@@ -461,13 +461,12 @@ public:
         // for (ui i = 0; i < n; i++)
         //     cout << dG[i] << " ";
         cout<<"*************"<<endl;
-        for (ui i = 0; i < C.size(); i++){
-            cout<<C.top()<<" ";
+        while (!C.empty()){
             removeFromC(C.top());
         }
-        // removeFromP_K();
-        // for (ui i = 0; i < n; i++)
-        //     cout << dG[i] << " ";
+        removeFromP_K();
+        for (ui i = 0; i < n; i++)
+            cout << dG[i] << " ";
         // cout << P.size() << " :P " << endl;
     }
 
