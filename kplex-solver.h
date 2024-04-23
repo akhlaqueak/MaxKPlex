@@ -108,13 +108,7 @@ public:
             cn = new ui[matrix_size];
 #endif
         }
-        for(ui i=0;i<C.size();i++)
-            removeFromC(C.top());
-        // removeFromP_K();
-        for(ui i=0;i<n;i++){
-            cout<<dG[i]<<" ";
-        }
-        cout<<P.size()<<" :P "<<endl;
+
 
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
@@ -455,7 +449,6 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-            // g.buildCommonMatrix(sz1h);
             // kSearch(K - 1);
         }
         if (best_size > kplex.size())
@@ -464,6 +457,14 @@ public:
             for (ui u : best_solution)
                 kplex.push_back(u);
         }
+
+                for(ui i=0;i<C.size();i++)
+            removeFromC(C.top());
+        // removeFromP_K();
+        for(ui i=0;i<n;i++){
+            cout<<dG[i]<<" ";
+        }
+        cout<<P.size()<<" :P "<<endl;
     }
 
     ui pruneC_K(ui u)
