@@ -703,9 +703,7 @@ public:
 #endif
         // if (secondOrderUB())
         {
-            t.tick();
             auto B = getBranchings();
-            t.tock();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
@@ -718,7 +716,9 @@ public:
                         addToC(C.top(), true);
                     break;
                 }
+            t.tick();
                 ui bn = maxDegenVertex(B.first++, B.second);
+            t.tock();
                 addToP_K(bn);
 #ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
