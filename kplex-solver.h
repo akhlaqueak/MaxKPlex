@@ -446,10 +446,7 @@ public:
         n = _n;
         best_size = kplex.size();
         initialization(vp, true);
-        for (ui i = 0; i < n; i++)
-        {
-            cout << dG[i] << " ";
-        }
+        
         if (R_end)
         {
             initContainers(sz1h);
@@ -462,9 +459,9 @@ public:
                 kplex.push_back(u);
         }
 
-        for (ui i = 0; i < C.size(); i++)
-            removeFromC(C.top());
-        removeFromP_K();
+        // for (ui i = 0; i < C.size(); i++)
+        //     removeFromC(C.top());
+        // removeFromP_K();
         for (ui i = 0; i < n; i++)
         {
             cout << dG[i] << " ";
