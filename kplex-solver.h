@@ -456,7 +456,7 @@ public:
         {
             initContainers(sz1h);
             // g.buildCommonMatrix(sz1h);
-            kSearch(K - 1);
+            // kSearch(K - 1);
         }
         if (best_size > kplex.size())
         {
@@ -524,7 +524,7 @@ public:
         while (br < m)
         {
             ui u = M.fakePop();
-            rsn++;              // so that the fakepop here is recoved in the end of this
+            rsn++;              // so that the fakepop here is recovered in the end of this
                                 // function
             addToP_K(u);        // u is added to P, that causes C, M and X to
                                 // shrink... as per theorem 9, 10, 11
@@ -1198,6 +1198,7 @@ public:
     }
     ui removeFromP_K()
     {
+// todo simplify this function by removing removeFromP from here... also other sim functions as well.
         ui u = P.top();
         removeFromP(u);
         // M.add(u);
