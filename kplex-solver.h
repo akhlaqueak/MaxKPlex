@@ -459,16 +459,14 @@ public:
                 kplex.push_back(u);
         }
 
-
-        // for (ui i = 0; i < C.size(); i++)
-        //     removeFromC(C.top());
-        // removeFromP_K();
         for (ui i = 0; i < n; i++)
-        {
-            for(ui j=i+1;j<n;j++)
-                if(matrix[i*n+j]!=matrix[j*n+i]) cout<<"("<<i<<","<<j<<")";
             cout << dG[i] << " ";
-        }
+        cout<<"*************"<<endl;
+        for (ui i = 0; i < C.size(); i++)
+            removeFromC(C.top());
+        removeFromP_K();
+        for (ui i = 0; i < n; i++)
+            cout << dG[i] << " ";
         cout << P.size() << " :P " << endl;
     }
 
