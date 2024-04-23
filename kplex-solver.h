@@ -520,8 +520,8 @@ public:
                                 // function
             addToP_K(u);        // u is added to P, that causes C, M and X to
                                 // shrink... as per theorem 9, 10, 11
-            // rc += pruneC_K(u);  // Applying Theorem 10 to update C
-            // rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
+            rc += pruneC_K(u);  // Applying Theorem 10 to update C
+            rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
 
             if (M.empty())
             {
@@ -1104,7 +1104,7 @@ public:
         for (ui i = st + 1; i < en; i++)
         {
             ui v = C.get(i);
-            if (peelOrder[SR[v]] > peelOrder[SR[bn]])
+            if (peelOrder[v] > peelOrder[bn])
                 // if(g.adjList[v].size()>g.adjList[bn].size())
                 bn = v, ind = i;
         }
