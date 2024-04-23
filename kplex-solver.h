@@ -719,7 +719,8 @@ public:
                 {
                     // return to root level of branchings, but before that recover all branching vertices to C
                     while (B.first++ < B.second)
-                        addToC(C.top(), true);
+                    // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
+                        addToC(0, true);
                     break;
                 }
                 t.tick();
