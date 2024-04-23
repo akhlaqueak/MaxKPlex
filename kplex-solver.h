@@ -483,7 +483,7 @@ public:
             if ((matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 2, 0) < best_size) or
                 (!matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 3, 0) < best_size) or
                 !canMoveToP(v))
-                removeFromC(v, true); // fake remove when flag is true
+                M.fakeRemove(v);
             ++i;
         }
         return sz - M.size();
