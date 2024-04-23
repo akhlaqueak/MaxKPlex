@@ -621,8 +621,6 @@ public:
             ui u = M.fakePop();
             addToP_K(u);
             rsn++;
-// todo prune 1hop neighbors, and then call recSearch if we can find a
-// larger kplex than ub size
 #ifdef CNPRUNE
             rc += pruneC_K(u);
             rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
@@ -640,8 +638,8 @@ public:
             removeFromP_K();
             br--;
         }
-#ifdef CNPRUNE
         M.fakeRecover(rsn);
+#ifdef CNPRUNE
         recoverC(rc);
 #endif
     }
