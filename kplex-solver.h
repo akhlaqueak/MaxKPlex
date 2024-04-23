@@ -167,9 +167,11 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j])
-                // if (!vis[j] && matrix[u * n + j])
+                if (!bmp.test(j) && matrix[u * n + j]){
                     --degree[j];
+                    heap.decrement(j, 1);
+                }
+                // if (!vis[j] && matrix[u * n + j])
         }
         if (n - idx > best_size)
         {
