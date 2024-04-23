@@ -108,6 +108,11 @@ public:
             cn = new ui[matrix_size];
 #endif
         }
+        for(ui i=0;i<n;i++){
+            cout<<dG[i]<<" ";
+        }
+        cout<<endl;
+        
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
