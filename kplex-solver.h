@@ -485,7 +485,7 @@ public:
                 !canMoveToP(v))
             {
                 M.fakeRemove(v);
-                decCN(v);
+                // decCN(v);
             }
             ++i;
         }
@@ -505,7 +505,7 @@ public:
                 !canMoveToP(v))
             {
                 removeFromC(v, true); // fake remove when flag is true
-                decCN(v);
+                // decCN(v);
             }
             else
                 ++i;
@@ -527,42 +527,42 @@ public:
                 !canMoveToP(v))
             {
                 removeFromC(v, true); // fake remove when flag is true
-                decCN(v);
+                // decCN(v);
             }
             else
                 ++i;
         }
         return sz - C.size();
     }
-    void decCN(ui v)
-    {
-        char *t_matrix = matrix + v * n;
-        ui neighbors_n = 0;
-        for (ui j = 0; j < n; j++)
-            if (t_matrix[j])
-                neighbors[neighbors_n++] = j;
-        for (ui j = 0; j < neighbors_n; j++)
-            for (ui k = j + 1; k < neighbors_n; k++)
-            {
-                --cn[neighbors[j] * n + neighbors[k]];
-                --cn[neighbors[k] * n + neighbors[j]];
-            }
-    }
+    // void decCN(ui v)
+    // {
+    //     char *t_matrix = matrix + v * n;
+    //     ui neighbors_n = 0;
+    //     for (ui j = 0; j < n; j++)
+    //         if (t_matrix[j])
+    //             neighbors[neighbors_n++] = j;
+    //     for (ui j = 0; j < neighbors_n; j++)
+    //         for (ui k = j + 1; k < neighbors_n; k++)
+    //         {
+    //             --cn[neighbors[j] * n + neighbors[k]];
+    //             --cn[neighbors[k] * n + neighbors[j]];
+    //         }
+    // }
 
-    void incCN(ui v)
-    {
-        char *t_matrix = matrix + v * n;
-        ui neighbors_n = 0;
-        for (ui j = 0; j < n; j++)
-            if (t_matrix[j])
-                neighbors[neighbors_n++] = j;
-        for (ui j = 0; j < neighbors_n; j++)
-            for (ui k = j + 1; k < neighbors_n; k++)
-            {
-                ++cn[neighbors[j] * n + neighbors[k]];
-                ++cn[neighbors[k] * n + neighbors[j]];
-            }
-    }
+    // void incCN(ui v)
+    // {
+    //     char *t_matrix = matrix + v * n;
+    //     ui neighbors_n = 0;
+    //     for (ui j = 0; j < n; j++)
+    //         if (t_matrix[j])
+    //             neighbors[neighbors_n++] = j;
+    //     for (ui j = 0; j < neighbors_n; j++)
+    //         for (ui k = j + 1; k < neighbors_n; k++)
+    //         {
+    //             ++cn[neighbors[j] * n + neighbors[k]];
+    //             ++cn[neighbors[k] * n + neighbors[j]];
+    //         }
+    // }
     void kSearch(ui m)
     {
         if (PuCuMSize <= best_size or TIMEOVER)
@@ -637,11 +637,7 @@ public:
             br--;
         }
         M.fakeRecover(rsn);
-        for (ui i = M.size() - rsn; i < M.size(); i++)
-            incCN(M[i]);
         recoverC(rc);
-        for (ui i = C.size() - rc; i < C.size(); i++)
-            incCN(C[i]);
     }
     void reportSolution()
     {
@@ -720,8 +716,6 @@ public:
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
                 recSearch(OTHER);
                 recoverC(rc);
-                for(ui i=C.size()-rc;i<C.size();i++)
-                    incCN(C[i]);
                 removeFromP(bn);
                 C.fakeRecPop();
             }
