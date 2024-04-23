@@ -449,7 +449,8 @@ public:
         cout<<n<<": "<<endl;
         if (R_end)
         {
-            initContainers(sz1h);
+            // initContainers(sz1h);
+            addToC(0);
             // kSearch(K - 1);
         }
         if (best_size > kplex.size())
