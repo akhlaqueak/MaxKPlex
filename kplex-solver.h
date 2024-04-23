@@ -1035,6 +1035,7 @@ public:
     {
         ui sz = 0;
         sz = lookAheadSolution();
+        if(sz)
         cout<<"lahead"<<P.size()<<endl;
         return sz;
 
