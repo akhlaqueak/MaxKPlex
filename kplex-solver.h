@@ -7,7 +7,7 @@ bool flag = false;
 // #define INIT_SEESAW
 
 // #define RULE2
-// #define SEESAW
+#define SEESAW
 // #define CTCP
 #define _SECOND_ORDER_PRUNING_
 
@@ -118,7 +118,8 @@ public:
         block.clear();
         P.clear();
         C.clear();
-
+        for (ui i = 0; i < n; i++)
+            PI[i].reserve(n);
         for (auto &e : vp)
         {
             assert(e.first >= 0 && e.first < n && e.second >= 0 && e.second < n);
