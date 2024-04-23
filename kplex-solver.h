@@ -452,9 +452,7 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-        t.tick();
             kSearch(K - 1);
-        t.tock();
         }
         if (best_size > kplex.size())
         {
@@ -705,7 +703,9 @@ public:
 #endif
         // if (secondOrderUB())
         {
+            t.tick();
             auto B = getBranchings();
+            t.tock();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
