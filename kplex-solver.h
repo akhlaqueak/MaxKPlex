@@ -132,7 +132,7 @@ public:
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
         for(ui i=0;i<n;i++) peel_sequence[i]=i;
-        // heap.init(n, n-1, peel_sequence, degree);
+        heap.init(n, n-1, peel_sequence, degree);
         ui *vis = SR;
         // memset(vis, 0, sizeof(ui) * n);
         bmp.reset(n);
@@ -141,14 +141,14 @@ public:
         {
             // todo check if heap works better here.
             ui u, min_degree = n;
-            // heap.pop_min(u, min_degree);
-            for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && degree[j] < min_degree)
-                // if (!vis[j] && degree[j] < min_degree)
-                {
-                    u = j;
-                    min_degree = degree[j];
-                }
+            heap.pop_min(u, min_degree);
+            // for (ui j = 0; j < n; j++)
+            //     if (!bmp.test(j) && degree[j] < min_degree)
+            //     // if (!vis[j] && degree[j] < min_degree)
+            //     {
+            //         u = j;
+            //         min_degree = degree[j];
+            //     }
             if (min_degree > max_core)
                 max_core = min_degree;
             core[u] = max_core;
