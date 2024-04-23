@@ -1029,7 +1029,8 @@ public:
 
     ui moveDirectlyToP()
     {
-        ui sz = lookAheadSolution();
+        ui sz = 0;
+        // sz = lookAheadSolution();
 
         for (ui i = 0; i < C.size();)
         {
