@@ -891,7 +891,8 @@ public:
             {
                 // PI[u] = non-neighbors of u in C
                 ui v = C[j];
-                if (!matrix[u * n + v])
+                if(v==0)
+                // if (!matrix[u * n + v])
                     // PI[u].push_back(v);
                     ISc.push_back(v);
             }
