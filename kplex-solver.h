@@ -934,9 +934,9 @@ public:
         {
             double ubp = tryPartition();
             // ubp = 0;
-            // gtime.tick();
+            check.tick();
             double ubc = tryColor();
-            // gtime.tock();
+            check.tock();
             if (ubp == 0 or
                 ISc.size() / ubc > ISp.size() / ubp or
                 (ISc.size() / ubc == ISp.size() / ubp and ISc.size() > ISp.size()))
@@ -1010,7 +1010,6 @@ public:
     {
         createIS();
         ui ub = TISUB();
-        check.tick();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
@@ -1067,7 +1066,6 @@ public:
                 bmp.set(u);
             }
         }
-        check.tock();
         return ub;
     }
     // bool upperboundK()
