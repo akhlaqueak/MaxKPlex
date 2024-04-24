@@ -876,6 +876,7 @@ public:
     }
     ui tryPartition()
     {
+        ISp.clear();
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
