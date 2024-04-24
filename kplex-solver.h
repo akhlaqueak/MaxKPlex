@@ -688,16 +688,16 @@ public:
             }
             goto RECOVER;
         }
+            t.tick();
         ub = relaxGCB();
+            t.tock();
 #ifdef SEESAW
         // ub = seesawUB();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
         {
-            t.tick();
             auto B = getBranchings();
-            t.tock();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
@@ -881,8 +881,6 @@ public:
             psz[u]=0;
             if (support(u) == 0)
                 continue;
-            // Lookup neig(&lookup, &g.adjList[u]);
-            // bmp.setup(g.adjList[u], g.V);
             for (ui j = 0; j < C.size(); j++)
             {
                 // PI[u] = non-neighbors of u in C
@@ -907,13 +905,7 @@ public:
                 maxpi = u, maxdise = dise, ub = cost;
         }
 
-        // for (ui u : PI[maxpi])
-        // for (ui i=0;i<psz[maxpi];i++)
-        //     ISp.push_back(LPI[maxpi*n+i]);
         ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
-        // clear PI
-        // for (ui i = 0; i < P.size(); i++)
-        //     PI[P[i]].clear();
         return ub;
     }
     ui relaxGCB()

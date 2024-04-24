@@ -449,7 +449,7 @@ void Graph::kPlex_exact() {
 		delete[] peel_sequence;
 	}
 
-	printf("\tMaximum kPlex Size: %lu, Total Time: %f (microseconds)\n", kplex.size(), t.elapsed()/1000000.0);
+	printf("\tMaximum kPlex Size: %lu, Total Time: %f (seconds)\n", kplex.size(), t.elapsed()/1000000.0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
