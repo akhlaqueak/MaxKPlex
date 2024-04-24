@@ -887,22 +887,22 @@ public:
             psz[u] = 0;
             if (support(u) == 0)
                 continue;
-            for (ui j = 0; j < C.size(); j++)
-            {
-                // PI[u] = non-neighbors of u in C
-                ui v = C[j];
-                if (!matrix[u * n + v])
-                    // PI[u].push_back(v);
-                    LPI[ub++]=v;
-                    // ISc.push_back(v);
-            }
-            // double cost = min(support(u), (ui)ISc.size());
-            // double dise = ISc.size() / cost;
-            // if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
+            // for (ui j = 0; j < C.size(); j++)
             // {
-            //     maxdise = dise, ub = cost;
-            //     ISp.swap(ISc);
+            //     // PI[u] = non-neighbors of u in C
+            //     ui v = C[j];
+            //     if (!matrix[u * n + v])
+            //         // PI[u].push_back(v);
+            //         LPI[ub++]=v;
+            //         // ISc.push_back(v);
             // }
+            double cost = min(support(u), (ui)ISc.size());
+            double dise = ISc.size() / cost;
+            if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
+            {
+                maxdise = dise, ub = cost;
+                ISp.swap(ISc);
+            }
         }
         t.tock();
         // for (ui i = 1; i < P.size(); i++)
