@@ -184,10 +184,11 @@ public:
             reportSolution();
             return;
         }
-        return;
+    
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
         R_end = 0;
+        return;
         for (ui i = 0; i < n; i++)
             SR_rid[i] = n;
         for (ui i = 0; i < n; i++)
