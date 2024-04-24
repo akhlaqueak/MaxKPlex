@@ -441,14 +441,16 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
+		printf(">>%s *** Search time: %f", dir.c_str(), tt.elapsed()/1000000.0);
+		// printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
 	}
 	else {
 		delete[] core;
 		delete[] peel_sequence;
 	}
 
-	printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
+	printf("\tMaximum kPlex Size: %lu, Total Time: %f (microseconds)\n", kplex.size(), t.elapsed()/1000000.0);
+	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
 void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {
