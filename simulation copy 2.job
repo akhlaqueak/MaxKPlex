@@ -26,8 +26,7 @@ module load gcc
 alias python=python3
 k=2
 
-module load cuda11.4/toolkit
-module load GCC/11.4.0
+
 datasets='
 sc-pkustk13
 socfb-A-anon
