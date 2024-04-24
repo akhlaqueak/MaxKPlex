@@ -690,10 +690,10 @@ public:
         }
         // ub = relaxGCB();
 #ifdef SEESAW
-            // t.tick();
+            check.tick();
         ub = seesawUB();
         // ub = tryPartition();
-            // t.tock();
+            check.tock();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
