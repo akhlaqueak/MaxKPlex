@@ -21,7 +21,7 @@ class MaxKPlex
     RandList P, C, M;
     // Partition upper bound vectors...
     MBitSet bmp;
-    vector<vecui> PI;
+    // vector<vecui> PI;
     vecui lookup, ISc, ISp, psz;
     RandList block;
     vecui temp;
@@ -73,7 +73,6 @@ public:
 
         dP.resize(m);
         dG.resize(m);
-        PI.resize(m);
         psz.resize(m);
         lookup.resize(m);
 
