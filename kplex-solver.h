@@ -125,8 +125,8 @@ public:
         block.clear();
         P.clear();
         C.clear();
-        for (ui i = 0; i < n; i++)
-            PI[i].reserve(n);
+        // for (ui i = 0; i < n; i++)
+        //     PI[i].reserve(n);
         for (auto &e : vp)
         {
             assert(e.first >= 0 && e.first < n && e.second >= 0 && e.second < n);
@@ -902,12 +902,12 @@ public:
         for (ui i = 1; i < P.size(); i++)
         {
             ui u = P[i];
-            if (PI[u].empty())
+            if (psz[u]==0)
                 continue;
             // cost(pi) = P.size()-dP[pi]
             double cost = min(support(u), psz[u]);
             double dise = psz[u] / cost;
-            if (dise > maxdise or (dise == maxdise and PI[u].size() > PI[maxpi].size()))
+            if (dise > maxdise or (dise == maxdise and psz[u] > psz[maxpi]))
                 maxpi = u, maxdise = dise, ub = cost;
         }
 
