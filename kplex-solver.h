@@ -691,8 +691,8 @@ public:
         // ub = relaxGCB();
 #ifdef SEESAW
             t.tick();
-        // ub = seesawUB();
-        ub = tryPartition();
+        ub = seesawUB();
+        // ub = tryPartition();
             t.tock();
         if (ub > best_size)
 #endif
@@ -932,9 +932,6 @@ public:
         ui sz = C.size();
         while (C.size())
         {
-            ISp.clear();
-            ISc.clear();
-
             double ubp = tryPartition();
             // ubp = 0;
             // gtime.tick();
@@ -963,6 +960,7 @@ public:
     }
     void createIS()
     {
+        ISc.clear();
         if(C.empty()) return;
         ISc.push_back(C[0]);
 
