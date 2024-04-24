@@ -180,14 +180,12 @@ public:
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
-            printf("Degen finds a solution of size %u\n", best_size);
-            return;
+            printf("Degen found a solution of size %u\n", best_size);
         }
     
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
         R_end = 0;
-        return;
         for (ui i = 0; i < n; i++)
             SR_rid[i] = n;
         for (ui i = 0; i < n; i++)
@@ -470,18 +468,6 @@ public:
                 kplex.push_back(u);
         }
 
-        // for (ui i = 0; i < n; i++)
-        //     cout << dG[i] << " ";
-        // cout<<"*************"<< P.size()<<endl;
-        while (!C.empty())
-        {
-            removeFromC(C.top());
-        }
-        if (P.size())
-            removeFromP_K();
-        for (ui i = 0; i < n; i++)
-            if (dG[i])
-                cout << dG[i] << " ";
     }
 
     ui pruneM_K(ui u)
@@ -656,7 +642,7 @@ public:
     void reportSolution()
     {
         best_solution.clear();
-        // best_size = P.size();
+        best_size = P.size();
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
         // checking validity of kplex
