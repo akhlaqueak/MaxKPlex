@@ -184,6 +184,7 @@ public:
             reportSolution();
             return;
         }
+        return;
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
         R_end = 0;
