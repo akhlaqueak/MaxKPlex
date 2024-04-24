@@ -3,7 +3,7 @@ Timer gtime, check, sr;
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
-#define TIMEOVER (gtime.elapsed() / 1000000 > 60 * 60)
+#define TIMEOVER (gtime.elapsed() / 1000000 > 3*60 * 60)
 // #define INIT_SEESAW
 
 // #define RULE2
