@@ -181,7 +181,6 @@ public:
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
             printf("Degen finds a solution of size %u\n", best_size);
-            reportSolution();
             return;
         }
     
