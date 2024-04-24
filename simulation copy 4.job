@@ -54,11 +54,16 @@ soc-digg
 soc-flickr
 '
 
+solutions='kplex-noUB  kplex-seesaw  kplex-solver.h  kplex-tryPartition'
+for kplex in $solutions; do
+
 for fn in $datasets; do
     # [ -e "$fn" ] || continue
     echo "computing $fn.... " 
-    timeout 7200 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
+    timeout 4000 ./$kplex -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> k$k-$kplex.out
+    # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
     if [ $? -eq 124 ]; then
     echo ">>../datasets/Chang/$fn Search_Time 99999999999" >> k$k.out
     fi
+done
 done
