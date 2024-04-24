@@ -1008,10 +1008,9 @@ public:
     }
     ui tryColor()
     {
-        check.tick();
         createIS();
         ui ub = TISUB();
-        check.tock();
+        check.tick();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
@@ -1068,6 +1067,7 @@ public:
                 bmp.set(u);
             }
         }
+        check.tock();
         return ub;
     }
     // bool upperboundK()
