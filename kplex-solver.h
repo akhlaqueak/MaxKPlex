@@ -904,8 +904,9 @@ public:
             if (dise > maxdise or (dise == maxdise and psz[u] > psz[maxpi]))
                 maxpi = u, maxdise = dise, ub = cost;
         }
-
-        ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
+        for(ui i=0;i<psz[maxpi]; i++)
+        ISp.push_back(LPI[maxpi*n+i]);
+        // ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
         return ub;
     }
     ui relaxGCB()
