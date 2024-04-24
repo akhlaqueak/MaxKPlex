@@ -874,34 +874,38 @@ public:
     }
     ui tryPartition()
     {
-        ISp.clear();
-
         t.tick();
         ui maxpi = P[0];
         double maxdise = 0;
-        ui ub = 0;
+        ui ub = 0, maxsize=0;
+        ui *PI = neighbors;
+        ui *PIMax = nonneighbors;
         for (ui i = 0; i < P.size(); i++)
         {
             ISc.clear();
             ui u = P[i];
-            psz[u] = 0;
+            ui sz = 0;
             if (support(u) == 0)
                 continue;
             for (ui j = 0; j < C.size(); j++)
             {
                 ui v = C[j];
                 if (!matrix[u * n + v])
-                    ISc.push_back(v);
+                    PI[sz++]=v;
+                    // ISc.push_back(v);
             }
-            double cost = min(support(u), (ui)ISc.size());
-            double dise = ISc.size() / cost;
-            if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
+            double cost = min(support(u), sz);
+            double dise = sz / cost;
+            if (dise > maxdise or (dise == maxdise and sz > maxsize))
             {
                 maxdise = dise, ub = cost;
-                ISp.swap(ISc);
+                maxsize = sz;
+                swap(PI, PIMax);
             }
         }
         t.tock();
+        ISp.clear();
+        ISp.insert(ISp.begin(), PIMax, PIMax+maxsize);
         return ub;
     }
     ui relaxGCB()
