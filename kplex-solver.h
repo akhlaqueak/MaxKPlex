@@ -688,9 +688,9 @@ public:
             }
             goto RECOVER;
         }
-        // ui ub = relaxGCB();
+        ub = relaxGCB();
 #ifdef SEESAW
-        ub = seesawUB();
+        // ub = seesawUB();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
@@ -801,12 +801,9 @@ public:
             for (ui i = 0; i < P.size(); i++)
             {
                 ui u = P[i];
-                // if (PI[u].empty())
                 if (psz[u] == 0)
                     continue;
-                // cost(pi) = P.size()-dP[pi]
                 double cost = min(support(u), psz[u]);
-                // double cost = min(support(u), (ui)PI[u].size());
                 double dise = psz[u] / cost;
                 if (cost <= beta and dise > maxdise)
                     maxpi = u, maxdise = dise;
@@ -814,7 +811,6 @@ public:
             if (maxpi != -1)
             {
 
-                // bmp.setup(PI[maxpi], n);
                 bmp.reset(n);
                 for (ui i = 0; i < psz[maxpi]; i++)
                     bmp.set(LPI[maxpi * n + i]);
