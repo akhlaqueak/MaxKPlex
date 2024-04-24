@@ -180,7 +180,7 @@ public:
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
-            printf("Degen find a solution of size %u\n", best_size);
+            printf("Degen finds a solution of size %u\n", best_size);
             reportSolution();
             return;
         }
