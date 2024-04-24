@@ -875,11 +875,16 @@ public:
     ui tryPartition()
     {
         ISp.clear();
+
         t.tick();
+        ui maxpi = P[0];
+        double maxdise = 0;
+        ui ub = 0;
         for (ui i = 0; i < P.size(); i++)
         {
+            ISc.clear();
             ui u = P[i];
-            psz[u]=0;
+            psz[u] = 0;
             if (support(u) == 0)
                 continue;
             for (ui j = 0; j < C.size(); j++)
@@ -888,27 +893,31 @@ public:
                 ui v = C[j];
                 if (!matrix[u * n + v])
                     // PI[u].push_back(v);
-                    LPI[u * n + psz[u]++] = v;
+                    ISc.push_back(v);
+            }
+            double cost = min(support(u), (ui)ISc.size());
+            double dise = ISc.size() / cost;
+            if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
+            {
+                maxdise = dise, ub = cost;
+                ISp.swap(ISc);
             }
         }
         t.tock();
-        ui maxpi = P[0];
-        double maxdise = 0;
-        ui ub = 0;
-        for (ui i = 1; i < P.size(); i++)
-        {
-            ui u = P[i];
-            if (psz[u]==0)
-                continue;
-            // cost(pi) = P.size()-dP[pi]
-            double cost = min(support(u), psz[u]);
-            double dise = psz[u] / cost;
-            if (dise > maxdise or (dise == maxdise and psz[u] > psz[maxpi]))
-                maxpi = u, maxdise = dise, ub = cost;
-        }
-        for(ui i=0;i<psz[maxpi]; i++)
-        ISp.push_back(LPI[maxpi*n+i]);
-        // ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
+        // for (ui i = 1; i < P.size(); i++)
+        // {
+        //     ui u = P[i];
+        //     if (psz[u] == 0)
+        //         continue;
+        //     // cost(pi) = P.size()-dP[pi]
+        //     double cost = min(support(u), psz[u]);
+        //     double dise = psz[u] / cost;
+        //     if (dise > maxdise or (dise == maxdise and psz[u] > psz[maxpi]))
+        //         maxpi = u, maxdise = dise, ub = cost;
+        // }
+        // for (ui i = 0; i < psz[maxpi]; i++)
+        //     ISp.push_back(LPI[maxpi * n + i]);
+        // // ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
         return ub;
     }
     ui relaxGCB()
@@ -960,7 +969,8 @@ public:
     void createIS()
     {
         ISc.clear();
-        if(C.empty()) return;
+        if (C.empty())
+            return;
         ISc.push_back(C[0]);
 
         // check.tick();
