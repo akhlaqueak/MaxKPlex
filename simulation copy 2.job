@@ -26,7 +26,7 @@ module load gcc
 alias python=python3
 k=2
 
-
+module load GCC/13.4.0
 datasets='
 sc-pkustk13
 socfb-A-anon
@@ -52,7 +52,7 @@ soc-buzznet
 soc-digg
 soc-flickr
 '
-solutions='kplex-noUB  kplex-seesaw  kplex-solver.h  kplex-tryPartition'
+solutions='kplex-noUB  kplex-seesaw kplex-tryPartition'
 for kplex in $solutions; do
 
 for fn in $datasets; do

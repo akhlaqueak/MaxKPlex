@@ -53,8 +53,7 @@ soc-buzznet
 soc-digg
 soc-flickr
 '
-
-solutions='kplex-noUB  kplex-seesaw  kplex-solver.h  kplex-tryPartition'
+solutions='kplex-noUB  kplex-seesaw kplex-tryPartition'
 for kplex in $solutions; do
 
 for fn in $datasets; do
