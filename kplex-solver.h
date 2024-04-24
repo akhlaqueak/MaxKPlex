@@ -875,6 +875,7 @@ public:
     ui tryPartition()
     {
         ISp.clear();
+        t.tick();
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
@@ -890,6 +891,7 @@ public:
                     LPI[u * n + psz[u]++] = v;
             }
         }
+        t.tock();
         ui maxpi = P[0];
         double maxdise = 0;
         ui ub = 0;
@@ -931,9 +933,7 @@ public:
         ui sz = C.size();
         while (C.size())
         {
-            t.tick();
             double ubp = tryPartition();
-            t.tock();
             // ubp = 0;
             double ubc = tryColor();
             if (ubp == 0 or
