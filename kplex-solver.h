@@ -697,6 +697,7 @@ public:
 #endif
         // if (secondOrderUB())
         {
+            cout<<ub<<" ";
             auto B = getBranchings();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
