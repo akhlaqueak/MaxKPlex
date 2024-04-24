@@ -896,13 +896,13 @@ public:
                     LPI[ub++]=v;
                     // ISc.push_back(v);
             }
-            double cost = min(support(u), (ui)ISc.size());
-            double dise = ISc.size() / cost;
-            if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
-            {
-                maxdise = dise, ub = cost;
-                ISp.swap(ISc);
-            }
+            // double cost = min(support(u), (ui)ISc.size());
+            // double dise = ISc.size() / cost;
+            // if (dise > maxdise or (dise == maxdise and ISc.size() > ISp.size()))
+            // {
+            //     maxdise = dise, ub = cost;
+            //     ISp.swap(ISc);
+            // }
         }
         t.tock();
         // for (ui i = 1; i < P.size(); i++)
