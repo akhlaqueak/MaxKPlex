@@ -690,10 +690,8 @@ public:
         }
         // ub = relaxGCB();
 #ifdef SEESAW
-            check.tick();
         ub = seesawUB();
         // ub = tryPartition();
-            check.tock();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
@@ -932,11 +930,11 @@ public:
         ui sz = C.size();
         while (C.size())
         {
-            check.tick();
             double ubp = tryPartition();
             // ubp = 0;
+            t.tick();
             double ubc = tryColor();
-            check.tock();
+            t.tock();
             if (ubp == 0 or
                 ISc.size() / ubc > ISp.size() / ubp or
                 (ISc.size() / ubc == ISp.size() / ubp and ISc.size() > ISp.size()))
