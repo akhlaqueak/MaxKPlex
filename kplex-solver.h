@@ -690,10 +690,10 @@ public:
         }
         // ub = relaxGCB();
 #ifdef SEESAW
-            t.tick();
+            // t.tick();
         ub = seesawUB();
         // ub = tryPartition();
-            t.tock();
+            // t.tock();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
@@ -1008,8 +1008,10 @@ public:
     }
     ui tryColor()
     {
+        check.tick();
         createIS();
         ui ub = TISUB();
+        check.tock();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
