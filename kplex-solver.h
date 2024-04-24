@@ -688,16 +688,15 @@ public:
             }
             goto RECOVER;
         }
-            t.tick();
-        ub = relaxGCB();
-            t.tock();
+        // ub = relaxGCB();
 #ifdef SEESAW
-        // ub = seesawUB();
+            t.tick();
+        ub = seesawUB();
+            t.tock();
         if (ub > best_size)
 #endif
         // if (secondOrderUB())
         {
-            cout<<ub<<" ";
             auto B = getBranchings();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
