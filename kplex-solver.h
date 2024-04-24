@@ -932,9 +932,9 @@ public:
         ui sz = C.size();
         while (C.size())
         {
+            check.tick();
             double ubp = tryPartition();
             // ubp = 0;
-            check.tick();
             double ubc = tryColor();
             check.tock();
             if (ubp == 0 or
