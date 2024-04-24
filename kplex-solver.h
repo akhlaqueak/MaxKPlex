@@ -61,7 +61,7 @@ class MaxKPlex
     ui *LPI;
 
 public:
-    Timer t;
+    Timer t, t2;
     MaxKPlex(ui m, ui _k, vecui &kp)
         : kplex(kp), K(_k), heap(m, m - 1)
     {
@@ -930,11 +930,11 @@ public:
         ui sz = C.size();
         while (C.size())
         {
-            double ubp = tryPartition();
-            // ubp = 0;
             t.tick();
-            double ubc = tryColor();
+            double ubp = tryPartition();
             t.tock();
+            // ubp = 0;
+            double ubc = tryColor();
             if (ubp == 0 or
                 ISc.size() / ubc > ISp.size() / ubp or
                 (ISc.size() / ubc == ISp.size() / ubp and ISc.size() > ISp.size()))
@@ -1006,8 +1006,10 @@ public:
     }
     ui tryColor()
     {
+        t2.tick();
         createIS();
         ui ub = TISUB();
+        t2.tock();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)

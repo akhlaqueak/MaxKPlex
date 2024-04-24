@@ -414,7 +414,8 @@ void Graph::kPlex_exact() {
 			printf("Number of remaining undirected edges: %s\n", Utility::integer_to_string(m/2).c_str());
 #endif
 		}
-		cout<<"check time: "<<kplex_solver->t.ticktock()<<endl;
+		cout<<"check1 time: "<<kplex_solver->t.ticktock()<<endl;
+		cout<<"check2 time: "<<kplex_solver->t2.ticktock()<<endl;
 
 		if(prune_cnt == 0) ++ prune_cnt;
 		if(search_cnt == 0) ++ search_cnt;
