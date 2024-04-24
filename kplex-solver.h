@@ -691,7 +691,8 @@ public:
         // ub = relaxGCB();
 #ifdef SEESAW
             t.tick();
-        ub = seesawUB();
+        // ub = seesawUB();
+        ub = tryPartition();
             t.tock();
         if (ub > best_size)
 #endif
