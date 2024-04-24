@@ -891,10 +891,10 @@ public:
             {
                 // PI[u] = non-neighbors of u in C
                 ui v = C[j];
-                if(v==0)
-                // if (!matrix[u * n + v])
+                if (!matrix[u * n + v])
                     // PI[u].push_back(v);
-                    ISc.push_back(v);
+                    LPI[ub++]=v;
+                    // ISc.push_back(v);
             }
             double cost = min(support(u), (ui)ISc.size());
             double dise = ISc.size() / cost;
