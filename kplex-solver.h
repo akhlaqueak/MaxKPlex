@@ -182,7 +182,6 @@ public:
                 best_solution.push_back(peel_sequence[i]);
             printf("Degen found a solution of size %u\n", best_size);
         }
-    
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
         R_end = 0;
@@ -467,7 +466,6 @@ public:
             for (ui u : best_solution)
                 kplex.push_back(u);
         }
-
     }
 
     ui pruneM_K(ui u)
@@ -698,9 +696,9 @@ public:
 #endif
         // if (secondOrderUB())
         {
-                t.tick();
+            t.tick();
             auto B = getBranchings();
-                t.tock();
+            t.tock();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
@@ -710,7 +708,7 @@ public:
                 {
                     // return to root level of branchings, but before that recover all branching vertices to C
                     while (B.first++ < B.second)
-                    // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
+                        // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
                         addToC(0, true);
                     break;
                 }
@@ -842,7 +840,8 @@ public:
                 {
                     // Removing pi* from all pi in PI
                     ui u = P[i];
-                    if(u==maxpi) continue;
+                    if (u == maxpi)
+                        continue;
                     ui j = 0;
                     for (ui k = 0; k < psz[u]; k++)
                         if (!bmp.test(LPI[u * n + k]))
@@ -854,7 +853,7 @@ public:
                 }
                 // remove maxpi...
                 // PI[maxpi].clear();
-                psz[maxpi]=0;
+                psz[maxpi] = 0;
             }
             else
                 break;
@@ -884,6 +883,7 @@ public:
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
+            psz[u]=0;
             if (support(u) == 0)
                 continue;
             // Lookup neig(&lookup, &g.adjList[u]);
@@ -893,7 +893,8 @@ public:
                 // PI[u] = non-neighbors of u in C
                 ui v = C[j];
                 if (!matrix[u * n + v])
-                    PI[u].push_back(v);
+                    // PI[u].push_back(v);
+                    LPI[u * n + psz[u]++] = v;
             }
         }
         ui maxpi = P[0];
@@ -905,18 +906,19 @@ public:
             if (PI[u].empty())
                 continue;
             // cost(pi) = P.size()-dP[pi]
-            double cost = min(support(u), (ui)PI[u].size());
-            double dise = PI[u].size() / cost;
+            double cost = min(support(u), psz[u]);
+            double dise = psz[u] / cost;
             if (dise > maxdise or (dise == maxdise and PI[u].size() > PI[maxpi].size()))
                 maxpi = u, maxdise = dise, ub = cost;
         }
 
-        for (ui u : PI[maxpi])
-            ISp.push_back(u);
-
+        // for (ui u : PI[maxpi])
+        // for (ui i=0;i<psz[maxpi];i++)
+        //     ISp.push_back(LPI[maxpi*n+i]);
+        ISp.insert(ISp.begin(), LPI + maxpi * n, LPI + maxpi * n + psz[maxpi]);
         // clear PI
-        for (ui i = 0; i < P.size(); i++)
-            PI[P[i]].clear();
+        // for (ui i = 0; i < P.size(); i++)
+        //     PI[P[i]].clear();
         return ub;
     }
     ui relaxGCB()
@@ -972,6 +974,7 @@ public:
     }
     void createIS()
     {
+        if(C.empty()) return;
         ISc.push_back(C[0]);
 
         // check.tick();
@@ -979,15 +982,7 @@ public:
         {
             ui u = C[i];
             bool flag = true;
-            // for(ui v:g.adjList[u])
-            //     bm.set(v);
-            // Lookup l1(&lookup, &g.adjList[u], true);
-            // Lookup neigh(&lookup, &g.adjList[u], true);
-            // bmp.setup(g.adjList[u], g.V);
             for (ui v : ISc)
-                // if (bmp.test(v))
-                // if(l1[v])
-                // if(isNeighbor(g.adjList[u], v))
                 if (matrix[u * n + v])
                 {
                     flag = false;
