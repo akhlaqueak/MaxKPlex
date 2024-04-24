@@ -22,7 +22,6 @@
 #
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
-module load gcc
 alias python=python3
 k=2
 
