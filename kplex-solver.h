@@ -690,9 +690,9 @@ public:
         }
         // ub = relaxGCB();
 #ifdef SEESAW
-        // ub = seesawUB();
+        ub = seesawUB();
         // ub = tryPartition();
-        // if (ub > best_size)
+        if (ub > best_size)
 #endif
         // if (secondOrderUB())
         {
