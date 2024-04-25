@@ -672,7 +672,9 @@ public:
     {
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
+        t.tick();
         ui rc = updateC(), ub = 0;
+        t.tock();
         if (PuCSize <= best_size)
         {
             recoverC(rc);
@@ -877,7 +879,6 @@ public:
     }
     ui tryPartition()
     {
-        t.tick();
         ui maxpi = P[0];
         double maxdise = 0;
         ui ub = 0, maxsize=0;
@@ -906,7 +907,6 @@ public:
                 swap(PI, PIMax);
             }
         }
-        t.tock();
         ISp.clear();
         ISp.insert(ISp.begin(), PIMax, PIMax+maxsize);
         return ub;
