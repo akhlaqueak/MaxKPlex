@@ -1,5 +1,6 @@
 #include "kplex-graph.h"
 Timer gtime, check, sr;
+Timer branchings, part, color;
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
@@ -696,7 +697,9 @@ public:
 #endif
         // if (secondOrderUB())
         {
+            branchings.tick();
             auto B = getBranchings();
+            branchings.tock();
             // vertices in C[B.first, B.second] are the ones we need to branch.
             while (B.first < B.second)
             {
@@ -930,9 +933,13 @@ public:
         ui sz = C.size();
         while (C.size())
         {
+            part.tick();
             double ubp = tryPartition();
+            part.tock();
             // ubp = 0;
+            color.tick();
             double ubc = tryColor();
+            color.tock();
             if (ubp == 0 or
                 ISc.size() / ubc > ISp.size() / ubp or
                 (ISc.size() / ubc == ISp.size() / ubp and ISc.size() > ISp.size()))
