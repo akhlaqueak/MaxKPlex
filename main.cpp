@@ -416,7 +416,7 @@ void Graph::kPlex_exact() {
 		}
 		cout<<"PxC time: "<<kplex_solver->t.ticktock()<<endl;
 		cout<<"check2 time: "<<kplex_solver->t2.ticktock()<<endl;
-		cout<<"Partition time: "<<part.ticktock()<<endl;
+		cout<<"Partitioning time: "<<part.ticktock()<<endl;
 		cout<<"Color time: "<<color.ticktock()<<endl;
 		cout<<"Branching time: "<<branchings.ticktock()<<endl;
 
