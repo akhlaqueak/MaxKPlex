@@ -432,6 +432,7 @@ public:
 #endif
 };
 
+
 inline ui getLowerBound(auto &vec, ui x)
 {
 	auto it = lower_bound(vec.begin(), vec.end(), x);
