@@ -693,9 +693,10 @@ public:
         }
         // ub = relaxGCB();
 #ifdef SEESAW
-        ub = seesawUB();
+        // ub = seesawUB();
         // ub = tryPartition();
-        if (ub > best_size)
+        int distance = best_size - P.size();
+        if (C.size>2*distance seesawUB() > best_size)
 #endif
         // if (secondOrderUB())
         {
