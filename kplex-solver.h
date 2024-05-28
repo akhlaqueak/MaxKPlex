@@ -1129,6 +1129,7 @@ public:
             {
                 CToP(u);
                 sz++;
+                cout<<dG[u]<<" ";
             }
             else
 #ifdef RULE2
