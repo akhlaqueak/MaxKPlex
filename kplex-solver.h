@@ -673,7 +673,7 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
             return;
         t.tick();
-        ui rc = updateC(), ub = 0;
+        ui rc = updateC(), ub = 0, distance;
         t.tock();
         if (PuCSize <= best_size)
         {
@@ -695,7 +695,7 @@ public:
 #ifdef SEESAW
         // ub = seesawUB();
         // ub = tryPartition();
-        int distance = best_size - P.size();
+         distance = best_size - P.size();
         if (C.size()<2*distance or seesawUB() > best_size)
 #endif
         // if (secondOrderUB())
