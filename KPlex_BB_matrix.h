@@ -194,8 +194,8 @@ public:
             double ubc = tryColor(S_end, R_end);
             color.tock();
             if (ubp == 0 or
-                ISc.size() / ubc > ISp.size() / ubp or
-                (ISc.size() / ubc == ISp.size() / ubp and ISc.size() > ISp.size()))
+                ISc.size() / ubc > PIMax.size() / ubp or
+                (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
 
             {
                 for (ui v : ISc)
