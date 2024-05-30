@@ -448,7 +448,6 @@ private:
         ui u = SR[S_end-1];
         char *t_matrix = matrix + u*n;
 
-		return false;
 
         ui neighbors_n = 0, nonneighbors_n = 0;
         for(ui i = 0;i < R_end;i ++) if(i != S_end-1) {
@@ -457,6 +456,8 @@ private:
         }
 
         for(ui i = 0;i < neighbors_n;i ++) ++ degree_in_S[neighbors[i]];
+
+		return false;
 
         assert(Qv.empty());
         if(degree_in_S[u] + K == S_end) { // only neighbors of u in R can be candidates --- RR2
