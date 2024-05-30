@@ -1,14 +1,16 @@
 #include "Graph.h"
 #include "Utility.h"
 // #include "Timer.h"
+Timer gtime, check, sr;
+Timer branchings, part, color;
+
 #include "popl.hpp"
 #include "KPlex_BB_matrix.h"
 #include "kplex-solver.h"
 using namespace std;
 using namespace popl;
 #define bbmatrix
-Timer gtime, check, sr;
-Timer branchings, part, color;
+
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
