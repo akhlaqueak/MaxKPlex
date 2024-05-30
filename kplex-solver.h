@@ -39,6 +39,7 @@ class MaxKPlex
     std::queue<std::pair<ui, ui>> Qe;
     std::vector<std::pair<ui, ui>> removed_edges;
     long long removed_edges_n;
+    
 #endif
 
     ui *degree;
