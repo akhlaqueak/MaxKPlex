@@ -2,9 +2,9 @@
 #define _KPLEX_BB_MATRIX_
 
 #include "Utility.h"
-// #include "Timer.h"
+#include "Timer.h"
 
-// #define _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 
 //#define set_bit(array, pos) (((array)[pos]) = 1)
 //#define reverse_bit(array, pos) (((array)[pos]) = 1- ((array)[pos]))
@@ -152,8 +152,6 @@ public:
             degree[b] ++;
             matrix[a*n + b] = matrix[b*n + a] = 1;
         }
-        // for(ui i = 0; i < n; i++) std::cout<<degree[i]<<' ';
-		// std::cout<<std::endl;
 
 #ifndef NDEBUG
         printf("load graph of size n=%lld, m=%lu\n", n, vp.size());
