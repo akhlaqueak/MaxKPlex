@@ -448,6 +448,8 @@ private:
         ui u = SR[S_end-1];
         char *t_matrix = matrix + u*n;
 
+		return false;
+
         ui neighbors_n = 0, nonneighbors_n = 0;
         for(ui i = 0;i < R_end;i ++) if(i != S_end-1) {
             if(t_matrix[SR[i]]) neighbors[neighbors_n++] = SR[i];
