@@ -6,7 +6,7 @@
 #include "kplex-solver.h"
 using namespace std;
 using namespace popl;
-// #define bbmatrix
+#define bbmatrix
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
@@ -414,11 +414,13 @@ void Graph::kPlex_exact() {
 			printf("Number of remaining undirected edges: %s\n", Utility::integer_to_string(m/2).c_str());
 #endif
 		}
+		#ifndef bbmatrix
 		cout<<"PxC time: "<<kplex_solver->t.ticktock()<<endl;
 		cout<<"check2 time: "<<kplex_solver->t2.ticktock()<<endl;
 		cout<<"Partitioning time: "<<part.ticktock()<<endl;
 		cout<<"Color time: "<<color.ticktock()<<endl;
 		cout<<"Branching time: "<<branchings.ticktock()<<endl;
+		#endif
 
 		if(prune_cnt == 0) ++ prune_cnt;
 		if(search_cnt == 0) ++ search_cnt;
