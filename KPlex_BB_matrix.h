@@ -4,7 +4,7 @@
 #include "Utility.h"
 // #include "Timer.h"
 
-#define _SECOND_ORDER_PRUNING_
+// #define _SECOND_ORDER_PRUNING_
 
 //#define set_bit(array, pos) (((array)[pos]) = 1)
 //#define reverse_bit(array, pos) (((array)[pos]) = 1- ((array)[pos]))
@@ -457,7 +457,6 @@ private:
 
         for(ui i = 0;i < neighbors_n;i ++) ++ degree_in_S[neighbors[i]];
 
-		return false;
 
         assert(Qv.empty());
         if(degree_in_S[u] + K == S_end) { // only neighbors of u in R can be candidates --- RR2
