@@ -17,6 +17,7 @@ private:
     char *matrix;
     long long matrix_size;
 	vecui PI, PIMax, ISc;
+	MBitSet bmp;
 
 #ifdef _SECOND_ORDER_PRUNING_
     ui *cn;
@@ -130,6 +131,7 @@ public:
 		PI.reserve(n);
 		PIMax.reserve(n);
 		ISc.reserve(n);
+		bmp.init(n);
     }
 
     void load_graph(ui _n, const std::vector<std::pair<int,int> > &vp) {
@@ -238,7 +240,7 @@ public:
     }
     ui support(ui S_end, ui i)
     {
-        return K - (S_end - degree_in_S(SR[i]));
+        return K - (S_end - degree_in_S[SR[i]]);
     }
 
     ui TISUB(ui S_end)
@@ -306,7 +308,7 @@ public:
         }
         for (ui i = S_end; i < R_end; i++)
         {
-            if (bmp.test(i) or support(i) >= ub) // this loop running for C\ISc
+            if (bmp.test(i) or support(S_end, i) >= ub) // this loop running for C\ISc
                 continue;
             ui nv = 0;
             for (ui j: ISc)
@@ -341,7 +343,7 @@ public:
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
-            double cost = min(support(S_end, i), PI.size());
+            double cost = min(support(S_end, i), (ui)PI.size());
             double dise = PI.size() / cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
             {
@@ -539,7 +541,7 @@ private:
         	return ;
         }
         else if(R_end == best_solution_size+1) return ;
-		else if(seesawUB(S_end, R_end)<=best_solution) return;
+		else if(seesawUB(S_end, R_end)<=best_solution_size) return;
 
 #ifndef NDEBUG
 #ifdef _SECOND_ORDER_PRUNING_

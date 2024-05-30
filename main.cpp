@@ -2,7 +2,7 @@
 #include "Utility.h"
 // #include "Timer.h"
 Timer gtime, check, sr;
-Timer branchings, part, color;
+Timer branchings, part, color, t2;
 
 #include "popl.hpp"
 #include "KPlex_BB_matrix.h"
