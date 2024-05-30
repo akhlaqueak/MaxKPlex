@@ -7,6 +7,8 @@
 using namespace std;
 using namespace popl;
 #define bbmatrix
+Timer gtime, check, sr;
+Timer branchings, part, color;
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);

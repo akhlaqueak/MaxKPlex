@@ -1,6 +1,5 @@
 #include "kplex-graph.h"
-Timer gtime, check, sr;
-Timer branchings, part, color;
+
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
