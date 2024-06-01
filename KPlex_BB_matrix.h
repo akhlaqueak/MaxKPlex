@@ -185,7 +185,7 @@ public:
    ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-
+		seesaw.ticke();
         while (R_end>S_end)
         {
             part.tick();
@@ -213,6 +213,7 @@ public:
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
+		seesaw.tock();
         return UB;
     }
 

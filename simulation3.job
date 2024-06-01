@@ -46,8 +46,6 @@ soc-digg
 # for kplex in $solutions; do
 for k in {2..5}; do
 for fn in $datasets; do
-    # [ -e "$fn" ] || continue
-    echo "computing $fn.... " 
     timeout 4000 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> kPlexS-$k.out
     # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
     if [ $? -eq 124 ]; then

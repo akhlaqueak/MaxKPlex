@@ -2,7 +2,7 @@
 #include "Utility.h"
 // #include "Timer.h"
 Timer gtime, check, sr;
-Timer branchings, part, color, t2;
+Timer branchings, part, color, t2, seesaw;
 
 #include "popl.hpp"
 #include "KPlex_BB_matrix.h"
@@ -451,7 +451,7 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf(">>%s *** Search time: %f", dir.c_str(), tt.elapsed()/1000000.0);
+		printf(">>%s t_Search: %f", dir.substr(dir.find('/')), tt.elapsed()/1000000.0);
 		// printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
 	}
 	else {
@@ -459,7 +459,7 @@ void Graph::kPlex_exact() {
 		delete[] peel_sequence;
 	}
 
-	printf("\tMaximum kPlex Size: %lu, Total Time: %f (seconds)\n", kplex.size(), t.elapsed()/1000000.0);
+	printf("\tMaxKPlex_Size: %lu, t_Total: %f, t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, seesaw.ticktock());
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
