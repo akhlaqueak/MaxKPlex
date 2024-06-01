@@ -30,6 +30,12 @@ hamming6-2
 johnson8-4-4
 san200-0-9-2 
 keller4
+tech-WHOIS
+socfb-Texas84
+sc-pkustk11
+socfb-UF
+socfb-B-anon
+sc-pwtk
 soc-flixster
 ia-wiki-Talk
 socfb-Duke14
@@ -39,8 +45,10 @@ sc-ldoor
 soc-lastfm
 soc-LiveMocha
 soc-orkut
+soc-BlogCatalog
 soc-buzznet
 soc-digg
+soc-flickr
 '
 rm kplex-*.out
 rm kplex-results.out
@@ -51,7 +59,7 @@ for fn in $datasets; do
     # [ -e "$fn" ] || continue
     outfile=kplex-$k.out
     echo "computing $fn.... " 
-    srun --ntasks=1 timeout 20 ./kplex-sim -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $outfile &
+    srun --ntasks=1 timeout 4000 ./kplex-sim -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $outfile &
     # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
     # if [ $? -eq 124 ]; then
     # echo ">>/$fn Search_Time 99999999999" >> $outfile 
@@ -62,12 +70,13 @@ done
 wait
 
 for k in {2..5}; do
+echo "================= $k =================" >> kplex-results.out
 for fn in $datasets; do
     # [ -e "$fn" ] || continue
     outfile=kplex-$k.out
     op=`grep $fn $outfile`
     if [ -z "${op}" ]; then 
-        echo $fn 9999999 >> kplex-results.out
+        echo "$fn Timedout" >> kplex-results.out
     else
         echo $op >> kplex-results.out
     fi

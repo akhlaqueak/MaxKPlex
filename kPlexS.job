@@ -5,13 +5,13 @@
 #
 # Name your job to make it easier for you to track
 #
-#SBATCH --job-name=simulation3
+#SBATCH --job-name=kPlexS
 #
 # Set your error and output files
 #
 #SBATCH --error=%x.err
 #SBATCH --output=%x.out
-#SBATCH --ntasks=1
+#SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
 # Tell the scheduler only need 10 minutes
 #
@@ -30,6 +30,12 @@ hamming6-2
 johnson8-4-4
 san200-0-9-2 
 keller4
+tech-WHOIS
+socfb-Texas84
+sc-pkustk11
+socfb-UF
+socfb-B-anon
+sc-pwtk
 soc-flixster
 ia-wiki-Talk
 socfb-Duke14
@@ -39,17 +45,40 @@ sc-ldoor
 soc-lastfm
 soc-LiveMocha
 soc-orkut
+soc-BlogCatalog
 soc-buzznet
 soc-digg
+soc-flickr
 '
+rm kPlexS-*.out
+rm kPlexS-results.out
 
-# for kplex in $solutions; do
+# for kPlexS in $solutions; do
 for k in {2..5}; do
 for fn in $datasets; do
-    timeout 4000 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> kPlexS-$k.out
-    # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
-    if [ $? -eq 124 ]; then
-    echo ">>../datasets/Chang/$fn Search_Time 99999999999" >> k$k.out
+    # [ -e "$fn" ] || continue
+    outfile=kPlexS-$k.out
+    echo "computing $fn.... " 
+    srun --ntasks=1 timeout 4000 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $outfile &
+    # timeout 3600 ./kPlexS -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
+    # if [ $? -eq 124 ]; then
+    # echo ">>/$fn Search_Time 99999999999" >> $outfile 
+    # fi  
+done
+done
+
+wait
+
+for k in {2..5}; do
+echo "================= $k =================" >> kPlexS-results.out
+for fn in $datasets; do
+    # [ -e "$fn" ] || continue
+    outfile=kPlexS-$k.out
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo "$fn Timedout" >> kPlexS-results.out
+    else
+        echo $op >> kPlexS-results.out
     fi
 done
 done
