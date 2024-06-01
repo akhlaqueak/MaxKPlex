@@ -16,7 +16,7 @@
 # Tell the scheduler only need 10 minutes
 #
 #SBATCH --time=20:00:00
-#SBATCH --mem-per-cpu=10000
+#SBATCH --mem-per-cpu=100000
 #
 # Set your email address and request notification when you job is complete or if it fails
 #
@@ -50,35 +50,40 @@ soc-buzznet
 soc-digg
 soc-flickr
 '
-rm kplex-*.out
-rm kplex-results.out
+# remove old stuff
+solutions='kplex kPlexS'
+for sol in $solutions; do
+    rm $sol-*.out
+done
+rm results.out
+
 
 # for kplex in $solutions; do
-for k in {2..5}; do
 for fn in $datasets; do
-    # [ -e "$fn" ] || continue
-    outfile=kplex-$k.out
+for k in {2..5}; do
+for sol in $solutions; do
     echo "computing $fn.... " 
-    srun --ntasks=1 timeout 4000 ./kplex-sim -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $outfile &
-    # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
-    # if [ $? -eq 124 ]; then
-    # echo ">>/$fn Search_Time 99999999999" >> $outfile 
-    # fi  
+    srun --ntasks=1 timeout 100 ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
 done
 done
 
 wait
 
-for k in {2..5}; do
 echo "================= $k =================" >> kplex-results.out
 for fn in $datasets; do
+echo -en "$fn\t" >> results.out
+for k in {2..5}; do
+for sol in $solutions; do
+    outfile=$sol-$k.out
     # [ -e "$fn" ] || continue
-    outfile=kplex-$k.out
     op=`grep $fn $outfile`
     if [ -z "${op}" ]; then 
-        echo "$fn Timedout" >> kplex-results.out
+        echo -en "-\t" >> results.out
     else
-        echo $op >> kplex-results.out
+        op=($op)
+        echo -en "${op[-3]}\t" >> results.out
     fi
 done
+done
+echo >> results.out
 done
