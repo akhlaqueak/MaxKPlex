@@ -43,6 +43,7 @@ soc-buzznet
 soc-digg
 '
 rm kplex-*.out
+rm kplex-results.out
 
 # for kplex in $solutions; do
 for k in {2..5}; do
@@ -64,6 +65,11 @@ for k in {2..5}; do
 for fn in $datasets; do
     # [ -e "$fn" ] || continue
     outfile=kplex-$k.out
-    grep $fn $outfile >> results.out
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo $fn 9999999 >> kplex-results.out
+    else
+        echo $op >> kplex-results.out
+    fi
 done
 done
