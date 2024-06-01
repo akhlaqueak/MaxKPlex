@@ -5,13 +5,13 @@
 #
 # Name your job to make it easier for you to track
 #
-#SBATCH --job-name=simulation2
+#SBATCH --job-name=kplex
 #
 # Set your error and output files
 #
 #SBATCH --error=%x.err
 #SBATCH --output=%x.out
-#SBATCH --ntasks=1
+#SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
 # Tell the scheduler only need 10 minutes
 #
@@ -42,16 +42,20 @@ soc-orkut
 soc-buzznet
 soc-digg
 '
+rm kplex-*.out
 
 # for kplex in $solutions; do
 for k in {2..5}; do
 for fn in $datasets; do
     # [ -e "$fn" ] || continue
+    outfile=kplex-$k.out
     echo "computing $fn.... " 
-    timeout 4000 ./kplex-sim -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> kplex-$k.out
+    srun --ntasks=1 timeout 400 ./kplex-sim -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $outfile &
     # timeout 3600 ./kplex -g ../datasets/graphs/Chang/$fn -a exact -k $k >> k$k.out
     if [ $? -eq 124 ]; then
-    echo ">>../datasets/Chang/$fn Search_Time 99999999999" >> k$k.out
+    echo ">>/$fn Search_Time 99999999999" >> $outfile
     fi
+    
 done
+wait
 done
