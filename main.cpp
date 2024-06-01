@@ -451,7 +451,7 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("D")), tt.elapsed()/1000000.0);
+		printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("D")).c_str, tt.elapsed()/1000000.0);
 		// printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
 	}
 	else {
