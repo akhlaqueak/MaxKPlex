@@ -67,8 +67,8 @@ for sol in $solutions; do
     srun --nodes=1 --ntasks=1 timeout 100 ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
 done
 done
-done
 wait
+done
 
 echo "================= $k =================" >> kplex-results.out
 for fn in $datasets; do
