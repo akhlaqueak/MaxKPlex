@@ -64,7 +64,7 @@ for fn in $datasets; do
 for k in {2..5}; do
 for sol in $solutions; do
     echo "computing $fn.... " 
-    srun -n1 -N1 timeout 100 ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 timeout 100 ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
 done
 done
 done
