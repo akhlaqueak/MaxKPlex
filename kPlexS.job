@@ -12,7 +12,7 @@
 
 
 for k in {2..5}; do 
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k
+srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k &
 done
 
 wait
