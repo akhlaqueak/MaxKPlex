@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#SBATCH --exclusive             ### Name of the job                
 #SBATCH --job-name=kplex             ### Name of the job                
 #SBATCH --ntasks=16                     ### Number of Tasks
 #SBATCH --cpus-per-task=1               ### Number of Tasks per CPU    
