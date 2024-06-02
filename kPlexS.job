@@ -6,8 +6,8 @@
 #SBATCH --mem=4G                        ### Memory required, 4 gigabyte
 #SBATCH --partition=express             ### Cheaha Partition    
 #SBATCH --time=01:00:00                 ### Estimated Time of Completion, 1 hour
-#SBATCH --output=%x_%j.out              ### Slurm Output file, %x is job name, %j is job id    
-#SBATCH --error=%x_%j.err               ### Slurm Error file, %x is job name, %j is job id    
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
 
 srun --nodes=1 --ntasks=1 --time=1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 2 &
 srun --nodes=1 --ntasks=1 --time=1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/tech-WHOIS -a exact -k 2 &
