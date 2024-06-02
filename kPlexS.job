@@ -11,8 +11,8 @@
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
 
 
-for i in {1..5}; do 
-srun -N 1 -n 1 ./work &
+for k in {2..5}; do 
+srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k
 done
 
 wait
