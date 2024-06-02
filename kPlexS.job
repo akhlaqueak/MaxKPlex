@@ -12,6 +12,7 @@
 
 for i in {1..5}; do 
 date
-sleep 60 &
+srun -N 1 -n 1 sleep 60 &
+wait
 date
 done
