@@ -2,7 +2,7 @@
 #SBATCH --exclusive
 #SBATCH --job-name=multijob             ### Name of the job                
 #SBATCH --nodes=1                       ### Number of Nodes
-#SBATCH --ntasks=3                      ### Number of Tasks
+#SBATCH --ntasks=5                      ### Number of Tasks
 #SBATCH --cpus-per-task=1               ### Number of Tasks per CPU    
 #SBATCH --mem-per-cpu=4G                        ### Memory required, 4 gigabyte
 #SBATCH --partition=express             ### Cheaha Partition    
@@ -10,8 +10,8 @@
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
 
-srun --nodes=1 --ntasks=1 --time=1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 2 &
-srun --nodes=1 --ntasks=1 --time=1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/tech-WHOIS -a exact -k 2 &
-srun --nodes=1 --ntasks=1 --time=1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/soc-LiveMocha -a exact -k 2 &
-
-wait
+for i in {1..5}; do 
+date
+sleep 60 &
+date
+done
