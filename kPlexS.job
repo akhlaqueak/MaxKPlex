@@ -23,13 +23,13 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 2 &
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 3 &
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 4 &
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 5 &
+srun -N 1 -n 1 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 2 &
+srun -N 1 -n 1 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 3 &
+srun -N 1 -n 1 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 4 &
+srun -N 1 -n 1 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 5 &
 
 for k in {2..5}; do 
-srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k &
+srun -N 1 -n 1 ./kPlexS -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k &
 done
 
 wait
