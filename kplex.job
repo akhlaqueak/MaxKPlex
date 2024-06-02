@@ -49,7 +49,7 @@ rm results.out
 
 
 # for kplex in $solutions; do
-for k in {2..5}; do
+for k in {2..2}; do
 for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
