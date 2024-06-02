@@ -1,7 +1,7 @@
 #!/bin/bash
 # normal command for interactive session: srun --ntasks=2 --cpus-per-task=1 --mem-per-cpu=64000 --time=12:00:00 --partition=pascalnodes --job-name=GG --gres=gpu:1 --pty /bin/bash
 #SBATCH --share
-#SBATCH --partition=medium
+#SBATCH --partition=express
 #
 # Name your job to make it easier for you to track
 #
@@ -28,5 +28,8 @@ srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a e
 srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 4 &
 srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k 5 &
 
+for k in {2..5}; do 
+srun -N 1 -n 1 ./kplex -g ~/MaximumKPlex/datasets/graphs/Chang/ia-wiki-Talk -a exact -k $k &
+done
 
 wait
