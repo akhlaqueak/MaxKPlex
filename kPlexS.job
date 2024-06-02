@@ -1,4 +1,5 @@
 #!/bin/bash
+#SBATCH --exclusive
 #SBATCH --job-name=multijob             ### Name of the job                
 #SBATCH --nodes=1                       ### Number of Nodes
 #SBATCH --ntasks=3                      ### Number of Tasks
