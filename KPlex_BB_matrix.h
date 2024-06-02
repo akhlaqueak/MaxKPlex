@@ -542,7 +542,7 @@ private:
         	return ;
         }
         else if(R_end == best_solution_size+1) return ;
-		// else if(seesawUB(S_end, R_end)<=best_solution_size) return;
+		else if(seesawUB(S_end, R_end)<=best_solution_size) return;
 
 #ifndef NDEBUG
 #ifdef _SECOND_ORDER_PRUNING_

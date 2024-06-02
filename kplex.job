@@ -37,7 +37,7 @@ soc-digg
 soc-flickr
 '
 # remove old stuff
-solutions='kplex-sim'
+solutions='kplex-seesaw kPlexS'
 for sol in $solutions; do
     rm $sol-*.out
 done
