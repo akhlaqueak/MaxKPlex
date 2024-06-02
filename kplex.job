@@ -1,4 +1,5 @@
 #!/bin/bash
+#SBATCH --share
 #SBATCH --job-name=kplex             ### Name of the job                
 #SBATCH --nodes=1                       ### Number of Nodes
 #SBATCH --ntasks=16                     ### Number of Tasks
