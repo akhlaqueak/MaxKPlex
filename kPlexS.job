@@ -10,15 +10,9 @@
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
 
-work()
-{
-    date
-    sleep 60
-    date
-}
 
 for i in {1..5}; do 
-srun -N 1 -n 1 work &
+srun -N 1 -n 1 ./work &
 done
 
 wait
