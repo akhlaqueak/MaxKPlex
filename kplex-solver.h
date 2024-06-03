@@ -729,8 +729,8 @@ public:
                 recoverC(rc);
 #endif
                 removeFromP(bn);
-                        // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
-                addToC(0, true);
+                        // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
+                addToC(bn, true);
             }
         }
     RECOVER:
@@ -1223,7 +1223,7 @@ public:
             C.add(u);
         for (ui i = 0; i < P.size(); i++)
             if (matrix[u * n + P[i]])
-                dP[u]++, dG[P[i]]++;
+                dG[u]++, dP[u]++, dG[P[i]]++;
         for (ui i = 0; i < C.size(); i++)
             if (matrix[u * n + C[i]])
                 dG[u]++, dG[C[i]]++;
