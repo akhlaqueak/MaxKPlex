@@ -719,7 +719,7 @@ public:
                     break;
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
-                addToP_K(bn);
+                addBranchingVertex(bn);
 #ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
 #endif
@@ -739,6 +739,18 @@ public:
         }
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
+    }
+    void addBranchingVertex(ui bn)
+    {
+        // bn can be one or two hop neighbor vertex, and previously its dG, dP were set to zero
+        addToP_K(bn);
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[bn * n + P[i]])
+                dG[u]++, dP[u]++;
+
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dG[u]++, dP[u]++;
     }
     void recoverC(ui rc)
     {
@@ -1250,12 +1262,7 @@ public:
             if (matrix[u * n + v])
                 if (v < sz1h or P.contains(v))
                     dG[v]++, dP[v]++;
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[u]++, dP[u]++;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[u]++, dP[u]++;
+
         return u;
     }
     ui removeFromP_K()
