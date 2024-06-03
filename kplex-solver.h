@@ -614,7 +614,7 @@ public:
         if (br == m)
         {
             ui u = M.fakePop();
-            addToP_K(u);
+            addToP(u);
             rsn++;
 #ifdef CNPRUNE
             rc += pruneC_K(u);
@@ -719,7 +719,7 @@ public:
                     break;
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
-                addBranchingVertex(bn);
+                addToP_K(bn);
 #ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
 #endif
@@ -740,18 +740,18 @@ public:
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
-    void addBranchingVertex(ui u)
-    {
-        // u can be one or two hop neighbor vertex, and previously its dG, dP were set to zero
-        addToP_K(u);
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[u]++, dP[u]++;
+    // void addBranchingVertex(ui u)
+    // {
+    //     // u can be one or two hop neighbor vertex, and previously its dG, dP were set to zero
+    //     P.add(u);
+    //     for (ui i = 0; i < P.size(); i++)
+    //         if (matrix[u * n + P[i]])
+    //             dG[u]++, dP[u]++;
 
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[u]++, dP[u]++;
-    }
+    //     for (ui i = 0; i < C.size(); i++)
+    //         if (matrix[u * n + C[i]])
+    //             dG[u]++, dP[u]++;
+    // }
     void recoverC(ui rc)
     {
         for (ui i = 0; i < rc; i++)
@@ -887,7 +887,6 @@ public:
             // vertices in [cend, sz) range are Branching vertices, just fakeremove them from C
             ui u = C.top();
             removeFromC(u, true);
-            dP[u] = dG[u] = 0;
         }
 
         // clear PI
@@ -1220,10 +1219,12 @@ public:
             u = C.fakeRecPop();
         else
             C.add(u);
-        for (ui v = 0; v < n; v++)
-            if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dG[v]++;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dP[u]++, dG[P[i]]++;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dG[u]++, dG[C[i]]++;
     }
 
     void removeFromC(ui u, bool fake = false)
@@ -1232,48 +1233,50 @@ public:
             C.fakeRemove(u);
         else
             C.remove(u);
-        for (ui v = 0; v < n; v++)
-            if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dG[v]--;
+        dG[u] = dP[u] = 0;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dG[P[i]]--;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dG[C[i]]--;
     }
 
-    void addToP(ui u)
-    {
-        P.add(u);
-        for (ui v = 0; v < n; v++)
-            if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dP[v]++;
-    }
-    void removeFromP(ui u)
-    {
-        P.remove(u);
-        for (ui v = 0; v < n; v++)
-            if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dP[v]--;
-    }
+
 
     ui addToP_K(ui u)
     {
         P.add(u);
-        for (ui v = 0; v < n; v++)
+        for (ui i = 0; i < P.size(); i++){
+            ui v = P[i];
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dG[v]++, dP[v]++;
+                dG[u]++, dP[u]++, dG[v]++, dP[v]++;
+        }
+
+        for (ui i = 0; i < C.size(); i++){
+            ui v = C[i];
+            if (matrix[u * n + v])
+                dG[u]++, dG[v]++, dP[v]++;
+        }
 
         return u;
     }
     ui removeFromP_K()
     {
-        ui u = P.top();
         P.remove(u);
-        for (ui v = 0; v < n; v++)
-            if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
-                    dG[v]--, dP[v]--;
         dG[u] = dP[u] = 0;
+        for (ui i = 0; i < P.size(); i++){
+            ui v = P[i];
+            if (matrix[u * n + v])
+                dG[v]--, dP[v]--;
+        }
+
+        for (ui i = 0; i < C.size(); i++){
+            ui v = C[i];
+            if (matrix[u * n + v])
+                dG[v]--, dP[v]--;
+        }
+
         return u;
     }
     ui updateC()
@@ -1313,12 +1316,24 @@ public:
     void CToP(ui u)
     {
         C.remove(u);
-        addToP(u);
+        P.add(u);
+         for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dP[P[i]]++;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dP[C[i]]++;   
     }
     void PToC(ui u)
     {
-        removeFromP(u);
+        P.remove(u);
         C.add(u);
+         for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dP[P[i]]--;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dP[C[i]]--; 
     }
     // void reset(const auto &vp)
     // {
