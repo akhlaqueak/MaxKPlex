@@ -1189,7 +1189,7 @@ public:
 #ifdef NAIVE
             addToC(u);
 #else
-            if (u <= sz1h)
+            if (u < sz1h)
                 addToC(u);
             else
                 M.add(u);
@@ -1205,7 +1205,7 @@ public:
             C.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dG[v]++;
     }
 
@@ -1217,7 +1217,7 @@ public:
             C.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dG[v]--;
     }
 
@@ -1226,7 +1226,7 @@ public:
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dP[v]++;
     }
     void removeFromP(ui u)
@@ -1234,7 +1234,7 @@ public:
         P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dP[v]--;
     }
 
@@ -1243,11 +1243,11 @@ public:
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dG[v]++, dP[v]++;
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[u]++, dP[u]++;
+        // for (ui i = 0; i < P.size(); i++)
+        //     if (matrix[u * n + P[i]])
+        //         dG[u]++, dP[u]++;
         return u;
     }
     ui removeFromP_K()
@@ -1256,9 +1256,9 @@ public:
         P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                if (v < sz1h or P.contains(v))
+                // if (v < sz1h or P.contains(v))
                     dG[v]--, dP[v]--;
-        dG[u] = dP[u] = 0;
+        // dG[u] = dP[u] = 0;
         return u;
     }
     ui updateC()
