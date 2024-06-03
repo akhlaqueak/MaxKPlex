@@ -746,6 +746,7 @@ public:
             ui u = C.fakeRecPop();
             for (ui v = 0; v < n; v++)
                 if (matrix[u * n + v])
+                if(v<sz1h or P.contains(v))
                     dG[v]++;
         }
     }
@@ -1246,9 +1247,9 @@ public:
             if (matrix[u * n + v])
                 if (v < sz1h or P.contains(v))
                     dG[v]++, dP[v]++;
-        // for (ui i = 0; i < P.size(); i++)
-        //     if (matrix[u * n + P[i]])
-        //         dG[u]++, dP[u]++;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dG[u]++, dP[u]++;
         return u;
     }
     ui removeFromP_K()
