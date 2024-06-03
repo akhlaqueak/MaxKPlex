@@ -653,6 +653,7 @@ public:
                 cout << " Invalid " << u;
             best_solution.push_back(u);
         }
+        cout<<endl;
     }
     ui lookAheadSolution()
     {
