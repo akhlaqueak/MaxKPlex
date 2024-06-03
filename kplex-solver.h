@@ -630,7 +630,7 @@ public:
         }
         while (br >= 1)
         {
-            removeFromP();
+            removeFromP(P.top());
             br--;
         }
         M.fakeRecover(rsn);
