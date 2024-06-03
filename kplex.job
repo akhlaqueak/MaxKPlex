@@ -59,6 +59,20 @@ done
 wait
 
 echo "================= $k =================" >> kplex-results.out
+rm results.out
+for k in {2..5}; do
+echo -en "$k\t\t" >> results.out
+done
+
+echo >>results.out
+
+for k in {2..5}; do
+for sol in $solutions; do
+    echo -en "$sol\t" >> results.out
+done
+done
+echo >>results.out
+
 for fn in $datasets; do
 echo -en "$fn\t" >> results.out
 for k in {2..5}; do

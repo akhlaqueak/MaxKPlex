@@ -3,7 +3,7 @@
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
-#define TIMEOVER (gtime.elapsed() / 1000000 > 3*60 * 60)
+#define TIMEOVER (gtime.elapsed() / 1000000 > 3 * 60 * 60)
 // #define INIT_SEESAW
 
 // #define RULE2
@@ -38,7 +38,7 @@ class MaxKPlex
     std::queue<std::pair<ui, ui>> Qe;
     std::vector<std::pair<ui, ui>> removed_edges;
     long long removed_edges_n;
-    
+
 #endif
 
     ui *degree;
@@ -575,7 +575,7 @@ public:
             return;
         }
         // first branch
-        // i think there is no need to put sec neigh to x, only removing from
+        // there is no need to put sec neigh to x, only removing from
         // secneigh should be sufficient
 
         // ui u = secNeighToX();
@@ -695,8 +695,8 @@ public:
 #ifdef SEESAW
         // ub = seesawUB();
         // ub = tryPartition();
-         distance = best_size - P.size();
-        if (C.size()<=distance+3 or seesawUB() > best_size)
+        distance = best_size - P.size();
+        if (C.size() <= distance + 3 or seesawUB() > best_size)
 #endif
         // if (secondOrderUB())
         {
@@ -882,7 +882,7 @@ public:
     {
         ui maxpi = P[0];
         double maxdise = 0;
-        ui ub = 0, maxsize=0;
+        ui ub = 0, maxsize = 0;
         ui *PI = neighbors;
         ui *PIMax = nonneighbors;
         for (ui i = 0; i < P.size(); i++)
@@ -896,8 +896,8 @@ public:
             {
                 ui v = C[j];
                 if (!matrix[u * n + v])
-                    PI[sz++]=v;
-                    // ISc.push_back(v);
+                    PI[sz++] = v;
+                // ISc.push_back(v);
             }
             double cost = min(support(u), sz);
             double dise = sz / cost;
@@ -909,7 +909,7 @@ public:
             }
         }
         ISp.clear();
-        ISp.insert(ISp.begin(), PIMax, PIMax+maxsize);
+        ISp.insert(ISp.begin(), PIMax, PIMax + maxsize);
         return ub;
     }
     ui relaxGCB()
@@ -1129,7 +1129,7 @@ public:
             {
                 CToP(u);
                 sz++;
-                cout<<dG[u]<<"-`"<<PuCSize<<" ";
+                cout << dG[u] << "-`" << PuCSize << " ";
             }
             else
 #ifdef RULE2
@@ -1190,7 +1190,7 @@ public:
 #ifdef NAIVE
             addToC(u);
 #else
-            if (u <= sz1h)
+            if (u < sz1h)
                 addToC(u);
             else
                 M.add(u);
@@ -1206,7 +1206,8 @@ public:
             C.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]++;
+                if (v < sz1h or P.contains(v))
+                    dG[v]++;
     }
 
     void removeFromC(ui u, bool fake = false)
@@ -1217,7 +1218,8 @@ public:
             C.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]--;
+                if (v < sz1h or P.contains(v))
+                    dG[v]--;
     }
 
     void addToP(ui u)
@@ -1225,14 +1227,16 @@ public:
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dP[v]++;
+                if (v < sz1h or P.contains(v))
+                    dP[v]++;
     }
     void removeFromP(ui u)
     {
         P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dP[v]--;
+                if (v < sz1h or P.contains(v))
+                    dP[v]--;
     }
 
     ui addToP_K(ui u)
@@ -1240,7 +1244,11 @@ public:
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]++, dP[v]++;
+                if (v < sz1h or P.contains(v))
+                    dG[v]++, dP[v]++;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dG[u]++, dP[u]++;
         return u;
     }
     ui removeFromP_K()
@@ -1249,7 +1257,9 @@ public:
         P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[v]--, dP[v]--;
+                if (v < sz1h or P.contains(v))
+                    dG[v]--, dP[v]--;
+        dG[u] = dP[u] = 0;
         return u;
     }
     ui updateC()
