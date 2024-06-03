@@ -740,12 +740,12 @@ public:
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
-    void addBranchingVertex(ui bn)
+    void addBranchingVertex(ui u)
     {
-        // bn can be one or two hop neighbor vertex, and previously its dG, dP were set to zero
-        addToP_K(bn);
+        // u can be one or two hop neighbor vertex, and previously its dG, dP were set to zero
+        addToP_K(u);
         for (ui i = 0; i < P.size(); i++)
-            if (matrix[bn * n + P[i]])
+            if (matrix[u * n + P[i]])
                 dG[u]++, dP[u]++;
 
         for (ui i = 0; i < C.size(); i++)
