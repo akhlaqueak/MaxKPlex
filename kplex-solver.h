@@ -450,12 +450,12 @@ public:
         SR_rid[SR[j]] = j;
     }
 
-    void solve_instance(ui _n, ui sz1h, const auto &vp)
+    void solve_instance(ui _n, ui _sz1h, const auto &vp)
     {
         n = _n;
+        sz1h = _sz1h;
         best_size = kplex.size();
         initialization(vp, true);
-        this->sz1h = sz1h;
         if (R_end)
         {
             initContainers(sz1h);
@@ -1188,9 +1188,9 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-#ifdef NAIVE
             addToC(u);
-#else
+// #else
+#ifdef NAIVE
             if (u < sz1h)
                 addToC(u);
             else
