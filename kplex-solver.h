@@ -593,7 +593,7 @@ public:
             ui u = M.fakePop();
             rsn++;              // so that the fakepop here is recovered in the end of this
                                 // function
-            addToP_K(u);        // u is added to P, that causes C, M and X to
+            addToP(u);        // u is added to P, that causes C, M and X to
 #ifdef CNPRUNE                  // shrink... as per theorem 9, 10, 11
             rc += pruneC_K(u);  // Applying Theorem 10 to update C
             rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
@@ -630,7 +630,7 @@ public:
         }
         while (br >= 1)
         {
-            removeFromP_K();
+            removeFromP();
             br--;
         }
         M.fakeRecover(rsn);
@@ -719,7 +719,7 @@ public:
                     break;
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
-                addToP_K(bn);
+                addToP(bn);
 #ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
 #endif
@@ -728,7 +728,8 @@ public:
                 recoverC(rc);
 #endif
                 removeFromP(bn);
-                C.fakeRecPop();
+                        // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
+                addToC(0, true);
             }
         }
     RECOVER:
@@ -1198,7 +1199,7 @@ public:
     void initContainers(ui sz1h)
     {
 
-        addToP_K(0);
+        addToP(0);
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
@@ -1244,7 +1245,7 @@ public:
 
 
 
-    ui addToP_K(ui u)
+    ui addToP(ui u)
     {
         P.add(u);
         for (ui i = 0; i < P.size(); i++){
@@ -1261,7 +1262,7 @@ public:
 
         return u;
     }
-    ui removeFromP_K()
+    ui removeFromP()
     {
         P.remove(u);
         dG[u] = dP[u] = 0;
