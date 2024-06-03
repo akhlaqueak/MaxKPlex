@@ -1262,7 +1262,7 @@ public:
 
         return u;
     }
-    ui removeFromP()
+    ui removeFromP(ui u)
     {
         P.remove(u);
         dG[u] = dP[u] = 0;
