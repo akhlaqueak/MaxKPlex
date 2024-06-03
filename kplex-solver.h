@@ -1114,7 +1114,7 @@ public:
     {
         ui sz = 0;
         // sz = lookAheadSolution();
-        return sz;
+        // return sz;
 
         for (ui i = 0; i < C.size();)
         {
@@ -1189,7 +1189,7 @@ public:
 #ifdef NAIVE
             addToC(u);
 #else
-            if (u < sz1h)
+            if (u <= sz1h)
                 addToC(u);
             else
                 M.add(u);
