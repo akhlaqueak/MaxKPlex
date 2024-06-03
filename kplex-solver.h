@@ -648,7 +648,7 @@ public:
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
-            cout<<dP[u]<<"." <<dG[u]<<" ";
+            cout << dP[u] << "." << dG[u] << " ";
             if (dP[u] < P.size() - K)
                 cout << " Invalid " << u;
             best_solution.push_back(u);
@@ -747,8 +747,8 @@ public:
             ui u = C.fakeRecPop();
             for (ui v = 0; v < n; v++)
                 if (matrix[u * n + v])
-                if(v<sz1h or P.contains(v))
-                    dG[v]++;
+                    if (v < sz1h or P.contains(v))
+                        dG[v]++;
         }
     }
     // ui updateC_SecondOrder()
@@ -1252,6 +1252,9 @@ public:
                     dG[v]++, dP[v]++;
         for (ui i = 0; i < P.size(); i++)
             if (matrix[u * n + P[i]])
+                dG[u]++, dP[u]++;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
                 dG[u]++, dP[u]++;
         return u;
     }
