@@ -1117,7 +1117,7 @@ public:
     {
         ui sz = 0;
         // sz = lookAheadSolution();
-        // return sz;
+        return sz;
 
         for (ui i = 0; i < C.size();)
         {
