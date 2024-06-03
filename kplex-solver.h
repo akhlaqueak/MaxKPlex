@@ -1129,7 +1129,6 @@ public:
             {
                 CToP(u);
                 sz++;
-                cout << dG[u] << "-`" << PuCSize << " ";
             }
             else
 #ifdef RULE2
