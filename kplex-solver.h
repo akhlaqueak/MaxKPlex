@@ -258,14 +258,14 @@ public:
 
         while (!Qe.empty())
             Qe.pop();
-        // for (ui i = 0; i < R_end; i++)
-        //     for (ui j = i + 1; j < R_end; j++)
-        //     {
-        //         if (adjMat(SR[i], SR[j]) && upper_bound_based_prune(0, SR[i], SR[j]))
-        //         {
-        //             Qe.push(std::make_pair(SR[i], SR[j]));
-        //         }
-        //     }
+        for (ui i = 0; i < R_end; i++)
+            for (ui j = i + 1; j < R_end; j++)
+            {
+                if (adjMat(SR[i], SR[j]) && upper_bound_based_prune(0, SR[i], SR[j]))
+                {
+                    Qe.push(std::make_pair(SR[i], SR[j]));
+                }
+            }
         removed_edges_n = 0;
 #endif
 
@@ -274,7 +274,21 @@ public:
         if (remove_vertices_and_edges_with_prune(0, R_end, 0))
             R_end = 0;
     }
-
+#ifdef _SECOND_ORDER_PRUNING_
+    bool upper_bound_based_prune(ui S_end, ui u, ui v) {
+    	// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
+    	ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
+    	if(SR_rid[u] >= S_end) {
+    		-- ub; // S_end ++
+    		if(matrix[u*n+v]) ++ ub; // degree_in_S[v] ++
+    	}
+    	if(SR_rid[v] >= S_end) {
+    		-- ub;
+    		if(matrix[v*n+u]) ++ ub;
+    	}
+    	return ub <= best_solution_size;
+    }
+#endif
     bool
     remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level)
     {
