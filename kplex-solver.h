@@ -787,6 +787,7 @@ public:
         // recover cp number of vertices directly moved to P
         for (ui i = 0; i < cp; i++)
         {
+            cout<<"-"<<P.top()<<" ";
             PToC(P.top());
         }
         recoverC(rc);
@@ -1189,6 +1190,7 @@ public:
             if (dG[u] + 2 >= PuCSize)
             {
                 CToP(u);
+                cout<<"+"<<u<<" ";
                 sz++;
             }
             else
