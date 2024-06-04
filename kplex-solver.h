@@ -698,6 +698,7 @@ public:
             ui u = P[i];
             cout << dP[u] << "." << dG[u] << " ";
             printvec("dg", dG);
+            printvec("dP", dP);
             if (dP[u] < P.size() - K)
                 cout << " Invalid " << u;
             best_solution.push_back(u);
