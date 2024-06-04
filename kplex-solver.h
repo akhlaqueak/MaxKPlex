@@ -808,9 +808,8 @@ public:
     // }
     void recoverC(ui rc)
     {
-        for (ui i = 0; i < rc; i++)        
+        for (ui i = 0; i < rc; i++)
             addToC(0, true);
-        
     }
     // ui updateC_SecondOrder()
     // {
@@ -1388,9 +1387,11 @@ public:
         // when fake is true, the vertex was previously fake removed from C and added to P. Now we only need to fake recover from C
         P.remove(u);
         if (fake)
-            // assert(C.fakeRecPop() == u);
-            ui v=C.fakeRecPop();
-            assert(v==u);
+        // assert(C.fakeRecPop() == u);
+        {
+            ui v = C.fakeRecPop();
+            assert(v == u);
+        }
         else
             C.add(u);
         for (ui v = 0; v < n; v++)
