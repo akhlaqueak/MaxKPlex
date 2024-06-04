@@ -779,10 +779,10 @@ public:
 #ifdef CNPRUNE
                 recoverC(rc);
 #endif
-                // PToC(bn, true);
-                removeFromP(bn);
-                // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
-                addToC(bn, true);
+                PToC(bn, true);
+                // removeFromP(bn);
+                // // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
+                // addToC(bn, true);
             }
         }
     RECOVER:
@@ -1383,7 +1383,7 @@ public:
         //     if (matrix[u * n + C[i]])
         //         dP[C[i]]++;
     }
-    void PToC(ui u, bool fake = true)
+    void PToC(ui u, bool fake = false)
     {
         // when fake is true, the vertex was previously fake removed from C and added to P. Now we only need to fake recover from C
         P.remove(u);
