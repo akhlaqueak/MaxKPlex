@@ -1,0 +1,114 @@
+#!/bin/bash
+               
+#SBATCH --job-name=kplex             ### Name of the job                
+#SBATCH --ntasks=96                     ### Number of Tasks
+#SBATCH --cpus-per-task=1              ### Number of Tasks per CPU    
+#SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
+#SBATCH --partition=medium             ### Cheaha Partition    
+#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
+#SBATCH --mail-type=END
+#SBATCH --mail-user=akhlaque.ak@gmail.com
+
+datasets='
+hamming6-2
+johnson8-4-4
+san200-0-9-2 
+keller4
+socfb-Texas84
+sc-pkustk11
+socfb-UF
+socfb-B-anon
+sc-pwtk
+soc-flixster
+tech-WHOIS
+ia-wiki-Talk
+socfb-Duke14
+socfb-Indiana
+socfb-OR
+socfb-Texas84
+sc-msdoor
+soc-FourSquare
+sc-ldoor
+soc-lastfm
+soc-LiveMocha
+soc-orkut
+soc-BlogCatalog
+soc-buzznet
+soc-digg
+soc-flickr
+'
+result=results.out
+# remove old stuff
+solutions='kplex-full 	 kplex-no-seesaw 	 kplex-no-rule2 	 kplex-UP1 	 kplex-distance4'
+for sol in $solutions; do
+    rm $sol-*.out
+done
+rm $result
+
+
+# for kplex in $solutions; do
+for k in {2..5}; do
+for fn in $datasets; do
+for sol in $solutions; do
+    echo "computing $fn.... " 
+    srun --nodes=1 --ntasks=1 --time=03:00 --exclusive ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
+done
+done
+done
+wait
+
+echo "================= $k =================" >> kplex-$result
+rm $result
+echo -en "k:\t"
+for k in {2..5}; do
+echo -en "$k\t\t" >> $result
+done
+
+echo >>$result
+echo -en "solutions:\t"
+
+for k in {2..5}; do
+for sol in $solutions; do
+    echo -en "$sol\t" >> $result
+done
+done
+echo >>$result
+
+for fn in $datasets; do
+echo -en "$fn\t" >> $result
+for k in {2..5}; do
+for sol in $solutions; do
+    outfile=$sol-$k.out
+    # [ -e "$fn" ] || continue
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo -en "-\t" >> $result
+    else
+        op=($op)
+        echo -en "${op[-3]}\t" >> $result
+    fi
+done
+done
+echo >> $result
+done
+
+result=kpsize.out
+for fn in $datasets; do
+echo -en "$fn\t" >> $result
+for k in {2..5}; do
+for sol in $solutions; do
+    outfile=$sol-$k.out
+    # [ -e "$fn" ] || continue
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo -en "-\t" >> $result
+    else
+        op=($op)
+        echo -en "${op[-5]}\t" >> $result
+    fi
+done
+done
+echo >> $result
+done
