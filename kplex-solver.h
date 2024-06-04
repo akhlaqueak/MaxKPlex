@@ -624,7 +624,7 @@ public:
             // recSearch();
             flag = false;
 #ifdef NAIVE
-            // naiveSearch();
+            naiveSearch();
 #else
             recSearch(FIRST);
 #endif
