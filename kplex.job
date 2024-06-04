@@ -60,11 +60,13 @@ wait
 
 echo "================= $k =================" >> kplex-results.out
 rm results.out
+echo -en "k:\t"
 for k in {2..5}; do
 echo -en "$k\t\t" >> results.out
 done
 
 echo >>results.out
+echo -en "solutions:\t"
 
 for k in {2..5}; do
 for sol in $solutions; do
