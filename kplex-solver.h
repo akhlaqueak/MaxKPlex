@@ -723,7 +723,7 @@ public:
     {
         if ((level == OTHER and flag) or PuCSize <= best_solution_size)
             return;
-    
+
         ui rc = updateC();
         ui ub = 0, distance = 0;
         if (PuCSize <= best_solution_size)
@@ -732,15 +732,21 @@ public:
             return;
         }
         // todo movedirectly to p need to be fixed...
-        ui cp = moveDirectlyToP();
         // rc += updateC_SecondOrder();
         if (C.empty())
         {
-            if (P.size() > best_solution_size)
-            {
-                reportSolution();
-            }
-            goto RECOVER;
+            reportSolution();
+            recoverC(rc);
+            return;
+        }
+        ui u = moveDirectlyToP();
+        if (u != n)
+        {
+            CToP(u);
+            recSearch(OTHER);
+            PToC(u);
+            recoverC(rc);
+            return;
         }
         // ub = relaxGCB();
 #ifdef SEESAW
@@ -783,13 +789,7 @@ public:
                 // addToC(bn, true);
             }
         }
-    RECOVER:
-        // recover cp number of vertices directly moved to P
-        for (ui i = 0; i < cp; i++)
-        {
-            cout<<"-"<<P.top()<<" ";
-            PToC(P.top());
-        }
+
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
@@ -1178,22 +1178,14 @@ public:
         // sz = lookAheadSolution();
         // return sz;
 
-        for (ui i = 0; i < C.size();)
+        for (ui i = 0; i < C.size(); i++)
         {
             ui u = C[i];
-            if (!canMoveToP(u))
-            {
-                i++;
-                continue;
-            }
+
             // vldb BR1 rule
             if (dG[u] + 2 >= PuCSize)
-            {
-                CToP(u);
-                cout<<"+"<<u<<" ";
-                sz++;
-            }
-            else
+                return u;
+
 #ifdef RULE2
             {
                 // xiao2017 Lemma4 rule. u and all non-nieghbors vertices of u shoulud be k-satisfied
@@ -1221,11 +1213,10 @@ public:
                 else
                     i++;
             }
-#else
-                i++;
+
 #endif
         }
-        return sz;
+        return n;
     }
 
     ui maxDegenVertex(ui st, ui en)
