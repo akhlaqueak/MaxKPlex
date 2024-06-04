@@ -136,8 +136,10 @@ public:
             matrix[a * n + b] = matrix[b * n + a] = 1;
             // adjMat(a, b) = 1;
         }
+
         R_end = n;
         return;
+        
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
@@ -1359,7 +1361,7 @@ public:
     {
         if (PuCSize < best_size)
             return;
-        ui rc = updateC();
+        // ui rc = updateC();
         if (C.empty())
         {
             if (P.size() > best_size)
@@ -1377,6 +1379,6 @@ public:
         C.fakePop();
         naiveSearch();
         C.fakeRecPop();
-        C.fakeRecover(rc);
+        // C.fakeRecover(rc);
     }
 };
