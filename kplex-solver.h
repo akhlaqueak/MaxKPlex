@@ -723,11 +723,11 @@ public:
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP(bn);
 #ifdef CNPRUNE
-                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                // ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
 #endif
                 recSearch(OTHER);
 #ifdef CNPRUNE
-                recoverC(rc);
+                // recoverC(rc);
 #endif
                 removeFromP(bn);
                         // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
@@ -1205,13 +1205,13 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            addToC(u);
 #ifdef NAIVE
+            addToC(u);
 #else
-            // if (u < sz1h)
-            //     addToC(u);
-            // else
-            //     M.add(u);
+            if (u < sz1h)
+                addToC(u);
+            else
+                M.add(u);
 #endif
         }
     }
