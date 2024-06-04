@@ -693,7 +693,7 @@ public:
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
         // checking validity of kplex
-            
+
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
@@ -779,9 +779,10 @@ public:
 #ifdef CNPRUNE
                 recoverC(rc);
 #endif
-                removeFromP(bn);
-                // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
-                addToC(bn, true);
+                PToC(bn, true);
+                // removeFromP(bn);
+                // // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
+                // addToC(bn, true);
             }
         }
     RECOVER:
@@ -1260,7 +1261,7 @@ public:
             else
                 M.add(u);
         }
-        cout<<n;
+        cout << n;
         printvec(" dg", dG);
     }
 
@@ -1388,12 +1389,16 @@ public:
         //     if (matrix[u * n + C[i]])
         //         dP[C[i]]++;
     }
-    void PToC(ui u)
+    void PToC(ui u, bool fake = true)
     {
+        // when fake is true, the vertex was previously fake removed from C and added to P. Now we only need to fake recover from C
         P.remove(u);
-        C.add(u);
-        for(ui v=0;v<n;v++)
-            if(matrix[u*n+v])
+        if (fake)
+            assert(C.fakeRecPop() == u);
+        else
+            C.add(u);
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
                 dP[v]--;
         // for (ui i = 0; i < P.size(); i++)
         //     if (matrix[u * n + P[i]])
