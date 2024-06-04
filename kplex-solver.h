@@ -11,7 +11,7 @@ bool flag = false;
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
 
-// #define NAIVE
+#define NAIVE
 
 class MaxKPlex
 {
@@ -1241,14 +1241,10 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-#ifdef NAIVE
-            addToC(u);
-#else
             if (u < sz1h)
                 addToC(u);
             else
                 M.add(u);
-#endif
         }
     }
 
