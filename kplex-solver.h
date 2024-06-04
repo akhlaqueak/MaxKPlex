@@ -1243,7 +1243,6 @@ public:
 
     void initContainers(ui sz1h)
     {
-
         addToP(0);
         for (ui i = 1; i < R_end; i++)
         {
