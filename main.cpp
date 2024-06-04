@@ -462,7 +462,7 @@ void Graph::kPlex_exact() {
 	}
 
 	printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, seesaw.ticktock());
-	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
+	printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
 void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {
