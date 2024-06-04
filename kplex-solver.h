@@ -779,10 +779,10 @@ public:
 #ifdef CNPRUNE
                 recoverC(rc);
 #endif
-                PToC(bn, true);
-                // removeFromP(bn);
-                // // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
-                // addToC(bn, true);
+                // PToC(bn, true);
+                removeFromP(bn);
+                // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
+                addToC(bn, true);
             }
         }
     RECOVER:
