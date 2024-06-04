@@ -3,7 +3,6 @@
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
-#define TIMEOVER (gtime.elapsed() / 1000000 > 3 * 60 * 60)
 // #define INIT_SEESAW
 
 // #define RULE2
@@ -562,7 +561,7 @@ public:
     // }
     void kSearch(ui m)
     {
-        if (PuCuMSize <= best_size or TIMEOVER)
+        if (PuCuMSize <= best_size)
             return;
 
         if (M.size() == 0)
@@ -673,7 +672,7 @@ public:
     }
     void recSearch(RecLevel level)
     {
-        if ((level == OTHER and flag) or PuCSize <= best_size or TIMEOVER)
+        if ((level == OTHER and flag) or PuCSize <= best_size )
             return;
         t.tick();
         ui rc = updateC(), ub = 0, distance;
