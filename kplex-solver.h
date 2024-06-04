@@ -699,7 +699,7 @@ public:
         // ub = tryPartition();
         distance = best_size - P.size();
         // if (C.size() <= distance + 3 or seesawUB() > best_size)
-        if(seesawUB()>best_size)
+        // if(seesawUB()>best_size)
 #endif
         // if (secondOrderUB())
         {
