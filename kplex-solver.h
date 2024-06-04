@@ -11,7 +11,7 @@ bool flag = false;
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
 
-// #define NAIVE
+#define NAIVE
 
 class MaxKPlex
 {
@@ -675,12 +675,12 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size )
             return;
         t.tick();
-        // ui rc = updateC();
+        ui rc = updateC();
         ui ub = 0, distance=0;
         t.tock();
         if (PuCSize <= best_size)
         {
-            // recoverC(rc);
+            recoverC(rc);
             return;
         }
         // todo movedirectly to p need to be fixed...
@@ -740,7 +740,7 @@ public:
         {
             PToC(P.top());
         }
-        // recoverC(rc);
+        recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
     // void addBranchingVertex(ui u)
