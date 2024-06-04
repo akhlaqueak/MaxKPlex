@@ -187,14 +187,13 @@ public:
         for (ui i = 0; i < n; i++)
             SR_rid[i] = n;
         for (ui i = 0; i < n; i++)
-            if (core[i] + K > best_size)
+            // if (core[i] + K > best_size)
             {
                 SR[R_end] = i;
                 SR_rid[i] = R_end;
                 ++R_end;
             }
         return;
-
         if (must_include_0 && SR_rid[0] == n)
         {
             R_end = 0;
