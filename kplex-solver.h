@@ -950,7 +950,7 @@ public:
                     // PI[sz++] = v;
                 ISc.push_back(v);
             }
-            double cost = min(support(u), ISc.size());
+            double cost = min(support(u), (ui) ISc.size());
             double dise = (double)ISc.size() / cost;
             if (dise > maxdise or (dise == maxdise and ISc.size() > maxsize))
             {
