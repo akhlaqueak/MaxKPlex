@@ -61,7 +61,7 @@ class MaxKPlex
     ui *LPI;
 
 public:
-    Timer t, t2;
+    Timer t, istimer;
     MaxKPlex(ui m, ui _k, vecui &kp)
         : kplex(kp), K(_k), heap(m, m - 1)
     {
@@ -1031,10 +1031,10 @@ public:
     }
     ui tryColor()
     {
-        t2.tick();
+        istimer.tick();
         createIS();
         ui ub = TISUB();
-        t2.tock();
+        istimer.tock();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)

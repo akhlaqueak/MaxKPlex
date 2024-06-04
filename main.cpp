@@ -419,11 +419,13 @@ void Graph::kPlex_exact() {
 #endif
 		}
 		#ifndef bbmatrix
-		cout<<"PxC time: "<<kplex_solver->t.ticktock()<<endl;
-		cout<<"check2 time: "<<kplex_solver->t2.ticktock()<<endl;
-		cout<<"Partitioning time: "<<part.ticktock()<<endl;
-		cout<<"Color time: "<<color.ticktock()<<endl;
-		cout<<"Branching time: "<<branchings.ticktock()<<endl;
+		cout<<"Timings "<<dir.substr(dir.find_last_of("/"));
+		cout<<" PxC: "<<kplex_solver->t.ticktock();
+		cout<<" check2: "<<kplex_solver->istimer.ticktock();
+		cout<<" Partitioning: "<<part.ticktock();
+		cout<<" Color: "<<color.ticktock();
+		cout<<" Branching: "<<branchings.ticktock();
+		cout<<endl;
 		#endif
 
 		if(prune_cnt == 0) ++ prune_cnt;
