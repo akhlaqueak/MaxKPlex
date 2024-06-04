@@ -45,7 +45,7 @@ class MaxKPlex
 
     ui K;
     vecui best_solution;
-    ui best_size;
+    ui best_solution_size;
 
     ui *neighbors;
     ui *nonneighbors;
@@ -195,14 +195,14 @@ public:
         //         if (!bmp.test(j) && matrix[u * n + j])
         //             heap.decrement(j, 1);
         // }
-        if (n - idx > best_size)
+        if (n - idx > best_solution_size)
         {
             best_solution.clear();
-            best_size = n - idx;
+            best_solution_size = n - idx;
             for (ui i = idx; i < n; i++)
                 // best_solution[i-idx] = peel_sequence[i];
                 best_solution.push_back(peel_sequence[i]);
-            printf("Degen found a solution of size %u\n", best_size);
+            printf("Degen found a solution of size %u\n", best_solution_size);
         }
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
@@ -210,7 +210,7 @@ public:
         for (ui i = 0; i < n; i++)
             SR_rid[i] = n;
         for (ui i = 0; i < n; i++)
-            if (core[i] + K > best_size)
+            if (core[i] + K > best_solution_size)
             {
                 SR[R_end] = i;
                 SR_rid[i] = R_end;
@@ -315,7 +315,7 @@ public:
                         ui w = SR[i];
                         neighbors[neighbors_n++] = w;
                         --degree[w];
-                        if (degree[w] + K <= best_size)
+                        if (degree[w] + K <= best_solution_size)
                         {
                             if (i < S_end)
                                 terminate = true; // UB1
@@ -397,12 +397,12 @@ public:
                 continue;
             assert(SR_rid[v] >= S_end && SR_rid[v] < R_end && SR_rid[w] >= S_end && SR_rid[w] < R_end);
 
-            if (degree[v] + K <= best_size + 1)
+            if (degree[v] + K <= best_solution_size + 1)
             {
                 level_id[v] = level;
                 Qv.push(v);
             }
-            if (degree[w] + K <= best_size + 1)
+            if (degree[w] + K <= best_solution_size + 1)
             {
                 level_id[w] = level;
                 Qv.push(w);
@@ -487,7 +487,7 @@ public:
     {
         n = _n;
         sz1h = _sz1h;
-        best_size = kplex.size();
+        best_solution_size = kplex.size();
         initialization(vp, true);
         if (R_end)
         {
@@ -495,7 +495,7 @@ public:
             kSearch(K - 1);
         }
     
-        if (best_size > kplex.size())
+        if (best_solution_size > kplex.size())
         {
             kplex.clear();
             for (ui u : best_solution)
@@ -511,8 +511,8 @@ public:
         for (int i = 0; i < M.size();)
         {
             int v = M[i];
-            if ((matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 2, 0) < best_size) or
-                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 3, 0) < best_size) or
+            if ((matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size) or
                 !canMoveToP(v))
             {
                 M.fakeRemove(v);
@@ -531,8 +531,8 @@ public:
         for (int i = 0; i < C.size();)
         {
             int v = C[i];
-            if ((matrix[u * n + v] and cn[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_size) or
-                (!matrix[u * n + v] and cn[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_size) or
+            if ((matrix[u * n + v] and cn[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) or
                 !canMoveToP(v))
             {
                 removeFromC(v, true); // fake remove when flag is true
@@ -553,8 +553,8 @@ public:
         {
             int v = C[i];
             // if (UNLINK2EQUAL > g.cnMatrix(u, v) or !canMoveToP(v))
-            if ((matrix[u * n + v] and cn[u * n + v] + 3 * K < best_size) or
-                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * (K - 1) < best_size) or
+            if ((matrix[u * n + v] and cn[u * n + v] + 3 * K < best_solution_size) or
+                (!matrix[u * n + v] and cn[u * n + v] + K + 2 * (K - 1) < best_solution_size) or
                 !canMoveToP(v))
             {
                 removeFromC(v, true); // fake remove when flag is true
@@ -596,7 +596,7 @@ public:
     // }
     void kSearch(ui m)
     {
-        if (PuCuMSize <= best_size)
+        if (PuCuMSize <= best_solution_size)
             return;
 
         if (M.size() == 0)
@@ -676,7 +676,7 @@ public:
     void reportSolution()
     {
         best_solution.clear();
-        best_size = P.size();
+        best_solution_size = P.size();
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
         // checking validity of kplex
@@ -708,13 +708,13 @@ public:
     }
     void recSearch(RecLevel level)
     {
-        if ((level == OTHER and flag) or PuCSize <= best_size )
+        if ((level == OTHER and flag) or PuCSize <= best_solution_size )
             return;
         t.tick();
         ui rc = updateC();
         ui ub = 0, distance=0;
         t.tock();
-        if (PuCSize <= best_size)
+        if (PuCSize <= best_solution_size)
         {
             recoverC(rc);
             return;
@@ -724,7 +724,7 @@ public:
         // rc += updateC_SecondOrder();
         if (C.empty())
         {
-            if (P.size() > best_size)
+            if (P.size() > best_solution_size)
             {
                 reportSolution();
             }
@@ -734,9 +734,9 @@ public:
 #ifdef SEESAW
         // ub = seesawUB();
         // ub = tryPartition();
-        distance = best_size - P.size();
-        // if (C.size() <= distance + 3 or seesawUB() > best_size)
-        if(seesawUB()>best_size)
+        distance = best_solution_size - P.size();
+        // if (C.size() <= distance + 3 or seesawUB() > best_solution_size)
+        if(seesawUB()>best_solution_size)
 #endif
         // if (secondOrderUB())
         {
@@ -809,7 +809,7 @@ public:
     //         for (ui i = 0; i < C.size();)
     //         {
     //             ui u = C[i], v = P[j];
-    //             if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_size)
+    //             if (P.size() + 1 + support(u) + support(v) + g.soMatrix(u, v) <= best_solution_size)
     //                 removeFromC(u, true);
     //             else
     //                 i++;
@@ -831,7 +831,7 @@ public:
     //                     ub = b;
     //             }
     //     }
-    //     return ub > best_size;
+    //     return ub > best_solution_size;
     // }
     pair<ui, ui> getBranchings()
     {
@@ -851,7 +851,7 @@ public:
                     LPI[u * n + psz[u]++] = v;
             }
         }
-        ui beta = best_size - P.size();
+        ui beta = best_solution_size - P.size();
         ui cend = 0;
         while (true)
         {
@@ -1157,10 +1157,10 @@ public:
     //             cnt++;
     //             nonadjInP[max_index]++;
     //         }
-    //         if (cnt >= best_size)
+    //         if (cnt >= best_solution_size)
     //             return true;
     //     }
-    //     if (cnt >= best_size)
+    //     if (cnt >= best_solution_size)
     //         return true;
     //     return false;
     // }
@@ -1388,12 +1388,12 @@ public:
     // }
     void naiveSearch()
     {
-        if (PuCSize < best_size)
+        if (PuCSize < best_solution_size)
             return;
         ui rc = updateC();
         if (C.empty())
         {
-            if (P.size() > best_size)
+            if (P.size() > best_solution_size)
             {
                 reportSolution();
             }
