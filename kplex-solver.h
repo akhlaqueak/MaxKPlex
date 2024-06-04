@@ -114,7 +114,6 @@ public:
             cn = new ui[matrix_size];
 #endif
         }
-        printvec("dG bef", dG);
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
@@ -1254,8 +1253,6 @@ public:
             else
                 M.add(u);
         }
-        cout << n;
-        printvec(" dg", dG);
     }
 
     void addToC(ui u, bool fake = false)
