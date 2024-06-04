@@ -570,6 +570,8 @@ public:
         {
             flag = false;
 #ifdef NAIVE
+            C.print();
+            
             naiveSearch();
 #else
             recSearch(FIRST);
