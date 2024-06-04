@@ -114,7 +114,7 @@ public:
             cn = new ui[matrix_size];
 #endif
         }
-
+        printvec("dG bef", dG);
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
@@ -808,10 +808,9 @@ public:
     // }
     void recoverC(ui rc)
     {
-        for (ui i = 0; i < rc; i++)
-        {
+        for (ui i = 0; i < rc; i++)        
             addToC(0, true);
-        }
+        
     }
     // ui updateC_SecondOrder()
     // {
