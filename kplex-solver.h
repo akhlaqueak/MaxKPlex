@@ -675,7 +675,8 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size )
             return;
         t.tick();
-        ui rc = updateC(), ub = 0, distance;
+        ui rc = updateC();
+        ui ub = 0, distance=0;
         t.tock();
         if (PuCSize <= best_size)
         {
@@ -699,7 +700,7 @@ public:
         // ub = tryPartition();
         distance = best_size - P.size();
         // if (C.size() <= distance + 3 or seesawUB() > best_size)
-        // if(seesawUB()>best_size)
+        if(seesawUB()>best_size)
 #endif
         // if (secondOrderUB())
         {
@@ -1204,13 +1205,13 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-#ifdef NAIVE
             addToC(u);
+#ifdef NAIVE
 #else
-            if (u < sz1h)
-                addToC(u);
-            else
-                M.add(u);
+            // if (u < sz1h)
+            //     addToC(u);
+            // else
+            //     M.add(u);
 #endif
         }
     }
@@ -1302,7 +1303,7 @@ public:
             return false;
         for (ui i = 0; i < P.size(); i++)
         {
-            ui v = P.get(i);
+            ui v = P[i];
             if (dP[v] + K == P.size() && !matrix[u * n + v])
                 return false;
         }

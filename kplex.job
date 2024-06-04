@@ -39,12 +39,13 @@ soc-buzznet
 soc-digg
 soc-flickr
 '
+result=results.out
 # remove old stuff
 solutions='kplex-seesaw kplex-noseesaw'
 for sol in $solutions; do
     rm $sol-*.out
 done
-rm results.out
+rm $result
 
 
 # for kplex in $solutions; do
@@ -58,37 +59,56 @@ done
 done
 wait
 
-echo "================= $k =================" >> kplex-results.out
-rm results.out
+echo "================= $k =================" >> kplex-$result
+rm $result
 echo -en "k:\t"
 for k in {2..5}; do
-echo -en "$k\t\t" >> results.out
+echo -en "$k\t\t" >> $result
 done
 
-echo >>results.out
+echo >>$result
 echo -en "solutions:\t"
 
 for k in {2..5}; do
 for sol in $solutions; do
-    echo -en "$sol\t" >> results.out
+    echo -en "$sol\t" >> $result
 done
 done
-echo >>results.out
+echo >>$result
 
 for fn in $datasets; do
-echo -en "$fn\t" >> results.out
+echo -en "$fn\t" >> $result
 for k in {2..5}; do
 for sol in $solutions; do
     outfile=$sol-$k.out
     # [ -e "$fn" ] || continue
     op=`grep $fn $outfile`
     if [ -z "${op}" ]; then 
-        echo -en "-\t" >> results.out
+        echo -en "-\t" >> $result
     else
         op=($op)
-        echo -en "${op[-3]}\t" >> results.out
+        echo -en "${op[-3]}\t" >> $result
     fi
 done
 done
-echo >> results.out
+echo >> $result
+done
+
+result=kpsize.out
+for fn in $datasets; do
+echo -en "$fn\t" >> $result
+for k in {2..5}; do
+for sol in $solutions; do
+    outfile=$sol-$k.out
+    # [ -e "$fn" ] || continue
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo -en "-\t" >> $result
+    else
+        op=($op)
+        echo -en "${op[-5]}\t" >> $result
+    fi
+done
+done
+echo >> $result
 done
