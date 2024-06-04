@@ -148,32 +148,53 @@ public:
         // memset(vis, 0, sizeof(ui) * n);
         bmp.reset(n);
         ui max_core = 0, UB = 0, idx = n;
-        for (ui i = 0; i < n; i++)
-        {
-            // todo check if heap works better here.
-            ui u, min_degree;
-            heap.pop_min(u, min_degree);
-            if (min_degree > max_core)
-                max_core = min_degree;
-            core[u] = max_core;
-            peel_sequence[i] = u;
+
+        for(ui i = 0;i < n;i ++) {
+			ui u, min_degree = n;
+			for(ui j = 0;j < n;j ++) if(!vis[j]&&degree[j] < min_degree) {
+				u = j;
+				min_degree = degree[j];
+			}
+			if(min_degree > max_core) max_core = min_degree;
+			core[u] = max_core;
+			peel_sequence[i] = u;
             peelOrder[u] = i;
-            // vis[u] = 1;
-            bmp.set(u);
+			vis[u] = 1;
 
-            ui t_UB = core[u] + K;
-            if (n - i < t_UB)
-                t_UB = n - i;
-            if (t_UB > UB)
-                UB = t_UB;
+			ui t_UB = core[u] + K;
+			if(n - i < t_UB) t_UB = n - i;
+			if(t_UB > UB) UB = t_UB;
 
-            if (idx == n && min_degree + K >= n - i)
-                idx = i;
+			if(idx == n&&min_degree + K >= n - i) idx = i;
 
-            for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j])
-                    heap.decrement(j, 1);
-        }
+			for(ui j = 0;j < n;j ++) if(!vis[j]&&matrix[u*n + j]) -- degree[j];
+		}
+        // for (ui i = 0; i < n; i++)
+        // {
+        //     // todo check if heap works better here.
+        //     ui u, min_degree;
+        //     heap.pop_min(u, min_degree);
+        //     if (min_degree > max_core)
+        //         max_core = min_degree;
+        //     core[u] = max_core;
+        //     peel_sequence[i] = u;
+        //     peelOrder[u] = i;
+        //     // vis[u] = 1;
+        //     bmp.set(u);
+
+        //     ui t_UB = core[u] + K;
+        //     if (n - i < t_UB)
+        //         t_UB = n - i;
+        //     if (t_UB > UB)
+        //         UB = t_UB;
+
+        //     if (idx == n && min_degree + K >= n - i)
+        //         idx = i;
+
+        //     for (ui j = 0; j < n; j++)
+        //         if (!bmp.test(j) && matrix[u * n + j])
+        //             heap.decrement(j, 1);
+        // }
         if (n - idx > best_size)
         {
             best_solution.clear();
@@ -249,7 +270,7 @@ public:
 #endif
 
         must_include_vertices.resize(n);
-        return;
+        
         if (remove_vertices_and_edges_with_prune(0, R_end, 0))
             R_end = 0;
     }
