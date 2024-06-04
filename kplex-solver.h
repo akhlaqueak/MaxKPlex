@@ -1368,7 +1368,7 @@ public:
             {
                 reportSolution();
             }
-            C.fakeRecover(rc);
+            // C.fakeRecover(rc);
             return;
         }
         ui u = C.top();
