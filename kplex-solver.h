@@ -137,7 +137,8 @@ public:
             // adjMat(a, b) = 1;
         }
 
-        
+        R_end = n;
+        return;
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
@@ -1210,7 +1211,7 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            addToC(u);
+            addToC(i);
 #ifdef NAIVE
 #else
             // if (u <= sz1h)
