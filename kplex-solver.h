@@ -249,7 +249,7 @@ public:
 #endif
 
         must_include_vertices.resize(n);
-
+        return;
         if (remove_vertices_and_edges_with_prune(0, R_end, 0))
             R_end = 0;
     }
@@ -1209,9 +1209,9 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            addToC(u);
 #ifdef NAIVE
-// #else
+            addToC(u);
+#else
             if (u < sz1h)
                 addToC(u);
             else
