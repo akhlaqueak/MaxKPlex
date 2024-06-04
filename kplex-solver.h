@@ -137,8 +137,7 @@ public:
             // adjMat(a, b) = 1;
         }
 
-        R_end = n;
-        return;
+
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
@@ -460,7 +459,6 @@ public:
         initialization(vp, true);
         if (R_end)
         {
-        
             initContainers(sz1h);
             kSearch(K - 1);
         }
@@ -1211,7 +1209,7 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            addToC(i);
+            addToC(u);
 #ifdef NAIVE
 #else
             // if (u <= sz1h)
