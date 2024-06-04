@@ -936,6 +936,7 @@ public:
         ui maxpi = P[0];
         double maxdise = 0;
         ui ub = 0, maxsize = 0;
+        ISp.clear();
         for (ui i = 0; i < P.size(); i++)
         {
             ISc.clear();
