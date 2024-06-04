@@ -193,8 +193,7 @@ public:
                 SR_rid[i] = R_end;
                 ++R_end;
             }
-            cout<<"Rend"<<R_end<<endl;
-        return;
+        
         if (must_include_0 && SR_rid[0] == n)
         {
             R_end = 0;
@@ -461,6 +460,7 @@ public:
             initContainers(sz1h);
             kSearch(K - 1);
         }
+        cout<<best_size<<endl;
         if (best_size > kplex.size())
         {
             kplex.clear();
