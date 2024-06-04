@@ -731,8 +731,7 @@ public:
             recoverC(rc);
             return;
         }
-        // todo movedirectly to p need to be fixed...
-        // rc += updateC_SecondOrder();
+
         if (C.empty())
         {
             reportSolution();
@@ -770,26 +769,18 @@ public:
                 {
                     // return to root level of branchings, but before that recover all branching vertices to C
                     while (B.first++ < B.second)
-                        // 0 is only serving as a plceholder, actually it fakerecovers the top element of C
+                        // 0 is only serving as a plceholder, actually it fakerecovers the top+1 element of C
                         addToC(0, true);
                     break;
                 }
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP(bn);
-#ifdef CNPRUNE
                 ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
-#endif
                 recSearch(OTHER);
-#ifdef CNPRUNE
                 recoverC(rc);
-#endif
                 PToC(bn, true);
-                // removeFromP(bn);
-                // // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
-                // addToC(bn, true);
             }
         }
-
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
@@ -1246,11 +1237,11 @@ public:
     void addToC(ui u, bool fake = false)
     {
         t.tick();
-#ifdef UP1
         if (fake)
             u = C.fakeRecPop();
         else
             C.add(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]++;
@@ -1268,11 +1259,11 @@ public:
     void removeFromC(ui u, bool fake = false)
     {
         t.tick();
-#ifdef UP1
         if (fake)
             C.fakeRemove(u);
         else
             C.remove(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--;
@@ -1341,40 +1332,6 @@ public:
         t.tock();
         return u;
     }
-    ui updateC()
-    {
-        ui sz = C.size();
-        for (ui i = 0; i < C.size();)
-        {
-            ui u = C[i];
-            if (!canMoveToP(u))
-                removeFromC(u, true);
-            else
-                i++;
-        }
-
-        return sz - C.size();
-    }
-    bool canMoveToP(ui u)
-    {
-        // u is not yet in P, hence checking <=
-        if (dP[u] + K <= P.size())
-            return false;
-        for (ui i = 0; i < P.size(); i++)
-        {
-            ui v = P[i];
-            if (dP[v] + K == P.size() && !matrix[u * n + v])
-                return false;
-        }
-        return true;
-    }
-    // char &adjMat(ui i, ui j)
-    // {
-    //     if (i < j)
-    //         return matrix[i * n + j];
-    //     else
-    //         return matrix[j * n + i];
-    // }
     void CToP(ui u)
     {
         t.tick();
@@ -1421,6 +1378,40 @@ public:
 #endif
         t.tock();
     }
+    ui updateC()
+    {
+        ui sz = C.size();
+        for (ui i = 0; i < C.size();)
+        {
+            ui u = C[i];
+            if (!canMoveToP(u))
+                removeFromC(u, true);
+            else
+                i++;
+        }
+
+        return sz - C.size();
+    }
+    bool canMoveToP(ui u)
+    {
+        // u is not yet in P, hence checking <=
+        if (dP[u] + K <= P.size())
+            return false;
+        for (ui i = 0; i < P.size(); i++)
+        {
+            ui v = P[i];
+            if (dP[v] + K == P.size() && !matrix[u * n + v])
+                return false;
+        }
+        return true;
+    }
+    // char &adjMat(ui i, ui j)
+    // {
+    //     if (i < j)
+    //         return matrix[i * n + j];
+    //     else
+    //         return matrix[j * n + i];
+    // }
     // void reset(const auto &vp)
     // {
     //     // for (auto &e : vp)
