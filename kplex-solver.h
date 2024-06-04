@@ -935,7 +935,7 @@ public:
         for (ui i = cend; i < sz; i++)
         {
             // vertices in [cend, sz) range are Branching vertices, just fakeremove them from C
-            removeFromC(C.top();, true);
+            removeFromC(C.top(), true);
         }
 
         // clear PI
