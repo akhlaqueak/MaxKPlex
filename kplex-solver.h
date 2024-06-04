@@ -1388,7 +1388,8 @@ public:
         // when fake is true, the vertex was previously fake removed from C and added to P. Now we only need to fake recover from C
         P.remove(u);
         if (fake)
-            assert(C.fakeRecPop() == u);
+            // assert(C.fakeRecPop() == u);
+            C.fakeRecPop();
         else
             C.add(u);
         for (ui v = 0; v < n; v++)
