@@ -4,8 +4,8 @@
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
 // #define INIT_SEESAW
-
-// #define RULE2
+#define UP1
+#define RULE2
 #define SEESAW
 // #define CTCP
 #define CNPRUNE
