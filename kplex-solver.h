@@ -9,7 +9,7 @@ bool flag = false;
 #define SEESAW
 // #define CTCP
 #define CNPRUNE
-// #define _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 
 #define NAIVE
 
