@@ -1389,7 +1389,8 @@ public:
         P.remove(u);
         if (fake)
             // assert(C.fakeRecPop() == u);
-            C.fakeRecPop();
+            ui v=C.fakeRecPop();
+            assert(v==u);
         else
             C.add(u);
         for (ui v = 0; v < n; v++)
