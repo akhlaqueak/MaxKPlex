@@ -1246,6 +1246,7 @@ public:
     void addToC(ui u, bool fake = false)
     {
         t.tick();
+#ifdef UP1
         if (fake)
             u = C.fakeRecPop();
         else
@@ -1253,18 +1254,21 @@ public:
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]++;
+#else
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dG[u]++, dP[u]++, dG[P[i]]++;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dG[u]++, dG[C[i]]++;
+#endif
         t.tock();
-        // for (ui i = 0; i < P.size(); i++)
-        //     if (matrix[u * n + P[i]])
-        //         dG[u]++, dP[u]++, dG[P[i]]++;
-        // for (ui i = 0; i < C.size(); i++)
-        //     if (matrix[u * n + C[i]])
-        //         dG[u]++, dG[C[i]]++;
     }
 
     void removeFromC(ui u, bool fake = false)
     {
         t.tick();
+#ifdef UP1
         if (fake)
             C.fakeRemove(u);
         else
@@ -1272,59 +1276,69 @@ public:
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--;
+#else
+    dG[u] = dP[u] = 0;
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dG[P[i]]--;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dG[C[i]]--;
+#endif
         t.tock();
-        // dG[u] = dP[u] = 0;
-        // for (ui i = 0; i < P.size(); i++)
-        //     if (matrix[u * n + P[i]])
-        //         dG[P[i]]--;
-        // for (ui i = 0; i < C.size(); i++)
-        //     if (matrix[u * n + C[i]])
-        //         dG[C[i]]--;
     }
 
     ui addToP(ui u)
     {
         t.tick();
         P.add(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]++, dP[v]++;
+#else
+    for (ui i = 0; i < P.size(); i++)
+    {
+        ui v = P[i];
+        if (matrix[u * n + v])
+            dG[u]++, dP[u]++, dG[v]++, dP[v]++;
+    }
+
+    for (ui i = 0; i < C.size(); i++)
+    {
+        ui v = C[i];
+        if (matrix[u * n + v])
+            dG[u]++, dG[v]++, dP[v]++;
+    }
+#endif
         t.tock();
-        // for (ui i = 0; i < P.size(); i++){
-        //     ui v = P[i];
-        //     if (matrix[u * n + v])
-        //         dG[u]++, dP[u]++, dG[v]++, dP[v]++;
-        // }
-
-        // for (ui i = 0; i < C.size(); i++){
-        //     ui v = C[i];
-        //     if (matrix[u * n + v])
-        //         dG[u]++, dG[v]++, dP[v]++;
-        // }
-
         return u;
     }
     ui removeFromP(ui u)
     {
         t.tick();
         P.remove(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--, dP[v]--;
+#else
+    dG[u] = dP[u] = 0;
+    for (ui i = 0; i < P.size(); i++)
+    {
+        ui v = P[i];
+        if (matrix[u * n + v])
+            dG[v]--, dP[v]--;
+    }
+
+    for (ui i = 0; i < C.size(); i++)
+    {
+        ui v = C[i];
+        if (matrix[u * n + v])
+            dG[v]--, dP[v]--;
+    }
+#endif
         t.tock();
-        // dG[u] = dP[u] = 0;
-        // for (ui i = 0; i < P.size(); i++){
-        //     ui v = P[i];
-        //     if (matrix[u * n + v])
-        //         dG[v]--, dP[v]--;
-        // }
-
-        // for (ui i = 0; i < C.size(); i++){
-        //     ui v = C[i];
-        //     if (matrix[u * n + v])
-        //         dG[v]--, dP[v]--;
-        // }
-
         return u;
     }
     ui updateC()
@@ -1366,16 +1380,19 @@ public:
         t.tick();
         C.remove(u);
         P.add(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dP[v]++;
+#else
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dP[P[i]]++;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dP[C[i]]++;
+#endif
         t.tock();
-        // for (ui i = 0; i < P.size(); i++)
-        //     if (matrix[u * n + P[i]])
-        //         dP[P[i]]++;
-        // for (ui i = 0; i < C.size(); i++)
-        //     if (matrix[u * n + C[i]])
-        //         dP[C[i]]++;
     }
     void PToC(ui u, bool fake = false)
     {
@@ -1390,16 +1407,19 @@ public:
         }
         else
             C.add(u);
+#ifdef UP1
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dP[v]--;
+#else
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dP[P[i]]--;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dP[C[i]]--;
+#endif
         t.tock();
-        // for (ui i = 0; i < P.size(); i++)
-        //     if (matrix[u * n + P[i]])
-        //         dP[P[i]]--;
-        // for (ui i = 0; i < C.size(); i++)
-        //     if (matrix[u * n + C[i]])
-        //         dP[C[i]]--;
     }
     // void reset(const auto &vp)
     // {
