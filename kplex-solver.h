@@ -810,11 +810,7 @@ public:
     {
         for (ui i = 0; i < rc; i++)
         {
-            ui u = C.fakeRecPop();
-            for (ui v = 0; v < n; v++)
-                if (matrix[u * n + v])
-                    if (v < sz1h or P.contains(v))
-                        dG[v]++;
+            addToC(0, true);
         }
     }
     // ui updateC_SecondOrder()
@@ -939,8 +935,7 @@ public:
         for (ui i = cend; i < sz; i++)
         {
             // vertices in [cend, sz) range are Branching vertices, just fakeremove them from C
-            ui u = C.top();
-            removeFromC(u, true);
+            removeFromC(C.top();, true);
         }
 
         // clear PI
