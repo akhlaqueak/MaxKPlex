@@ -11,7 +11,7 @@ bool flag = false;
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
 
-#define NAIVE
+// #define NAIVE
 
 class MaxKPlex
 {
