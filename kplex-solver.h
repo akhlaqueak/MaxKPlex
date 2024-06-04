@@ -936,8 +936,6 @@ public:
         ui maxpi = P[0];
         double maxdise = 0;
         ui ub = 0, maxsize = 0;
-        ui *PI = neighbors;
-        ui *PIMax = nonneighbors;
         for (ui i = 0; i < P.size(); i++)
         {
             ISc.clear();
@@ -949,20 +947,18 @@ public:
             {
                 ui v = C[j];
                 if (!matrix[u * n + v])
-                    PI[sz++] = v;
-                // ISc.push_back(v);
+                    // PI[sz++] = v;
+                ISc.push_back(v);
             }
-            double cost = min(support(u), sz);
-            double dise = sz / cost;
-            if (dise > maxdise or (dise == maxdise and sz > maxsize))
+            double cost = min(support(u), ISc.size());
+            double dise = (double)ISc.size() / cost;
+            if (dise > maxdise or (dise == maxdise and ISc.size() > maxsize))
             {
                 maxdise = dise, ub = cost;
-                maxsize = sz;
-                swap(PI, PIMax);
+                maxsize = ISc.size();
+                ISp.swap(ISc);
             }
         }
-        ISp.clear();
-        ISp.insert(ISp.begin(), PIMax, PIMax + maxsize);
         return ub;
     }
     ui relaxGCB()
