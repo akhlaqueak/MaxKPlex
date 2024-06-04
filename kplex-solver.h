@@ -693,12 +693,12 @@ public:
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
         // checking validity of kplex
+            printvec("dg", dG);
+            printvec("dP", dP);
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
             cout << dP[u] << "." << dG[u] << " ";
-            printvec("dg", dG);
-            printvec("dP", dP);
             if (dP[u] < P.size() - K)
                 cout << " Invalid " << u;
             best_solution.push_back(u);
