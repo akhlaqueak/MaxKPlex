@@ -9,7 +9,7 @@ Timer branchings, part, color, t2, seesaw;
 #include "kplex-solver.h"
 using namespace std;
 using namespace popl;
-// #define bbmatrix
+#define bbmatrix
 
 
 Graph::Graph(const char *_dir, const int _K) {

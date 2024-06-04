@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex-full 	 kplex-no-seesaw 	 kplex-no-rule2 	 kplex-UP1 	 kplex-distance4'
+solutions='kplex-full 	 kplex-no-seesaw 	 kplex-no-rule2 	 kplex-UP1 	 kplex-distance4 kPlexS'
 for sol in $solutions; do
     rm $sol-*.out
 done
