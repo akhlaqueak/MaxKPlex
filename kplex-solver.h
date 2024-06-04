@@ -258,11 +258,11 @@ public:
 
         while (!Qe.empty())
             Qe.pop();
-        for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
-        	if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
-        		Qe.push(std::make_pair(SR[i], SR[j]));
-        	}
-        }
+        // for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
+        // 	if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
+        // 		Qe.push(std::make_pair(SR[i], SR[j]));
+        // 	}
+        // }
         removed_edges_n = 0;
 #endif
 
