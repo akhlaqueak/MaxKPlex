@@ -1209,13 +1209,13 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            addToC(u);
 #ifdef NAIVE
+            addToC(u);
 #else
-            // if (u <= sz1h)
-            //     addToC(u);
-            // else
-            //     M.add(u);
+            if (u < sz1h)
+                addToC(u);
+            else
+                M.add(u);
 #endif
         }
     }
