@@ -693,8 +693,7 @@ public:
         cout << "RecSearch found a larger kplex of size: " << P.size() << endl;
         flag = true;
         // checking validity of kplex
-            printvec("dg", dG);
-            printvec("dP", dP);
+            
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
@@ -1261,6 +1260,8 @@ public:
             else
                 M.add(u);
         }
+        cout<<n;
+        printvec(" dg", dG);
     }
 
     void addToC(ui u, bool fake = false)
