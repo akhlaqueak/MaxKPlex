@@ -1199,8 +1199,8 @@ public:
                 if (flag)
                     return u;
             }
-#endif
         }
+#endif
         return n;
     }
 
