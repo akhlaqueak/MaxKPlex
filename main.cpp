@@ -425,6 +425,7 @@ void Graph::kPlex_exact() {
 		cout<<" Partitioning: "<<part.ticktock();
 		cout<<" Color: "<<color.ticktock();
 		cout<<" Branching: "<<branchings.ticktock();
+		cout<<" additions "<<t.ticktock();
 		cout<<endl;
 		#endif
 

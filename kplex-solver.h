@@ -723,10 +723,9 @@ public:
     {
         if ((level == OTHER and flag) or PuCSize <= best_solution_size)
             return;
-        t.tick();
+    
         ui rc = updateC();
         ui ub = 0, distance = 0;
-        t.tock();
         if (PuCSize <= best_solution_size)
         {
             recoverC(rc);
@@ -1256,6 +1255,7 @@ public:
 
     void addToC(ui u, bool fake = false)
     {
+        t.tick();
         if (fake)
             u = C.fakeRecPop();
         else
@@ -1263,6 +1263,7 @@ public:
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]++;
+        t.tock();
         // for (ui i = 0; i < P.size(); i++)
         //     if (matrix[u * n + P[i]])
         //         dG[u]++, dP[u]++, dG[P[i]]++;
@@ -1273,6 +1274,7 @@ public:
 
     void removeFromC(ui u, bool fake = false)
     {
+        t.tick();
         if (fake)
             C.fakeRemove(u);
         else
@@ -1280,6 +1282,7 @@ public:
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--;
+        t.tock();
         // dG[u] = dP[u] = 0;
         // for (ui i = 0; i < P.size(); i++)
         //     if (matrix[u * n + P[i]])
@@ -1291,10 +1294,12 @@ public:
 
     ui addToP(ui u)
     {
+        t.tick();
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]++, dP[v]++;
+        t.tock();
         // for (ui i = 0; i < P.size(); i++){
         //     ui v = P[i];
         //     if (matrix[u * n + v])
@@ -1311,10 +1316,12 @@ public:
     }
     ui removeFromP(ui u)
     {
+        t.tick();
         P.remove(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--, dP[v]--;
+        t.tock();
         // dG[u] = dP[u] = 0;
         // for (ui i = 0; i < P.size(); i++){
         //     ui v = P[i];
@@ -1366,11 +1373,13 @@ public:
     // }
     void CToP(ui u)
     {
+        t.tick();
         C.remove(u);
         P.add(u);
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dP[v]++;
+        t.tock();
         // for (ui i = 0; i < P.size(); i++)
         //     if (matrix[u * n + P[i]])
         //         dP[P[i]]++;
@@ -1381,6 +1390,7 @@ public:
     void PToC(ui u, bool fake = false)
     {
         // when fake is true, the vertex was previously fake removed from C and added to P. Now we only need to fake recover from C
+        t.tick();
         P.remove(u);
         if (fake)
         // assert(C.fakeRecPop() == u);
@@ -1393,6 +1403,7 @@ public:
         for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dP[v]--;
+        t.tock();
         // for (ui i = 0; i < P.size(); i++)
         //     if (matrix[u * n + P[i]])
         //         dP[P[i]]--;
