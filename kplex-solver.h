@@ -675,7 +675,7 @@ public:
         if ((level == OTHER and flag) or PuCSize <= best_size )
             return;
         t.tick();
-        ui rc = updateC();
+        // ui rc = updateC();
         ui ub = 0, distance=0;
         t.tock();
         if (PuCSize <= best_size)
@@ -723,11 +723,11 @@ public:
                 ui bn = maxDegenVertex(B.first++, B.second);
                 addToP(bn);
 #ifdef CNPRUNE
-                // ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
 #endif
                 recSearch(OTHER);
 #ifdef CNPRUNE
-                // recoverC(rc);
+                recoverC(rc);
 #endif
                 removeFromP(bn);
                         // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
@@ -740,7 +740,7 @@ public:
         {
             PToC(P.top());
         }
-        recoverC(rc);
+        // recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
     // void addBranchingVertex(ui u)
