@@ -457,7 +457,7 @@ public:
         initialization(vp, true);
         if (R_end)
         {
-            cout<<R_end<<"."<<sz1h<<" ";
+        
             initContainers(sz1h);
             kSearch(K - 1);
         }
@@ -570,7 +570,7 @@ public:
         {
             flag = false;
 #ifdef NAIVE
-            // naiveSearch();
+            naiveSearch();
 #else
             recSearch(FIRST);
 #endif
