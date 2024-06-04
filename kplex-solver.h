@@ -145,7 +145,7 @@ public:
             peel_sequence[i] = i;
         heap.init(n, n - 1, peel_sequence, degree);
         ui *vis = SR;
-        // memset(vis, 0, sizeof(ui) * n);
+        memset(vis, 0, sizeof(ui) * n);
         bmp.reset(n);
         ui max_core = 0, UB = 0, idx = n;
 
