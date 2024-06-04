@@ -1361,24 +1361,26 @@ public:
     {
         if (PuCSize < best_size)
             return;
-        // ui rc = updateC();
+        ui rc = updateC();
         if (C.empty())
         {
             if (P.size() > best_size)
             {
                 reportSolution();
             }
-            // C.fakeRecover(rc);
+            for(ui i=0;i<rc;i++)
+                addToC(0, true);
             return;
         }
         ui u = C.top();
         // cout<<u<<" c ";C.print();
         CToP(u);
         naiveSearch();
-        PToC(u);
-        C.fakePop();
+
+        removeFromP(u);
         naiveSearch();
-        C.fakeRecPop();
-        // C.fakeRecover(rc);
+        addToC(u);
+        for(ui i=0;i<rc;i++)
+            addToC(0, true);
     }
 };
