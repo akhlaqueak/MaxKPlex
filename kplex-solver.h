@@ -4,7 +4,7 @@
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
 // #define INIT_SEESAW
-#define UP1
+// #define UP1
 #define RULE2
 #define SEESAW
 // #define CTCP
@@ -752,8 +752,8 @@ public:
         // ub = seesawUB();
         // ub = tryPartition();
         distance = best_solution_size - P.size();
-        // if (C.size() <= distance + 3 or seesawUB() > best_solution_size)
-        if (seesawUB() > best_solution_size)
+        if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
+        // if (seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
