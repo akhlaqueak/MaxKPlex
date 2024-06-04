@@ -11,7 +11,7 @@ bool flag = false;
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
 
-// #define NAIVE
+#define NAIVE
 
 class MaxKPlex
 {
@@ -137,7 +137,6 @@ public:
             // adjMat(a, b) = 1;
         }
 
-
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
@@ -145,26 +144,35 @@ public:
         memset(vis, 0, sizeof(ui) * n);
         ui max_core = 0, UB = 0, idx = n;
 
-        for(ui i = 0;i < n;i ++) {
-			ui u, min_degree = n;
-			for(ui j = 0;j < n;j ++) if(!vis[j]&&degree[j] < min_degree) {
-				u = j;
-				min_degree = degree[j];
-			}
-			if(min_degree > max_core) max_core = min_degree;
-			core[u] = max_core;
-			peel_sequence[i] = u;
+        for (ui i = 0; i < n; i++)
+        {
+            ui u, min_degree = n;
+            for (ui j = 0; j < n; j++)
+                if (!vis[j] && degree[j] < min_degree)
+                {
+                    u = j;
+                    min_degree = degree[j];
+                }
+            if (min_degree > max_core)
+                max_core = min_degree;
+            core[u] = max_core;
+            peel_sequence[i] = u;
             peelOrder[u] = i;
-			vis[u] = 1;
+            vis[u] = 1;
 
-			ui t_UB = core[u] + K;
-			if(n - i < t_UB) t_UB = n - i;
-			if(t_UB > UB) UB = t_UB;
+            ui t_UB = core[u] + K;
+            if (n - i < t_UB)
+                t_UB = n - i;
+            if (t_UB > UB)
+                UB = t_UB;
 
-			if(idx == n&&min_degree + K >= n - i) idx = i;
+            if (idx == n && min_degree + K >= n - i)
+                idx = i;
 
-			for(ui j = 0;j < n;j ++) if(!vis[j]&&matrix[u*n + j]) -- degree[j];
-		}
+            for (ui j = 0; j < n; j++)
+                if (!vis[j] && matrix[u * n + j])
+                    --degree[j];
+        }
         // for (ui i = 0; i < n; i++)
         //     peel_sequence[i] = i;
         // heap.init(n, n - 1, peel_sequence, degree);
@@ -216,7 +224,7 @@ public:
                 SR_rid[i] = R_end;
                 ++R_end;
             }
-        
+
         if (must_include_0 && SR_rid[0] == n)
         {
             R_end = 0;
@@ -267,23 +275,28 @@ public:
 #endif
 
         must_include_vertices.resize(n);
-        
+
         if (remove_vertices_and_edges_with_prune(0, R_end, 0))
             R_end = 0;
     }
 #ifdef _SECOND_ORDER_PRUNING_
-    bool upper_bound_based_prune(ui S_end, ui u, ui v) {
-    	// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
-    	ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
-    	if(SR_rid[u] >= S_end) {
-    		-- ub; // S_end ++
-    		if(matrix[u*n+v]) ++ ub; // degree_in_S[v] ++
-    	}
-    	if(SR_rid[v] >= S_end) {
-    		-- ub;
-    		if(matrix[v*n+u]) ++ ub;
-    	}
-    	return ub <= best_solution_size;
+    bool upper_bound_based_prune(ui S_end, ui u, ui v)
+    {
+        // ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
+        ui ub = 2 * K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u * n + v];
+        if (SR_rid[u] >= S_end)
+        {
+            --ub; // S_end ++
+            if (matrix[u * n + v])
+                ++ub; // degree_in_S[v] ++
+        }
+        if (SR_rid[v] >= S_end)
+        {
+            --ub;
+            if (matrix[v * n + u])
+                ++ub;
+        }
+        return ub <= best_solution_size;
     }
 #endif
     bool
@@ -494,7 +507,7 @@ public:
             initContainers(sz1h);
             kSearch(K - 1);
         }
-    
+
         if (best_solution_size > kplex.size())
         {
             kplex.clear();
@@ -628,7 +641,7 @@ public:
             ui u = M.fakePop();
             rsn++;              // so that the fakepop here is recovered in the end of this
                                 // function
-            addToP(u);        // u is added to P, that causes C, M and X to
+            addToP(u);          // u is added to P, that causes C, M and X to
 #ifdef CNPRUNE                  // shrink... as per theorem 9, 10, 11
             rc += pruneC_K(u);  // Applying Theorem 10 to update C
             rsn += pruneM_K(u); // applying Theorem 9 to update second hop neighbors
@@ -688,7 +701,7 @@ public:
                 cout << " Invalid " << u;
             best_solution.push_back(u);
         }
-        cout<<endl;
+        cout << endl;
     }
     ui lookAheadSolution()
     {
@@ -708,11 +721,11 @@ public:
     }
     void recSearch(RecLevel level)
     {
-        if ((level == OTHER and flag) or PuCSize <= best_solution_size )
+        if ((level == OTHER and flag) or PuCSize <= best_solution_size)
             return;
         t.tick();
         ui rc = updateC();
-        ui ub = 0, distance=0;
+        ui ub = 0, distance = 0;
         t.tock();
         if (PuCSize <= best_solution_size)
         {
@@ -736,7 +749,7 @@ public:
         // ub = tryPartition();
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 3 or seesawUB() > best_solution_size)
-        if(seesawUB()>best_solution_size)
+        if (seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
@@ -766,7 +779,7 @@ public:
                 recoverC(rc);
 #endif
                 removeFromP(bn);
-                        // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
+                // bn is only serving as a plceholder, actually it fakerecovers the top element of C i.e. bn
                 addToC(bn, true);
             }
         }
@@ -1254,12 +1267,15 @@ public:
             u = C.fakeRecPop();
         else
             C.add(u);
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[u]++, dP[u]++, dG[P[i]]++;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[u]++, dG[C[i]]++;
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]++;
+        // for (ui i = 0; i < P.size(); i++)
+        //     if (matrix[u * n + P[i]])
+        //         dG[u]++, dP[u]++, dG[P[i]]++;
+        // for (ui i = 0; i < C.size(); i++)
+        //     if (matrix[u * n + C[i]])
+        //         dG[u]++, dG[C[i]]++;
     }
 
     void removeFromC(ui u, bool fake = false)
@@ -1268,49 +1284,56 @@ public:
             C.fakeRemove(u);
         else
             C.remove(u);
-        dG[u] = dP[u] = 0;
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[P[i]]--;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[C[i]]--;
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dG[v]--;
+        // dG[u] = dP[u] = 0;
+        // for (ui i = 0; i < P.size(); i++)
+        //     if (matrix[u * n + P[i]])
+        //         dG[P[i]]--;
+        // for (ui i = 0; i < C.size(); i++)
+        //     if (matrix[u * n + C[i]])
+        //         dG[C[i]]--;
     }
-
-
 
     ui addToP(ui u)
     {
         P.add(u);
-        for (ui i = 0; i < P.size(); i++){
-            ui v = P[i];
+        for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
-                dG[u]++, dP[u]++, dG[v]++, dP[v]++;
-        }
+                dG[v]++, dP[v]++;
+        // for (ui i = 0; i < P.size(); i++){
+        //     ui v = P[i];
+        //     if (matrix[u * n + v])
+        //         dG[u]++, dP[u]++, dG[v]++, dP[v]++;
+        // }
 
-        for (ui i = 0; i < C.size(); i++){
-            ui v = C[i];
-            if (matrix[u * n + v])
-                dG[u]++, dG[v]++, dP[v]++;
-        }
+        // for (ui i = 0; i < C.size(); i++){
+        //     ui v = C[i];
+        //     if (matrix[u * n + v])
+        //         dG[u]++, dG[v]++, dP[v]++;
+        // }
 
         return u;
     }
     ui removeFromP(ui u)
     {
         P.remove(u);
-        dG[u] = dP[u] = 0;
-        for (ui i = 0; i < P.size(); i++){
-            ui v = P[i];
+        for (ui v = 0; v < n; v++)
             if (matrix[u * n + v])
                 dG[v]--, dP[v]--;
-        }
+        // dG[u] = dP[u] = 0;
+        // for (ui i = 0; i < P.size(); i++){
+        //     ui v = P[i];
+        //     if (matrix[u * n + v])
+        //         dG[v]--, dP[v]--;
+        // }
 
-        for (ui i = 0; i < C.size(); i++){
-            ui v = C[i];
-            if (matrix[u * n + v])
-                dG[v]--, dP[v]--;
-        }
+        // for (ui i = 0; i < C.size(); i++){
+        //     ui v = C[i];
+        //     if (matrix[u * n + v])
+        //         dG[v]--, dP[v]--;
+        // }
 
         return u;
     }
@@ -1352,23 +1375,29 @@ public:
     {
         C.remove(u);
         P.add(u);
-         for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dP[P[i]]++;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dP[C[i]]++;   
+        for (ui v = 0; v < n; v++)
+            if (matrix[u * n + v])
+                dP[v]++;
+        // for (ui i = 0; i < P.size(); i++)
+        //     if (matrix[u * n + P[i]])
+        //         dP[P[i]]++;
+        // for (ui i = 0; i < C.size(); i++)
+        //     if (matrix[u * n + C[i]])
+        //         dP[C[i]]++;
     }
     void PToC(ui u)
     {
         P.remove(u);
         C.add(u);
-         for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dP[P[i]]--;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dP[C[i]]--; 
+        for(ui v=0;v<n;v++)
+            if(matrix[u*n+v])
+                dP[v]--;
+        // for (ui i = 0; i < P.size(); i++)
+        //     if (matrix[u * n + P[i]])
+        //         dP[P[i]]--;
+        // for (ui i = 0; i < C.size(); i++)
+        //     if (matrix[u * n + C[i]])
+        //         dP[C[i]]--;
     }
     // void reset(const auto &vp)
     // {
@@ -1393,7 +1422,7 @@ public:
             {
                 reportSolution();
             }
-            for(ui i=0;i<rc;i++)
+            for (ui i = 0; i < rc; i++)
                 addToC(0, true);
             return;
         }
@@ -1405,7 +1434,7 @@ public:
         removeFromP(u);
         naiveSearch();
         addToC(u);
-        for(ui i=0;i<rc;i++)
+        for (ui i = 0; i < rc; i++)
             addToC(0, true);
     }
 };
