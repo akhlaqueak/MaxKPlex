@@ -5,7 +5,7 @@
 bool flag = false;
 // #define INIT_SEESAW
 
-// #define RULE2
+#define RULE2
 #define SEESAW
 // #define CTCP
 #define CNPRUNE
@@ -1185,35 +1185,32 @@ public:
             // vldb BR1 rule
             if (dG[u] + 2 >= PuCSize)
                 return u;
+        }
 
 #ifdef RULE2
+        for (ui i = 0; i < C.size(); i++)
+        {
+            ui u = C[i];
             {
                 // xiao2017 Lemma4 rule. u and all non-nieghbors vertices of u shoulud be k-satisfied
                 //  u is already k-satisfied. we check here non-neighbors be k-satisfied.
                 bool flag = true;
-                bmp.setup(g.adjList[u], g.V);
                 for (ui i = 0; flag and i < P.size(); i++)
                 {
                     ui v = P[i];
-                    if (!bmp.test(v) and dG[v] + K < PuCSize)
+                    if (!matrix[u * n + v] and dG[v] + K < PuCSize)
                         flag = false;
                 }
 
                 for (ui i = 0; flag and i < C.size(); i++)
                 {
                     ui v = C[i];
-                    if (!bmp.test(v) and dG[v] + K < PuCSize)
+                    if (!matrix[u * n + v] and dG[v] + K < PuCSize)
                         flag = false;
                 }
                 if (flag)
-                {
-                    sz++;
-                    CToP(u);
-                }
-                else
-                    i++;
+                    return u;
             }
-
 #endif
         }
         return n;
