@@ -193,6 +193,7 @@ public:
                 SR_rid[i] = R_end;
                 ++R_end;
             }
+        return;
 
         if (must_include_0 && SR_rid[0] == n)
         {
