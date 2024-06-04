@@ -141,12 +141,8 @@ public:
         // the following computes a degeneracy ordering and a heuristic solution
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
-        for (ui i = 0; i < n; i++)
-            peel_sequence[i] = i;
-        heap.init(n, n - 1, peel_sequence, degree);
         ui *vis = SR;
         memset(vis, 0, sizeof(ui) * n);
-        bmp.reset(n);
         ui max_core = 0, UB = 0, idx = n;
 
         for(ui i = 0;i < n;i ++) {
@@ -169,6 +165,10 @@ public:
 
 			for(ui j = 0;j < n;j ++) if(!vis[j]&&matrix[u*n + j]) -- degree[j];
 		}
+        // for (ui i = 0; i < n; i++)
+        //     peel_sequence[i] = i;
+        // heap.init(n, n - 1, peel_sequence, degree);
+        // bmp.reset(n);
         // for (ui i = 0; i < n; i++)
         // {
         //     // todo check if heap works better here.
