@@ -6,7 +6,7 @@ bool flag = false;
 // #define INIT_SEESAW
 // #define UP1
 // #define RULE2
-// #define SEESAW
+#define SEESAW
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
@@ -753,7 +753,7 @@ public:
         // ub = tryPartition();
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        if (seesawUB() > best_solution_size)
+        if (C.size()<100 or seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
