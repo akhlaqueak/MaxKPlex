@@ -116,3 +116,26 @@ done
 done
 echo >> $result
 done
+
+
+result=seesaw.out
+rm $result
+for k in {2..5}; do
+    echo >> $result
+
+    echo "seesaw-cost">>$result
+    for fn in $datasets; do
+        for sol in $solutions; do
+            outfile=$sol-$k.out
+            # [ -e "$fn" ] || continue
+            op=`grep "$fn PxC" $outfile`
+            if [ -z "${op}" ]; then 
+                echo -en "-\t" >> $result
+            else
+                op=($op)
+                echo -en "=${op[-5]}+${op[-7]}\t" >> $result
+            fi
+        done
+        echo >> $result
+    done
+done

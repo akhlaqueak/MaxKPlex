@@ -1224,10 +1224,11 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
-            if (u < sz1h)
-                addToC(u);
-            else
-                M.add(u);
+            addToC(u);
+            // if (u < sz1h)
+            //     addToC(u);
+            // else
+            //     M.add(u);
         }
     }
 
