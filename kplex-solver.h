@@ -10,7 +10,7 @@ bool flag = false;
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
-
+// #define SET_ENUM
 // #define NAIVE
 
 class MaxKPlex
@@ -752,8 +752,8 @@ public:
         // ub = seesawUB();
         // ub = tryPartition();
         distance = best_solution_size - P.size();
-        if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        // if (seesawUB() > best_solution_size)
+        // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
+        if (seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
@@ -949,9 +949,9 @@ public:
                 ui v = C[j];
                 if (!matrix[u * n + v])
                     // PI[sz++] = v;
-                ISc.push_back(v);
+                    ISc.push_back(v);
             }
-            double cost = min(support(u), (ui) ISc.size());
+            double cost = min(support(u), (ui)ISc.size());
             double dise = (double)ISc.size() / cost;
             if (dise > maxdise or (dise == maxdise and ISc.size() > maxsize))
             {
@@ -980,6 +980,7 @@ public:
 
     ui seesawUB()
     {
+        seesaw.tick();
         ui UB = P.size();
         ui sz = C.size();
         while (C.size())
@@ -1010,6 +1011,7 @@ public:
             // cout<<C.size()<<" "<<ISp.size();
         }
         C.fakeRecover(sz);
+        seesaw.tock();
         return UB;
     }
     void createIS()
@@ -1063,10 +1065,9 @@ public:
     }
     ui tryColor()
     {
-        istimer.tick();
+
         createIS();
         ui ub = TISUB();
-        istimer.tock();
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
@@ -1224,11 +1225,14 @@ public:
         for (ui i = 1; i < R_end; i++)
         {
             ui u = SR[i];
+#ifdef SET_ENUM
+            if (u < sz1h)
+                addToC(u);
+            else
+                M.add(u);
+#else
             addToC(u);
-            // if (u < sz1h)
-            //     addToC(u);
-            // else
-            //     M.add(u);
+#endif
         }
     }
 
@@ -1244,12 +1248,12 @@ public:
             if (matrix[u * n + v])
                 dG[v]++;
 #else
-    for (ui i = 0; i < P.size(); i++)
-        if (matrix[u * n + P[i]])
-            dG[u]++, dP[u]++, dG[P[i]]++;
-    for (ui i = 0; i < C.size(); i++)
-        if (matrix[u * n + C[i]])
-            dG[u]++, dG[C[i]]++;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dG[u]++, dP[u]++, dG[P[i]]++;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dG[u]++, dG[C[i]]++;
 #endif
         t.tock();
     }
@@ -1266,13 +1270,13 @@ public:
             if (matrix[u * n + v])
                 dG[v]--;
 #else
-    dG[u] = dP[u] = 0;
-    for (ui i = 0; i < P.size(); i++)
-        if (matrix[u * n + P[i]])
-            dG[P[i]]--;
-    for (ui i = 0; i < C.size(); i++)
-        if (matrix[u * n + C[i]])
-            dG[C[i]]--;
+        dG[u] = dP[u] = 0;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dG[P[i]]--;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dG[C[i]]--;
 #endif
         t.tock();
     }
@@ -1286,19 +1290,19 @@ public:
             if (matrix[u * n + v])
                 dG[v]++, dP[v]++;
 #else
-    for (ui i = 0; i < P.size(); i++)
-    {
-        ui v = P[i];
-        if (matrix[u * n + v])
-            dG[u]++, dP[u]++, dG[v]++, dP[v]++;
-    }
+        for (ui i = 0; i < P.size(); i++)
+        {
+            ui v = P[i];
+            if (matrix[u * n + v])
+                dG[u]++, dP[u]++, dG[v]++, dP[v]++;
+        }
 
-    for (ui i = 0; i < C.size(); i++)
-    {
-        ui v = C[i];
-        if (matrix[u * n + v])
-            dG[u]++, dG[v]++, dP[v]++;
-    }
+        for (ui i = 0; i < C.size(); i++)
+        {
+            ui v = C[i];
+            if (matrix[u * n + v])
+                dG[u]++, dG[v]++, dP[v]++;
+        }
 #endif
         t.tock();
         return u;
@@ -1312,20 +1316,20 @@ public:
             if (matrix[u * n + v])
                 dG[v]--, dP[v]--;
 #else
-    dG[u] = dP[u] = 0;
-    for (ui i = 0; i < P.size(); i++)
-    {
-        ui v = P[i];
-        if (matrix[u * n + v])
-            dG[v]--, dP[v]--;
-    }
+        dG[u] = dP[u] = 0;
+        for (ui i = 0; i < P.size(); i++)
+        {
+            ui v = P[i];
+            if (matrix[u * n + v])
+                dG[v]--, dP[v]--;
+        }
 
-    for (ui i = 0; i < C.size(); i++)
-    {
-        ui v = C[i];
-        if (matrix[u * n + v])
-            dG[v]--, dP[v]--;
-    }
+        for (ui i = 0; i < C.size(); i++)
+        {
+            ui v = C[i];
+            if (matrix[u * n + v])
+                dG[v]--, dP[v]--;
+        }
 #endif
         t.tock();
         return u;
@@ -1340,12 +1344,12 @@ public:
             if (matrix[u * n + v])
                 dP[v]++;
 #else
-    for (ui i = 0; i < P.size(); i++)
-        if (matrix[u * n + P[i]])
-            dP[P[i]]++;
-    for (ui i = 0; i < C.size(); i++)
-        if (matrix[u * n + C[i]])
-            dP[C[i]]++;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dP[P[i]]++;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dP[C[i]]++;
 #endif
         t.tock();
     }
@@ -1367,12 +1371,12 @@ public:
             if (matrix[u * n + v])
                 dP[v]--;
 #else
-    for (ui i = 0; i < P.size(); i++)
-        if (matrix[u * n + P[i]])
-            dP[P[i]]--;
-    for (ui i = 0; i < C.size(); i++)
-        if (matrix[u * n + C[i]])
-            dP[C[i]]--;
+        for (ui i = 0; i < P.size(); i++)
+            if (matrix[u * n + P[i]])
+                dP[P[i]]--;
+        for (ui i = 0; i < C.size(); i++)
+            if (matrix[u * n + C[i]])
+                dP[C[i]]--;
 #endif
         t.tock();
     }

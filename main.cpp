@@ -420,8 +420,7 @@ void Graph::kPlex_exact() {
 		}
 		#ifndef bbmatrix
 		cout<<"Timings "<<dir.substr(dir.find_last_of("/"));
-		cout<<" PxC: "<<kplex_solver->t.ticktock();
-		cout<<" check2: "<<kplex_solver->istimer.ticktock();
+		cout<<" degree_update: "<<kplex_solver->t.ticktock();
 		cout<<" Partitioning: "<<part.ticktock();
 		cout<<" Color: "<<color.ticktock();
 		cout<<" Branching: "<<branchings.ticktock();
