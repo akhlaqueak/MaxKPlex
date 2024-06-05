@@ -4,7 +4,7 @@
 #include "Utility.h"
 // #include "Timer.h"
 
-#define _SECOND_ORDER_PRUNING_
+// #define _SECOND_ORDER_PRUNING_
 
 //#define set_bit(array, pos) (((array)[pos]) = 1)
 //#define reverse_bit(array, pos) (((array)[pos]) = 1- ((array)[pos]))
@@ -447,7 +447,6 @@ private:
     	assert(S_end > 0);
         ui u = SR[S_end-1];
         char *t_matrix = matrix + u*n;
-
 
         ui neighbors_n = 0, nonneighbors_n = 0;
         for(ui i = 0;i < R_end;i ++) if(i != S_end-1) {

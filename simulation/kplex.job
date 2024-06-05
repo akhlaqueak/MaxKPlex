@@ -59,39 +59,43 @@ done
 done
 wait
 
-echo "================= $k =================" >> kplex-$result
+
+
 rm $result
-echo -en "k:\t"
 for k in {2..5}; do
-echo -en "$k\t\t" >> $result
-done
-
-echo >>$result
-echo -en "solutions:\t"
-
-for k in {2..5}; do
-for sol in $solutions; do
-    echo -en "$sol\t" >> $result
-done
-done
-echo >>$result
-
-for fn in $datasets; do
-echo -en "$fn\t" >> $result
-for k in {2..5}; do
-for sol in $solutions; do
-    outfile=$sol-$k.out
-    # [ -e "$fn" ] || continue
-    op=`grep $fn $outfile`
-    if [ -z "${op}" ]; then 
-        echo -en "-\t" >> $result
-    else
-        op=($op)
-        echo -en "${op[-3]}\t" >> $result
-    fi
-done
-done
-echo >> $result
+    echo "================= k=$k =================" >> $result
+    echo -en "datasets\t" >>$result
+    for sol in $solutions; do
+        echo -en "$sol\t" >> $result
+    done
+    # done
+    echo >>$result
+    for fn in $datasets; do
+    echo -en "$fn\t" >> $result
+        line=()
+        for sol in $solutions; do
+            outfile=$sol-$k.out
+            op=`grep $fn $outfile`
+            if [ -z "${op}" ]; then 
+                line+=('-')
+            else
+                op=($op)
+                line+=(${op[-3]})
+            fi
+        done
+        m=`printf "%s\n" "${line[@]}" | sort -rn | tail -n1`
+        echo ${line[@]}
+        for i in "${line[@]}"; do 
+            if [ $i == '-' ]; then
+                echo -en '-\t' >> $result
+            elif [ $i == $m ] ; then
+                echo $i | bc -l | xargs printf "*%.2f\t" >> $result
+            else
+                echo $i | bc -l | xargs printf "%.2f\t" >> $result
+            fi 
+        done
+    echo >> $result
+    done
 done
 
 result=kpsize.out
