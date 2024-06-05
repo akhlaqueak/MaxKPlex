@@ -12,7 +12,7 @@ bool flag = false;
 #define _SECOND_ORDER_PRUNING_
 // #define SET_ENUM
 // #define NAIVE
-
+#define C_THRESH 10
 class MaxKPlex
 {
     vecui &kplex;
@@ -753,7 +753,7 @@ public:
         // ub = tryPartition();
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        if (C.size()<100 or seesawUB() > best_solution_size)
+        if (C.size() < C_THRESH or seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
