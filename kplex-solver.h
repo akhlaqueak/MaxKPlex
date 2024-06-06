@@ -753,7 +753,7 @@ public:
         // ub = tryPartition();
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        if (C.size() < C_THRESH or seesawUB() > best_solution_size)
+        if (C.size() > c_size or seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
         {
