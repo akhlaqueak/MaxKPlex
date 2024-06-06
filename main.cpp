@@ -3,7 +3,7 @@
 // #include "Timer.h"
 Timer gtime, check, sr;
 Timer branchings, part, color, t2, seesaw;
-ui c_size=1;
+double c_size=1;
 #include "popl.hpp"
 #include "KPlex_BB_matrix.h"
 #include "kplex-solver.h"
@@ -1207,7 +1207,7 @@ int main(int argc, char *argv[]) {
 	auto graph_option = op.add<Value<string>>("g", "graph", "\'path to input graph file\'");
 	auto alg_option = op.add<Value<string>>("a", "alg", "\'algorithm name\' (exact | verify)");
 	auto k_option = op.add<Value<int>>("k", "k", "\'the value of k for k-plex\'");
-	auto c_option = op.add<Value<int>>("c", "c", "\'min size of candidate set for seesaw\'");
+	auto c_option = op.add<Value<double>>("c", "c", "\'min size of candidate set for seesaw\'");
 	op.add<Switch>("o", "output", "\'write the kplex to ./kplex.txt\'", &output);
 	op.add<Switch>("b", "binary", "\'read the input graph from binary files b_adj.bin and b_degree.bin\'", &binary_input);
 
