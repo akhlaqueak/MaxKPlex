@@ -12,8 +12,8 @@ bool flag = false;
 #define _SECOND_ORDER_PRUNING_
 // #define SET_ENUM
 // #define NAIVE
-#define C_THRESH
-// #define C_SIZE
+// #define C_THRESH
+#define C_SIZE
 class MaxKPlex
 {
     vecui &kplex;
