@@ -1235,7 +1235,7 @@ int main(int argc, char *argv[]) {
 		printf("c value not provided, using c=1\n");
 	}
 	else
-		c_size=k_option->value();
+		c_size=c_option->value();
 	string alg = "exact";
 	if(alg_option->is_set()) alg = alg_option->value();
 
