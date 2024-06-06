@@ -12,7 +12,8 @@ bool flag = false;
 #define _SECOND_ORDER_PRUNING_
 // #define SET_ENUM
 // #define NAIVE
-#define C_THRESH 10
+#define C_THRESH
+// #define C_SIZE
 class MaxKPlex
 {
     vecui &kplex;
@@ -754,7 +755,13 @@ public:
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
         // cout<<C.size()<<" "<<distance<<endl;
+        #ifdef C_SIZE
         if (C.size() < c_size or seesawUB() > best_solution_size)
+        #endif
+
+        #ifdef C_THRESH
+        if (C.size() < c_size*distance or seesawUB() > best_solution_size)
+        #endif
 #endif
         // if (secondOrderUB())
         {
