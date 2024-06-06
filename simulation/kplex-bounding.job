@@ -33,7 +33,7 @@ rm $result
 
 # for kplex in $solutions; do
 sol=kplex-c-size
-for c in {10 20 50 100}
+for c in 10 20 50 100; do
 for k in {2..5}; do
 for fn in $datasets; do
 # for sol in $solutions; do
@@ -45,7 +45,7 @@ done
 done
 
 sol=kplex-threshold
-for c in {1.2 1.4 1.8 2.0 3 4 5}
+for c in 1.2 1.4 1.8 2.0 3 4 5; do
 for k in {2..5}; do
 for fn in $datasets; do
 # for sol in $solutions; do
