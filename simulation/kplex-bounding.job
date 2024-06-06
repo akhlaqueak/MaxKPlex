@@ -60,12 +60,12 @@ done
 wait
 
 
-result=results.out
+result=results-csize.out
 rm $result
 
-cs
+solutions=$csize
 rm $result
-for c in $csize; do
+
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
     echo -en "datasets\t" >>$result
@@ -78,7 +78,7 @@ for k in {2..5}; do
     echo -en "$fn\t" >> $result
         line=()
         for sol in $solutions; do
-            outfile=$sol-$k.out
+            outfile=kplex-c-size-$sol-$k.out
             op=`grep $fn $outfile`
             if [ -z "${op}" ]; then 
                 line+=('9999999999')
@@ -101,6 +101,47 @@ for k in {2..5}; do
     echo >> $result
     done
 done
+
+result=results-threshold.out
+solutions=$cthresh
+rm $result
+
+for k in {2..5}; do
+    echo "================= k=$k =================" >> $result
+    echo -en "datasets\t" >>$result
+    for sol in $solutions; do
+        echo -en "${sol#*-}\t" >> $result
+    done
+    # done
+    echo >>$result
+    for fn in $datasets; do
+    echo -en "$fn\t" >> $result
+        line=()
+        for sol in $solutions; do
+            outfile=kplex-threshold-$sol-$k.out
+            op=`grep $fn $outfile`
+            if [ -z "${op}" ]; then 
+                line+=('9999999999')
+            else
+                op=($op)
+                line+=(${op[-1]})
+            fi
+        done
+        m=`printf "%s\n" "${line[@]}" | sort -rn | tail -n1`
+        echo ${line[@]}
+        for i in "${line[@]}"; do 
+            if [ $i == '9999999999' ]; then
+                echo -en '-\t' >> $result
+            elif [ $i == $m ] ; then
+                echo $i | bc -l | xargs printf "*%.1f\t" >> $result
+            else
+                echo $i | bc -l | xargs printf "%.1f\t" >> $result
+            fi 
+        done
+    echo >> $result
+    done
+done
+
 
 result=kpsize.out
 rm $result
