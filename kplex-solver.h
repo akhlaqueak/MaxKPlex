@@ -5,7 +5,7 @@
 bool flag = false;
 // #define INIT_SEESAW
 // #define UP1
-// #define RULE2
+#define RULE2
 #define SEESAW
 // #define CTCP
 #define CNPRUNE
