@@ -1,0 +1,139 @@
+#!/bin/bash
+               
+#SBATCH --job-name=kplex             ### Name of the job                
+#SBATCH --ntasks=96                     ### Number of Tasks
+#SBATCH --cpus-per-task=1              ### Number of Tasks per CPU    
+#SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
+#SBATCH --partition=medium             ### Cheaha Partition    
+#SBATCH --time=6:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
+#SBATCH --mail-type=END
+#SBATCH --mail-user=akhlaque.ak@gmail.com
+
+datasets='
+ sc-msdoor 
+ socfb-Duke14 
+ sc-ldoor 
+ soc-digg 
+ soc-LiveMocha 
+ soc-flixster 
+ tech-WHOIS 
+ hamming6-2 
+ johnson8-4-4 
+'
+result=results.out
+# remove old stuff
+solutions='kplex-c-size 	 kplex-threshold'
+for sol in $solutions; do
+    rm $sol-*.out
+done
+rm $result
+
+
+# for kplex in $solutions; do
+sol=kplex-c-size
+for c in {10 20 50 100}
+for k in {2..5}; do
+for fn in $datasets; do
+# for sol in $solutions; do
+    echo "computing $fn.... " 
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k -c $c >> $sol-$k.out &
+# done
+done
+done
+done
+
+sol=kplex-threshold
+for c in {1.2 1.4 1.8 2.0 3 4 5}
+for k in {2..5}; do
+for fn in $datasets; do
+# for sol in $solutions; do
+    echo "computing $fn.... " 
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k -c $c >> $sol-$k.out &
+# done
+done
+done
+done
+wait
+
+
+
+rm $result
+for k in {2..5}; do
+    echo "================= k=$k =================" >> $result
+    echo -en "datasets\t" >>$result
+    for sol in $solutions; do
+        echo -en "$sol\t" >> $result
+    done
+    # done
+    echo >>$result
+    for fn in $datasets; do
+    echo -en "$fn\t" >> $result
+        line=()
+        for sol in $solutions; do
+            outfile=$sol-$k.out
+            op=`grep $fn $outfile`
+            if [ -z "${op}" ]; then 
+                line+=('-')
+            else
+                op=($op)
+                line+=(${op[-3]})
+            fi
+        done
+        m=`printf "%s\n" "${line[@]}" | sort -rn | tail -n1`
+        echo ${line[@]}
+        for i in "${line[@]}"; do 
+            if [ $i == '-' ]; then
+                echo -en '-\t' >> $result
+            elif [ $i == $m ] ; then
+                echo $i | bc -l | xargs printf "*%.2f\t" >> $result
+            else
+                echo $i | bc -l | xargs printf "%.2f\t" >> $result
+            fi 
+        done
+    echo >> $result
+    done
+done
+
+result=kpsize.out
+for fn in $datasets; do
+echo -en "$fn\t" >> $result
+for k in {2..5}; do
+for sol in $solutions; do
+    outfile=$sol-$k.out
+    # [ -e "$fn" ] || continue
+    op=`grep $fn $outfile`
+    if [ -z "${op}" ]; then 
+        echo -en "-\t" >> $result
+    else
+        op=($op)
+        echo -en "${op[-5]}\t" >> $result
+    fi
+done
+done
+echo >> $result
+done
+
+
+result=seesaw.out
+rm $result
+for k in {2..5}; do
+    echo >> $result
+
+    echo "seesaw-cost">>$result
+    for fn in $datasets; do
+        for sol in $solutions; do
+            outfile=$sol-$k.out
+            # [ -e "$fn" ] || continue
+            op=`grep "$fn PxC" $outfile`
+            if [ -z "${op}" ]; then 
+                echo -en "-\t" >> $result
+            else
+                op=($op)
+                echo -en "=${op[-5]}+${op[-7]}\t" >> $result
+            fi
+        done
+        echo >> $result
+    done
+done

@@ -1,0 +1,396 @@
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 92,118; m = 360,767 (undirected)
+*** Heuristic kplex size: 14, time: 5,825 (microseconds)
+*** Degeneracy k-plex size: 13, max_core: 58, UB: 60, Time: 5,304 (microseconds)
+*** After core shrink: n = 6,549, m = 180,546 (undirected)
+*** After core-truss co-pruning: n = 819, m = 34,337, density = 0.1025
+Degen found a solution of size 15
+Degen found a solution of size 16
+RecSearch found a larger kplex of size: 17
+15.15 15.15 15.15 16.16 16.16 15.15 16.16 15.15 15.15 15.15 15.15 16.16 15.15 15.15 16.16 15.15 15.15 
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 7,477; m = 56,943 (undirected)
+*** Heuristic kplex size: 45, time: 3,881 (microseconds)
+*** Degeneracy k-plex size: 62, max_core: 88, UB: 90, Time: 678 (microseconds)
+*** After core shrink: n = 266, m = 16,523 (undirected)
+*** After core-truss co-pruning: n = 174, m = 9,778, density = 0.6497
+Degen found a solution of size 63
+RecSearch found a larger kplex of size: 64
+62.62 62.62 62.62 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 62.62 63.63 63.63 62.62 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 62.62 62.62 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 63.63 62.62 63.63 63.63 63.63 63.63 63.63 63.63 62.62 63.63 63.63 62.62 63.63 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 62.62 
+Timings /tech-WHOIS PxC: 0.0640925 check2: 0.0101696 Partitioning: 0.131278 Color: 0.0408874 Branching: 0.00725265 additions 0
+prune_cnt: 73, max_n: 125, min_density: 0.8755, avg_density: 0.9426
+search_cnt: 73, max_n: 125, min_density: 0.8755, avg_density: 0.9426
+>>/tech-WHOIS t_Search: 0.454047	MaxKPlex_Size: 64 t_Total: 0.467516 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 63,393; m = 816,886 (undirected)
+*** Heuristic kplex size: 22, time: 4,487 (microseconds)
+*** Degeneracy k-plex size: 28, max_core: 52, UB: 54, Time: 12,735 (microseconds)
+*** After core shrink: n = 10,506, m = 383,449 (undirected)
+*** After core-truss co-pruning: n = 404, m = 11,600, density = 0.1425
+Degen found a solution of size 31
+Degen found a solution of size 32
+Degen found a solution of size 33
+Timings /socfb-OR PxC: 0.0100904 check2: 0.00177914 Partitioning: 0.00798883 Color: 0.00580705 Branching: 0.000415663 additions 0
+prune_cnt: 144, max_n: 70, min_density: 0.8095, avg_density: 0.9026
+search_cnt: 144, max_n: 70, min_density: 0.8095, avg_density: 0.9026
+>>/socfb-OR t_Search: 0.064506	MaxKPlex_Size: 33 t_Total: 0.412433 t_Seesaw: 0.000000
+
+Degen found a solution of size 18
+Timings /ia-wiki-Talk PxC: 0.257538 check2: 0.0416751 Partitioning: 0.0271543 Color: 0.127125 Branching: 0.0065619 additions 0
+prune_cnt: 443, max_n: 171, min_density: 0.4014, avg_density: 0.5566
+search_cnt: 443, max_n: 171, min_density: 0.4014, avg_density: 0.5566
+>>/ia-wiki-Talk t_Search: 0.749494	MaxKPlex_Size: 18 t_Total: 0.868670 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 65; m = 1,824 (undirected)
+*** Heuristic kplex size: 32, time: 209 (microseconds)
+*** Degeneracy k-plex size: 32, max_core: 57, UB: 59, Time: 17 (microseconds)
+*** After core shrink: n = 64, m = 1,824 (undirected)
+*** After core-truss co-pruning: n = 64, m = 1,824, density = 0.9048
+Timings /hamming6-2 PxC: 0.0410087 check2: 0.050413 Partitioning: 0.174616 Color: 0.171516 Branching: 0.0108691 additions 0
+prune_cnt: 22, max_n: 64, min_density: 0.9048, avg_density: 0.9109
+search_cnt: 22, max_n: 64, min_density: 0.9048, avg_density: 0.9109
+>>/hamming6-2 t_Search: 0.501505	MaxKPlex_Size: 32 t_Total: 0.501884 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 87,805; m = 2,565,054 (undirected)
+*** Heuristic kplex size: 24, time: 1,046 (microseconds)
+*** Degeneracy k-plex size: 24, max_core: 47, UB: 49, Time: 24,262 (microseconds)
+*** After core shrink: n = 87,084, m = 2,558,070 (undirected)
+*** After core-truss co-pruning: n = 87,084, m = 2,414,934, density = 0.0006
+Degen found a solution of size 30
+Degen found a solution of size 36
+Timings /sc-pkustk11 PxC: 0.000388131 check2: 7.2292e-05 Partitioning: 8.7406e-05 Color: 0.000154886 Branching: 2.7821e-05 additions 0
+prune_cnt: 2302, max_n: 48, min_density: 0.8723, avg_density: 0.9968
+search_cnt: 78, max_n: 48, min_density: 0.8723, avg_density: 0.9048
+>>/sc-pkustk11 t_Search: 0.564718	MaxKPlex_Size: 36 t_Total: 0.888211 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 29,733; m = 1,305,757 (undirected)
+*** Heuristic kplex size: 29, time: 7,910 (microseconds)
+*** Degeneracy k-plex size: 39, max_core: 76, UB: 78, Time: 22,660 (microseconds)
+*** After core shrink: n = 19,088, m = 1,104,303 (undirected)
+*** After core-truss co-pruning: n = 2,312, m = 83,743, density = 0.0313
+Degen found a solution of size 43
+Degen found a solution of size 47
+Degen found a solution of size 48
+Degen found a solution of size 50
+Degen found a solution of size 51
+Timings /socfb-Indiana PxC: 0.00453112 check2: 0.00030243 Partitioning: 0.00262574 Color: 0.00108803 Branching: 0.000105608 additions 0
+prune_cnt: 60, max_n: 76, min_density: 0.9081, avg_density: 0.9654
+search_cnt: 60, max_n: 76, min_density: 0.9081, avg_density: 0.9654
+>>/socfb-Indiana t_Search: 0.074429	MaxKPlex_Size: 51 t_Total: 1.777142 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 36,365; m = 1,590,651 (undirected)
+*** Heuristic kplex size: 19, time: 27,237 (microseconds)
+*** Degeneracy k-plex size: 52, max_core: 81, UB: 83, Time: 29,035 (microseconds)
+*** After core shrink: n = 16,086, m = 1,046,859 (undirected)
+*** After core-truss co-pruning: n = 377, m = 18,140, density = 0.2559
+Degen found a solution of size 55
+Timings /socfb-Texas84 PxC: 0.0667056 check2: 0.0112768 Partitioning: 0.121591 Color: 0.0428542 Branching: 0.00692421 additions 0
+prune_cnt: 131, max_n: 117, min_density: 0.8438, avg_density: 0.9241
+search_cnt: 131, max_n: 117, min_density: 0.8438, avg_density: 0.9241
+>>/socfb-Texas84 t_Search: 0.464592	MaxKPlex_Size: 55 t_Total: 2.273826 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 71; m = 1,855 (undirected)
+*** Heuristic kplex size: 14, time: 184 (microseconds)
+*** Degeneracy k-plex size: 8, max_core: 53, UB: 55, Time: 23 (microseconds)
+*** After core shrink: n = 70, m = 1,855 (undirected)
+*** After core-truss co-pruning: n = 70, m = 1,855, density = 0.7681
+Timings /johnson8-4-4 PxC: 0.629055 check2: 0.285462 Partitioning: 0.496969 Color: 1.01493 Branching: 0.152635 additions 0
+prune_cnt: 52, max_n: 70, min_density: 0.7681, avg_density: 0.8026
+search_cnt: 52, max_n: 70, min_density: 0.7681, avg_density: 0.8026
+>>/johnson8-4-4 t_Search: 2.873400	MaxKPlex_Size: 14 t_Total: 2.873824 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 36,365; m = 1,590,651 (undirected)
+*** Heuristic kplex size: 19, time: 26,820 (microseconds)
+*** Degeneracy k-plex size: 52, max_core: 81, UB: 83, Time: 28,813 (microseconds)
+*** After core shrink: n = 16,086, m = 1,046,859 (undirected)
+*** After core-truss co-pruning: n = 377, m = 18,140, density = 0.2559
+Degen found a solution of size 55
+Timings /socfb-Texas84 PxC: 0.0682703 check2: 0.0113537 Partitioning: 0.121766 Color: 0.0430663 Branching: 0.00704092 additions 0
+prune_cnt: 131, max_n: 117, min_density: 0.8438, avg_density: 0.9241
+search_cnt: 131, max_n: 117, min_density: 0.8438, avg_density: 0.9241
+>>/socfb-Texas84 t_Search: 0.472006	MaxKPlex_Size: 55 t_Total: 2.212197 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 35,112; m = 1,465,654 (undirected)
+*** Heuristic kplex size: 41, time: 23,078 (microseconds)
+*** Degeneracy k-plex size: 52, max_core: 83, UB: 85, Time: 24,781 (microseconds)
+*** After core shrink: n = 14,127, m = 905,529 (undirected)
+*** After core-truss co-pruning: n = 1,526, m = 70,410, density = 0.0605
+Degen found a solution of size 59
+Degen found a solution of size 60
+Timings /socfb-UF PxC: 0.0661027 check2: 0.00882176 Partitioning: 0.0943445 Color: 0.0357044 Branching: 0.00243313 additions 0
+prune_cnt: 319, max_n: 114, min_density: 0.8718, avg_density: 0.9485
+search_cnt: 319, max_n: 114, min_density: 0.8718, avg_density: 0.9485
+>>/socfb-UF t_Search: 0.577607	MaxKPlex_Size: 60 t_Total: 2.075089 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 217,892; m = 5,653,221 (undirected)
+*** Heuristic kplex size: 24, time: 2,117 (microseconds)
+*** Degeneracy k-plex size: 24, max_core: 35, UB: 37, Time: 40,610 (microseconds)
+*** After core shrink: n = 216,897, m = 5,641,349 (undirected)
+*** After core-truss co-pruning: n = 204,263, m = 5,302,125, density = 0.0003
+Timings /sc-pwtk PxC: 0.0181405 check2: 0.000569518 Partitioning: 0.00191397 Color: 0.00122259 Branching: 0.00119831 additions 0
+prune_cnt: 32351, max_n: 36, min_density: 0.7580, avg_density: 0.9898
+search_cnt: 1458, max_n: 36, min_density: 0.7580, avg_density: 0.7742
+>>/sc-pwtk t_Search: 0.889244	MaxKPlex_Size: 24 t_Total: 1.334736 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 104,104; m = 2,193,083 (undirected)
+*** Heuristic kplex size: 9, time: 15,630 (microseconds)
+*** Degeneracy k-plex size: 9, max_core: 92, UB: 94, Time: 46,956 (microseconds)
+*** After core shrink: n = 66,980, m = 2,059,265 (undirected)
+*** After core-truss co-pruning: n = 4,062, m = 182,864, density = 0.0222
+Degen found a solution of size 10
+Degen found a solution of size 11
+Degen found a solution of size 15
+Degen found a solution of size 17
+Degen found a solution of size 18
+Degen found a solution of size 19
+Timings /soc-LiveMocha PxC: 0.821907 check2: 0.179845 Partitioning: 0.125257 Color: 0.646143 Branching: 0.03539 additions 0
+prune_cnt: 461, max_n: 260, min_density: 0.3703, avg_density: 0.5203
+search_cnt: 461, max_n: 260, min_density: 0.3703, avg_density: 0.5203
+>>/soc-LiveMocha t_Search: 2.877205	MaxKPlex_Size: 19 t_Total: 4.870552 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 1,191,806; m = 4,519,330 (undirected)
+*** Heuristic kplex size: 8, time: 22,067 (microseconds)
+*** Degeneracy k-plex size: 14, max_core: 70, UB: 72, Time: 89,132 (microseconds)
+*** After core shrink: n = 79,932, m = 1,696,417 (undirected)
+*** After core-truss co-pruning: n = 2,017, m = 77,558, density = 0.0381
+Degen found a solution of size 15
+Degen found a solution of size 16
+Degen found a solution of size 18
+Timings /soc-lastfm PxC: 1.03149 check2: 0.222778 Partitioning: 0.173441 Color: 0.828091 Branching: 0.048114 additions 0
+prune_cnt: 731, max_n: 272, min_density: 0.2895, avg_density: 0.4939
+search_cnt: 731, max_n: 272, min_density: 0.2895, avg_density: 0.4939
+>>/soc-lastfm t_Search: 3.482940	MaxKPlex_Size: 18 t_Total: 4.459020 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 415,864; m = 9,378,650 (undirected)
+*** Heuristic kplex size: 21, time: 3,507 (microseconds)
+*** Degeneracy k-plex size: 21, max_core: 34, UB: 36, Time: 113,736 (microseconds)
+*** After core shrink: n = 404,705, m = 9,377,290 (undirected)
+*** After core-truss co-pruning: n = 378,465, m = 8,746,531, density = 0.0001
+Timings /sc-msdoor PxC: 0.674458 check2: 0.12608 Partitioning: 0.414925 Color: 0.299567 Branching: 0.0630941 additions 0
+prune_cnt: 84963, max_n: 42, min_density: 0.6506, avg_density: 0.8646
+search_cnt: 77360, max_n: 42, min_density: 0.6506, avg_density: 0.8513
+>>/sc-msdoor t_Search: 5.711957	MaxKPlex_Size: 21 t_Total: 6.683735 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 2,937,613; m = 20,959,854 (undirected)
+*** Heuristic kplex size: 9, time: 38,575 (microseconds)
+*** Degeneracy k-plex size: 15, max_core: 63, UB: 65, Time: 810,220 (microseconds)
+*** After core shrink: n = 489,129, m = 15,630,088 (undirected)
+*** After core-truss co-pruning: n = 35,893, m = 882,817, density = 0.0014
+Degen found a solution of size 19
+Degen found a solution of size 22
+Degen found a solution of size 24
+Degen found a solution of size 27
+Timings /socfb-B-anon PxC: 0.0739996 check2: 0.0217746 Partitioning: 0.0703627 Color: 0.0707118 Branching: 0.00763743 additions 0
+prune_cnt: 255, max_n: 103, min_density: 0.5814, avg_density: 0.7877
+search_cnt: 254, max_n: 103, min_density: 0.5814, avg_density: 0.7869
+>>/socfb-B-anon t_Search: 1.061191	MaxKPlex_Size: 27 t_Total: 23.466191 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 172; m = 9,435 (undirected)
+*** Heuristic kplex size: 11, time: 685 (microseconds)
+*** Degeneracy k-plex size: 15, max_core: 102, UB: 104, Time: 109 (microseconds)
+*** After core shrink: n = 171, m = 9,435 (undirected)
+*** After core-truss co-pruning: n = 171, m = 9,435, density = 0.6491
+Timings /keller4 PxC: 16.7029 check2: 4.85843 Partitioning: 6.01847 Color: 25.4599 Branching: 1.61204 additions 0
+prune_cnt: 152, max_n: 171, min_density: 0.6491, avg_density: 0.7356
+search_cnt: 152, max_n: 171, min_density: 0.6491, avg_density: 0.7356
+>>/keller4 t_Search: 59.053148	MaxKPlex_Size: 15 t_Total: 59.055548 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 2,997,167; m = 106,349,209 (undirected)
+*** Heuristic kplex size: 20, time: 444,506 (microseconds)
+*** Degeneracy k-plex size: 24, max_core: 230, UB: 232, Time: 4,255,900 (microseconds)
+*** After core shrink: n = 1,954,140, m = 94,256,779 (undirected)
+*** After core-truss co-pruning: n = 158,450, m = 7,760,529, density = 0.0006
+Degen found a solution of size 25
+Degen found a solution of size 26
+Degen found a solution of size 30
+Degen found a solution of size 31
+Degen found a solution of size 32
+Degen found a solution of size 33
+Degen found a solution of size 34
+Degen found a solution of size 35
+Degen found a solution of size 36
+Degen found a solution of size 37
+Degen found a solution of size 43
+Degen found a solution of size 48
+Degen found a solution of size 49
+Degen found a solution of size 50
+RecSearch found a larger kplex of size: 51
+50.50 50.50 50.50 49.49 50.50 49.49 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 49.49 50.50 50.50 50.50 50.50 49.49 50.50 50.50 50.50 49.49 49.49 49.49 50.50 50.50 50.50 50.50 50.50 50.50 50.50 50.50 49.49 50.50 50.50 49.49 50.50 49.49 49.49 50.50 49.49 49.49 49.49 49.49 49.49 
+RecSearch found a larger kplex of size: 52
+50.50 50.50 50.50 51.51 50.50 50.50 51.51 50.50 51.51 51.51 50.50 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 51.51 50.50 51.51 51.51 51.51 51.51 50.50 51.51 51.51 51.51 51.51 51.51 50.50 51.51 51.51 51.51 51.51 51.51 50.50 51.51 50.50 51.51 50.50 51.51 50.50 50.50 50.50 50.50 50.50 
+Timings /soc-orkut PxC: 4.72932 check2: 1.7122 Partitioning: 9.79349 Color: 7.68846 Branching: 0.312453 additions 0
+prune_cnt: 1689, max_n: 315, min_density: 0.5034, avg_density: 0.8093
+search_cnt: 1685, max_n: 315, min_density: 0.5034, avg_density: 0.8088
+>>/soc-orkut t_Search: 43.511701	MaxKPlex_Size: 52 t_Total: 228.910305 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 9,886; m = 506,437 (undirected)
+*** Heuristic kplex size: 31, time: 7,756 (microseconds)
+*** Degeneracy k-plex size: 33, max_core: 85, UB: 87, Time: 8,308 (microseconds)
+*** After core shrink: n = 7,165, m = 469,969 (undirected)
+*** After core-truss co-pruning: n = 815, m = 35,252, density = 0.1063
+Degen found a solution of size 34
+Degen found a solution of size 37
+Degen found a solution of size 38
+Timings /socfb-Duke14 PxC: 0.355713 check2: 0.117546 Partitioning: 0.314441 Color: 0.417241 Branching: 0.0213556 additions 0
+prune_cnt: 291, max_n: 175, min_density: 0.6188, avg_density: 0.7786
+search_cnt: 291, max_n: 175, min_density: 0.6188, avg_density: 0.7786
+>>/socfb-Duke14 t_Search: 1.789796	MaxKPlex_Size: 38 t_Total: 2.446480 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 201; m = 17,910 (undirected)
+*** Heuristic kplex size: 51, time: 1,798 (microseconds)
+*** Degeneracy k-plex size: 70, max_core: 169, UB: 171, Time: 197 (microseconds)
+*** After core shrink: n = 200, m = 17,910 (undirected)
+*** After core-truss co-pruning: n = 200, m = 17,910, density = 0.9000
+RecSearch found a larger kplex of size: 71
+69.69 69.69 69.69 70.70 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 69.69 
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 639,015; m = 3,214,986 (undirected)
+*** Heuristic kplex size: 26, time: 312,044 (microseconds)
+*** Degeneracy k-plex size: 30, max_core: 63, UB: 65, Time: 37,899 (microseconds)
+*** After core shrink: n = 23,248, m = 860,065 (undirected)
+*** After core-truss co-pruning: n = 12,742, m = 481,460, density = 0.0059
+Degen found a solution of size 31
+Degen found a solution of size 32
+Degen found a solution of size 33
+Degen found a solution of size 35
+Timings /soc-FourSquare PxC: 1.22802 check2: 0.0125706 Partitioning: 0.0619626 Color: 0.0477936 Branching: 0.000332323 additions 0
+prune_cnt: 3814, max_n: 708, min_density: 0.0971, avg_density: 0.5299
+search_cnt: 3813, max_n: 708, min_density: 0.0971, avg_density: 0.5297
+>>/soc-FourSquare t_Search: 9.351424	MaxKPlex_Size: 35 t_Total: 10.174068 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 88,785; m = 2,093,195 (undirected)
+*** Heuristic kplex size: 41, time: 164,945 (microseconds)
+*** Degeneracy k-plex size: 49, max_core: 221, UB: 223, Time: 30,305 (microseconds)
+*** After core shrink: n = 13,098, m = 1,477,797 (undirected)
+*** After core-truss co-pruning: n = 3,570, m = 579,959, density = 0.0910
+Degen found a solution of size 51
+Degen found a solution of size 52
+Degen found a solution of size 53
+Degen found a solution of size 54
+Timings /soc-BlogCatalog PxC: 1139.4 check2: 456.169 Partitioning: 2051.99 Color: 3393.87 Branching: 75.0072 additions 0
+prune_cnt: 3045, max_n: 1419, min_density: 0.2562, avg_density: 0.4508
+search_cnt: 3045, max_n: 1419, min_density: 0.2562, avg_density: 0.4508
+>>/soc-BlogCatalog t_Search: 8163.591625	MaxKPlex_Size: 54 t_Total: 8166.930265 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 2,523,387; m = 7,918,801 (undirected)
+*** Heuristic kplex size: 17, time: 20,462 (microseconds)
+*** Degeneracy k-plex size: 36, max_core: 68, UB: 70, Time: 119,541 (microseconds)
+*** After core shrink: n = 24,044, m = 934,735 (undirected)
+*** After core-truss co-pruning: n = 282, m = 12,901, density = 0.3256
+Degen found a solution of size 37
+RecSearch found a larger kplex of size: 38
+37.37 37.37 37.37 37.37 37.37 37.37 37.37 37.37 37.37 36.36 37.37 37.37 37.37 37.37 37.37 37.37 36.36 37.37 36.36 36.36 37.37 36.36 37.37 37.37 37.37 37.37 36.36 37.37 36.36 37.37 36.36 36.36 36.36 37.37 36.36 36.36 36.36 36.36 
+Timings /soc-flixster PxC: 0.12143 check2: 0.043526 Partitioning: 0.152319 Color: 0.15429 Branching: 0.00894058 additions 0
+prune_cnt: 186, max_n: 132, min_density: 0.7010, avg_density: 0.8220
+search_cnt: 186, max_n: 132, min_density: 0.7010, avg_density: 0.8220
+>>/soc-flixster t_Search: 0.726607	MaxKPlex_Size: 38 t_Total: 1.629377 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 952,204; m = 20,770,807 (undirected)
+*** Heuristic kplex size: 21, time: 6,208 (microseconds)
+*** Degeneracy k-plex size: 21, max_core: 34, UB: 36, Time: 245,132 (microseconds)
+*** After core shrink: n = 909,447, m = 20,769,277 (undirected)
+*** After core-truss co-pruning: n = 881,740, m = 20,111,444, density = 0.0001
+Timings /sc-ldoor PxC: 1.01667 check2: 0.203161 Partitioning: 0.664053 Color: 0.481202 Branching: 0.091345 additions 0
+prune_cnt: 141256, max_n: 42, min_density: 0.6506, avg_density: 0.8723
+search_cnt: 122493, max_n: 42, min_density: 0.6506, avg_density: 0.8527
+>>/sc-ldoor t_Search: 9.855132	MaxKPlex_Size: 21 t_Total: 11.751843 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 770,800; m = 5,907,132 (undirected)
+*** Heuristic kplex size: 27, time: 63,464 (microseconds)
+*** Degeneracy k-plex size: 22, max_core: 236, UB: 238, Time: 109,903 (microseconds)
+*** After core shrink: n = 41,299, m = 3,573,022 (undirected)
+*** After core-truss co-pruning: n = 9,388, m = 1,412,825, density = 0.0321
+Degen found a solution of size 43
+Degen found a solution of size 54
+Degen found a solution of size 55
+Degen found a solution of size 56
+RecSearch found a larger kplex of size: 57
+55.55 55.55 56.56 56.56 56.56 56.56 56.56 56.56 55.55 56.56 56.56 56.56 55.55 56.56 56.56 56.56 56.56 56.56 55.55 55.55 56.56 55.55 56.56 56.56 56.56 55.55 56.56 56.56 56.56 56.56 56.56 55.55 56.56 55.55 56.56 56.56 56.56 56.56 56.56 55.55 55.55 56.56 55.55 56.56 55.55 55.55 56.56 56.56 56.56 55.55 56.56 55.55 56.56 56.56 55.55 55.55 55.55 
+Timings /soc-digg PxC: 33.9373 check2: 3.08315 Partitioning: 7.06418 Color: 9.2044 Branching: 0.308317 additions 0
+prune_cnt: 1412, max_n: 721, min_density: 0.3562, avg_density: 0.6048
+search_cnt: 1412, max_n: 721, min_density: 0.3562, avg_density: 0.6048
+>>/soc-digg t_Search: 99.008461	MaxKPlex_Size: 57 t_Total: 105.423718 t_Seesaw: 0.000000
+
+**** kPlexS (Release) build at 16:28:11 Jun  4 2024 ***
+# Start reading graph from an edgelist file, Require files "edges.txt"
+# Note that this function is not optimized. Reading from a binary file will be faster
+*	n = 101,164; m = 2,763,066 (undirected)
+*** Heuristic kplex size: 27, time: 186,127 (microseconds)
+*** Degeneracy k-plex size: 34, max_core: 153, UB: 155, Time: 41,390 (microseconds)
+*** After core shrink: n = 28,032, m = 2,030,962 (undirected)
+*** After core-truss co-pruning: n = 2,806, m = 320,848, density = 0.0815
+Degen found a solution of size 36
+Timings /soc-buzznet PxC: 101.075 check2: 16.9007 Partitioning: 21.2359 Color: 109.58 Branching: 2.71583 additions 0
+prune_cnt: 2375, max_n: 1220, min_density: 0.1864, avg_density: 0.3845
+search_cnt: 2375, max_n: 1220, min_density: 0.1864, avg_density: 0.3845
+>>/soc-buzznet t_Search: 381.553802	MaxKPlex_Size: 36 t_Total: 385.523443 t_Seesaw: 0.000000
+
