@@ -100,26 +100,26 @@ Graph::~Graph() {
 }
 
 void Graph::read_graph_binary() {
-	    FILE *f = Utility::open_file(dir, "rb");
-        int tt;
-        fread(&tt, sizeof(int), 1, f);
-        if (tt != sizeof(int)) {
-            printf("sizeof unsigned int is different: file %u, machine %lu\n", tt, sizeof(int));
+	    FILE *f = Utility::open_file(dir.c_str(), "rb");
+        ui tt;
+        fread(&tt, sizeof(ui), 1, f);
+        if (tt != sizeof(ui)) {
+            printf("sizeof unsigned ui is different: file %u, machine %lu\n", tt, sizeof(ui));
         }
-        fread(&n, sizeof(int), 1, f);	// the number of vertices
-        fread(&m, sizeof(int), 1, f); // the number of edges (twice the acutal number).
+        fread(&n, sizeof(ui), 1, f);	// the number of vertices
+        fread(&m, sizeof(ui), 1, f); // the number of edges (twice the acutal number).
  
-        int *degree = new int[n];
-        fread(degree, sizeof(int), n, f);
+        ui *degree = new ui[n];
+        fread(degree, sizeof(ui), n, f);
         if (pstart != nullptr) delete[] pstart;
-        pstart = new int[n + 1];
+        pstart = new ui[n + 1];
         if (edges != nullptr) delete[] edges;
-        edges = new int[m];
+        edges = new ui[m];
 
         pstart[0] = 0;
-        for (int i = 0; i < n; i++) {
+        for (ui i = 0; i < n; i++) {
             if (degree[i] > 0){
-                fread(edges + pstart[i], sizeof(int), degree[i], f);
+                fread(edges + pstart[i], sizeof(ui), degree[i], f);
                 //std::sort(edges+pstart[i], edges + pstart[i] + degree[i]);
             }
             pstart[i + 1] = pstart[i] + degree[i];
