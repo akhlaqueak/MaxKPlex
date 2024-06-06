@@ -60,13 +60,16 @@ done
 wait
 
 
+result=results.out
+rm $result
+
 
 rm $result
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
     echo -en "datasets\t" >>$result
     for sol in $solutions; do
-        echo -en "$sol\t" >> $result
+        echo -en "${sol#*-}\t" >> $result
     done
     # done
     echo >>$result
@@ -77,7 +80,7 @@ for k in {2..5}; do
             outfile=$sol-$k.out
             op=`grep $fn $outfile`
             if [ -z "${op}" ]; then 
-                line+=('-')
+                line+=('9999999999')
             else
                 op=($op)
                 line+=(${op[-3]})
@@ -86,12 +89,12 @@ for k in {2..5}; do
         m=`printf "%s\n" "${line[@]}" | sort -rn | tail -n1`
         echo ${line[@]}
         for i in "${line[@]}"; do 
-            if [ $i == '-' ]; then
+            if [ $i == '9999999999' ]; then
                 echo -en '-\t' >> $result
             elif [ $i == $m ] ; then
-                echo $i | bc -l | xargs printf "*%.2f\t" >> $result
+                echo $i | bc -l | xargs printf "*%.1f\t" >> $result
             else
-                echo $i | bc -l | xargs printf "%.2f\t" >> $result
+                echo $i | bc -l | xargs printf "%.1f\t" >> $result
             fi 
         done
     echo >> $result
@@ -99,6 +102,7 @@ for k in {2..5}; do
 done
 
 result=kpsize.out
+rm $result
 for fn in $datasets; do
 echo -en "$fn\t" >> $result
 for k in {2..5}; do
@@ -120,22 +124,22 @@ done
 
 result=seesaw.out
 rm $result
+sol=kplex-full
 for k in {2..5}; do
     echo >> $result
 
     echo "seesaw-cost">>$result
     for fn in $datasets; do
-        for sol in $solutions; do
+
             outfile=$sol-$k.out
             # [ -e "$fn" ] || continue
-            op=`grep "$fn PxC" $outfile`
+            op=`grep $fn $outfile`
             if [ -z "${op}" ]; then 
                 echo -en "-\t" >> $result
             else
                 op=($op)
-                echo -en "=${op[-5]}+${op[-7]}\t" >> $result
+                echo -en "${op[-1]}\t" >> $result
             fi
-        done
-        echo >> $result
+            echo >> $result
     done
 done
