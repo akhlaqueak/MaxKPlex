@@ -753,7 +753,7 @@ public:
         // ub = tryPartition();
         distance = best_solution_size - P.size();
         // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        cout<<c.size()<<" "<<distance<<endl;
+        cout<<C.size()<<" "<<distance<<endl;
         if (C.size() > c_size*distance or seesawUB() > best_solution_size)
 #endif
         // if (secondOrderUB())
