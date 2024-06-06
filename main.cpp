@@ -100,59 +100,85 @@ Graph::~Graph() {
 }
 
 void Graph::read_graph_binary() {
-	printf("# Start reading graph, Require files \"b_degree.bin\" and \"b_adj.bin\"\n");
-	FILE *f = Utility::open_file((dir + string("/b_degree.bin")).c_str(), "rb");
+	    FILE *f = Utility::open_file(dir, "rb");
+        int tt;
+        fread(&tt, sizeof(int), 1, f);
+        if (tt != sizeof(int)) {
+            printf("sizeof unsigned int is different: file %u, machine %lu\n", tt, sizeof(int));
+        }
+        fread(&n, sizeof(int), 1, f);	// the number of vertices
+        fread(&m, sizeof(int), 1, f); // the number of edges (twice the acutal number).
+ 
+        int *degree = new int[n];
+        fread(degree, sizeof(int), n, f);
+        if (pstart != nullptr) delete[] pstart;
+        pstart = new int[n + 1];
+        if (edges != nullptr) delete[] edges;
+        edges = new int[m];
 
-	ui tt;
-	fread(&tt, sizeof(int), 1, f);
-	if(tt != sizeof(int)) {
-		printf("sizeof int is different: edge.bin(%d), machine(%d)\n", tt, (int)sizeof(int));
-		return ;
-	}
-	fread(&n, sizeof(int), 1, f);
-	fread(&m, sizeof(int), 1, f);
+        pstart[0] = 0;
+        for (int i = 0; i < n; i++) {
+            if (degree[i] > 0){
+                fread(edges + pstart[i], sizeof(int), degree[i], f);
+                //std::sort(edges+pstart[i], edges + pstart[i] + degree[i]);
+            }
+            pstart[i + 1] = pstart[i] + degree[i];
+        }
+        fclose(f);        
+        delete[] degree; 
+// 	printf("# Start reading graph, Require files \"b_degree.bin\" and \"b_adj.bin\"\n");
+// 	FILE *f = Utility::open_file((dir + string("/b_degree.bin")).c_str(), "rb");
 
-	printf("\tn = %s; m = %s (undirected)\n", Utility::integer_to_string(n).c_str(), Utility::integer_to_string(m/2).c_str());
+// 	ui tt;
+// 	fread(&tt, sizeof(int), 1, f);
+// 	if(tt != sizeof(int)) {
+// 		printf("sizeof int is different: edge.bin(%d), machine(%d)\n", tt, (int)sizeof(int));
+// 		return ;
+// 	}
+// 	fread(&n, sizeof(int), 1, f);
+// 	fread(&m, sizeof(int), 1, f);
 
-	ui *degree = new ui[n];
-	fread(degree, sizeof(int), n, f);
+// 	printf("\tn = %s; m = %s (undirected)\n", Utility::integer_to_string(n).c_str(), Utility::integer_to_string(m/2).c_str());
 
-#ifndef NDEBUG
-	long long sum = 0;
-	for(ui i = 0;i < n;i ++) sum += degree[i];
-	if(sum != m) printf("m not equal sum of degrees\n");
-#endif
+// 	ui *degree = new ui[n];
+// 	fread(degree, sizeof(int), n, f);
 
-	fclose(f);
+// #ifndef NDEBUG
+// 	long long sum = 0;
+// 	for(ui i = 0;i < n;i ++) sum += degree[i];
+// 	if(sum != m) printf("m not equal sum of degrees\n");
+// #endif
 
-	f = Utility::open_file((dir + string("/b_adj.bin")).c_str(), "rb");
+// 	fclose(f);
 
-	if(pstart == nullptr) pstart = new ept[n+1];
-	if(edges == nullptr) edges = new ui[m];
+// 	f = Utility::open_file((dir + string("/b_adj.bin")).c_str(), "rb");
 
-	pstart[0] = 0;
-	for(ui i = 0;i < n;i ++) {
-		if(degree[i] > 0) {
-			fread(edges+pstart[i], sizeof(int), degree[i], f);
+// 	if(pstart == nullptr) pstart = new ept[n+1];
+// 	if(edges == nullptr) edges = new ui[m];
 
-			// remove self loops and parallel edges
-			ui *buff = edges+pstart[i];
-			sort(buff, buff+degree[i]);
-			ui idx = 0;
-			for(ui j = 0;j < degree[i];j ++) {
-				if(buff[j] >= n) printf("vertex id %u wrong\n", buff[j]);
-				if(buff[j] == i||(j > 0&&buff[j] == buff[j-1])) continue;
-				buff[idx ++] = buff[j];
-			}
-			degree[i] = idx;
-		}
+// 	pstart[0] = 0;
+// 	for(ui i = 0;i < n;i ++) {
+// 		if(degree[i] > 0) {
+// 			fread(edges+pstart[i], sizeof(int), degree[i], f);
 
-		pstart[i+1] = pstart[i] + degree[i];
-	}
+// 			// remove self loops and parallel edges
+// 			ui *buff = edges+pstart[i];
+// 			sort(buff, buff+degree[i]);
+// 			ui idx = 0;
+// 			for(ui j = 0;j < degree[i];j ++) {
+// 				if(buff[j] >= n) printf("vertex id %u wrong\n", buff[j]);
+// 				if(buff[j] == i||(j > 0&&buff[j] == buff[j-1])) continue;
+// 				buff[idx ++] = buff[j];
+// 			}
+// 			degree[i] = idx;
+// 		}
 
-	fclose(f);
+// 		pstart[i+1] = pstart[i] + degree[i];
+// 	}
 
-	delete[] degree;
+// 	fclose(f);
+
+// 	delete[] degree;
 }
 
 void Graph::read_graph() {
