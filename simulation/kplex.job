@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex-full kPlexS Maple'
+solutions='kplex-full Maple'
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -65,7 +65,7 @@ wait
 
 
 result=results.out
-# solutions='kplex-full kPlexS Maple'
+solutions='kplex-full kPlexS Maple'
 
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
