@@ -609,7 +609,7 @@ public:
                 // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
                 rem = ((matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
                        (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size) or
-                       !canMoveToP(v))
+                       !canMoveToP(v));
             }
             else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
             {
@@ -617,7 +617,7 @@ public:
                 // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
                 rem = ((matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
                        (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) or
-                       !canMoveToP(v))
+                       !canMoveToP(v));
             }
             else
             {
@@ -625,7 +625,7 @@ public:
                 // u and v both are two hop neighbors
                 rem = ((matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
                        (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size) or
-                       !canMoveToP(v))
+                       !canMoveToP(v));
             }
             if (rem)
                 removeFromC(v, true);
@@ -799,7 +799,6 @@ public:
         if (u != n)
         {
             CToP(u);
-            if (u < sz1h)
                 ui pc = pruneC(u);
             recSearch(OTHER);
             recoverC(pc);
