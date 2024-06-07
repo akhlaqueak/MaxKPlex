@@ -10,7 +10,7 @@ bool flag = false;
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
-#define SET_ENUM
+// #define SET_ENUM
 // #define NAIVE
 #define C_THRESH
 // #define C_SIZE
