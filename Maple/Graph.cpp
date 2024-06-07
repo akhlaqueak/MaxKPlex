@@ -380,7 +380,7 @@ void Graph::search() {
 	delete[] seq;
 
 
-	printf("\tMaxKPlex_Size: %lu t_Total: %f\n", kplex.size(), t.elapsed()/1000000.0);
+	printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 	// printf("*** Node count: %lld\n",nodeCnt);
 	// printf("*** Gamma avg: %.4lf\n",(edgeCnt+0.1)/(nodeCnt+0.1));
