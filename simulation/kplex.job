@@ -100,25 +100,25 @@ for k in {2..5}; do
     done
 done
 
-result=kpsize.out
-rm $result
-for fn in $datasets; do
-echo -en "$fn\t" >> $result
-for k in {2..5}; do
-for sol in $solutions; do
-    outfile=$sol-$k.out
-    # [ -e "$fn" ] || continue
-    op=`grep $fn $outfile`
-    if [ -z "${op}" ]; then 
-        echo -en "-\t" >> $result
-    else
-        op=($op)
-        echo -en "${op[-5]}\t" >> $result
-    fi
-done
-done
-echo >> $result
-done
+    result=kpsize.out
+    rm $result
+    for fn in $datasets; do
+    echo -en "$fn\t" >> $result
+    for k in {2..5}; do
+    for sol in $solutions; do
+        outfile=$sol-$k.out
+        # [ -e "$fn" ] || continue
+        op=`grep $fn $outfile`
+        if [ -z "${op}" ]; then 
+            echo -en "-\t" >> $result
+        else
+            op=($op)
+            echo -en "${op[-5]}\t" >> $result
+        fi
+    done
+    done
+    echo >> $result
+    done
 
 
 result=seesaw.out
