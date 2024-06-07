@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex-threshold Maple'
+solutions='kplex-setEnum-initseesaw'
 for sol in $solutions; do
     rm $sol-*.out
 done
