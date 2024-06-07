@@ -53,7 +53,7 @@ for k in {2..5}; do
 for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
-    if ($sol == 'Maple'); then
+    if [ $sol == 'Maple' ]; then
     srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol ~/graphs/$fn.bin $k >> $sol-$k.out &
     else
     srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
@@ -65,7 +65,7 @@ wait
 
 
 result=results.out
-solutions='kplex-full kPlexS Maple'
+# solutions='kplex-full kPlexS Maple'
 
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
