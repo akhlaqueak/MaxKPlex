@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex Maplex'
+solutions='kplex Maple'
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -54,7 +54,7 @@ for fn in $datasets; do
 # for sol in $solutions; do
     echo "computing $fn.... " 
     srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./kplex-threshold -b -g ~/$fn.bin -a exact -k $k -c 3 >> kplex-threshold-$k.out &
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./Maplex ~/$fn.bin >> Maplex-$k.out &
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./Maple ~/$fn.bin >> Maple-$k.out &
 # done
 done
 done
