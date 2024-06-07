@@ -10,7 +10,7 @@ bool flag = false;
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
-#define SET_ENUM
+// #define SET_ENUM
 // #define NAIVE
 #define C_THRESH
 // #define C_SIZE
@@ -87,7 +87,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[matrix_size];
         cnC = new ui[matrix_size];
-        
+
 #endif
 
         neighbors = new ui[m];
@@ -510,10 +510,13 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
-            if(seesawUB()>best_solution_size){
-                for(ui i=0;i<M.size();i++)
+#ifdef SET_ENUM
+            if (seesawUB() > best_solution_size)
+            {
+                for (ui i = 0; i < M.size(); i++)
                     removeFromC(M[i]);
-            kSearch(K - 1);
+#endif
+                kSearch(K - 1);
             }
         }
 
@@ -628,7 +631,7 @@ public:
 
             naiveSearch();
 #else
-            recSearch(FIRST);
+        recSearch(FIRST);
 #endif
             return;
         }
@@ -682,7 +685,7 @@ public:
 #ifdef NAIVE
             naiveSearch();
 #else
-            recSearch(FIRST);
+        recSearch(FIRST);
 #endif
         }
         while (br >= 1)
@@ -763,42 +766,42 @@ public:
         // ub = seesawUB();
         // ub = tryPartition();
         distance = best_solution_size - P.size();
-        // if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
-        // cout<<C.size()<<" "<<distance<<endl;
-        #ifdef C_SIZE
+// if (C.size() <= distance + 4 or seesawUB() > best_solution_size)
+// cout<<C.size()<<" "<<distance<<endl;
+#ifdef C_SIZE
         if (C.size() < c_size or seesawUB() > best_solution_size)
-        #endif
-
-        #ifdef C_THRESH
-        if (C.size() < c_size*distance or seesawUB() > best_solution_size)
-        #endif
 #endif
-        // if (secondOrderUB())
-        {
-            branchings.tick();
-            auto B = getBranchings();
-            branchings.tock();
-            // vertices in C[B.first, B.second] are the ones we need to branch.
-            while (B.first < B.second)
+
+#ifdef C_THRESH
+            if (C.size() < c_size * distance or seesawUB() > best_solution_size)
+#endif
+#endif
+            // if (secondOrderUB())
             {
-                if (level == FIRST)
-                    flag = false;
-                else if (flag)
+                branchings.tick();
+                auto B = getBranchings();
+                branchings.tock();
+                // vertices in C[B.first, B.second] are the ones we need to branch.
+                while (B.first < B.second)
                 {
-                    // return to root level of branchings, but before that recover all branching vertices to C
-                    while (B.first++ < B.second)
-                        // 0 is only serving as a plceholder, actually it fakerecovers the top+1 element of C
-                        addToC(0, true);
-                    break;
+                    if (level == FIRST)
+                        flag = false;
+                    else if (flag)
+                    {
+                        // return to root level of branchings, but before that recover all branching vertices to C
+                        while (B.first++ < B.second)
+                            // 0 is only serving as a plceholder, actually it fakerecovers the top+1 element of C
+                            addToC(0, true);
+                        break;
+                    }
+                    ui bn = maxDegenVertex(B.first++, B.second);
+                    addToP(bn);
+                    ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
+                    recSearch(OTHER);
+                    recoverC(rc);
+                    PToC(bn, true);
                 }
-                ui bn = maxDegenVertex(B.first++, B.second);
-                addToP(bn);
-                ui rc = pruneC(bn); // apply theorem 11 to remove such vertices in C that can't co-exist with bn
-                recSearch(OTHER);
-                recoverC(rc);
-                PToC(bn, true);
             }
-        }
         recoverC(rc);
         // updateC have done fakeRemove rc vertices, now recover
     }
@@ -1244,12 +1247,12 @@ public:
         {
             ui u = SR[i];
 #ifdef SET_ENUM
-                addToC(u);
-            // else
+            addToC(u);
             if (u >= sz1h)
+                // else
                 M.add(u);
 #else
-            addToC(u);
+        addToC(u);
 #endif
         }
     }
@@ -1266,12 +1269,12 @@ public:
             if (matrix[u * n + v])
                 dG[v]++;
 #else
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[u]++, dP[u]++, dG[P[i]]++;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[u]++, dG[C[i]]++;
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dG[u]++, dP[u]++, dG[P[i]]++;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dG[u]++, dG[C[i]]++;
 #endif
         t.tock();
     }
@@ -1288,13 +1291,13 @@ public:
             if (matrix[u * n + v])
                 dG[v]--;
 #else
-        dG[u] = dP[u] = 0;
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dG[P[i]]--;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dG[C[i]]--;
+    dG[u] = dP[u] = 0;
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dG[P[i]]--;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dG[C[i]]--;
 #endif
         t.tock();
     }
@@ -1308,19 +1311,19 @@ public:
             if (matrix[u * n + v])
                 dG[v]++, dP[v]++;
 #else
-        for (ui i = 0; i < P.size(); i++)
-        {
-            ui v = P[i];
-            if (matrix[u * n + v])
-                dG[u]++, dP[u]++, dG[v]++, dP[v]++;
-        }
+    for (ui i = 0; i < P.size(); i++)
+    {
+        ui v = P[i];
+        if (matrix[u * n + v])
+            dG[u]++, dP[u]++, dG[v]++, dP[v]++;
+    }
 
-        for (ui i = 0; i < C.size(); i++)
-        {
-            ui v = C[i];
-            if (matrix[u * n + v])
-                dG[u]++, dG[v]++, dP[v]++;
-        }
+    for (ui i = 0; i < C.size(); i++)
+    {
+        ui v = C[i];
+        if (matrix[u * n + v])
+            dG[u]++, dG[v]++, dP[v]++;
+    }
 #endif
         t.tock();
         return u;
@@ -1334,20 +1337,20 @@ public:
             if (matrix[u * n + v])
                 dG[v]--, dP[v]--;
 #else
-        dG[u] = dP[u] = 0;
-        for (ui i = 0; i < P.size(); i++)
-        {
-            ui v = P[i];
-            if (matrix[u * n + v])
-                dG[v]--, dP[v]--;
-        }
+    dG[u] = dP[u] = 0;
+    for (ui i = 0; i < P.size(); i++)
+    {
+        ui v = P[i];
+        if (matrix[u * n + v])
+            dG[v]--, dP[v]--;
+    }
 
-        for (ui i = 0; i < C.size(); i++)
-        {
-            ui v = C[i];
-            if (matrix[u * n + v])
-                dG[v]--, dP[v]--;
-        }
+    for (ui i = 0; i < C.size(); i++)
+    {
+        ui v = C[i];
+        if (matrix[u * n + v])
+            dG[v]--, dP[v]--;
+    }
 #endif
         t.tock();
         return u;
@@ -1362,12 +1365,12 @@ public:
             if (matrix[u * n + v])
                 dP[v]++;
 #else
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dP[P[i]]++;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dP[C[i]]++;
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dP[P[i]]++;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dP[C[i]]++;
 #endif
         t.tock();
     }
@@ -1389,12 +1392,12 @@ public:
             if (matrix[u * n + v])
                 dP[v]--;
 #else
-        for (ui i = 0; i < P.size(); i++)
-            if (matrix[u * n + P[i]])
-                dP[P[i]]--;
-        for (ui i = 0; i < C.size(); i++)
-            if (matrix[u * n + C[i]])
-                dP[C[i]]--;
+    for (ui i = 0; i < P.size(); i++)
+        if (matrix[u * n + P[i]])
+            dP[P[i]]--;
+    for (ui i = 0; i < C.size(); i++)
+        if (matrix[u * n + C[i]])
+            dP[C[i]]--;
 #endif
         t.tock();
     }
