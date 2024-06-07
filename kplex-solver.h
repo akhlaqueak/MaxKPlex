@@ -116,8 +116,8 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
             cn = new ui[matrix_size];
-            delete[] cnS;
-            cnS = new ui[matrix_size];
+            delete[] cnC;
+            cnC = new ui[matrix_size];
 #endif
         }
         fill(matrix, matrix + n * n, 0);
