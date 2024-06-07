@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex-full 	 kplex-no-seesaw    kplex-no-rule2	 kplex-no-seesaw-rule2'
+solutions='kplex Maplex'
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -51,10 +51,11 @@ rm $result
 # for kplex in $solutions; do
 for k in {2..5}; do
 for fn in $datasets; do
-for sol in $solutions; do
+# for sol in $solutions; do
     echo "computing $fn.... " 
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -g ~/MaximumKPlex/datasets/graphs/Chang/$fn -a exact -k $k >> $sol-$k.out &
-done
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./kplex-threshold -g ~/$fn.bin -a exact -k $k -c 3 >> kplex-threshold-$k.out &
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./Maplex ~/$fn.bin >> Maplex-$k.out &
+# done
 done
 done
 wait
