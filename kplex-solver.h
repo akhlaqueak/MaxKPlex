@@ -10,7 +10,7 @@ bool flag = false;
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
-// #define SET_ENUM
+#define SET_ENUM
 // #define NAIVE
 #define C_THRESH
 // #define C_SIZE
@@ -35,6 +35,7 @@ class MaxKPlex
     long long matrix_size;
 #ifdef _SECOND_ORDER_PRUNING_
     ui *cn;
+    ui *cnC;
     std::queue<std::pair<ui, ui>> Qe;
     std::vector<std::pair<ui, ui>> removed_edges;
     long long removed_edges_n;
@@ -85,6 +86,8 @@ public:
         LPI = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[matrix_size];
+        cnC = new ui[matrix_size];
+        
 #endif
 
         neighbors = new ui[m];
@@ -113,10 +116,13 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
             cn = new ui[matrix_size];
+            delete[] cnS;
+            cnS = new ui[matrix_size];
 #endif
         }
         fill(matrix, matrix + n * n, 0);
         fill(cn, cn + n * n, 0);
+        fill(cnC, cnC + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
         fill(psz.begin(), psz.begin() + n, 0);
@@ -254,7 +260,6 @@ public:
             char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
-                    // if (adjMat(SR[i], SR[j]))
                     neighbors[neighbors_n++] = SR[j];
             for (ui j = 0; j < neighbors_n; j++)
                 for (ui k = j + 1; k < neighbors_n; k++)
@@ -505,7 +510,11 @@ public:
         if (R_end)
         {
             initContainers(sz1h);
+            if(seesawUB()>best_solution_size){
+                for(ui i=0;i<M.size();i++)
+                    removeFromC(M[i]);
             kSearch(K - 1);
+            }
         }
 
         if (best_solution_size > kplex.size())
@@ -1235,9 +1244,9 @@ public:
         {
             ui u = SR[i];
 #ifdef SET_ENUM
-            if (u < sz1h)
                 addToC(u);
-            else
+            // else
+            if (u >= sz1h)
                 M.add(u);
 #else
             addToC(u);
