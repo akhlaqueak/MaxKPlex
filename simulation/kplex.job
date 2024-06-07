@@ -62,7 +62,7 @@ wait
 
 
 result=results.out
-solutions='kplex-threshold Maple'
+solutions='kplex-setEnum-initseesaw'
 
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
