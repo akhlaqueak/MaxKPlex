@@ -51,11 +51,11 @@ rm $result
 # for kplex in $solutions; do
 for k in {2..5}; do
 for fn in $datasets; do
-# for sol in $solutions; do
+for sol in $solutions; do
     echo "computing $fn.... " 
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./kplex-threshold -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> kplex-threshold-$k.out &
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./Maple ~/graphs/$fn.bin $k >> Maple-$k.out &
-# done
+    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
+    # srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./Maple ~/graphs/$fn.bin $k >> Maple-$k.out &
+done
 done
 done
 wait
