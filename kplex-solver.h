@@ -515,9 +515,11 @@ public:
             {
                 for (ui i = 0; i < M.size(); i++)
                     removeFromC(M[i]);
-#endif
-                kSearch(K - 1);
             }
+                kSearch(K - 1);
+#else
+                kSearch(K - 1);
+#endif
         }
 
         if (best_solution_size > kplex.size())
