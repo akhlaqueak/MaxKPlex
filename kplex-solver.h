@@ -285,6 +285,7 @@ public:
             R_end = 0;
 
         // calculating common neighbors in C for pruning rules
+        t2.tick();
         for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0, u = SR[i];
@@ -308,6 +309,7 @@ public:
                 }
             }
         }
+        t2.tock();
     }
 #ifdef _SECOND_ORDER_PRUNING_
     bool upper_bound_based_prune(ui S_end, ui u, ui v)
