@@ -39,13 +39,11 @@ soc-buzznet
 soc-digg
 soc-flickr
 '
-result=results.out
 # remove old stuff
 solutions='kplex kplex-heap kPlexS Maple'
 for sol in $solutions; do
     rm $sol-*.out
 done
-rm $result
 
 
 # for kplex in $solutions; do
@@ -64,8 +62,9 @@ done
 wait
 
 
-result=results.out
 # solutions='kplex-full kplex-doubt kPlexS Maple'
+result=results.out
+rm $result
 
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
