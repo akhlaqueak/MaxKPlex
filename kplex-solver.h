@@ -135,6 +135,36 @@ public:
                 if (!bmp.test(j) && matrix[u * n + j])
                     --degree[j];
         }
+
+            // heap doesn't work better in several datasets e.g. soc-FourSquare
+            // possibly there is a bug, need to fix it to make it run
+        // heap.init(n, n - 1, degree);
+        // bmp.reset(n);
+        // for (ui i = 0; i < n; i++)
+        // {
+        //     ui u, min_degree;
+        //     heap.pop_min(u, min_degree);
+        //     if (min_degree > max_core)
+        //         max_core = min_degree;
+        //     core[u] = max_core;
+        //     peel_sequence[i] = u;
+        //     peelOrder[u] = i;
+        //     // vis[u] = 1;
+        //     bmp.set(u);
+
+        //     ui t_UB = core[u] + K;
+        //     if (n - i < t_UB)
+        //         t_UB = n - i;
+        //     if (t_UB > UB)
+        //         UB = t_UB;
+
+        //     if (idx == n && min_degree + K >= n - i)
+        //         idx = i;
+
+        //     for (ui j = 0; j < n; j++)
+        //         if (!bmp.test(j) && matrix[u * n + j])
+        //             heap.decrement(j, 1);
+        // }
         return idx;
     }
 
@@ -185,38 +215,10 @@ public:
         t2.tick();
         ui* peel_sequence=neighbors;
         ui* core=nonneighbors;
+        t2.tick();
         ui idx = peel(peel_sequence, core);
         t2.tock();
 
-            // heap doesn't work better in several datasets e.g. soc-FourSquare
-            // possibly there is a bug, need to fix it to make it run
-        // heap.init(n, n - 1, degree);
-        // bmp.reset(n);
-        // for (ui i = 0; i < n; i++)
-        // {
-        //     ui u, min_degree;
-        //     heap.pop_min(u, min_degree);
-        //     if (min_degree > max_core)
-        //         max_core = min_degree;
-        //     core[u] = max_core;
-        //     peel_sequence[i] = u;
-        //     peelOrder[u] = i;
-        //     // vis[u] = 1;
-        //     bmp.set(u);
-
-        //     ui t_UB = core[u] + K;
-        //     if (n - i < t_UB)
-        //         t_UB = n - i;
-        //     if (t_UB > UB)
-        //         UB = t_UB;
-
-        //     if (idx == n && min_degree + K >= n - i)
-        //         idx = i;
-
-        //     for (ui j = 0; j < n; j++)
-        //         if (!bmp.test(j) && matrix[u * n + j])
-        //             heap.decrement(j, 1);
-        // }
         if (n - idx > best_solution_size)
         {
             best_solution.clear();
@@ -318,7 +320,7 @@ public:
             }
         }
         t2.tock();
-        peel(peel_sequence, core);
+        // peel(peel_sequence, core);
     }
 #ifdef _SECOND_ORDER_PRUNING_
     bool upper_bound_based_prune(ui S_end, ui u, ui v)
