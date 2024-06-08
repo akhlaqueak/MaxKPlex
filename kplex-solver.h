@@ -98,6 +98,47 @@ public:
         R_end = 0;
     }
 
+    ui peel(ui* peel_seq, ui* core){
+        peel_sequence = neighbors;
+        core = nonneighbors;
+
+        ui max_core = 0, UB = 0, idx = n;
+        bmp.reset(n);
+
+        // memset(vis, 0, sizeof(ui) * n);
+        for (ui i = 0; i < n; i++)
+        {
+            ui u, min_degree = n;
+            for (ui j = 0; j < n; j++)
+                if (!bmp.test(j) && degree[j] < min_degree)
+                {
+                    u = j;
+                    min_degree = degree[j];
+                }
+            if (min_degree > max_core)
+                max_core = min_degree;
+            core[u] = max_core;
+            peel_sequence[i] = u;
+            peelOrder[u] = i;
+            // vis[u] = 1;
+            bmp.set(u);
+
+            ui t_UB = core[u] + K;
+            if (n - i < t_UB)
+                t_UB = n - i;
+            if (t_UB > UB)
+                UB = t_UB;
+
+            if (idx == n && min_degree + K >= n - i)
+                idx = i;
+
+            for (ui j = 0; j < n; j++)
+                if (!bmp.test(j) && matrix[u * n + j])
+                    --degree[j];
+        }
+        return idx;
+    }
+
     void initialization(const auto &vp, bool must_include_0)
     {
         // memset(matrix, 0, sizeof(char) * ((long long)n) * n);
@@ -142,43 +183,10 @@ public:
         }
 
         // the following computes a degeneracy ordering and a heuristic solution
-        ui *peel_sequence = neighbors;
-        ui *core = nonneighbors;
-        ui *vis = SR;
-        ui max_core = 0, UB = 0, idx = n;
-        bmp.reset(n);
         t2.tick();
-        // memset(vis, 0, sizeof(ui) * n);
-        for (ui i = 0; i < n; i++)
-        {
-            ui u, min_degree = n;
-            for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && degree[j] < min_degree)
-                {
-                    u = j;
-                    min_degree = degree[j];
-                }
-            if (min_degree > max_core)
-                max_core = min_degree;
-            core[u] = max_core;
-            peel_sequence[i] = u;
-            peelOrder[u] = i;
-            // vis[u] = 1;
-            bmp.set(u);
-
-            ui t_UB = core[u] + K;
-            if (n - i < t_UB)
-                t_UB = n - i;
-            if (t_UB > UB)
-                UB = t_UB;
-
-            if (idx == n && min_degree + K >= n - i)
-                idx = i;
-
-            for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j])
-                    --degree[j];
-        }
+        ui* peel_seq;
+        ui* core;
+        ui idx = peel(peel_seq, core);
         t2.tock();
 
             // heap doesn't work better in several datasets e.g. soc-FourSquare
@@ -311,6 +319,7 @@ public:
             }
         }
         t2.tock();
+        peel(peel_seq, core);
     }
 #ifdef _SECOND_ORDER_PRUNING_
     bool upper_bound_based_prune(ui S_end, ui u, ui v)
