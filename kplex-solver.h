@@ -184,35 +184,33 @@ public:
 
 
             // heap doesn't work better in several datasets e.g. soc-FourSquare
-        // for (ui i = 0; i < n; i++)
-        //     peel_sequence[i] = i;
-        // heap.init(n, n - 1, degree);
-        // bmp.reset(n);
-        // for (ui i = 0; i < n; i++)
-        // {
-        //     ui u, min_degree;
-        //     heap.pop_min(u, min_degree);
-        //     if (min_degree > max_core)
-        //         max_core = min_degree;
-        //     core[u] = max_core;
-        //     peel_sequence[i] = u;
-        //     peelOrder[u] = i;
-        //     // vis[u] = 1;
-        //     bmp.set(u);
+        heap.init(n, n - 1, degree);
+        bmp.reset(n);
+        for (ui i = 0; i < n; i++)
+        {
+            ui u, min_degree;
+            heap.pop_min(u, min_degree);
+            if (min_degree > max_core)
+                max_core = min_degree;
+            core[u] = max_core;
+            peel_sequence[i] = u;
+            peelOrder[u] = i;
+            // vis[u] = 1;
+            bmp.set(u);
 
-        //     ui t_UB = core[u] + K;
-        //     if (n - i < t_UB)
-        //         t_UB = n - i;
-        //     if (t_UB > UB)
-        //         UB = t_UB;
+            ui t_UB = core[u] + K;
+            if (n - i < t_UB)
+                t_UB = n - i;
+            if (t_UB > UB)
+                UB = t_UB;
 
-        //     if (idx == n && min_degree + K >= n - i)
-        //         idx = i;
+            if (idx == n && min_degree + K >= n - i)
+                idx = i;
 
-        //     for (ui j = 0; j < n; j++)
-        //         if (!bmp.test(j) && matrix[u * n + j])
-        //             heap.decrement(j, 1);
-        // }
+            for (ui j = 0; j < n; j++)
+                if (!bmp.test(j) && matrix[u * n + j])
+                    heap.decrement(j, 1);
+        }
         if (n - idx > best_solution_size)
         {
             best_solution.clear();
