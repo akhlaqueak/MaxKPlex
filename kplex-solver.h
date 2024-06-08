@@ -147,54 +147,24 @@ public:
         ui *peel_sequence = neighbors;
         ui *core = nonneighbors;
         ui *vis = SR;
-        // memset(vis, 0, sizeof(ui) * n);
         ui max_core = 0, UB = 0, idx = n;
 
-        // for (ui i = 0; i < n; i++)
-        // {
-        //     ui u, min_degree = n;
-        //     for (ui j = 0; j < n; j++)
-        //         if (!vis[j] && degree[j] < min_degree)
-        //         {
-        //             u = j;
-        //             min_degree = degree[j];
-        //         }
-        //     if (min_degree > max_core)
-        //         max_core = min_degree;
-        //     core[u] = max_core;
-        //     peel_sequence[i] = u;
-        //     peelOrder[u] = i;
-        //     vis[u] = 1;
-
-        //     ui t_UB = core[u] + K;
-        //     if (n - i < t_UB)
-        //         t_UB = n - i;
-        //     if (t_UB > UB)
-        //         UB = t_UB;
-
-        //     if (idx == n && min_degree + K >= n - i)
-        //         idx = i;
-
-        //     for (ui j = 0; j < n; j++)
-        //         if (!vis[j] && matrix[u * n + j])
-        //             --degree[j];
-        // }
-        for (ui i = 0; i < n; i++)
-            peel_sequence[i] = i;
-        heap.init(n, n - 1, peel_sequence, degree);
-        bmp.reset(n);
+        memset(vis, 0, sizeof(ui) * n);
         for (ui i = 0; i < n; i++)
         {
-            // todo check if heap works better here.
-            ui u, min_degree;
-            heap.pop_min(u, min_degree);
+            ui u, min_degree = n;
+            for (ui j = 0; j < n; j++)
+                if (!vis[j] && degree[j] < min_degree)
+                {
+                    u = j;
+                    min_degree = degree[j];
+                }
             if (min_degree > max_core)
                 max_core = min_degree;
             core[u] = max_core;
             peel_sequence[i] = u;
             peelOrder[u] = i;
-            // vis[u] = 1;
-            bmp.set(u);
+            vis[u] = 1;
 
             ui t_UB = core[u] + K;
             if (n - i < t_UB)
@@ -206,9 +176,39 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j])
-                    heap.decrement(j, 1);
+                if (!vis[j] && matrix[u * n + j])
+                    --degree[j];
         }
+        // for (ui i = 0; i < n; i++)
+        //     peel_sequence[i] = i;
+        // heap.init(n, n - 1, peel_sequence, degree);
+        // bmp.reset(n);
+        // for (ui i = 0; i < n; i++)
+        // {
+        //     // todo check if heap works better here.
+        //     ui u, min_degree;
+        //     heap.pop_min(u, min_degree);
+        //     if (min_degree > max_core)
+        //         max_core = min_degree;
+        //     core[u] = max_core;
+        //     peel_sequence[i] = u;
+        //     peelOrder[u] = i;
+        //     // vis[u] = 1;
+        //     bmp.set(u);
+
+        //     ui t_UB = core[u] + K;
+        //     if (n - i < t_UB)
+        //         t_UB = n - i;
+        //     if (t_UB > UB)
+        //         UB = t_UB;
+
+        //     if (idx == n && min_degree + K >= n - i)
+        //         idx = i;
+
+        //     for (ui j = 0; j < n; j++)
+        //         if (!bmp.test(j) && matrix[u * n + j])
+        //             heap.decrement(j, 1);
+        // }
         if (n - idx > best_solution_size)
         {
             best_solution.clear();
@@ -947,7 +947,7 @@ public:
                     {
                         // rather than removing from C, we are changing the positions within C.
                         // When function completes
-                        // [0...cend) holds all vertices in C, and [cend, sz) holds the branching vertices.
+                        // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
                         C.swapElements(cend++, i);
                     }
                     // else
