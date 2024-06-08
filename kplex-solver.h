@@ -300,7 +300,7 @@ public:
                 for (ui k = j + 1; k < neighbors_n; k++)
                 {
                     ui w = neighbors[k];
-                    if (!matrix[v * n + w] or (u < v and v < w))
+                    // if (!matrix[v * n + w] or (u < v and v < w))
                     {
                         ++cnC[v * n + w];
                         ++cnC[w * n + v];
