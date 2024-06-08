@@ -41,7 +41,7 @@ soc-flickr
 '
 result=results.out
 # remove old stuff
-solutions='kplex kPlexS Maple'
+solutions='kplex kplex-heap kPlexS Maple'
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -54,9 +54,9 @@ for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
     if [ $sol == 'Maple' ]; then
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol ~/graphs/$fn.bin $k >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol ~/graphs/$fn.bin $k >> $sol-$k.out &
     else
-    srun --nodes=1 --ntasks=1 --time=01:00:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
     fi
 done
 done
