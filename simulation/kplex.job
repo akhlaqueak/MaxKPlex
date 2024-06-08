@@ -105,7 +105,7 @@ done
 
 # solutions='kplex-full kplex-doubt kPlexS Maple'
 result=kpsize.out
-
+rm $result
 for k in {2..5}; do
     echo "================= k=$k =================" >> $result
     echo -en "datasets\t" >>$result

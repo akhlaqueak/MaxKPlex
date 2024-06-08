@@ -125,7 +125,7 @@ public:
         fill(cnC, cnC + n * n, 0);
         fill(dP.begin(), dP.begin() + n, 0);
         fill(dG.begin(), dG.begin() + n, 0);
-        fill(psz.begin(), psz.begin() + n, 0);
+        // fill(psz.begin(), psz.begin() + n, 0);
         fill(degree, degree + n, 0);
         M.clear();
         block.clear();
@@ -903,6 +903,7 @@ public:
         for (ui i = 0; i < P.size(); i++)
         {
             ui u = P[i];
+            psz[u] = 0;
             if (support(u) == 0)
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
