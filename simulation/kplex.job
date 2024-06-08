@@ -40,7 +40,7 @@ soc-digg
 soc-flickr
 '
 # remove old stuff
-solutions='kplex kplex-heap kPlexS Maple'
+solutions='kplex-full kplex-peel kPlexS Maple'
 for sol in $solutions; do
     rm $sol-*.out
 done
