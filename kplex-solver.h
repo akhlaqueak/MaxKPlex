@@ -1,5 +1,3 @@
-// #include "kplex-graph.h"
-
 #define PuCSize (P.size() + C.size())
 #define PuCuMSize (P.size() + C.size() + M.size())
 bool flag = false;
@@ -149,7 +147,7 @@ public:
         ui *vis = SR;
         ui max_core = 0, UB = 0, idx = n;
 
-        // memset(vis, 0, sizeof(ui) * n);
+        memset(vis, 0, sizeof(ui) * n);
         // bmp.reset(n);
         // for (ui i = 0; i < n; i++)
         // {
@@ -195,7 +193,7 @@ public:
             core[u] = max_core;
             peel_sequence[i] = u;
             peelOrder[u] = i;
-            // vis[u] = 1;
+            vis[u] = 1;
             bmp.set(u);
 
             ui t_UB = core[u] + K;
@@ -208,7 +206,7 @@ public:
                 idx = i;
 
             for (ui j = 0; j < n; j++)
-                if (!bmp.test(j) && matrix[u * n + j])
+                if (!vis[j] && matrix[u * n + j])
                     heap.decrement(j, 1);
         }
         if (n - idx > best_solution_size)
