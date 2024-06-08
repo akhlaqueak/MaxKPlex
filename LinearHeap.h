@@ -69,7 +69,28 @@ public:
 			if(key < min_key) min_key = key;
 		}
 	}
+	void init(ui _n, ui _key_cap,  ui *_key_s) {
+		if(key_s == nullptr) key_s = new ui[n];
+		if(pre_s == nullptr) pre_s = new ui[n];
+		if(next_s == nullptr) next_s = new ui[n];
+		if(head_s == nullptr) head_s = new ui[key_cap+1];
 
+		//assert(_key_cap <= key_cap);
+		min_key = max_key = _key_cap;
+		for(ui i = 0;i <= _key_cap;i ++) head_s[i] = n;
+
+		for(ui i = 0;i < _n;i ++) {
+			ui id = i;
+			ui key = _key_s[id];
+			//assert(id < n); assert(key <= _key_cap);
+
+			key_s[id] = key; pre_s[id] = n; next_s[id] = head_s[key];
+			if(head_s[key] != n) pre_s[head_s[key]] = id;
+			head_s[key] = id;
+
+			if(key < min_key) min_key = key;
+		}
+	}
 	void init(ui _n, const vector<vecui>& adjList) {
 		ui _key_cap = _n-1;
 		if(key_s == nullptr) key_s = new ui[n];

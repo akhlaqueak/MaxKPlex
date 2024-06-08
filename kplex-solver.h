@@ -179,9 +179,11 @@ public:
         //         if (!vis[j] && matrix[u * n + j])
         //             --degree[j];
         // }
-        for (ui i = 0; i < n; i++)
-            peel_sequence[i] = i;
-        heap.init(n, n - 1, peel_sequence, degree);
+
+        
+        // for (ui i = 0; i < n; i++)
+        //     peel_sequence[i] = i;
+        heap.init(n, n - 1, degree);
         bmp.reset(n);
         for (ui i = 0; i < n; i++)
         {
