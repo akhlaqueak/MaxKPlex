@@ -147,7 +147,7 @@ public:
         ui *vis = SR;
         ui max_core = 0, UB = 0, idx = n;
         bmp.reset(n);
-
+        t2.tick();
         // memset(vis, 0, sizeof(ui) * n);
         for (ui i = 0; i < n; i++)
         {
@@ -179,7 +179,7 @@ public:
                 if (!bmp.test(j) && matrix[u * n + j])
                     --degree[j];
         }
-
+        t2.tock();
 
             // heap doesn't work better in several datasets e.g. soc-FourSquare
             // possibly there is a bug, need to fix it to make it run
