@@ -1,16 +1,7 @@
 #include "Graph.h"
-#include "Utility.h"
-// #include "Timer.h"
-Timer gtime, check, sr;
-Timer branchings, part, color, t2, seesaw;
-double c_size=1;
-#include "popl.hpp"
 #include "KPlex_BB_matrix.h"
-#include "kplex-solver.h"
-using namespace std;
-using namespace popl;
-#define bbmatrix
 
+using namespace std;
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
@@ -126,59 +117,6 @@ void Graph::read_graph_binary() {
         }
         fclose(f);        
         delete[] degree; 
-// 	printf("# Start reading graph, Require files \"b_degree.bin\" and \"b_adj.bin\"\n");
-// 	FILE *f = Utility::open_file((dir + string("/b_degree.bin")).c_str(), "rb");
-
-// 	ui tt;
-// 	fread(&tt, sizeof(int), 1, f);
-// 	if(tt != sizeof(int)) {
-// 		printf("sizeof int is different: edge.bin(%d), machine(%d)\n", tt, (int)sizeof(int));
-// 		return ;
-// 	}
-// 	fread(&n, sizeof(int), 1, f);
-// 	fread(&m, sizeof(int), 1, f);
-
-// 	printf("\tn = %s; m = %s (undirected)\n", Utility::integer_to_string(n).c_str(), Utility::integer_to_string(m/2).c_str());
-
-// 	ui *degree = new ui[n];
-// 	fread(degree, sizeof(int), n, f);
-
-// #ifndef NDEBUG
-// 	long long sum = 0;
-// 	for(ui i = 0;i < n;i ++) sum += degree[i];
-// 	if(sum != m) printf("m not equal sum of degrees\n");
-// #endif
-
-// 	fclose(f);
-
-// 	f = Utility::open_file((dir + string("/b_adj.bin")).c_str(), "rb");
-
-// 	if(pstart == nullptr) pstart = new ept[n+1];
-// 	if(edges == nullptr) edges = new ui[m];
-
-// 	pstart[0] = 0;
-// 	for(ui i = 0;i < n;i ++) {
-// 		if(degree[i] > 0) {
-// 			fread(edges+pstart[i], sizeof(int), degree[i], f);
-
-// 			// remove self loops and parallel edges
-// 			ui *buff = edges+pstart[i];
-// 			sort(buff, buff+degree[i]);
-// 			ui idx = 0;
-// 			for(ui j = 0;j < degree[i];j ++) {
-// 				if(buff[j] >= n) printf("vertex id %u wrong\n", buff[j]);
-// 				if(buff[j] == i||(j > 0&&buff[j] == buff[j-1])) continue;
-// 				buff[idx ++] = buff[j];
-// 			}
-// 			degree[i] = idx;
-// 		}
-
-// 		pstart[i+1] = pstart[i] + degree[i];
-// 	}
-
-// 	fclose(f);
-
-// 	delete[] degree;
 }
 
 void Graph::read_graph() {
@@ -361,12 +299,9 @@ void Graph::kPlex_exact() {
 		s_edge_list = new ui[m];
 		s_active_edgelist = new ui[m/2];
 		s_deleted = new char[m/2];
-		#ifdef bbmatrix
+
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
 		kplex_solver->allocateMemory(max_n, m/2);
-		#else
-		MaxKPlex *kplex_solver = new MaxKPlex(max_n, K, kplex);
-		#endif
 
 		vector<pair<int,int> > vp; vp.reserve(m/2);
 		ui *t_degree = new ui[n];
@@ -393,12 +328,12 @@ void Graph::kPlex_exact() {
 			assert(degree[u] == key);
 
 			ui *ids = Qv;
-			ui ids_n = 0, sz1h=0;
+			ui ids_n = 0;
 #ifndef NDEBUG
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
 			if(kplex.size()+1 >= 2*K) {
-				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+				extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
 				if(ids_n) {
 					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 					total_density_prune += density; ++ prune_cnt;
@@ -406,9 +341,8 @@ void Graph::kPlex_exact() {
 					if(ids_n > max_n_prune) max_n_prune = ids_n;
 				}
 			}
-			else 
-			{
-				sz1h = extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
+			else {
+				extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
 				if(density < min_density_prune) min_density_prune = density;
@@ -420,17 +354,8 @@ void Graph::kPlex_exact() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
-				// for(auto e: vp)
-				// 	cout<<"["<<e.first<<","<<e.second<<"] ";
-				// cout<<endl;
-				#ifdef bbmatrix
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, kplex, true);
-				#else 
-				// Timer t;
-				kplex_solver->solve_instance(ids_n, sz1h, vp);
-				// cout<<t.elapsed()<<endl;
-				#endif
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
@@ -444,14 +369,6 @@ void Graph::kPlex_exact() {
 			printf("Number of remaining undirected edges: %s\n", Utility::integer_to_string(m/2).c_str());
 #endif
 		}
-		#ifndef bbmatrix
-		cout<<"Timings "<<dir.substr(dir.find_last_of("/"));
-		cout<<" degree_update: "<<kplex_solver->t.ticktock();
-		cout<<" Partitioning: "<<part.ticktock();
-		cout<<" Color: "<<color.ticktock();
-		cout<<" Branching: "<<branchings.ticktock();
-		cout<<endl;
-		#endif
 
 		if(prune_cnt == 0) ++ prune_cnt;
 		if(search_cnt == 0) ++ search_cnt;
@@ -478,16 +395,14 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
-		// printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
+		printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 	}
 	else {
 		delete[] core;
 		delete[] peel_sequence;
 	}
 
-	printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, t2.ticktock());
-	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
+	printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
 void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {
@@ -562,7 +477,7 @@ void Graph::load_graph_from_edgelist(ui _n, const vector<pair<int,int> > &edge_l
 	for(ui i = 0;i < n;i ++) pstart[i] -= degree[i];
 }
 
-ui Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	ids[ids_n++] = u; exists[u] = 1; rid[u] = 0;
 	ui u_n = pstart[u];
@@ -600,7 +515,6 @@ ui Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,in
 		pend[u] = u_n;
 	}
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
-	return old_size;
 }
 
 void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
@@ -618,7 +532,7 @@ void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
@@ -655,7 +569,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<p
 	if(ids_n - 1 - Q_n + K <= kplex.size()) {
 		for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 		ids_n = 0;
-		return 0;
+		return ;
 	}
 	
 	ui nr_size = ids_n;
@@ -735,7 +649,6 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<p
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(exists[i] == 0);
 #endif
-	return nr_size;
 }
 
 // max-degree-based heuristic k-plex computation
@@ -1210,77 +1123,4 @@ ept Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &
 	printf("*** Truss removed %s undirected edges\n", Utility::integer_to_string(deleted_edges_n).c_str());
 #endif
 	return deleted_edges_n;
-}
-
-
-void print_usage() {
-	printf("Example usage: ./kPlexS -g path_to_graph -a exact -k 3 -o\n");
-}
-
-int main(int argc, char *argv[]) {
-#ifndef NDEBUG
-	printf("**** kPlexS (Debug) build at %s %s ***\n", __TIME__, __DATE__);
-	printf("!!! You may want to define NDEBUG in Utility.h to get better performance!\n");
-#else
-	printf("**** kPlexS (Release) build at %s %s ***\n", __TIME__, __DATE__);
-#endif
-
-	bool output = false;
-	bool binary_input = false;
-
-	OptionParser op("Allowed options");
-	auto help_option = op.add<Switch>("h", "help", "\'produce help message\'");
-	auto graph_option = op.add<Value<string>>("g", "graph", "\'path to input graph file\'");
-	auto alg_option = op.add<Value<string>>("a", "alg", "\'algorithm name\' (exact | verify)");
-	auto k_option = op.add<Value<int>>("k", "k", "\'the value of k for k-plex\'");
-	auto c_option = op.add<Value<double>>("c", "c", "\'min size of candidate set for seesaw\'");
-	op.add<Switch>("o", "output", "\'write the kplex to ./kplex.txt\'", &output);
-	op.add<Switch>("b", "binary", "\'read the input graph from binary files b_adj.bin and b_degree.bin\'", &binary_input);
-
-	op.parse(argc, argv);
-
-	if(help_option->is_set()||argc <= 1) {
-		cout << op << endl;
-		if(argc <= 1) {
-			print_usage();
-			return 0;
-		}
-	}
-	if(!graph_option->is_set()) {
-		printf("!!! Path to input graph file is not provided! Exit !!!\n");
-		return 0;
-	}
-	ui k = 2;
-	if(!k_option->is_set()) {
-		printf("k value not provided, using k=2\n");
-	}
-	else
-		k=k_option->value();
-
-	if(!c_option->is_set()) {
-		printf("c value not provided, using c=1\n");
-	}
-	else
-		c_size=c_option->value();
-	string alg = "exact";
-	if(alg_option->is_set()) alg = alg_option->value();
-
-	Graph *graph = new Graph(graph_option->value().c_str(), k);
-	if(binary_input) graph->read_graph_binary();
-	else graph->read_graph();
-
-#ifndef NDEBUG
-	printf("\t*** Finished reading graph\n");
-#endif
-
-	if(strcmp(alg.c_str(), "exact") == 0) graph->kPlex_exact();
-	else if(strcmp(alg.c_str(), "verify") == 0) graph->verify_kplex();
-	else print_usage();
-
-	if(output) graph->output_one_kplex();
-
-	delete graph;
-
-	printf("\n");
-	return 0;
 }
