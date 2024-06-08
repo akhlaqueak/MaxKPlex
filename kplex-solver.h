@@ -99,8 +99,7 @@ public:
     }
 
     ui peel(ui* peel_sequence, ui* core){
-        peel_sequence = neighbors;
-        core = nonneighbors;
+
 
         ui max_core = 0, UB = 0, idx = n;
         bmp.reset(n);
@@ -184,8 +183,8 @@ public:
 
         // the following computes a degeneracy ordering and a heuristic solution
         t2.tick();
-        ui* peel_sequence;
-        ui* core;
+        ui* peel_sequence=neighbors;
+        ui* core=nonneighbors;
         ui idx = peel(peel_sequence, core);
         t2.tock();
 
