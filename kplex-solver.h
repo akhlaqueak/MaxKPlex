@@ -98,7 +98,7 @@ public:
         R_end = 0;
     }
 
-    ui peel(ui* peel_seq, ui* core){
+    ui peel(ui* peel_sequence, ui* core){
         peel_sequence = neighbors;
         core = nonneighbors;
 
@@ -184,9 +184,9 @@ public:
 
         // the following computes a degeneracy ordering and a heuristic solution
         t2.tick();
-        ui* peel_seq;
+        ui* peel_sequence;
         ui* core;
-        ui idx = peel(peel_seq, core);
+        ui idx = peel(peel_sequence, core);
         t2.tock();
 
             // heap doesn't work better in several datasets e.g. soc-FourSquare
@@ -319,7 +319,7 @@ public:
             }
         }
         t2.tock();
-        peel(peel_seq, core);
+        peel(peel_sequence, core);
     }
 #ifdef _SECOND_ORDER_PRUNING_
     bool upper_bound_based_prune(ui S_end, ui u, ui v)
