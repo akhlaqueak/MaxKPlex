@@ -81,7 +81,7 @@ public:
         Timer t;
         vis.reset();
         ui ub = 0;
-        heap.init(V, adjList);
+        // heap.init(V, adjList);
         ui max_core = 0;
         ui idx = V;
         for (ui i = 0; i < V; i++)
