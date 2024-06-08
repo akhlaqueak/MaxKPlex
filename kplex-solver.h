@@ -633,7 +633,7 @@ public:
                     //    !canMoveToP(v)
                     );
             }
-            if (rem)
+            if (rem or !canMoveToP(v))
                 removeFromC(v, true);
             else
                 i++;
