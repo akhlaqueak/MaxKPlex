@@ -1,44 +1,17 @@
 #!/bin/bash
                
 #SBATCH --job-name=kplex             ### Name of the job                
-#SBATCH --ntasks=96                     ### Number of Tasks
+#SBATCH --ntasks=192                     ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU    
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
 #SBATCH --partition=medium             ### Cheaha Partition    
-#SBATCH --time=6:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-datasets='
-hamming6-2
-johnson8-4-4
-san200-0-9-2 
-keller4
-socfb-Texas84
-sc-pkustk11
-socfb-UF
-socfb-B-anon
-sc-pwtk
-soc-flixster
-tech-WHOIS
-ia-wiki-Talk
-socfb-Duke14
-socfb-Indiana
-socfb-OR
-socfb-Texas84
-sc-msdoor
-soc-FourSquare
-sc-ldoor
-soc-lastfm
-soc-LiveMocha
-soc-orkut
-soc-BlogCatalog
-soc-buzznet
-soc-digg
-soc-flickr
-'
+datasets=`ls ~/graphs/*.bin`
 # remove old stuff
 solutions='kplex-full KpLeX kPlexS Maple'
 for sol in $solutions; do
@@ -52,9 +25,9 @@ for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
     if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol ~/graphs/$fn.bin $k >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol $fn $k >> $sol-$k.out &
     else
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >> $sol-$k.out &
     fi
 done
 done
