@@ -165,6 +165,15 @@ public:
         //         if (!bmp.test(j) && matrix[u * n + j])
         //             heap.decrement(j, 1);
         // }
+                if (n - idx > best_solution_size)
+        {
+            best_solution.clear();
+            best_solution_size = n - idx;
+            for (ui i = idx; i < n; i++)
+                // best_solution[i-idx] = peel_sequence[i];
+                best_solution.push_back(peel_sequence[i]);
+            printf("Degen found a solution of size %u\n", best_solution_size);
+        }
         return idx;
     }
 
@@ -216,18 +225,10 @@ public:
         ui* peel_sequence=neighbors;
         ui* core=nonneighbors;
         t2.tick();
-        ui idx = peel(peel_sequence, core);
+        peel(peel_sequence, core);
         t2.tock();
 
-        if (n - idx > best_solution_size)
-        {
-            best_solution.clear();
-            best_solution_size = n - idx;
-            for (ui i = idx; i < n; i++)
-                // best_solution[i-idx] = peel_sequence[i];
-                best_solution.push_back(peel_sequence[i]);
-            printf("Degen found a solution of size %u\n", best_solution_size);
-        }
+
 
         // memset(degree_in_S, 0, sizeof(ui)*n);
         R_end = 0;
