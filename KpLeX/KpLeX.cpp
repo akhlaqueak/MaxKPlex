@@ -963,7 +963,7 @@ int main(int argc, char *argv[]) {
   printf("\n-----------------------------------------------------------------------------------------\n");
   KX = atoi(argv[2]);
   CUT_OFF = 9999999;
-  printf("# Solving %d-plex in %s\n", KX, argv[1]);
+  // printf("# Solving %d-plex in %s\n", KX, argv[1]);
   build_simple_graph_instance(argv[1]);
   if (!preprocess()) {
     allocate_memory();
@@ -972,11 +972,11 @@ int main(int argc, char *argv[]) {
   } else
     printSol();
   printf(">>%s |V| %d |E| %d HEURKPX %d Tree %lld Read_Time %4.2lf "
-         "Init_Time %4.2lf MaxKPX %d Search_Time %4.2lf Total %4.2lf \\\\\n",
+         "Init_Time %4.2lf MaxKPX %d Search_Time %4.2lf Total %4.2lf \n",
          argv[1], NB_NODE_O, NB_EDGE_O,  HEUR_KPX_SIZE,
          BRANCHING_COUNT, READ_TIME, INIT_TIME, MAX_KPX_SIZE,
          SEARCH_TIME - READ_TIME, SEARCH_TIME);
-  printf("#File=%s\n#K=%d\n", argv[1], KX);
+  // printf("#File=%s\n#K=%d\n", argv[1], KX);
   printf("#nodes=%d\n#nedges=%d\n\n", NB_NODE_O, NB_EDGE_O);
   printf("#MaxKPX=%d\n#HEURKPX=%d\n#Tree=%lld\n\n", MAX_KPX_SIZE, HEUR_KPX_SIZE, BRANCHING_COUNT);
   printf("#timeout=%d\n#optimal=%d\n\n#Read_Time=%4.2lf\n#Init_Time=%4.2lf\n#Search_Time=%4.2lf\n#Total=%4.2lf\n", 1-TIME_OUT, CUT_OFF, READ_TIME, INIT_TIME,
