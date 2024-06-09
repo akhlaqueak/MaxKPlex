@@ -300,13 +300,13 @@ public:
         for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0, u = SR[i];
-                continue;
             char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
             degree[u]=neighbors_n;
             if (u == 0 or u >= sz1h)
+                continue;
             for (ui j = 0; j < neighbors_n; j++)
             {
                 ui v = neighbors[j];
