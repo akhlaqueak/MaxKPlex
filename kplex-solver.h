@@ -1291,8 +1291,8 @@ public:
         for (ui i = st + 1; i < en; i++)
         {
             ui v = C.get(i);
-            // if (peelOrder[v] > peelOrder[bn])
-            if (dG[v] > dG[bn])
+            if (peelOrder[v] > peelOrder[bn])
+            // if (dG[v] > dG[bn])
                 bn = v, ind = i;
         }
         C.swapElements(ind, C.size());
