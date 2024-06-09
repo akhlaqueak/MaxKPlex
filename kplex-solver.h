@@ -300,13 +300,14 @@ public:
         for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0, u = SR[i];
+            // we are looking for common neighbors only in first hop neighbors
+            if (u == 0 or u >= sz1h)
+                continue;
             char *t_matrix = matrix + SR[i] * n;
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
             degree[u]=neighbors_n;
-            if (u == 0 or u >= sz1h)
-                continue;
             for (ui j = 0; j < neighbors_n; j++)
             {
                 ui v = neighbors[j];
@@ -322,7 +323,7 @@ public:
             }
         }
         t2.tock();
-        peel(peel_sequence, core);
+        // peel(peel_sequence, core);
     }
 #ifdef _SECOND_ORDER_PRUNING_
     bool upper_bound_based_prune(ui S_end, ui u, ui v)

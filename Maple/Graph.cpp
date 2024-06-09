@@ -354,7 +354,7 @@ void Graph::search() {
 		printf("prune_cnt: %u, max_n: %u, min_density: %.4lf, avg_density: %.4lf\n", prune_cnt, max_n_prune, min_density_prune, total_density_prune/prune_cnt);
 		printf("search_cnt: %u, max_n: %u, min_density: %.4lf, avg_density: %.4lf\n", search_cnt, max_n_search, min_density_search, total_density_search/search_cnt);
 		// printf("*** Search time: %s \n", Utility::integer_to_string(tt.elapsed()).c_str());
-		printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
+		// printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 
 		if(kplex.size() > old_size) {
 			for(ui i = 0;i < kplex.size();i ++) {
@@ -379,8 +379,9 @@ void Graph::search() {
 	delete[] core;
 	delete[] seq;
 
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0);
 
-	printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
+	// printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 	// printf("*** Node count: %lld\n",nodeCnt);
 	// printf("*** Gamma avg: %.4lf\n",(edgeCnt+0.1)/(nodeCnt+0.1));
