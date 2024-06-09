@@ -478,15 +478,15 @@ void Graph::kPlex_exact() {
 		delete[] Qe;
 		delete[] Qv;
 		delete[] deleted;
-		printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 		// printf(">>%s *** Search time: %s", dir.c_str(), Utility::integer_to_string(tt.elapsed()).c_str());
+		// printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 	}
 	else {
 		delete[] core;
 		delete[] peel_sequence;
 	}
 
-	printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, t2.ticktock());
+	printf(">>%s t_Search: %f \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")).c_str(), kplex.size(), t.elapsed()/1000000.0, t2.ticktock());
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
 
