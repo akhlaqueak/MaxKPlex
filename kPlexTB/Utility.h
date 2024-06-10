@@ -22,7 +22,8 @@ using namespace std;
 
 using ui = unsigned int; // vertex type
 using ept = unsigned int; // edge pointer type; unsigned int can be used to process upto two billion undirected edges
-
+// typedef std::vector<ui> vecui ;
+using vecui = std::vector<ui>;
 #define pb push_back
 #define mp make_pair
 
