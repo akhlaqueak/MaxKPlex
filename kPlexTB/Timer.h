@@ -13,20 +13,20 @@ using namespace std::chrono;
 
 class Timer
 {
-#define TIME_NOW chrono::steady_clock::now()
+#define TIME_NOW std::chrono::steady_clock::now()
 
 public:
 	Timer() : m_start(TIME_NOW) {}
 	void restart() { m_start = TIME_NOW; }
 	long long elapsed()
 	{
-		return chrono::duration_cast<chrono::microseconds>(TIME_NOW - m_start).count();
+		return std::chrono::duration_cast<std::chrono::microseconds>(TIME_NOW - m_start).count();
 	}
 	void tick(){
 		tic = TIME_NOW;
 	}
 	void tock(){
-		toc+=chrono::duration_cast<chrono::nanoseconds>(TIME_NOW - tic).count();
+		toc+=std::chrono::duration_cast<std::chrono::nanoseconds>(TIME_NOW - tic).count();
 	}
 	double ticktock(){
 		return toc/(1000'000'000.0);
