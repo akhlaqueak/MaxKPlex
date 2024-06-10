@@ -2,7 +2,7 @@
 # ******** Email: ljchang@outlook.com ******
 #
 CC=g++ -flto -O3
-CFLAGS=-c -I. -std=c++11
+CFLAGS=-c -I. -std=c++17
 
 all: kPlexT
 
