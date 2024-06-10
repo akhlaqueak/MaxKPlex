@@ -40,7 +40,8 @@ soc-digg
 soc-flickr
 '
 # remove old stuff
-solutions='kplex-full KpLeX kPlexS Maple'
+solutions='kPlexT'
+# solutions='kplex-full KpLeX kPlexS Maple kPlexT'
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -52,15 +53,16 @@ for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
     if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol ~/graphs/$fn.bin $k >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol ~/graphs/selected/$fn.bin $k >> $sol-$k.out &
     else
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g ~/graphs/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g ~/graphs/selected/$fn.bin -a exact -k $k -c 3 >> $sol-$k.out &
     fi
 done
 done
 done
 wait
 
+solutions='kplex-full KpLeX kPlexS Maple kPlexT'
 
 # solutions='kplex-full kplex-doubt kPlexS Maple'
 result=results.out
