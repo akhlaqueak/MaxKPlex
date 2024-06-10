@@ -40,7 +40,7 @@ soc-digg
 soc-flickr
 '
 # remove old stuff
-solutions='kPlexT'
+solutions='kPlexTB'
 # solutions='kplex-full KpLeX kPlexS Maple kPlexT'
 for sol in $solutions; do
     rm $sol-*.out
@@ -62,7 +62,7 @@ done
 done
 wait
 
-solutions='kplex-full KpLeX kPlexS Maple kPlexT'
+solutions='kplex-full KpLeX  Maple kPlexS kPlexT kPlexTB'
 
 # solutions='kplex-full kplex-doubt kPlexS Maple'
 result=results.out
