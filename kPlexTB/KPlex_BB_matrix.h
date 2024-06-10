@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, t2, part, color;
-typedef vecui std::vector<ui> ;
+typedef std::vector<ui> vecui ;
 
 class KPLEX_BB_MATRIX {
 private:
