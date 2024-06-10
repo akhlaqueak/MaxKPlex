@@ -1,0 +1,19 @@
+#!/bin/bash
+               
+#SBATCH --job-name=kplex             ### Name of the job                
+#SBATCH --ntasks=4                     ### Number of Tasks
+#SBATCH --cpus-per-task=1              ### Number of Tasks per CPU    
+#SBATCH --mem=40000                        ### Memory required, 4 gigabyte
+#SBATCH --partition=medium             ### Cheaha Partition    
+#SBATCH --time=6:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id    
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id    
+#SBATCH --mail-type=END
+#SBATCH --mail-user=akhlaque.ak@gmail.com
+
+
+srun --exclusive --ntasks=1 --mem-per-cpu 10000MB sleep 1 &
+srun --exclusive --ntasks=1 --mem-per-cpu 10000MB sleep 1 &
+srun --exclusive --ntasks=1 --mem-per-cpu 10000MB sleep 1 &
+srun --exclusive --ntasks=1 --mem-per-cpu 10000MB sleep 1 &
+wait
