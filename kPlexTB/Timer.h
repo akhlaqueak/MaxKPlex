@@ -8,6 +8,8 @@
 
 #include <cstdlib>
 #include <sys/time.h>
+#include<chrono>
+using namespace std::chrono;
 
 class Timer
 {
