@@ -376,6 +376,7 @@ private:
 		old_removed_edges_n = removed_edges_n;
 #endif
 
+		// choosing 0 as branching vertex
 		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
 			//printf("here1\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
@@ -555,6 +556,7 @@ private:
 				for(ui i = S_end;i < R_end;i ++) if(SR[i] != v&&SR[i] != u&&!t_matrix[SR[i]]) candidates[candidates_n ++] = SR[i];
 			}
 		}
+		// u is the last emelent in S i.e. SR[S_end-1]
 		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 		if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
 		if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
