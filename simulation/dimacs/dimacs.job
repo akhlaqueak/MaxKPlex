@@ -11,9 +11,11 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-datasets=`ls ~/graphs/*.bin | xargs -n 1 basename`
-# remove old stuff
+datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
 solutions='kplex-full KpLeX kPlexS Maple'
+
+
+# remove old stuff
 for sol in $solutions; do
     rm $sol-*.out
 done
@@ -100,6 +102,34 @@ for k in {2..5}; do
         done
     echo >> $result
     done
+done
+
+declare -A res
+result=summary.out
+rm $result
+for k in {2..5}; do
+    for sol in $solutions; do
+        res[$k,$sol]=0
+    done
+done
+
+for k in {2..5}; do
+    for fn in $datasets; do
+        for sol in $solutions; do
+            outfile=$sol-$k.out
+            op=`grep $fn $outfile`
+            if ! [ -z "${op}" ]; then 
+                (( res[$k,$sol]++ ))
+            fi
+        done
+    done
+done
+
+for k in {2..5}; do
+    for sol in $solutions; do
+        echo -en "${res[$k,$sol]}\t"
+    done
+    echo
 done
 
 result=seesaw.out
