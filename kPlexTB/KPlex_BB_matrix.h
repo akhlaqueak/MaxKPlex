@@ -3,6 +3,8 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
+Timer seesaw, t2, part, color;
+typedef vecui vector<ui> 
 
 class KPLEX_BB_MATRIX {
 private:
@@ -1389,7 +1391,7 @@ private:
             for (ui j = i + 1; j < ISc.size(); j++)
             {
                 if (support(S_end, ISc[j]) > support(S_end, ISc[i]))
-                    swap(ISc[i], ISc[j]);
+                    std::swap(ISc[i], ISc[j]);
             }
             // if (i+1 > support(ISc[i])){
             //     return i;
@@ -1414,7 +1416,7 @@ private:
         {
             if (support(S_end, ISc[i]) > ub)
             {
-                swap(ISc[i], ISc[vlc]);
+                std::swap(ISc[i], ISc[vlc]);
                 vlc++;
             }
         }
@@ -1432,7 +1434,7 @@ private:
                 ui v = ISc[j];
                 if (is_neigh(i, v))
                 {
-                    swap(ISc[vlc + vc], ISc[j]);
+                    std::swap(ISc[vlc + vc], ISc[j]);
                     vc++;
                 }
             }
@@ -1440,7 +1442,7 @@ private:
             {
                 vlc += vc;
                 ISc.push_back(i);
-                swap(ISc.back(), ISc[vlc++]);
+                std::swap(ISc.back(), ISc[vlc++]);
                 bmp.set(i);
             }
         }

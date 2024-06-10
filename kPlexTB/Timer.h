@@ -9,21 +9,30 @@
 #include <cstdlib>
 #include <sys/time.h>
 
-class Timer {
+class Timer
+{
+#define TIME_NOW chrono::steady_clock::now()
+
 public:
-	Timer() { m_start = timestamp(); }
-	void restart() { m_start = timestamp(); }
-	long long elapsed() { return timestamp() - m_start; }
-
-private:
-	long long m_start;
-
-	// Returns a timestamp ('now') in microseconds
-	long long timestamp() {
-		struct timeval tp;
-		gettimeofday(&tp, nullptr);
-		return ((long long)(tp.tv_sec))*1000000 + tp.tv_usec;
+	Timer() : m_start(TIME_NOW) {}
+	void restart() { m_start = TIME_NOW; }
+	long long elapsed()
+	{
+		return chrono::duration_cast<chrono::microseconds>(TIME_NOW - m_start).count();
 	}
+	void tick(){
+		tic = TIME_NOW;
+	}
+	void tock(){
+		toc+=chrono::duration_cast<chrono::nanoseconds>(TIME_NOW - tic).count();
+	}
+	double ticktock(){
+		return toc/(1000'000'000.0);
+	}
+private:
+	std::chrono::steady_clock::time_point m_start, tic;
+	unsigned long long toc=0;
 };
+
 
 #endif
