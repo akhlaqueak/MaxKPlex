@@ -557,6 +557,7 @@ private:
 			}
 		}
 		// u is the last emelent in S i.e. SR[S_end-1]
+		// this function removes u from entire graph... 
 		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 		if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
 		if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
