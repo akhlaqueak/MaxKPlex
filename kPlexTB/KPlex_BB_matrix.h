@@ -1,10 +1,10 @@
 #ifndef _KPLEX_BB_MATRIX_
 #define _KPLEX_BB_MATRIX_
 #define CSIZE (R_end-S_end)
+typedef std::vector<ui> vecui ;
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, t2, part, color;
-typedef std::vector<ui> vecui ;
 
 class KPLEX_BB_MATRIX {
 private:
