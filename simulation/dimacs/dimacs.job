@@ -11,7 +11,8 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
+# datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
+datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin`
 solutions='kplex-full KpLeX kPlexS Maple'
 
 
@@ -27,9 +28,9 @@ for fn in $datasets; do
 for sol in $solutions; do
     echo "computing $fn.... " 
     if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol ~/graphs/$fn $k >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol $fn $k >> $sol-$k.out &
     else
-    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g ~/graphs/$fn -a exact -k $k -c 3 >> $sol-$k.out &
+    srun --nodes=1 --ntasks=1 --time=30:00 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >> $sol-$k.out &
     fi
 done
 done
