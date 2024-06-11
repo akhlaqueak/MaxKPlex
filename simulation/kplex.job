@@ -136,9 +136,9 @@ for sol in $solutions; do
     rm $sol-*.out
 done
 
-run_jobs()
+run_jobs
 
 solutions='kplex-full KpLeX  Maple kPlexS kPlexT kPlexTB'
 
-get_results()
-get_kpsize()
+get_results
+get_kpsize
