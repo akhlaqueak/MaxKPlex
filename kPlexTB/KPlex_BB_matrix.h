@@ -340,7 +340,7 @@ private:
 #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
-
+		t2.tick();
 		for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0, u = SR[i];
@@ -366,6 +366,7 @@ private:
                 }
             }
         }
+		t2.tock();
 	}
 
 	void store_solution(ui size) {
@@ -860,7 +861,6 @@ private:
 				level_id[v] = level;
 				Qv.push(v);
 			}
-
 		}
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
@@ -1475,10 +1475,9 @@ private:
     }
     ui tryColor(ui S_end, ui R_end)
     {
-        t2.tick();
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
-        t2.tock();
+
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
