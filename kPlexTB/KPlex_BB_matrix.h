@@ -859,6 +859,7 @@ private:
 			if(rem) {
 				level_id[v] = level;
 				Qv.push(v);
+				std::cout<<v<<" ";
 			}
 
 		}
