@@ -388,7 +388,7 @@ private:
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 		ui distance = best_solution_size - S_end;
-		// if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
+		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
