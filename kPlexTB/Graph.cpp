@@ -316,6 +316,7 @@ void Graph::kPlex_exact(int mode) {
 
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
+				ui sz1h = 0;
 
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
@@ -323,8 +324,8 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(kplex.size() >= 2*K-1) extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
-					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
+					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 
@@ -334,7 +335,7 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 
 					ui t_old_size = kplex.size();
-						kplex_solver_m->load_graph(ids.size(), vp);
+						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, kplex.size()+1, kplex, true);
 					if(kplex.size() > t_old_size) {
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
@@ -404,7 +405,7 @@ void Graph::reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pst
 // each of u's neighbors must have at least triangle_threshold common neighbors with u
 // each of u's non-neighbor must have at least cn_threshold common neighbors with u
 // after pruning, u must have at least degree_threshold neighbors
-void Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
+ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
@@ -478,9 +479,10 @@ void Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_t
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
+	return old_size;
 }
 
-void Graph::extract_subgraph_wo_prune(ui u, const ui *p_rid, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
+ui Graph::extract_subgraph_wo_prune(ui u, const ui *p_rid, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1; rid[u] = 0;
 	for(ept i = pstart[u];i < pend[u];i ++) {
@@ -502,6 +504,7 @@ void Graph::extract_subgraph_wo_prune(ui u, const ui *p_rid, vector<ui> &ids, ui
 		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]]) vp.push_back(make_pair(rid[v], rid[edges[j]]));
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
+	return old_size;
 }
 
 void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {

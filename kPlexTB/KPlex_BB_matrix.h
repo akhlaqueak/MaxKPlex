@@ -15,6 +15,8 @@ private:
 	vecui PI, PIMax, ISc;
 	MBitSet bmp;
 
+	ui *cnC;
+	ui sz1h;
 #ifdef _SECOND_ORDER_PRUNING_
 	ui *cn;
 	std::queue<std::pair<ui,ui> > Qe;
@@ -48,7 +50,7 @@ public:
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
-
+		cnC=nullptr;
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = nullptr;
 		removed_edges_n = 0;
@@ -78,6 +80,11 @@ public:
 			cn = NULL;
 		}
 #endif
+
+		if(cnC != NULL) {
+			delete[] cnC;
+			cnC = NULL;
+		}
 		if(degree != NULL) {
 			delete[] degree;
 			degree = NULL;
@@ -125,6 +132,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = new ui[matrix_size];
 #endif
+		cnC = new ui[matrix_size];
 
 		degree = new ui[n];
 		degree_in_S = new ui[n];
@@ -137,8 +145,9 @@ public:
 		level_id = new ui[n];
 	}
 
-	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
+	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp, ui _sz1h) {
 		n = _n;
+		sz1h = _sz1h;
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -147,11 +156,13 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
+			delete[] cnC; cnC = new ui[matrix_size];
 		}
 
 #ifdef _SECOND_ORDER_PRUNING_
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
 #endif
+		memset(cnC, 0, sizeof(ui)*((long long)n)*n);
 		memset(matrix, 0, sizeof(char)*((long long)n)*n);
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
@@ -329,6 +340,32 @@ private:
 #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
+
+		for (ui i = 0; i < R_end; i++)
+        {
+            ui neighbors_n = 0, u = SR[i];
+            // we are looking for common neighbors only in first hop neighbors
+            if (u == 0 or u >= sz1h)
+                continue;
+            char *t_matrix = matrix + SR[i] * n;
+            for (ui j = 0; j < R_end; j++)
+                if (t_matrix[SR[j]])
+                    neighbors[neighbors_n++] = SR[j];
+            degree[u]=neighbors_n;
+            for (ui j = 0; j < neighbors_n; j++)
+            {
+                ui v = neighbors[j];
+                for (ui k = j + 1; k < neighbors_n; k++)
+                {
+                    ui w = neighbors[k];
+                    // if (!matrix[v * n + w] or (u < v and v < w))
+                    {
+                        ++cnC[v * n + w];
+                        ++cnC[w * n + v];
+                    }
+                }
+            }
+        }
 	}
 
 	void store_solution(ui size) {
@@ -793,6 +830,38 @@ private:
 			}
 		}
 
+		// reduction rules based on Theorem 9, 10, 11
+		for(ui j = S_end;j < R_end;j ++)  {
+			ui v = SR[j];
+			if(SR_rid[v] < S_end||level_id[v] == level) continue;
+			bool rem=false;
+		    if (u < sz1h and v < sz1h)
+            {
+                // Theorem 11
+                // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
+            }
+            else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
+            {
+                // Theorem 10
+                // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
+            }
+            else
+            {
+                // Theorem 9
+                // u and v both are two hop neighbors
+                rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
+            }
+			if(rem) {
+				level_id[v] = level;
+				Qv.push(v);
+			}
+
+		}
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
 			char *t_matrix = matrix + SR[i]*n;
