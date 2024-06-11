@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, t2, part, color;
+#define _SECOND_ORDER_PRUNING_
 
 class KPLEX_BB_MATRIX {
 private:
