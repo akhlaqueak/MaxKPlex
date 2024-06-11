@@ -442,7 +442,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	if(ids.size() - Q_n  - 1 < degree_threshold) {
 		for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
 		ids.clear();
-		return ;
+		return 0;
 	}
 
 	ui old_size = ids.size();
