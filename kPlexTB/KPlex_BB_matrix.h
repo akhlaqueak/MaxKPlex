@@ -534,26 +534,27 @@ private:
 		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 		ui t_R_end=R_end;
 		t2.tick();
-		R_end = getBranchings(S_end, R_end);
+		R_end = S_end;
+		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 			ui u = SR[R_end++];
 			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<t_R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]++;
-			}
-			degree_in_S[u] = 0;
-			for(ui j=0;j<S_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree_in_S[u]++;
-			}
+			// for(ui j=0;j<t_R_end;j++){
+			// 	ui v = SR[j];
+			// 	if(t_matrix[v])
+			// 		degree[v]++;
+			// }
+			// degree_in_S[u] = 0;
+			// for(ui j=0;j<S_end;j++){
+			// 	ui v = SR[j];
+			// 	if(t_matrix[v])
+			// 		degree_in_S[u]++;
+			// }
 			// if a larger kplex is found, branches will be generated only at root level
-			if(root_level) found_larger=false;
-			else
-			if(found_larger) continue;
+			// if(root_level) found_larger=false;
+			// else
+			// if(found_larger) continue;
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			if(best_solution_size >= _UB_) return ;
