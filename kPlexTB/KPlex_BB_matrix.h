@@ -702,6 +702,7 @@ private:
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end >= old_S_end&&R_end <= old_R_end);
 		//printf("here5\n");
+*/
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 		//printf("here6\n");
 #ifndef NDEBUG
@@ -721,7 +722,6 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-*/
 	}
 
 	ui choose_u_directly(ui S_end, ui R_end){
