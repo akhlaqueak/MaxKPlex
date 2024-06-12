@@ -374,6 +374,9 @@ private:
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
+			printf("!!! BB_Search found a larger kplex\n");
+			found_larger = true;
+		
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
 	}
@@ -510,7 +513,27 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
+		ui u = choose_u_directly(S_end, R_end);
+		
+		if(u!=n){
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+			if(best_solution_size >= _UB_) return ;
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
+			return;
+		}
 
+		ui old_R_end=R_end;
+		R_end = getBranchings(S_end, R_end);
+		// branching vertices are now in R_end to old_R_end, and they are already sorted in peelOrder
+		for(; R_end<old_R_end;R_end++){
+			ui u = SR[R_end];
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+			if(best_solution_size >= _UB_) return ;
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+		}
+/*
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -570,7 +593,6 @@ private:
 #ifdef  _SECOND_ORDER_PRUNING_
 		assert(removed_edges_n == t_old_removed_edges_n);
 #endif
-/*
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -676,7 +698,107 @@ private:
 #endif
 */
 	}
+    ui getBranchings(ui S_end, ui R_end)
+    {
+        for (ui i = S_end; i < R_end; i++)
+        {
+            ui u = SR[i];
+            psz[u] = 0;
+            if (support(u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+            // Lookup neig(&lookup, &g.adjList[u]);
+            // bmp.setup(g.adjList[u], g.V);
+            for (ui j = S_end; j < R_end; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    LPI[u * n + psz[u]++] = v;
+            }
+        }
+        ui beta = best_solution_size - S_end;
+        ui cend = S_end;
+        while (true)
+        {
+            ui maxpi = -1;
+            double maxdise = 0;
+            for (ui i = 0; i < S_end; i++)
+            {
+                ui u = SR[i];
+                if (psz[u] == 0)
+                    continue;
+                double cost = min(support(u), psz[u]);
+                double dise = psz[u] / cost;
+                if (cost <= beta and dise > maxdise)
+                    maxpi = u, maxdise = dise;
+            }
+            if (maxpi != -1)
+            {
+                bmp.reset(n);
+                for (ui i = 0; i < psz[maxpi]; i++)
+                    bmp.set(LPI[maxpi * n + i]);
+                // remove pi* from C
+                for (ui i = cend; i < R_end; i++)
+                {
+                    ui v = SR[i];
+                    if (bmp.test(v))
+                    {
+                        // rather than removing from C, we are changing the positions within C.
+                        // When function completes
+                        // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
+                        swap_pos(cend++, i);
+                    }
+                    // else
+                    //     i++;
+                }
+                // beta-=cost(pi*)
+                beta -= min(support(maxpi), psz[maxpi]);
+                // remove maxpi from every pi
+                for (ui i = 0; i < S_end; i++)
+                {
+                    // Removing pi* from all pi in PI
+                    ui u = SR[i];
+                    if (u == maxpi)
+                        continue;
+                    ui j = 0;
+                    for (ui k = 0; k < psz[u]; k++)
+                        if (!bmp.test(LPI[u * n + k]))
+                            // if (!bmp.test(PI[u][k]))
+                            // PI[u][j++] = PI[u][k];
+                            LPI[u * n + j++] = LPI[u * n + k];
+                    // PI[u].resize(j);
+                    psz[u] = j;
+                }
+                // remove maxpi...
+                // PI[maxpi].clear();
+                psz[maxpi] = 0;
+            }
+            else
+                break;
+            if (beta == 0)
+                break;
+        }
 
+        if (beta > 0)
+            cend += min(beta, CSIZE - cend);
+		
+		// todo consider updating degrees of removed branches... 
+
+            // vertices in [cend, R_end) range are Branching vertices
+			// sort the branching vertices in ascending order of peelOrder
+		for(ui i=cend; i<R_end; i++){
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] > peelOrder[u])
+					ind = j;
+			}
+			swap_pos(i, ind);
+		}
+        return cend;
+    }
 	void collect_removable_vertices_based_on_total_edges(ui S2_n, ui S_end, ui R_end, ui level) {
 		vp.resize(R_end - S_end);
 		ui max_nn = 0;

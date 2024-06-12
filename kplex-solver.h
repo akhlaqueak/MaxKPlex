@@ -82,9 +82,9 @@ public:
         matrix_size = m * 2;
         matrix = new char[matrix_size];
         LPI = new ui[matrix_size];
+        cnC = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
         cn = new ui[matrix_size];
-        cnC = new ui[matrix_size];
 
 #endif
 
@@ -188,13 +188,13 @@ public:
             } while (((long long)n) * n > matrix_size);
             delete[] matrix;
             delete[] LPI;
+            delete[] cnC;
             matrix = new char[matrix_size];
             LPI = new ui[matrix_size];
+            cnC = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
             delete[] cn;
             cn = new ui[matrix_size];
-            delete[] cnC;
-            cnC = new ui[matrix_size];
 #endif
         }
         fill(matrix, matrix + n * n, 0);
@@ -813,7 +813,7 @@ public:
         {
             CToP(u);
                 ui pc = pruneC(u);
-            recSearch(OTHER);
+            recSearch(level);
             recoverC(pc);
             PToC(u);
             recoverC(uc);
