@@ -383,7 +383,7 @@ private:
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
-			printf("!!! BB_Search found a larger kplex\n");
+			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 			found_larger = true;
 		
 		best_solution_size = size;
@@ -494,10 +494,12 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-
+		ui distance = best_solution_size - S_end;
+		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) {
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_ || 
+			(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size)) {
 			//printf("here3\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
