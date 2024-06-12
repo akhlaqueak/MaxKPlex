@@ -535,7 +535,6 @@ private:
 		ui t_R_end=R_end;
 		t2.tick();
 		R_end = getBranchings(S_end, R_end);
-		t2.tock();
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 			ui u = SR[R_end++];
@@ -560,6 +559,7 @@ private:
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
+		t2.tock();
 /*
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
