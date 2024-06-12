@@ -400,7 +400,6 @@ private:
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 		ui distance = best_solution_size - S_end;
-		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -532,6 +531,8 @@ private:
 		// 	return;
 		// }
 
+		ui distance = best_solution_size - S_end;
+		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 		ui t_R_end=R_end;
 		R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
