@@ -534,16 +534,15 @@ private:
 
 		ui t_R_end=R_end;
 		R_end = getBranchings(S_end, R_end);
-		// todo exist from all reclevels except root
-		// branching vertices are now in R_end to old_R_end, and they are already sorted in peelOrder
+		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 			ui u = SR[R_end++];
 			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<t_R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]++;
-			}
+			// for(ui j=0;j<t_R_end;j++){
+			// 	ui v = SR[j];
+			// 	if(t_matrix[v])
+			// 		degree[v]++;
+			// }
 			// if a larger kplex is found, branches will be generated only at root level
 			if(root_level) found_larger=false;
 			else
@@ -720,10 +719,10 @@ private:
 	}
 
 	ui choose_u_directly(ui S_end, ui R_end){
-		// for(ui i=S_end;i<R_end;i++){
-		// 	if(degree[SR[i]]+2>=R_end)
-		// 		return SR[i];
-		// }
+		for(ui i=S_end;i<R_end;i++){
+			if(degree[SR[i]]+2>=R_end)
+				return SR[i];
+		}
 		return n;
 	}
     ui getBranchings(ui S_end, ui R_end)
@@ -818,11 +817,11 @@ private:
 		for(ui i=cend; i<R_end; i++){
 			ui u = SR[i], ind = i;
 			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]--;
-			}
+			// for(ui j=0;j<R_end;j++){
+			// 	ui v = SR[j];
+			// 	if(t_matrix[v])
+			// 		degree[v]--;
+			// }
 			for (ui j = i + 1; j < R_end; j++)
 			{
 				ui v = SR[j];
