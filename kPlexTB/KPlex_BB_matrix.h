@@ -533,7 +533,9 @@ private:
 		ui distance = best_solution_size - S_end;
 		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
 		ui t_R_end=R_end;
+		t2.tick();
 		R_end = getBranchings(S_end, R_end);
+		t2.tock();
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 			ui u = SR[R_end++];
