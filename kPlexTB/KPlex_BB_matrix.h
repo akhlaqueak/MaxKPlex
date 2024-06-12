@@ -18,6 +18,7 @@ private:
 	ui *cnC;
 	ui* peelOrder;
 	ui sz1h;
+	bool found_larger=false;
 #ifdef _SECOND_ORDER_PRUNING_
 	ui *cn;
 	std::queue<std::pair<ui,ui> > Qe;
@@ -42,6 +43,8 @@ private:
 	std::queue<ui> Qv;
 	ui *level_id;
 	ui max_level;
+    ui *LPI;
+    ui *psz;
 
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
@@ -126,7 +129,9 @@ public:
 		matrix_size = 1;
 		//printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
 		matrix = new char[matrix_size];
+    	LPI = new ui[matrix_size];
 		peelOrder=new ui[n];
+		psz=new ui[n];
 		PI.reserve(n);
 		PIMax.reserve(n);
 		ISc.reserve(n);
@@ -159,6 +164,7 @@ public:
 			delete[] cn; cn = new ui[matrix_size];
 #endif
 			delete[] cnC; cnC = new ui[matrix_size];
+			delete[] LPI; LPI = new ui[matrix_size];
 		}
 
 #ifdef _SECOND_ORDER_PRUNING_
@@ -192,7 +198,7 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end;
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
+		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
@@ -216,7 +222,7 @@ public:
 		ui R_end;
 		Timer t;
 		initialization(R_end, false);
-		if(R_end) BB_search(0, R_end, 1, 0);
+		if(R_end) BB_search(0, R_end, 1, 0, true);
 		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
 		return 0;
 	}
@@ -389,7 +395,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
@@ -520,26 +526,30 @@ private:
 		
 		if(u!=n){
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, root_level);
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
 			return;
 		}
 
-		ui old_R_end=R_end;
+		ui t_R_end=R_end;
 		R_end = getBranchings(S_end, R_end);
 		// todo exist from all reclevels except root
 		// branching vertices are now in R_end to old_R_end, and they are already sorted in peelOrder
-		while(R_end<old_R_end){
+		while(R_end<t_R_end){
 			ui u = SR[R_end++];
-			ui* t_matrix = matrix+u*n;
-			for(ui j=0;j<old_R_end;j++){
+			char* t_matrix = matrix+u*n;
+			for(ui j=0;j<t_R_end;j++){
 				ui v = SR[j];
 				if(t_matrix[v])
 					degree[v]++;
 			}
+			// if a larger kplex is found, branches will be generated only at root level
+			if(root_level) found_larger=false;
+			else
+			if(found_larger) continue;
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
@@ -708,13 +718,21 @@ private:
 #endif
 */
 	}
+
+	ui choose_u_directly(ui S_end, ui R_end){
+		for(ui i=S_end;i<R_end;i++){
+			if(degree[SR[i]]+2>=R_end)
+				return SR[i];
+		}
+		return n;
+	}
     ui getBranchings(ui S_end, ui R_end)
     {
         for (ui i = S_end; i < R_end; i++)
         {
             ui u = SR[i];
             psz[u] = 0;
-            if (support(u) == 0)
+            if (support(S_end, u) == 0)
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
             // Lookup neig(&lookup, &g.adjList[u]);
@@ -738,7 +756,7 @@ private:
                 ui u = SR[i];
                 if (psz[u] == 0)
                     continue;
-                double cost = min(support(u), psz[u]);
+                double cost = min(support(S_end, u), psz[u]);
                 double dise = psz[u] / cost;
                 if (cost <= beta and dise > maxdise)
                     maxpi = u, maxdise = dise;
@@ -763,7 +781,7 @@ private:
                     //     i++;
                 }
                 // beta-=cost(pi*)
-                beta -= min(support(maxpi), psz[maxpi]);
+                beta -= min(support(S_end, maxpi), psz[maxpi]);
                 // remove maxpi from every pi
                 for (ui i = 0; i < S_end; i++)
                 {
@@ -799,7 +817,7 @@ private:
 			// sort the branching vertices in ascending order of peelOrder
 		for(ui i=cend; i<R_end; i++){
 			ui u = SR[i], ind = i;
-			ui* t_matrix = matrix+u*n;
+			char* t_matrix = matrix+u*n;
 			for(ui j=0;j<R_end;j++){
 				ui v = SR[j];
 				if(t_matrix[v])
@@ -1586,9 +1604,9 @@ private:
         }
         // check.tock();
     }
-    ui support(ui S_end, ui i)
+    ui support(ui S_end, ui u)
     {
-        return K - (S_end - degree_in_S[SR[i]]);
+        return K - (S_end - degree_in_S[u]);
     }
 
     ui TISUB(ui S_end)
@@ -1598,14 +1616,14 @@ private:
         {
             for (ui j = i + 1; j < ISc.size(); j++)
             {
-                if (support(S_end, ISc[j]) > support(S_end, ISc[i]))
+                if (support(S_end, SR[ISc[j]]) > support(S_end, SR[ISc[i]]))
                     std::swap(ISc[i], ISc[j]);
             }
             // if (i+1 > support(ISc[i])){
             //     return i;
             // }
             // not using <= condition because i is starting from 0...
-            if (support(S_end, ISc[i]) > i)
+            if (support(S_end, SR[ISc[i]]) > i)
                 maxsup++;
             else
                 break;
@@ -1621,7 +1639,7 @@ private:
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
         {
-            if (support(S_end, ISc[i]) > ub)
+            if (support(S_end, SR[ISc[i]]) > ub)
             {
                 std::swap(ISc[i], ISc[vlc]);
                 vlc++;
@@ -1655,7 +1673,7 @@ private:
         }
         for (ui i = S_end; i < R_end; i++)
         {
-            if (bmp.test(i) or support(S_end, i) >= ub) // this loop running for C\ISc
+            if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
                 continue;
             ui nv = 0;
             for (ui j: ISc)
@@ -1663,7 +1681,7 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
-            if (nv <= ub - support(S_end, i))
+            if (nv <= ub - support(S_end, SR[i]))
             {
                 ISc.push_back(i);
                 bmp.set(i);
@@ -1683,14 +1701,14 @@ private:
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
-            if (support(S_end, i) == 0)
+            if (support(S_end, SR[i]) == 0)
                 continue;
             for (ui j = S_end; j < R_end; j++)
             {
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
-            double cost = min(support(S_end, i), (ui)PI.size());
+            double cost = min(support(S_end, SR[i]), (ui)PI.size());
             double dise = PI.size() / cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
             {
