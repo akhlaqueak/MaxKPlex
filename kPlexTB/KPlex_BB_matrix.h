@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, t2, part, color;
-#define _SECOND_ORDER_PRUNING_
+// #define _SECOND_ORDER_PRUNING_
 
 class KPLEX_BB_MATRIX {
 private:
@@ -395,7 +395,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
