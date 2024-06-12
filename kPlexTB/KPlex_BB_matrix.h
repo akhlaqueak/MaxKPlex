@@ -566,11 +566,11 @@ private:
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
 		//printf("here4\n");
-		restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);
+		restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
 #ifdef  _SECOND_ORDER_PRUNING_
 		assert(removed_edges_n == t_old_removed_edges_n);
 #endif
-
+/*
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -674,6 +674,7 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
+*/
 	}
 
 	void collect_removable_vertices_based_on_total_edges(ui S2_n, ui S_end, ui R_end, ui level) {
