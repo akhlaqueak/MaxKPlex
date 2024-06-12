@@ -720,10 +720,10 @@ private:
 	}
 
 	ui choose_u_directly(ui S_end, ui R_end){
-		for(ui i=S_end;i<R_end;i++){
-			if(degree[SR[i]]+2>=R_end)
-				return SR[i];
-		}
+		// for(ui i=S_end;i<R_end;i++){
+		// 	if(degree[SR[i]]+2>=R_end)
+		// 		return SR[i];
+		// }
 		return n;
 	}
     ui getBranchings(ui S_end, ui R_end)
