@@ -520,48 +520,7 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		// ui u = choose_u_directly(S_end, R_end);
-		
-		// if(u!=n){
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, root_level);
-		// 	if(best_solution_size >= _UB_) return ;
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
-		// 	return;
-		// }
-/*
-		ui distance = best_solution_size - S_end;
-		if(CSIZE > 3*distance and seesawUB(S_end, R_end)<=best_solution_size) return;
-		ui t_R_end=R_end;
-		t2.tick();
-		R_end = getBranchings(S_end, R_end);
-		// R_end = getBranchings(S_end, R_end);
-		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
-		while(R_end<t_R_end){
-			ui u = SR[R_end++];
-			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<t_R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]++;
-			}
-			degree_in_S[u] = 0;
-			for(ui j=0;j<S_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree_in_S[u]++;
-			}
-			// if a larger kplex is found, branches will be generated only at root level
-			if(root_level) found_larger=false;
-			else
-			if(found_larger) continue;
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-			if(best_solution_size >= _UB_) return ;
-			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-		}
-		t2.tock();
-/**/
+
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -617,10 +576,11 @@ private:
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
 		//printf("here4\n");
-		restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
+		restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);
 #ifdef  _SECOND_ORDER_PRUNING_
 		assert(removed_edges_n == t_old_removed_edges_n);
 #endif
+
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -705,7 +665,6 @@ private:
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end >= old_S_end&&R_end <= old_R_end);
 		//printf("here5\n");
-
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 		//printf("here6\n");
 #ifndef NDEBUG
@@ -726,6 +685,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 	}
+
 
 	ui choose_u_directly(ui S_end, ui R_end){
 		for(ui i=S_end;i<R_end;i++){
