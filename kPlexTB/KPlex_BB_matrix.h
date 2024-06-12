@@ -522,15 +522,15 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		ui u = choose_u_directly(S_end, R_end);
+		// ui u = choose_u_directly(S_end, R_end);
 		
-		if(u!=n){
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, root_level);
-			if(best_solution_size >= _UB_) return ;
-			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
-			return;
-		}
+		// if(u!=n){
+		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, root_level);
+		// 	if(best_solution_size >= _UB_) return ;
+		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);
+		// 	return;
+		// }
 
 		ui t_R_end=R_end;
 		R_end = getBranchings(S_end, R_end);
