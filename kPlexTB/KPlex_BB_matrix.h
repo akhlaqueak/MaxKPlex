@@ -16,6 +16,7 @@ private:
 	MBitSet bmp;
 
 	ui *cnC;
+	ui* peelOrder;
 	ui sz1h;
 #ifdef _SECOND_ORDER_PRUNING_
 	ui *cn;
@@ -125,6 +126,7 @@ public:
 		matrix_size = 1;
 		//printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
 		matrix = new char[matrix_size];
+		peelOrder=new ui[n];
 		PI.reserve(n);
 		PIMax.reserve(n);
 		ISc.reserve(n);
@@ -284,6 +286,7 @@ private:
 			if(min_degree > max_core) max_core = min_degree;
 			core[u] = max_core;
 			peel_sequence[i] = u;
+			peelOrder[u] = i;
 			vis[u] = 1;
 
 			if(idx == n&&min_degree + K >= n - i) idx = i;
@@ -525,9 +528,16 @@ private:
 
 		ui old_R_end=R_end;
 		R_end = getBranchings(S_end, R_end);
+		// todo exist from all reclevels except root
 		// branching vertices are now in R_end to old_R_end, and they are already sorted in peelOrder
-		for(; R_end<old_R_end;R_end++){
-			ui u = SR[R_end];
+		while(R_end<old_R_end){
+			ui u = SR[R_end++];
+			ui* t_matrix = matrix+u*n;
+			for(ui j=0;j<old_R_end;j++){
+				ui v = SR[j];
+				if(t_matrix[v])
+					degree[v]++;
+			}
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 			if(best_solution_size >= _UB_) return ;
@@ -789,6 +799,12 @@ private:
 			// sort the branching vertices in ascending order of peelOrder
 		for(ui i=cend; i<R_end; i++){
 			ui u = SR[i], ind = i;
+			ui* t_matrix = matrix+u*n;
+			for(ui j=0;j<R_end;j++){
+				ui v = SR[j];
+				if(t_matrix[v])
+					degree[v]--;
+			}
 			for (ui j = i + 1; j < R_end; j++)
 			{
 				ui v = SR[j];
