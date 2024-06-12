@@ -728,7 +728,7 @@ private:
 	}
     ui getBranchings(ui S_end, ui R_end)
     {
-        for (ui i = S_end; i < R_end; i++)
+        for (ui i = 0; i < S_end; i++)
         {
             ui u = SR[i];
             psz[u] = 0;
