@@ -1526,7 +1526,6 @@ private:
 		seesaw.tick();
 		ui sr = 0;
 		for(ui i=S_end;i<R_end;i++){
-			SR_rid_t[sr] = SR_rid[i];
 			SR_t[sr++]=SR[i];
 		}
         while (R_end>S_end)
@@ -1544,20 +1543,21 @@ private:
 
             {
                 for (ui v : ISc)
-                    swap_pos(v, --R_end);
+                    std::swap(SR[v], SR[--R_end]);
+                    // swap_pos(v, --R_end);
                 UB += ubc;
             }
             else
             {
 
                 for (ui v : PIMax)
-                    swap_pos(v, --R_end);
+                    std::swap(SR[v], SR[--R_end]);
+                    // swap_pos(v, --R_end);
                 UB += ubp;
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
 		for(ui i=0;i<sr;i++){
-			SR_rid[S_end+i] = SR_rid_t[i];
 			SR[S_end+i] = SR_t[i];
 		}
 		seesaw.tock();
