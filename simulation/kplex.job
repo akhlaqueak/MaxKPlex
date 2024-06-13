@@ -131,7 +131,7 @@ done
 datasets=' hamming6-2 johnson8-4-4 san200-0-9-2  keller4 socfb-Texas84 sc-pkustk11 socfb-UF socfb-B-anon sc-pwtk soc-flixster tech-WHOIS ia-wiki-Talk socfb-Duke14 socfb-Indiana socfb-OR socfb-Texas84 sc-msdoor soc-FourSquare sc-ldoor soc-lastfm soc-LiveMocha soc-orkut soc-BlogCatalog soc-buzznet soc-digg soc-flickr '
 
 
-solutions='kPlexTB'
+solutions='kPlex-setEnum kPlex-nosetEnum'
 for sol in $solutions; do
     rm $sol-*.out
 done
