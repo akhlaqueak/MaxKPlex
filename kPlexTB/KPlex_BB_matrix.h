@@ -1521,6 +1521,9 @@ private:
     {
         ui UB = S_end;
 		seesaw.tick();
+		ui sr = 0;
+		for(ui i=S_end;i<R_end;i++)
+			neighbors[sr++]=SR[i];
         while (R_end>S_end)
         {
             part.tick();
@@ -1548,6 +1551,8 @@ private:
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
+		for(ui i=0;i<sr;i++)
+			SR[S_end+i] = neighbors[i];
 		seesaw.tock();
         return UB;
     }
