@@ -41,6 +41,7 @@ private:
 	ui *SR; // union of S and R, where S is at the front
 	ui *SR_rid; // reverse ID for SR
 	std::queue<ui> Qv;
+	std::queue<ui> Qc;
 	ui *level_id;
 	ui max_level;
     ui *LPI;
@@ -526,6 +527,9 @@ private:
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
+		for(ui i=S_end;i<R_end;i++){
+			Qc.push(SR[i]);
+		}
 		t2.tick();
 		R_end = getBranchings(S_end, R_end);
 		// R_end = getBranchings(S_end, R_end);
@@ -552,6 +556,12 @@ private:
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+		}
+		for(ui i=R_end-1;i>S_end;i--){
+			ui u = Qc.back();
+			Qc.pop();
+			SR[i] = u;
+			SR_rid[u] = i;
 		}
 		t2.tock();
 
