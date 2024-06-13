@@ -1529,33 +1529,33 @@ private:
 			SR_rid_t[sr] = SR_rid[i];
 			SR_t[sr++]=SR[i];
 		}
-        while (R_end>S_end)
-        {
-            part.tick();
-            double ubp = tryPartition(S_end, R_end);
-            part.tock();
-            // ubp = 0;
-            color.tick();
-            double ubc = tryColor(S_end, R_end);
-            color.tock();
-            if (ubp == 0 or
-                ISc.size() / ubc > PIMax.size() / ubp or
-                (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
+        // while (R_end>S_end)
+        // {
+        //     part.tick();
+        //     double ubp = tryPartition(S_end, R_end);
+        //     part.tock();
+        //     // ubp = 0;
+        //     color.tick();
+        //     double ubc = tryColor(S_end, R_end);
+        //     color.tock();
+        //     if (ubp == 0 or
+        //         ISc.size() / ubc > PIMax.size() / ubp or
+        //         (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
 
-            {
-                for (ui v : ISc)
-                    swap_pos(v, --R_end);
-                UB += ubc;
-            }
-            else
-            {
+        //     {
+        //         for (ui v : ISc)
+        //             swap_pos(v, --R_end);
+        //         UB += ubc;
+        //     }
+        //     else
+        //     {
 
-                for (ui v : PIMax)
-                    swap_pos(v, --R_end);
-                UB += ubp;
-            }
-            // cout<<C.size()<<" "<<ISp.size();
-        }
+        //         for (ui v : PIMax)
+        //             swap_pos(v, --R_end);
+        //         UB += ubp;
+        //     }
+        //     // cout<<C.size()<<" "<<ISp.size();
+        // }
 		for(ui i=0;i<sr;i++){
 			SR_rid[S_end+i] = SR_rid_t[i];
 			SR[S_end+i] = SR_t[i];
