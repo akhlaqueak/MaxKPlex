@@ -1521,10 +1521,14 @@ private:
 	   ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
+		ui* SR_t = neighbors;
+		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
 		ui sr = 0;
-		for(ui i=S_end;i<R_end;i++)
-			neighbors[sr++]=SR[i];
+		for(ui i=S_end;i<R_end;i++){
+			SR_rid_t[sr] = SR_rid[i];
+			SR_t[sr++]=SR[i];
+		}
         while (R_end>S_end)
         {
             part.tick();
@@ -1552,8 +1556,10 @@ private:
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
-		for(ui i=0;i<sr;i++)
-			SR[S_end+i] = neighbors[i];
+		for(ui i=0;i<sr;i++){
+			SR_rid[SR_end+i] = SR_rid_t[i];
+			SR[SR_end+i] = SR_t[i];
+		}
 		seesaw.tock();
         return UB;
     }
