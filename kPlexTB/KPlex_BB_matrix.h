@@ -494,7 +494,7 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		// ui distance = best_solution_size - S_end;
+		ui distance = best_solution_size - S_end;
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
@@ -502,7 +502,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > 3*distance and  seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -1525,6 +1525,7 @@ private:
 		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
 		ui sr = 0;
+		// save candidate set temporarily
 		for(ui i=S_end;i<R_end;i++){
 			SR_t[sr++]=SR[i];
 		}
@@ -1557,6 +1558,7 @@ private:
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
+		// recover candidate set... 
 		for(ui i=0;i<sr;i++){
 			SR[S_end+i] = SR_t[i];
 		}
