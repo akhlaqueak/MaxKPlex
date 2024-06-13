@@ -560,8 +560,8 @@ private:
 		for(ui i=R_end-1;i>=S_end;i--){
 			ui u = Qc.back();
 			Qc.pop();
-			// SR[i] = u;
-			// SR_rid[u] = i;
+			SR[i] = u;
+			SR_rid[u] = i;
 		}
 		t2.tock();
 
