@@ -1557,8 +1557,8 @@ private:
             // cout<<C.size()<<" "<<ISp.size();
         }
 		for(ui i=0;i<sr;i++){
-			SR_rid[SR_end+i] = SR_rid_t[i];
-			SR[SR_end+i] = SR_t[i];
+			SR_rid[S_end+i] = SR_rid_t[i];
+			SR[S_end+i] = SR_t[i];
 		}
 		seesaw.tock();
         return UB;
