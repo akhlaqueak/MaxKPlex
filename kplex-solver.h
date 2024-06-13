@@ -8,7 +8,7 @@ bool flag = false;
 // #define CTCP
 #define CNPRUNE
 #define _SECOND_ORDER_PRUNING_
-#define SET_ENUM
+// #define SET_ENUM
 // #define NAIVE
 #define C_THRESH
 // #define C_SIZE
@@ -1067,7 +1067,8 @@ public:
         while (C.size())
         {
             part.tick();
-            double ubp = tryPartition();
+            double ubp = 0;
+            // double ubp = tryPartition();
             part.tock();
             // ubp = 0;
             color.tick();
