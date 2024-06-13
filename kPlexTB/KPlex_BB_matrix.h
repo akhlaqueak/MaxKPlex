@@ -1561,7 +1561,7 @@ private:
 			SR[S_end+i] = SR_t[i];
 		}
 		seesaw.tock();
-        return UB;
+        return R_end;
     }
 
     void createIS(ui S_end, ui R_end)
