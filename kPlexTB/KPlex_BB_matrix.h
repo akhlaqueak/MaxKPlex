@@ -557,7 +557,7 @@ private:
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		for(ui i=R_end-1;i>S_end;i--){
+		for(ui i=R_end-1;i>=S_end;i--){
 			ui u = Qc.back();
 			Qc.pop();
 			// SR[i] = u;
