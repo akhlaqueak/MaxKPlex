@@ -754,8 +754,8 @@ private:
         {
             ui u = SR[i];
             psz[u] = 0;
-            // if (support(S_end, u) == 0)
-            //     continue;
+            if (support(S_end, u) == 0)
+                continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
             // Lookup neig(&lookup, &g.adjList[u]);
             // bmp.setup(g.adjList[u], g.V);
@@ -799,8 +799,6 @@ private:
                         // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
                         swap_pos(cend++, i);
                     }
-                    // else
-                    //     i++;
                 }
                 // beta-=cost(pi*)
                 beta -= min(support(S_end, maxpi), psz[maxpi]);
@@ -830,8 +828,8 @@ private:
                 break;
         }
 
-        if (beta > 0)
-            cend += min(beta, CSIZE - cend);
+        // if (beta > 0)
+        //     cend += min(beta, CSIZE - cend);
 		
 		// todo consider updating degrees of removed branches... 
 
