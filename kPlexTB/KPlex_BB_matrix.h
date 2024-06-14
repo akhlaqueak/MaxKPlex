@@ -556,12 +556,12 @@ private:
 
 
 			// if a larger kplex is found, branches will be generated only at root level
-			// if(root_level) found_larger=false;
-			// else
-			// if(found_larger) continue;
+			if(root_level) found_larger=false;
+			else
+			if(found_larger) continue;
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-			if(best_solution_size >= _UB_) return ;
+			// if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
 		// for(ui i=R_end-1;i>=S_end;i--){
