@@ -328,6 +328,7 @@ private:
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
+			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
 	}
