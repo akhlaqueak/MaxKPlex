@@ -1581,9 +1581,9 @@ private:
 		seesaw.tick();
 		ui sr = 0;
 		// save candidate set temporarily
-		for(ui i=S_end;i<R_end;i++){
-			SR_t[sr++]=SR[i];
-		}
+		// for(ui i=S_end;i<R_end;i++){
+		// 	SR_t[sr++]=SR[i];
+		// }
         while (R_end>S_end)
         {
             part.tick();
@@ -1600,24 +1600,24 @@ private:
 
             {
                 for (ui v : ISc)
-                    std::swap(SR[v], SR[--R_end]);
-                    // swap_pos(v, --R_end);
+                    // std::swap(SR[v], SR[--R_end]);
+                    swap_pos(v, --R_end);
                 UB += ubc;
             }
             else
             {
 
                 for (ui v : PIMax)
-                    std::swap(SR[v], SR[--R_end]);
-                    // swap_pos(v, --R_end);
+                    // std::swap(SR[v], SR[--R_end]);
+                    swap_pos(v, --R_end);
                 UB += ubp;
             }
             // cout<<C.size()<<" "<<ISp.size();
         }
 		// recover candidate set... 
-		for(ui i=0;i<sr;i++){
-			SR[S_end+i] = SR_t[i];
-		}
+		// for(ui i=0;i<sr;i++){
+		// 	SR[S_end+i] = SR_t[i];
+		// }
 		seesaw.tock();
         return UB;
     }
