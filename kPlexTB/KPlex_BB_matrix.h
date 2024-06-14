@@ -828,8 +828,8 @@ private:
                 break;
         }
 
-        // if (beta > 0)
-        //     cend += min(beta, CSIZE - cend);
+        if (beta > 0)
+            cend += min(beta, CSIZE - cend);
 		
 		// todo consider updating degrees of removed branches... 
 
@@ -844,15 +844,17 @@ private:
 				if (peelOrder[v] > peelOrder[u])
 					ind = j, u = v;
 			}
-			swap_pos(i, ind);
+			if(i!=ind)
+				swap_pos(i, ind);
 			// remove vertex at i location
 			// assert(level_id[u] == level&&SR_rid[u] == R_end);
 			level_id[u] = level;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
-			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+			for(ui i = 0;i < R_end;i ++) {
 				ui w = SR[i];
-				-- degree[w];
+				if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
 			}
 		}
         return cend;
