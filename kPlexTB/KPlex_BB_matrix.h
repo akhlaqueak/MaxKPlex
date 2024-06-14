@@ -754,8 +754,8 @@ private:
         {
             ui u = SR[i];
             psz[u] = 0;
-            if (support(S_end, u) == 0)
-                continue;
+            // if (support(S_end, u) == 0)
+            //     continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
             // Lookup neig(&lookup, &g.adjList[u]);
             // bmp.setup(g.adjList[u], g.V);
@@ -1015,36 +1015,36 @@ private:
 		}
 
 		// reduction rules based on Theorem 9, 10, 11
-		// for(ui j = S_end;j < R_end;j ++)  {
-		// 	ui v = SR[j];
-		// 	if(level_id[v] == level) continue; // v is already pruned... 
-		// 	bool rem=false;
-		//     if (u < sz1h and v < sz1h)
-        //     {
-        //         // Theorem 11
-        //         // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
-        //         rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
-        //                (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
-        //     }
-        //     else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
-        //     {
-        //         // Theorem 10
-        //         // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
-        //         rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
-        //                (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
-        //     }
-        //     else
-        //     {
-        //         // Theorem 9
-        //         // u and v both are two hop neighbors
-        //         rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
-        //                (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
-        //     }
-		// 	if(rem) {
-		// 		level_id[v] = level;
-		// 		Qv.push(v);
-		// 	}
-		// }
+		for(ui j = S_end;j < R_end;j ++)  {
+			ui v = SR[j];
+			if(level_id[v] == level) continue; // v is already pruned... 
+			bool rem=false;
+		    if (u < sz1h and v < sz1h)
+            {
+                // Theorem 11
+                // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
+            }
+            else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
+            {
+                // Theorem 10
+                // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
+            }
+            else
+            {
+                // Theorem 9
+                // u and v both are two hop neighbors
+                rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
+            }
+			if(rem) {
+				level_id[v] = level;
+				Qv.push(v);
+			}
+		}
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
 			char *t_matrix = matrix + SR[i]*n;
