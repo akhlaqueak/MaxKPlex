@@ -527,42 +527,43 @@ private:
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
-		for(ui i=S_end;i<R_end;i++){
-			Qc.push(SR[i]);
-		}
+		// for(ui i=S_end;i<R_end;i++){
+		// 	Qc.push(SR[i]);
+		// }
 		t2.tick();
-		R_end = getBranchings(S_end, R_end);
+		R_end = getBranchings(S_end, R_end, level);
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
+			// move branching vertex back to C
 			ui u = SR[R_end++];
-			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<t_R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]++;
+			assert(level_id[u] == level&&SR_rid[u] == R_end);
+			level_id[u] = n;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				ui w = SR[i];
+				++ degree[w];
+				++ degree[u];
+				if(i < S_end) ++ degree_in_S[u];
 			}
-			degree_in_S[u] = 0;
-			for(ui j=0;j<S_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree_in_S[u]++;
-			}
+
+
 			// if a larger kplex is found, branches will be generated only at root level
 			if(root_level) found_larger=false;
 			else
 			if(found_larger) continue;
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, ++level, false, false);
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		for(ui i=R_end-1;i>=S_end;i--){
-			ui u = Qc.back();
-			Qc.pop();
-			SR[i] = u;
-			SR_rid[u] = i;
-		}
+		// for(ui i=R_end-1;i>=S_end;i--){
+		// 	ui u = Qc.back();
+		// 	Qc.pop();
+		// 	SR[i] = u;
+		// 	SR_rid[u] = i;
+		// }
 		t2.tock();
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
@@ -747,7 +748,7 @@ private:
 		}
 		return n;
 	}
-    ui getBranchings(ui S_end, ui R_end)
+    ui getBranchings(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
         {
@@ -835,22 +836,26 @@ private:
 		// todo consider updating degrees of removed branches... 
 
             // vertices in [cend, R_end) range are Branching vertices
-			// sort the branching vertices in ascending order of peelOrder
+			// sort the branching vertices in ascending order of peelOrder, and remove from C
 		for(ui i=cend; i<R_end; i++){
+			// get a vertex with highest peelOrder at location i
 			ui u = SR[i], ind = i;
-			char* t_matrix = matrix+u*n;
-			for(ui j=0;j<R_end;j++){
-				ui v = SR[j];
-				if(t_matrix[v])
-					degree[v]--;
-			}
 			for (ui j = i + 1; j < R_end; j++)
 			{
 				ui v = SR[j];
 				if (peelOrder[v] > peelOrder[u])
-					ind = j;
+					ind = j, u = v;
 			}
 			swap_pos(i, ind);
+			// remove vertex at i location
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				ui w = SR[i];
+				-- degree[w];
+			}
 		}
         return cend;
     }
@@ -1012,7 +1017,7 @@ private:
 		// reduction rules based on Theorem 9, 10, 11
 		for(ui j = S_end;j < R_end;j ++)  {
 			ui v = SR[j];
-			if(SR_rid[v] < S_end||level_id[v] == level) continue;
+			if(level_id[v] == level) continue; // v is already pruned... 
 			bool rem=false;
 		    if (u < sz1h and v < sz1h)
             {
