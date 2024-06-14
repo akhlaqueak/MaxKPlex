@@ -6,7 +6,8 @@
 Timer seesaw, t2, part, color;
 // #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
-
+#define SEESAW
+// #define OURS
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
@@ -504,10 +505,12 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		// if (CSIZE > 3*beta and  seesawUB(S_end, R_end)<=best_solution_size) {
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		#ifdef SEESAW
+		if (CSIZE > 3*beta and  seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -526,6 +529,8 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
+
+#ifdef OURS
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 		// for(ui i=S_end;i<R_end;i++){
@@ -570,11 +575,11 @@ private:
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 // ******************* Ended our branching stuff here... 
-
+#else
 
 
 // ******************* following block is original branching...  
-/*
+
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -738,7 +743,7 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-*/
+#endif
 	}
 
 
