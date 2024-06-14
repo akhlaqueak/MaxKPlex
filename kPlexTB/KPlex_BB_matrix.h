@@ -542,8 +542,9 @@ private:
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 			// move branching vertex back to C
-			ui u = SR[R_end++];
+			ui u = SR[R_end];
 			assert(level_id[u] == level&&SR_rid[u] == R_end);
+			R_end++;
 			level_id[u] = n;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
@@ -834,8 +835,9 @@ private:
                 break;
         }
 
+
         if (beta > 0)
-            cend += min(beta, CSIZE - cend);
+            cend += min(beta, R_end - cend);
 		
 		// todo consider updating degrees of removed branches... 
 
@@ -852,8 +854,11 @@ private:
 			}
 			if(i!=ind)
 				swap_pos(i, ind);
+		}
 			// remove vertex at i location
 			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		while(R_end > cend){
+			ui u = SR[--R_end];
 			level_id[u] = level;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
@@ -863,6 +868,15 @@ private:
 				if(t_matrix[w]) -- degree[w];
 			}
 		}
+		// assert(R_end==cend);
+		// for(ui i = 0;i < R_end;i ++) {
+		// 	ui d1 = 0, d2 = 0;
+		// 	for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+		// 	d2 = d1;
+		// 	for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+		// 	assert(d1 == degree_in_S[SR[i]]);
+		// 	assert(d2 == degree[SR[i]]);
+		// }
         return cend;
     }
 	void collect_removable_vertices_based_on_total_edges(ui S2_n, ui S_end, ui R_end, ui level) {
