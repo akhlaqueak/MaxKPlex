@@ -853,7 +853,7 @@ private:
 			degree[u] = degree_in_S[u] = 0;
 			for(ui i = 0;i < R_end;i ++) {
 				ui w = SR[i];
-				if(level_id[w]==level) continue;
+				// if(level_id[w]==level) continue;
 				if(t_matrix[w]) -- degree[w];
 			}
 		}
