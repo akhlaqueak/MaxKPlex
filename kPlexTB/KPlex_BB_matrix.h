@@ -7,7 +7,7 @@ Timer seesaw, t2, part, color;
 // #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-// #define OURS
+#define B_BRANCHINGS
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
@@ -530,7 +530,7 @@ private:
 #endif
 
 
-#ifdef OURS
+#ifdef B_BRANCHINGS
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 		// for(ui i=S_end;i<R_end;i++){
