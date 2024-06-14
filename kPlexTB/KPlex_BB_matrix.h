@@ -5,6 +5,7 @@
 #include "Timer.h"
 Timer seesaw, t2, part, color;
 // #define _SECOND_ORDER_PRUNING_
+// #define REDUCTIONS
 
 class KPLEX_BB_MATRIX {
 private:
@@ -1015,6 +1016,7 @@ private:
 		}
 
 		// reduction rules based on Theorem 9, 10, 11
+		#ifdef REDUCTIONS
 		for(ui j = S_end;j < R_end;j ++)  {
 			ui v = SR[j];
 			if(level_id[v] == level) continue; // v is already pruned... 
@@ -1045,6 +1047,7 @@ private:
 				Qv.push(v);
 			}
 		}
+		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
 			char *t_matrix = matrix + SR[i]*n;
