@@ -5,7 +5,7 @@
 #include "Timer.h"
 Timer seesaw, t2, part, color;
 // #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
+#define REDUCTIONS
 #define SEESAW
 // #define OURS
 class KPLEX_BB_MATRIX {
