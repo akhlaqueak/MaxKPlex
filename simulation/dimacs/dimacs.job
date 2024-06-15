@@ -26,9 +26,9 @@ for sol in $solutions; do
         for fn in $datasets; do
             echo "computing $fn.... "
             if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                srun --nodes=1 --ntasks=1 -c 1 --time=03:00:00 --exclusive ./$sol $fn $k >>$sol-$k.out &
+                srun --nodes=1 --ntasks=1 -c 1 --time=30:00 --exclusive ./$sol $fn $k >>$sol-$k.out &
             else
-                srun --nodes=1 --ntasks=1 -c 1 --time=03:00:00 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
+                srun --nodes=1 --ntasks=1 -c 1 --time=30:00 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
             fi
         done
     done
