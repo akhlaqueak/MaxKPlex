@@ -338,7 +338,7 @@ void Graph::kPlex_exact(int mode) {
 
 					ui t_old_size = kplex.size();
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
-						kplex_solver_m->kPlex(K, kplex.size()+1, kplex, true);
+						kplex_solver_m->kPlex(K, kplex.size()+2, kplex, true);
 					if(kplex.size() > t_old_size) {
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
