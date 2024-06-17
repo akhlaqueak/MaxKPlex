@@ -320,7 +320,7 @@ void Graph::kPlex_exact(int mode) {
 
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
-					// printf("solving %u\n", u);
+					printf("solving %u\n", u);
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
 					fflush(stdout);
@@ -329,6 +329,7 @@ void Graph::kPlex_exact(int mode) {
 					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
+					printf("extracted %u\n", u);
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
