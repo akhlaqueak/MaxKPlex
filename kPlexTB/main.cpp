@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 #endif
 
 	bool output = false;
-	bool binary_input = false;
+	bool binary_input = true;
 	bool mode = false;
 	string alg;
 

@@ -350,6 +350,7 @@ void Graph::kPlex_exact(int mode) {
 
 #ifndef NDEBUG
 			if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) {
+				printf("!!! Found a maximum kplex less than 2*k-2, now verifying!\n");
 				kplex_solver->load_graph(n, pstart, pstart+1, edges);
 				if(2*K-2 < UB) UB = 2*K-2;
 				kplex_solver->kPlex(K, UB, kplex, false);
