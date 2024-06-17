@@ -130,7 +130,7 @@ public:
 		if(n <= 0) return ;
 
 		matrix_size = 1;
-		printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
+		//printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
 		matrix = new char[matrix_size];
     	LPI = new ui[matrix_size];
 		peelOrder=new ui[n];
@@ -166,6 +166,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
+		cout<<"allocating... "<<matrix_size<<endl;
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
