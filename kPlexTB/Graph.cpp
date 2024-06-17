@@ -320,7 +320,7 @@ void Graph::kPlex_exact(int mode) {
 
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
-					printf("solving %u\n", u);
+					// printf("solving %u\n", u);
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
 					fflush(stdout);
@@ -347,7 +347,7 @@ void Graph::kPlex_exact(int mode) {
 				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			}
-					printf("extracted\n");
+
 
 			if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) {
 				kplex_solver->load_graph(n, pstart, pstart+1, edges);
