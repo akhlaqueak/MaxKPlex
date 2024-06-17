@@ -329,7 +329,6 @@ void Graph::kPlex_exact(int mode) {
 					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
-					printf("extracted %u\n", u);
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
@@ -348,6 +347,7 @@ void Graph::kPlex_exact(int mode) {
 				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			}
+					printf("extracted %u\n", u);
 
 			if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) {
 				kplex_solver->load_graph(n, pstart, pstart+1, edges);
