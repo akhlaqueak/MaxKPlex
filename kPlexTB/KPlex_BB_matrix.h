@@ -130,7 +130,7 @@ public:
 		if(n <= 0) return ;
 
 		matrix_size = 1;
-		//printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
+		printf("matrix size: %lldMB\n", (((long long)UB)*v_n*4)/1024/1024);
 		matrix = new char[matrix_size];
     	LPI = new ui[matrix_size];
 		peelOrder=new ui[n];
@@ -352,6 +352,7 @@ private:
 #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
+		#ifdef REDUCTIONS
 		t2.tick();
 		for (ui i = 0; i < R_end; i++)
         {
@@ -378,6 +379,7 @@ private:
                 }
             }
         }
+		#endif
 		t2.tock();
 	}
 
