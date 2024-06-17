@@ -255,7 +255,8 @@ void Graph::kPlex_exact(int mode) {
 		return ;
 	}
 	if(K >= n) {
-		printf("\tMaximum kPlex Size: %u, Total Time: %s (microseconds)\n", n, Utility::integer_to_string(t.elapsed()).c_str());
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
+		// printf("\tMaximum kPlex Size: %u, Total Time: %s (microseconds)\n", n, Utility::integer_to_string(t.elapsed()).c_str());
 		return ;
 	}
 
