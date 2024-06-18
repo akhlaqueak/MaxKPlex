@@ -19,7 +19,7 @@ run_jobs() {
                 outfile=$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
-                    echo "computing $fn.... "
+                    echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
                     if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
                         srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >>$sol-$k.out &
                     else
@@ -145,50 +145,58 @@ del_prev() {
     done
 }
 
-cd ../../kPlexTB
-make; cp kPlexT ../simulation/ablation/kPlexTBs
+make_solutions() {
 
-cp switches.h temp.h
+    cd ../../kPlexTB
+    make
+    cp kPlexT ../simulation/ablation/kPlexTBs
 
-echo -e "
+    cp switches.h temp.h
+
+    echo -e "
 define _SECOND_ORDER_PRUNING_
 define REDUCTIONS
 define SEESAW
 define B_BRANCHINGS
-" > switches.h
-make; cp kPlexT ../simulation/ablation/kPlexT-with-ctcp
+" >switches.h
+    make
+    cp kPlexT ../simulation/ablation/kPlexT-with-ctcp
 
-echo -e "
+    echo -e "
 # define _SECOND_ORDER_PRUNING_
 # define B_BRANCHINGS
 define REDUCTIONS
 define SEESAW
-" > switches.h
-make; cp kPlexT ../simulation/ablation/kPlexT-no-branchings
+" >switches.h
+    make
+    cp kPlexT ../simulation/ablation/kPlexT-no-branchings
 
-echo -e "
+    echo -e "
 define _SECOND_ORDER_PRUNING_
 # define REDUCTIONS
 define SEESAW
 define B_BRANCHINGS
-" > switches.h
-make; cp kPlexT ../simulation/ablation/kPlexT-no-reductions
+" >switches.h
+    make
+    cp kPlexT ../simulation/ablation/kPlexT-no-reductions
 
-echo -e "
+    echo -e "
 define _SECOND_ORDER_PRUNING_
 define REDUCTIONS
 # define SEESAW
 define B_BRANCHINGS
-" > switches.h
-make; cp kPlexT ../simulation/ablation/kPlexT-no-seesaw
+" >switches.h
+    make
+    cp kPlexT ../simulation/ablation/kPlexT-no-seesaw
 
-mv temp.h switches.h
-
-cd ../simulation/ablation
+    mv temp.h switches.h
+    cd ../simulation/ablation
+}
 
 datasets=$(ls ~/graphs/ablation/*.bin)
 # solutions='kPlexTBs'
 # solutions='kPlexTBs kPlexT-with-ctcp'
+make_solutions
 solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
 del_prev
