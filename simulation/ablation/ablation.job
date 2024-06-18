@@ -146,6 +146,7 @@ del_prev() {
 datasets=`ls ~/graphs/ablation/*.bin`
 # solutions='kPlexTBs'
 solutions='kPlexTBs kPlexT-with-ctcp'
+solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
 del_prev
 run_jobs
