@@ -190,6 +190,7 @@ make_solutions() {
     cp kPlexT ../simulation/ablation/kPlexT-no-seesaw
 
     mv temp.h switches.h
+    make
     cd ../simulation/ablation
 }
 
