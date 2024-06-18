@@ -539,7 +539,7 @@ private:
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
-		t2.tick();
+
 		R_end = getBranchings(S_end, R_end, level);
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
@@ -574,7 +574,7 @@ private:
 		// 	SR[i] = u;
 		// 	SR_rid[u] = i;
 		// }
-		t2.tock();
+
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
