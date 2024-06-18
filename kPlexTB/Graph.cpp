@@ -259,7 +259,7 @@ void Graph::kPlex_exact(int mode) {
 		return ;
 	}
 	if(K >= n) {
-	printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+	printf(">>%s trivial solution... \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 	printf("\tMaxKPlex_Size: %lu t_Total: %f additional: %f\n", kplex.size(), t.elapsed()/1000000.0, 0.0);
 	return ;
 	}
