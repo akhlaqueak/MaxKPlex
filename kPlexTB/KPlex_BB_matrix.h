@@ -1614,14 +1614,10 @@ private:
 		// }
         while (R_end>S_end)
         {
-            part.tick();
-            double ubp = tryPartition(S_end, R_end);
-            // ui ubp = 0;
-            part.tock();
             
-			color.tick();
+            double ubp = tryPartition(S_end, R_end);
+            
             double ubc = tryColor(S_end, R_end);
-            color.tock();
             if (ubp == 0 or
                 ISc.size() / ubc > PIMax.size() / ubp or
                 (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
