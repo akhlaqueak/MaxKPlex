@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, t2, part, color;
-#define _SECOND_ORDER_PRUNING_
+// #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS

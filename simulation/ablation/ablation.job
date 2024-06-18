@@ -141,40 +141,17 @@ del_prev() {
     done
 }
 
-# datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
-datasets="p-hat700-1.bin
-keller4.bin
-MANN-a81.bin
-brock200-2.bin
-soc-buzznet.bin
-san200-0-9-2.bin
-san200-0-7-1.bin
-p-hat500-1.bin
-soc-digg.bin
-sc-ldoor.bin
-sc-msdoor.bin
-socfb-Duke14.bin
-soc-LiveMocha.bin
-channel-500x100x100-b050.bin
-MANN-a45.bin
-socfb-B-anon.bin
-packing-500x100x100-b050.bin
-johnson8-4-4.bin
-hugetrace-00010.bin
-socfb-uci-uni.bin
-hugetrace-00020.bin
-inf-europe_osm.bin
-hamming6-2.bin
-socfb-A-anon.bin
-delaunay_n24.bin"
 
+
+datasets=`ls ~/graphs/ablation/*.bin`
 # solutions='kPlexTBs'
-solutions='kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw  kPlexT-reverse'
+solutions='kPlexTBs kPlexT-with-ctcp'
 
 del_prev
 run_jobs
 
 datasets=`ls ~/graphs/ablation/*.bin | xargs -n 1 basename`
+solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
 get_results
 get_kpsize
