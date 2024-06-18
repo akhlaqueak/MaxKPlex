@@ -16,11 +16,15 @@ run_jobs() {
     for fn in $datasets; do
         for sol in $solutions; do
             for k in {2..5}; do
-                echo "computing $fn.... "
-                if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=30:00 --exclusive ./$sol $fn $k >>$sol-$k.out &
-                else
-                    srun --nodes=1 --ntasks=1 -c 1 --time=30:00 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    echo "computing $fn.... "
+                    if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
+                        srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >>$sol-$k.out &
+                    else
+                        srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
+                    fi
                 fi
             done
         done
@@ -141,17 +145,15 @@ del_prev() {
     done
 }
 
-
-
-datasets=`ls ~/graphs/ablation/*.bin`
+datasets=$(ls ~/graphs/ablation/*.bin)
 # solutions='kPlexTBs'
 solutions='kPlexTBs kPlexT-with-ctcp'
 solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
-del_prev
-run_jobs
+# del_prev
+run_jobs 06:00:00
 
-datasets=`ls ~/graphs/ablation/*.bin | xargs -n 1 basename`
+datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
 get_results
