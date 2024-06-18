@@ -222,8 +222,7 @@ void Graph::verify_kplex() {
 
 void Graph::kPlex_degen() {
 	Timer t;
-	auto nn=n;
-	auto mm=m;
+
 
 	assert(K > 0&&K < n);
 
@@ -251,7 +250,9 @@ void Graph::kPlex_degen() {
 void Graph::kPlex_exact(int mode) {
 	Timer t;
 
-
+	auto nn=n;
+	auto mm=m;
+	
 	assert(K > 0);
 	if(K <= 1) {
 		printf("\tFor k <= 1, please invoke clique computation algorithms\n");
