@@ -12,7 +12,7 @@
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
 # datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
-datasets=$(ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin)
+datasets=$(ls ~/graphs/network_repo/*.bin ~/graphs/dimacs/*.bin ~/graphs/dimacs10/*.bin)
 solutions='kPlexS Maple kPlexT kPlexTBs'
 
 # remove old stuff
