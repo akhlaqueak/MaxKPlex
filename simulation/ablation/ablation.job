@@ -145,12 +145,55 @@ del_prev() {
     done
 }
 
+cd ../../kPlexTB
+make; cp kPlexT ../simulation/ablation/kPlexTBs
+
+cp switches.h temp.h
+
+echo -e "
+define _SECOND_ORDER_PRUNING_
+define REDUCTIONS
+define SEESAW
+define B_BRANCHINGS
+" > switches.h
+make; cp kPlexT ../simulation/ablation/kPlexT-with-ctcp
+
+echo -e "
+# define _SECOND_ORDER_PRUNING_
+# define B_BRANCHINGS
+define REDUCTIONS
+define SEESAW
+" > switches.h
+make; cp kPlexT ../simulation/ablation/kPlexT-no-branchings
+
+echo -e "
+define _SECOND_ORDER_PRUNING_
+# define REDUCTIONS
+define SEESAW
+define B_BRANCHINGS
+" > switches.h
+make; cp kPlexT ../simulation/ablation/kPlexT-no-reductions
+
+echo -e "
+define _SECOND_ORDER_PRUNING_
+define REDUCTIONS
+# define SEESAW
+define B_BRANCHINGS
+" > switches.h
+make; cp kPlexT ../simulation/ablation/kPlexT-no-seesaw
+
+mv temp.h switches.h
+
+cd ../simulation/ablation
+
 datasets=$(ls ~/graphs/ablation/*.bin)
 # solutions='kPlexTBs'
-solutions='kPlexTBs kPlexT-with-ctcp'
+# solutions='kPlexTBs kPlexT-with-ctcp'
 solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
 
-# del_prev
+del_prev
+run_jobs 00:30:00
+
 run_jobs 06:00:00
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
