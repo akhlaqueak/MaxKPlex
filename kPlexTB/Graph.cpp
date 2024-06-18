@@ -222,6 +222,8 @@ void Graph::verify_kplex() {
 
 void Graph::kPlex_degen() {
 	Timer t;
+	auto nn=n;
+	auto mm=m;
 
 	assert(K > 0&&K < n);
 
@@ -248,6 +250,7 @@ void Graph::kPlex_degen() {
 
 void Graph::kPlex_exact(int mode) {
 	Timer t;
+
 
 	assert(K > 0);
 	if(K <= 1) {
@@ -380,7 +383,7 @@ void Graph::kPlex_exact(int mode) {
 	delete[] peel_sequence;
 	delete[] vis;
 	delete[] degree;
-	printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), n, m, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+	printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 	printf("\tMaxKPlex_Size: %lu t_Total: %f additional: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
 
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
