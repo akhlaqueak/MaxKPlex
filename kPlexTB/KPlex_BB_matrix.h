@@ -3,7 +3,7 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-Timer seesaw, t2, part, color;
+Timer seesaw, reductions, branchings;
 // #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
 #define SEESAW
@@ -354,7 +354,7 @@ private:
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
 		#ifdef REDUCTIONS
-		t2.tick();
+		reductions.tick();
 		for (ui i = 0; i < R_end; i++)
         {
             ui neighbors_n = 0, u = SR[i];
@@ -380,7 +380,7 @@ private:
                 }
             }
         }
-		t2.tock();
+		reductions.tock();
 		#endif
 	}
 
@@ -509,10 +509,12 @@ private:
 			return ;
 		}
 		#ifdef SEESAW
+		seesaw.tick();
 		if (CSIZE > 3*beta and  seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		seesaw.tock();
 		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -539,8 +541,9 @@ private:
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
-
+		branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
+		branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
