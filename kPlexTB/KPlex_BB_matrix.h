@@ -4,10 +4,10 @@
 #include "Utility.h"
 #include "Timer.h"
 Timer seesaw, reductions, branchings;
-// #define _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-// #define B_BRANCHINGS
+#define B_BRANCHINGS
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
