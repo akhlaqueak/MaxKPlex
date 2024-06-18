@@ -380,8 +380,8 @@ private:
                 }
             }
         }
-		#endif
 		t2.tock();
+		#endif
 	}
 
 	void store_solution(ui size) {
