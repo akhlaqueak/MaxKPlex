@@ -1295,6 +1295,7 @@ int main(int argc, char *argv[]) {
 	auto graph_option = op.add<Value<string>>("g", "graph", "\'path to input graph file\'");
 	auto alg_option = op.add<Value<string>>("a", "alg", "\'algorithm name\' (degen | exact | verify)", "exact", &alg);
 	auto k_option = op.add<Value<int>>("k", "k", "\'the value of k for k-plex\'");
+	auto c_option = op.add<Value<int>>("c", "c", "\'the value of c-factor\'");
 	op.add<Switch>("o", "output", "\'write the kplex to ./kplex.txt\'", &output);
 	op.add<Switch>("b", "binary", "\'read the input graph from binary files b_adj.bin and b_degree.bin\'", &binary_input);
 
@@ -1315,6 +1316,13 @@ int main(int argc, char *argv[]) {
 		printf("!!! The argument -k is required! Exit !!!\n");
 		return 0;
 	}
+
+	if(!c_option->is_set()) {
+		printf("!!! The argument -c is not provided, using c=1!!!\n");
+		cfactor = 1;
+	}
+	else
+		cfactor = c_option->value();
 
 	Graph *graph = new Graph(graph_option->value().c_str(), k_option->value());
 	if(binary_input) graph->read_graph_binary();
