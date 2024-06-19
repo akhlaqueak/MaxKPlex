@@ -37,7 +37,7 @@ get_results() {
     done
     echo -en "\ndatasets,|," >>$result
 
-    for k in {2..5}; do
+    for k in {1..5}; do
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
@@ -48,7 +48,7 @@ get_results() {
 
     for fn in $datasets; do
         echo -en "$fn,|," >>$result
-        for k in {1..5}; do
+        for c in {1..5}; do
 
             line=()
             for sol in $solutions; do

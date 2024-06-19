@@ -70,12 +70,12 @@ get_results() {
             for i in "${line[@]}"; do
                 if [ $i == '9999999999' ]; then
                     echo -en 'x,' >>$result
-                # elif [ $i == $m ]; then
-                #     echo $i | bc -l | xargs printf "*%.2f," >>$result
-                # elif [ $i == $secm ]; then
-                #     echo $i | bc -l | xargs printf "^%.2f," >>$result
+                elif [ $i == $m ]; then
+                    echo $i | bc -l | xargs printf "*%.1f," >>$result
+                elif [ $i == $secm ]; then
+                    echo $i | bc -l | xargs printf "^%.1f," >>$result
                 else
-                    echo $i | bc -l | xargs printf "%.2f," >>$result
+                    echo $i | bc -l | xargs printf "%.1f," >>$result
                 fi
             done
             echo -en "|," >>$result
@@ -206,7 +206,8 @@ run_jobs 00:30:00
 run_jobs 06:00:00
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
-solutions='kPlexTBs'
+solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
+# solutions='kPlexTBs'
 
 get_results
 get_kpsize
