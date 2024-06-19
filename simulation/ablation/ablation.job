@@ -206,7 +206,7 @@ run_jobs 00:30:00
 run_jobs 06:00:00
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
-solutions='kPlexTBs kPlexT-with-ctcp kPlexT-no-branchings  kPlexT-no-reductions  kPlexT-no-seesaw'
+solutions='kPlexTBs'
 
 get_results
 get_kpsize

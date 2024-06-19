@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 #include "switches.h"
+ui cfactor=1;
 
 
 Timer seesaw, reductions, branchings;
@@ -510,7 +511,7 @@ private:
 		}
 		#ifdef SEESAW
 		seesaw.tick();
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > cfactor*beta and  seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
