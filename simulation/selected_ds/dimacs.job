@@ -19,9 +19,9 @@ run_jobs() {
             for k in {2..5}; do
                 echo "computing $fn.... "
                 if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=12:00:00 --exclusive ./$sol ~/graphs/network_repo/$fn $k >>$sol-$k.out &
+                    srun --nodes=1 --ntasks=1 -c 1 --time=01:00:00 --exclusive ./$sol ~/graphs/network_repo/$fn $k >>$sol-$k.out &
                 else
-                    srun --nodes=1 --ntasks=1 -c 1 --time=12:00:00 --exclusive ./$sol -b -g ~/graphs/network_repo/$fn -a exact -k $k -c 3 >>$sol-$k.out &
+                    srun --nodes=1 --ntasks=1 -c 1 --time=01:00:00 --exclusive ./$sol -b -g ~/graphs/network_repo/$fn -a exact -k $k -c 3 >>$sol-$k.out &
                 fi
             done
         done
@@ -143,22 +143,14 @@ del_prev() {
 }
 
 # datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
-# datasets=$(ls ~/graphs/network_repo/*.bin ~/graphs/dimacs/*.bin ~/graphs/dimacs10/*.bin)
-datasets='
-soc-digg.bin
-sc-ldoor.bin
-sc-msdoor.bin
-socfb-Duke14.bin
-soc-LiveMocha.bin
-soc-orkut.bin
-MANN-a81.bin
-'
+datasets=$(ls ~/graphs/ablation/*.bin)
+
 # solutions='kPlexTBs'
 solutions='kPlexTBs kPlexTBs-reverse'
 
 del_prev
 run_jobs
-
+datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 get_results
 get_kpsize
 get_cost
