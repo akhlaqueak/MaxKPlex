@@ -395,7 +395,7 @@ void Graph::kPlex_exact() {
 #else
 			for(int i = n;i > 0&&m&&kplex.size() < UB;i --) {
 				ui u=peel_sequence[i-1];
-				if(degree[u]==0) continue;
+				if(degree[u]==0 or degree[u]<kplex.size()+1-K) continue;
 #endif
 
 			ui *ids = Qv;
