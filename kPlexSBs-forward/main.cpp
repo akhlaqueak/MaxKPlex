@@ -305,7 +305,7 @@ void Graph::kPlex_exact() {
 		ui *rid = new ui[n];
 
 		shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
-		delete[] core; core = NULL;
+		// delete[] core; core = NULL;
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
@@ -345,6 +345,7 @@ void Graph::kPlex_exact() {
 			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
 		}
+		UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 		Timer tt;
 
