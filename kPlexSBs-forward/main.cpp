@@ -428,7 +428,7 @@ void Graph::kPlex_exact() {
 
 
 				kplex_solver->load_graph(ids_n, vp, sz1h);
-				kplex_solver->kPlex(K, UB, kplex, true);
+				kplex_solver->kPlex(K, kplex.size()+1, kplex, true);
 
 			}
 			// Qv[0] = u; Qv_n = 1;
