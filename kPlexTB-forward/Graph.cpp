@@ -313,7 +313,7 @@ void Graph::kPlex_exact(int mode) {
 		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
-		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+		oriented_triangle_counting(n, m, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
 		// delete[] peel_sequence; peel_sequence = NULL;
 
@@ -338,7 +338,7 @@ void Graph::kPlex_exact(int mode) {
 		ui Qv_n = 0;
 
 		if(kplex.size()+1 > 2*K) {
-			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			m -= 2*peeling(linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
 		}
 
