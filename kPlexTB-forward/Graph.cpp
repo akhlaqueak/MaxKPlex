@@ -295,10 +295,55 @@ void Graph::kPlex_exact(int mode) {
 					assert(kplex[i] < n);
 					kplex[i] = out_mapping[kplex[i]];
 				}
-
-				if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-				else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+				// if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+				// else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 			}
+
+////////
+
+		ui old_size = kplex.size();
+		ui *out_mapping = new ui[n];
+		ui *rid = new ui[n];
+
+
+		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
+		linear_heap->init(n, n-1, peel_sequence, degree);
+
+		assert(pend == nullptr);
+		pend = new ept[n];
+
+		ui *edgelist_pointer = new ui[m];
+		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+		
+		// delete[] peel_sequence; peel_sequence = NULL;
+
+		pend_buf = new ept[n];
+		ui *edge_list = new ui[m];
+		ui *tri_cnt = new ui[m/2];
+		reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
+
+		for(ui i = 0;i < n;i ++) pend[i] = pstart[i+1];
+
+		ui *active_edgelist = new ui[m>>1];
+		ui active_edgelist_n = m>>1;
+		for(ui i = 0;i < (m>>1);i ++) active_edgelist[i] = i;
+
+		ui *Qe = new ui[m>>1];
+		char *deleted = new char[m>>1];
+		memset(deleted, 0, sizeof(char)*(m>>1));
+		char *exists = new char[n];
+		memset(exists, 0, sizeof(char)*n);
+
+		ui *Qv = new ui[n];
+		ui Qv_n = 0;
+
+		if(kplex.size()+1 > 2*K) {
+			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
+		}
+
+///////
+
 
 			Timer tt;
 
