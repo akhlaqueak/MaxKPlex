@@ -67,10 +67,10 @@ get_results() {
             for i in "${line[@]}"; do
                 if [ $i == '9999999999' ]; then
                     echo -en 'x,' >>$result
-                # elif [ $i == $m ]; then
-                #     echo $i | bc -l | xargs printf "*%.2f," >>$result
-                # elif [ $i == $secm ]; then
-                #     echo $i | bc -l | xargs printf "^%.2f," >>$result
+                elif [ $i == $m ]; then
+                    echo $i | bc -l | xargs printf "*%.2f," >>$result
+                elif [ $i == $secm ]; then
+                    echo $i | bc -l | xargs printf "^%.2f," >>$result
                 else
                     echo $i | bc -l | xargs printf "%.2f," >>$result
                 fi

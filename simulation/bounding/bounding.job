@@ -35,13 +35,13 @@ get_results() {
     for c in {1..5}; do
         echo -en "**** k=$c ****,,," >>$result
     done
-    echo -en "\ndatasets,|," >>$result
+    echo -en "\ndatasets," >>$result
 
     for k in {1..5}; do
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
-        echo -en "|," >>$result
+        echo -en "," >>$result
     done
 
     echo >>$result
@@ -50,32 +50,9 @@ get_results() {
         echo -en "$fn,|," >>$result
         for c in {1..5}; do
 
-            line=()
-            for sol in $solutions; do
-                outfile=$sol-$c.out
-                op=$(grep $fn $outfile)
-                if [ -z "${op}" ]; then
-                    line+=('9999999999')
-                else
-                    op=($op)
-                    line+=(${op[-3]})
-                fi
-            done
-            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
-            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
-            echo ${line[@]}
-            for i in "${line[@]}"; do
-                if [ $i == '9999999999' ]; then
-                    echo -en 'x,' >>$result
-                # elif [ $i == $m ]; then
-                #     echo $i | bc -l | xargs printf "*%.2f," >>$result
-                # elif [ $i == $secm ]; then
-                #     echo $i | bc -l | xargs printf "^%.2f," >>$result
-                else
-                    echo $i | bc -l | xargs printf "%.2f," >>$result
-                fi
-            done
-            echo -en "|," >>$result
+            line=($(grep $fn $sol-$c.out))
+
+            echo -en "${line[-11]}," >>$result
         done
         echo >>$result
     done
