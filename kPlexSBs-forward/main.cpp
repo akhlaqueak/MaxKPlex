@@ -393,7 +393,7 @@ void Graph::kPlex_exact() {
 #endif
 			assert(degree[u] == key);
 #else
-			for(int i = max_n;i > 0&&m&&kplex.size() < UB;i --) {
+			for(int i = n;i > 0&&m&&kplex.size() < UB;i --) {
 				ui u=peel_sequence[i-1];
 				if(degree[u]==0) continue;
 #endif
