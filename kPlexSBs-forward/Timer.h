@@ -8,7 +8,7 @@
 
 #include <cstdlib>
 #include <sys/time.h>
-
+using namespace std;
 class Timer
 {
 #define TIME_NOW chrono::steady_clock::now()
