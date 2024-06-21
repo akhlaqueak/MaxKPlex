@@ -301,9 +301,9 @@ void Graph::kPlex_exact(int mode) {
 
 ////////
 
-		ui old_size = kplex.size();
-		ui *out_mapping = new ui[n];
-		ui *rid = new ui[n];
+		// ui old_size = kplex.size();
+		// ui *out_mapping = new ui[n];
+		// ui *rid = new ui[n];
 
 
 		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
