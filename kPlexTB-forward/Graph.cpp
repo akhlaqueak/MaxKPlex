@@ -369,7 +369,7 @@ void Graph::kPlex_exact(int mode) {
 #ifdef FOWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
-			bool ret_tmp = linear_heap->pop_min(u, key);
+			bool ret_tmp = heap->pop_min(u, key);
 			assert(ret_tmp);
 			if(key < kplex.size()+1-K) {
 				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
