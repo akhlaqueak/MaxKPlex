@@ -306,8 +306,8 @@ void Graph::kPlex_exact(int mode) {
 		// ui *rid = new ui[n];
 
 
-		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-		linear_heap->init(n, n-1, peel_sequence, degree);
+		// ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
+		heap->init(n, n-1, peel_sequence, degree);
 
 		assert(pend == nullptr);
 		pend = new ept[n];
