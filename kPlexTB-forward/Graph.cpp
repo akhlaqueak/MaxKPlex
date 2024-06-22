@@ -313,6 +313,8 @@ void Graph::kPlex_exact(int mode) {
 		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
+		orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
+
 		oriented_triangle_counting(n, m, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
 		// delete[] peel_sequence; peel_sequence = NULL;
@@ -1073,12 +1075,7 @@ void Graph::orient_graph(ui n, ui m, ui *peel_sequence, ept *pstart, ept *pend, 
 
 // oriented triangle counting
 void Graph::oriented_triangle_counting(ui n, ui m, ept *pstart, ept *pend, ui *edges, ui *tri_cnt, ui *adj) {
-		ui *rid = adj;
-	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
-	for(ui i = 0;i < n;i ++) {
-		ept &end = pend[i] = pstart[i];
-		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
-	}
+
 	memset(adj, 0, sizeof(ui)*n);
 	long long cnt = 0;
 	memset(tri_cnt, 0, sizeof(ui)*m);
