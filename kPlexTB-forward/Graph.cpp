@@ -307,7 +307,6 @@ void Graph::kPlex_exact(int mode) {
 
 
 		// ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-		heap->init(n, n-1, peel_sequence, degree);
 
 		assert(pend == nullptr);
 		pend = new ept[n];
@@ -324,6 +323,7 @@ void Graph::kPlex_exact(int mode) {
 		ui *tri_cnt = new ui[m/2];
 		reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
 
+		heap->init(n, n-1, peel_sequence, degree);
 		for(ui i = 0;i < n;i ++) pend[i] = pstart[i+1];
 
 		ui *active_edgelist = new ui[m>>1];
