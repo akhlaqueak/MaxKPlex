@@ -301,37 +301,37 @@ void Graph::kPlex_exact(int mode) {
 
 ////////
 
-		// assert(pend == nullptr);
-		// pend = new ept[n];
-		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
-		// heap->init(n, n-1, peel_sequence, degree);
+		assert(pend == nullptr);
+		pend = new ept[n];
+		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+		heap->init(n, n-1, peel_sequence, degree);
 
-		// ui *edgelist_pointer = new ui[m];
-		// orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
+		ui *edgelist_pointer = new ui[m];
+		orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
 
-		// oriented_triangle_counting(n, m, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+		oriented_triangle_counting(n, m, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
-		// // delete[] peel_sequence; peel_sequence = NULL;
+		// delete[] peel_sequence; peel_sequence = NULL;
 
-		// pend_buf = new ept[n];
-		// ui *edge_list = new ui[m];
-		// ui *tri_cnt = new ui[m/2];
-		// reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
+		pend_buf = new ept[n];
+		ui *edge_list = new ui[m];
+		ui *tri_cnt = new ui[m/2];
+		reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
 
-		// for(ui i = 0;i < n;i ++) pend[i] = pstart[i+1];
+		for(ui i = 0;i < n;i ++) pend[i] = pstart[i+1];
 
-		// ui *active_edgelist = new ui[m>>1];
-		// ui active_edgelist_n = m>>1;
-		// for(ui i = 0;i < (m>>1);i ++) active_edgelist[i] = i;
+		ui *active_edgelist = new ui[m>>1];
+		ui active_edgelist_n = m>>1;
+		for(ui i = 0;i < (m>>1);i ++) active_edgelist[i] = i;
 
-		// ui *Qe = new ui[m>>1];
-		// char *deleted = new char[m>>1];
-		// memset(deleted, 0, sizeof(char)*(m>>1));
-		// char *exists = new char[n];
-		// memset(exists, 0, sizeof(char)*n);
+		ui *Qe = new ui[m>>1];
+		char *deleted = new char[m>>1];
+		memset(deleted, 0, sizeof(char)*(m>>1));
+		char *exists = new char[n];
+		memset(exists, 0, sizeof(char)*n);
 
-		// ui *Qv = new ui[n];
-		// ui Qv_n = 0;
+		ui *Qv = new ui[n];
+		ui Qv_n = 0;
 
 		// if(kplex.size()+1 > 2*K) {
 		// 	m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
@@ -339,6 +339,8 @@ void Graph::kPlex_exact(int mode) {
 		// }
 
 ///////
+
+
 
 
 			Timer tt;
@@ -363,10 +365,21 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
-		#define FOWARD
+#define FOWARD
 #ifdef FOWARD
-				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
-					ui u = peel_sequence[i];
+		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
+			ui u, key;
+			bool ret_tmp = linear_heap->pop_min(u, key);
+			assert(ret_tmp);
+			if(key < kplex.size()+1-K) {
+				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
+					Qv[0] = u; Qv_n = 1;
+					if(kplex.size()+1>2*K) m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					else m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				}
+				continue;
+			}
+			if(m == 0) break;
 #else
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
@@ -389,9 +402,25 @@ void Graph::kPlex_exact(int mode) {
 					ui t_old_size = kplex.size();
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, kplex.size()+1, kplex, true);
+
+
+
+
+
+
+					Qv[0] = u; Qv_n = 1;
 					if(kplex.size() > t_old_size) {
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+						//output_one_kplex(); break;
+						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 					}
+					else if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+
+
+
+
+
 				}
 				delete kplex_solver_m;
 
