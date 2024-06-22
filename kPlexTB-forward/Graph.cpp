@@ -1073,6 +1073,12 @@ void Graph::orient_graph(ui n, ui m, ui *peel_sequence, ept *pstart, ept *pend, 
 
 // oriented triangle counting
 void Graph::oriented_triangle_counting(ui n, ui m, ept *pstart, ept *pend, ui *edges, ui *tri_cnt, ui *adj) {
+		ui *rid = adj;
+	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
+	for(ui i = 0;i < n;i ++) {
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+	}
 	memset(adj, 0, sizeof(ui)*n);
 	long long cnt = 0;
 	memset(tri_cnt, 0, sizeof(ui)*m);
