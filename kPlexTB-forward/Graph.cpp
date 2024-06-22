@@ -363,7 +363,7 @@ void Graph::kPlex_exact(int mode) {
 				double min_density = 1, total_density = 0;
 
 				if(pend == nullptr) pend = new ept[n+1];
-				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
+				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 #define FOWARD
 #ifdef FOWARD
