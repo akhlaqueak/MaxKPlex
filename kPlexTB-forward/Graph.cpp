@@ -1229,7 +1229,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 			ept idx = Qe[j];
 			ui u = edge_list[idx<<1], v = edge_list[(idx<<1)+1];
 			ui tri_n = tri_cnt[idx];
-			//printf("remove %u %u\n", u, v);
+			printf("remove %u %u\n", u, v);
 			deleted[idx] = 1;
 			linear_heap->decrement(u, 1);
 			linear_heap->decrement(v, 1);
