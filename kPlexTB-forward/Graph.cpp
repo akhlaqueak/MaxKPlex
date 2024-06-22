@@ -371,14 +371,14 @@ void Graph::kPlex_exact(int mode) {
 			ui u, key;
 			bool ret_tmp = heap->pop_min(u, key);
 			assert(ret_tmp);
-			if(key < kplex.size()+1-K) {
-				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
-					Qv[0] = u; Qv_n = 1;
-					if(kplex.size()+1>2*K) m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-					else m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-				}
-				continue;
-			}
+			// if(key < kplex.size()+1-K) {
+			// 	if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
+			// 		Qv[0] = u; Qv_n = 1;
+			// 		if(kplex.size()+1>2*K) m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			// 		else m-=2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			// 	}
+			// 	continue;
+			// }
 			// if(m == 0) break;
 #else
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
@@ -408,14 +408,14 @@ void Graph::kPlex_exact(int mode) {
 
 
 
-					Qv[0] = u; Qv_n = 1;
-					if(kplex.size() > t_old_size) {
-						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
-						//output_one_kplex(); break;
-						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-					}
-					else if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-					else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					// Qv[0] = u; Qv_n = 1;
+					// if(kplex.size() > t_old_size) {
+					// 	for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+					// 	//output_one_kplex(); break;
+					// 	m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					// }
+					// else if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					// else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
 
 
