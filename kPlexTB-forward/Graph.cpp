@@ -300,19 +300,12 @@ void Graph::kPlex_exact(int mode) {
 			}
 
 ////////
-
-		// ui old_size = kplex.size();
-		// ui *out_mapping = new ui[n];
-		// ui *rid = new ui[n];
-
-
-		// ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-
 		assert(pend == nullptr);
 		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
 		orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
+		heap->init(n, n-1, peel_sequence, degree);
 
 		oriented_triangle_counting(n, m, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
@@ -323,7 +316,6 @@ void Graph::kPlex_exact(int mode) {
 		ui *tri_cnt = new ui[m/2];
 		reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
 
-		heap->init(n, n-1, peel_sequence, degree);
 		for(ui i = 0;i < n;i ++) pend[i] = pstart[i+1];
 
 		ui *active_edgelist = new ui[m>>1];
