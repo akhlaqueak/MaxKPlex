@@ -374,7 +374,7 @@ void Graph::kPlex_exact() {
 		ui max_n_prune = 0, max_n_search = 0, prune_cnt = 0, search_cnt = 0;
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
 
-#define FORWARD
+// #define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
