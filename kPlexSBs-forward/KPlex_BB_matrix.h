@@ -206,6 +206,7 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end;
 		initialization(R_end, must_include_0);
+			printf("kplex size, best size %u, %u\n", kplex.size(), best_solution_size);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
