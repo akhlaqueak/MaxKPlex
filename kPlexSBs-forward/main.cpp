@@ -658,9 +658,9 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	
 	ui nr_size = ids_n;
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
-		uu = ids[i];
+		ui uu = ids[i];
 		for(ept j = pstart[uu];j < pend[uu];j ++) {
-			if(!exists[edges[j]] and p_rid[u]<p_rid[edjes[j]]) {
+			if(!exists[edges[j]] and p_rid[u]<p_rid[edges[j]]) {
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
 				degree[edges[j]] = 1;
