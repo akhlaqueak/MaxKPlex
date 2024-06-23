@@ -435,6 +435,7 @@ void Graph::kPlex_exact() {
 			}
 			else 
 			{
+				printf("this is called....");
 				sz1h = extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
