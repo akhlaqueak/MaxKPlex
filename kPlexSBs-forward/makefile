@@ -2,20 +2,11 @@
 # ******** Email: ljchang@outlook.com ******
 #
 CC=g++ -flto -O3
-CFLAGS=-c -I. -std=c++11
+CFLAGS=-c -I. -std=c++20
 
 all: kPlexS
 
-kPlexS: .obj/main.o .obj/Graph.o
-	${CC} .obj/main.o .obj/Graph.o -o kPlexS
-	rm .obj/*.o
+kPlexS: 
+	${CC} Graph.cpp -o kPlexTBs
 
-.obj/main.o: main.cpp
-	${CC} ${CFLAGS} -o .obj/main.o main.cpp
 
-.obj/Graph.o: Graph.cpp
-	${CC} ${CFLAGS} -o .obj/Graph.o Graph.cpp
-
-clean:
-	rm -rf *o .obj/
-	mkdir .obj
