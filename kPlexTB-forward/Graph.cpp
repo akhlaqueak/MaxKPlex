@@ -303,7 +303,7 @@ void Graph::kPlex_exact(int mode) {
 
 		assert(pend == nullptr);
 		pend = new ept[n];
-		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 		heap->init(n, n-1, peel_sequence, degree);
 
 		ui *edgelist_pointer = new ui[m];
