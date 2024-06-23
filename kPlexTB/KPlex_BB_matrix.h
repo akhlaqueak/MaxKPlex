@@ -845,8 +845,6 @@ private:
 
         if (beta > 0)
             cend += min(beta, R_end - cend);
-		
-		// todo consider updating degrees of removed branches... 
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
