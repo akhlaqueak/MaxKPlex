@@ -284,7 +284,7 @@ void Graph::kPlex_exact() {
 	assert(K > 0&&K < n);
 
 	kplex.clear();
-	kplex.resize(2*K-2);
+	kplex.resize(68);
 	heuristic_kplex_max_degree(10);
 
 	ui *peel_sequence = new ui[n];
