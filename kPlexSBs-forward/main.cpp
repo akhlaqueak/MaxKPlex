@@ -393,7 +393,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t = UB;
-// #define FORWARD
+#define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
@@ -435,7 +435,6 @@ void Graph::kPlex_exact() {
 			}
 			else 
 			{
-				printf("this is called....");
 				sz1h = extract_subgraph(u, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
