@@ -1607,15 +1607,12 @@ private:
 		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
 		ui sr = 0;
-		// save candidate set temporarily
-		// for(ui i=S_end;i<R_end;i++){
-		// 	SR_t[sr++]=SR[i];
-		// }
+
         while (R_end>S_end)
         {
             
-            double ubp = tryPartition(S_end, R_end);
-            
+            // double ubp = tryPartition(S_end, R_end);
+            double ubp = 0;
             double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
                 ISc.size() / ubc > PIMax.size() / ubp or
