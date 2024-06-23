@@ -50,7 +50,8 @@ private:
 	void write_subgraph(ui n, const std::vector<std::pair<ui, ui> > &edge_list) ;
 	void heuristic_kplex_max_degree(ui processed_threshold) ;
 	ui extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, std::vector<std::pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) ;
-	ui extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, std::vector<std::pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) ;
+	// ui extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, std::vector<std::pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) ;
+	ui extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui*p_rid, std::vector<std::pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) ;
 	void extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, std::vector<std::pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) ;
 
 	ui degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *degree, char *vis, ListLinearHeap *heap, bool output) ;

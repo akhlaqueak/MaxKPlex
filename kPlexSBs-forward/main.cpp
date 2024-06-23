@@ -374,6 +374,8 @@ void Graph::kPlex_exact() {
 		ui max_n_prune = 0, max_n_search = 0, prune_cnt = 0, search_cnt = 0;
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
 
+		ui *p_rid = new ui[n];
+		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 // #define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
@@ -405,7 +407,7 @@ void Graph::kPlex_exact() {
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
 			if(kplex.size()+1 >= 2*K) {
-				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, p_rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
 				if(ids_n) {
 					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 					total_density_prune += density; ++ prune_cnt;
@@ -612,14 +614,16 @@ void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
+ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_rid, vector<pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
 	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
-		ids[ids_n++] = v; exists[v] = 2;
+		if(p_rid[u]<p_rid[v]){
+			ids[ids_n++] = v; exists[v] = 2;
+		}
 	}
 	pend[u] = u_n;
 	
@@ -654,9 +658,9 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<p
 	
 	ui nr_size = ids_n;
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
-		u = ids[i];
-		for(ept j = pstart[u];j < pend[u];j ++) {
-			if(!exists[edges[j]]) {
+		uu = ids[i];
+		for(ept j = pstart[uu];j < pend[uu];j ++) {
+			if(!exists[edges[j]] and p_rid[u]<p_rid[edjes[j]]) {
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
 				degree[edges[j]] = 1;
