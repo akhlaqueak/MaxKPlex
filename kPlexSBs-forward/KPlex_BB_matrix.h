@@ -369,7 +369,7 @@ private:
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
-            degree[u]=neighbors_n;
+            // degree[u]=neighbors_n;
             for (ui j = 0; j < neighbors_n; j++)
             {
                 ui v = neighbors[j];
