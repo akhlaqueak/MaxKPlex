@@ -624,7 +624,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
-		// if(p_rid[u]<p_rid[v])
+		if(p_rid[u]<p_rid[v])
 		{
 			ids[ids_n++] = v; exists[v] = 2;
 		}
@@ -665,7 +665,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 		ui uu = ids[i];
 		for(ept j = pstart[uu];j < pend[uu];j ++) {
 			if(!exists[edges[j]] 
-			// and p_rid[u]<p_rid[edges[j]]
+			and p_rid[u]<p_rid[edges[j]]
 			) {
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
