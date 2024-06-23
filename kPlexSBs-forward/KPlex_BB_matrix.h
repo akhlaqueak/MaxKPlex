@@ -210,6 +210,7 @@ public:
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
+			printf("a larger kplex found\n");
 		}
 	}
 
