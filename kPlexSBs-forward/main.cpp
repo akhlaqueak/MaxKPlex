@@ -435,14 +435,17 @@ void Graph::kPlex_exact() {
 				kplex_solver->kPlex(K, kplex.size()+1, kplex, true);
 
 			}
-			Qv[0] = u; Qv_n = 1;
-			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
+			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+#ifdef FORWARD
+			Qv[0] = u; Qv_n = 1;
+			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
 				//output_one_kplex(); break;
 				m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			}
+			
 			else if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+#endif
 #ifndef NDEBUG
 			printf("Number of remaining undirected edges: %s\n", Utility::integer_to_string(m/2).c_str());
 #endif
