@@ -393,7 +393,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t = UB;
-#define FORWARD
+// #define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
@@ -453,8 +453,10 @@ void Graph::kPlex_exact() {
 				kplex_solver->kPlex(K, UB_t, kplex, true);
 
 			}
-			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
+			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+				cout<<"a larger kplex found at: "<<u<<endl;
+			}
 #ifdef FORWARD
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
