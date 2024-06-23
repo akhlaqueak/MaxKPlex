@@ -6,7 +6,7 @@
 // #include "switches.h"
 ui cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
+// #define REDUCTIONS
 // #define SEESAW
 #define B_BRANCHINGS
 
@@ -369,6 +369,7 @@ private:
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
+					// todo commentingoff degree, see the effect
             // degree[u]=neighbors_n;
             for (ui j = 0; j < neighbors_n; j++)
             {
