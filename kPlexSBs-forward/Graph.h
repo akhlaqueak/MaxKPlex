@@ -15,6 +15,7 @@ private:
 	ept *pstart; //offset of neighbors of nodes
 	ept *pend; //used in search
 	ept *pend_buf;
+	ept *edgelist_pointer;
 	ui *edges; //adjacent ids of edges
 
 	std::vector<ui> kplex;

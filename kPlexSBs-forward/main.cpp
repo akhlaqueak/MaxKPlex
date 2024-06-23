@@ -20,6 +20,7 @@ Graph::Graph(const char *_dir, const int _K) {
 
 	pstart = nullptr;
 	pend = pend_buf = nullptr;
+	edgelist_pointer = nullptr;
 	edges = nullptr;
 
 	kplex.clear();
@@ -1291,7 +1292,7 @@ int main(int argc, char *argv[]) {
 void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
 	if(pend == nullptr) pend = new ept[n+1];
-	orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
+	// orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
 
 	if(pend_buf == nullptr) pend_buf = new ept[n+1];
 	if(edgelist_pointer == nullptr) edgelist_pointer = new ui[m];
