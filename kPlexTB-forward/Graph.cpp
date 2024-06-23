@@ -365,7 +365,7 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
-#define FOWARD
+// #define FOWARD
 #ifdef FOWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
