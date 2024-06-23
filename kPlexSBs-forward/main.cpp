@@ -377,7 +377,7 @@ void Graph::kPlex_exact() {
 
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
-// #define FORWARD
+#define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
