@@ -447,12 +447,9 @@ void Graph::kPlex_exact() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
-				cout<<"searching at: "<<u<<endl;
-
 
 				kplex_solver->load_graph(ids_n, vp, sz1h);
 				kplex_solver->kPlex(K, UB_t, kplex, true);
-
 			}
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
