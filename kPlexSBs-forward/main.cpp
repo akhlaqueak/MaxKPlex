@@ -308,7 +308,7 @@ void Graph::kPlex_exact() {
 		shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
 		// delete[] core; core = NULL;
 
-		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
+		// ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
 			if(kplex.size() > old_size) {
 				old_size = kplex.size();
