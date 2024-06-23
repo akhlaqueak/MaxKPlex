@@ -1296,7 +1296,7 @@ void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui 
 
 	if(pend_buf == nullptr) pend_buf = new ept[n+1];
 	if(edgelist_pointer == nullptr) edgelist_pointer = new ui[m];
-	ui *pstart_s = pend_buf;
+	ept *pstart_s = pend_buf;
 	ui *pend_s = rid;
 	ui *edges_s = edgelist_pointer;
 
