@@ -1307,7 +1307,11 @@ int main(int argc, char *argv[]) {
 void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
 	if(pend == nullptr) pend = new ept[n+1];
-	// orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
+	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
+	for(ui i = 0;i < n;i ++) {
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+	}
 
 	if(pend_buf == nullptr) pend_buf = new ept[n+1];
 	if(edgelist_pointer == nullptr) edgelist_pointer = new ui[m];
