@@ -1770,6 +1770,7 @@ private:
             }
 			if(PI.size()==0) continue;
             double cost = min(support(S_end, SR[i]), (ui)PI.size());
+			if(cost==0) cout<<"Eror"<<endl;
             double dise = PI.size() / cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
             {
@@ -1778,7 +1779,7 @@ private:
                 PI.swap(PIMax);
             }
         }
-        return 0;
+        return ub;
     }
 };
 #endif
