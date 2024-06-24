@@ -1719,7 +1719,7 @@ private:
                     vc++;
                 }
             }
-            if (vlc + vc + 1 < ub)
+            if (vlc + vc + 1 <= ub)
             {
                 vlc += vc;
                 ISc.push_back(i);
@@ -1737,6 +1737,7 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
+			cout<<ub - support(S_end, SR[i])<<endl;
             if (nv <= ub - support(S_end, SR[i]))
             {
                 ISc.push_back(i);
