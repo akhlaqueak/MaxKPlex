@@ -1728,7 +1728,7 @@ private:
                     nv++;
             }
 
-            if (nv + support(S_end, SR[i]) < ub )
+            if (nv + support(S_end, SR[i]) <= ub )
             {
                 ISc.push_back(i);
                 bmp.set(i);
