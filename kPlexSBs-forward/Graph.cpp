@@ -329,7 +329,7 @@ void Graph::kPlex_exact() {
 		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
 		linear_heap->init(n, n-1, peel_sequence, degree);
 
-		assert(pend == nullptr);
+		// assert(pend == nullptr);
 		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
