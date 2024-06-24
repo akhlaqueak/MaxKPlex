@@ -172,7 +172,7 @@ make_solutions() {
     cp kPlexT ../simulation/ablation/kPlexT-no-branchings
 
     echo -e "
-#define _SECOND_ORDER_PRUNING_
+//#define _SECOND_ORDER_PRUNING_
 //#define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
@@ -181,7 +181,7 @@ make_solutions() {
     cp kPlexT ../simulation/ablation/kPlexT-no-reductions
 
     echo -e "
-#define _SECOND_ORDER_PRUNING_
+//#define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 //#define SEESAW
 #define B_BRANCHINGS
