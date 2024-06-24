@@ -1713,14 +1713,13 @@ private:
             ui vc = 0;
             for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
             {
-                ui v = ISc[j];
-                if (is_neigh(i, v))
+                if (is_neigh(i, ISc[j]))
                 {
                     std::swap(ISc[vlc + vc], ISc[j]);
                     vc++;
                 }
             }
-            if (vlc + vc + 1 <= ub)
+            if (vlc + vc + 1 < ub)
             {
                 vlc += vc;
                 ISc.push_back(i);
