@@ -329,7 +329,7 @@ void Graph::kPlex_exact(int mode) {
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
 #endif
-					// printf("solving %u ", i);
+					printf("solving %u ", u);
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
 					fflush(stdout);
