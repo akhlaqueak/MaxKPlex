@@ -1716,7 +1716,7 @@ private:
                 bmp.set(i);
             }
         }
-		return ub;
+		// return ub;
         for (ui i = S_end; i < R_end; i++)
         {
             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
@@ -1728,7 +1728,7 @@ private:
                     nv++;
             }
 
-            if (nv <= ub - support(S_end, SR[i]))
+            if (nv + support(S_end, SR[i]) <= ub )
             {
                 ISc.push_back(i);
                 bmp.set(i);
