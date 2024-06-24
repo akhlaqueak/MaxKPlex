@@ -457,7 +457,7 @@ void Graph::kPlex_exact() {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 				cout<<"a larger kplex found at: "<<u<<endl;
 			}
-			cout<<endl;
+			// cout<<endl;
 #ifdef FORWARD
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
