@@ -451,7 +451,7 @@ void Graph::kPlex_exact() {
 				if(ids_n > max_n_search) max_n_search = ids_n;
 			// cout<<" solving "<<u;
 				kplex_solver->load_graph(ids_n, vp, sz1h);
-				kplex_solver->kPlex(K, kplex.size()+1, kplex, true);
+				kplex_solver->kPlex(K, UB_t, kplex, true);
 			}
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
@@ -759,6 +759,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 		pend[u] = u_n;
 	}
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
+	for(ui i = 0;i < n;i ++) if(exists[i] != 0) cout<<"Error ";
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(exists[i] == 0);
 #endif
