@@ -1737,8 +1737,7 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
-			if(ub - support(S_end, SR[i]) > 5)
-			cout<<ub - support(S_end, SR[i])<<" ";
+
             if (nv <= ub - support(S_end, SR[i]))
             {
                 ISc.push_back(i);
