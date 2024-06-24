@@ -1612,8 +1612,8 @@ private:
             // 0;
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
-                ISc.size() / ubc > PIMax.size() / ubp or
-                (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
+               ( ISc.size() / ubc > PIMax.size() / ubp) or
+                ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
                 for (ui v : ISc)
@@ -1746,7 +1746,7 @@ private:
 	ui tryPartition(ui S_end, ui R_end)
     {
         double maxdise = 0;
-        ui ub = 0, maxpi = 0;
+        ui ub = 0;
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
@@ -1763,12 +1763,10 @@ private:
             double dise = (double) PI.size() / (double) cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
             {
-                maxdise = dise, ub = cost, maxpi=i;
+                maxdise = dise, ub = cost;
                 std::swap(PI, PIMax);
             }
         }
-		for(ui i: PIMax)
-			if(is_neigh(i, maxpi)) cout<<"Eror";
         return ub;
     }
 };
