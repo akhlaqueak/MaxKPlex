@@ -449,7 +449,7 @@ void Graph::kPlex_exact() {
 				if(ids_n > max_n_search) max_n_search = ids_n;
 
 				kplex_solver->load_graph(ids_n, vp, sz1h);
-				kplex_solver->kPlex(K, UB_t, kplex, true);
+				kplex_solver->kPlex(K, UB, kplex, true);
 			}
 			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
