@@ -424,9 +424,9 @@ void Graph::kPlex_exact() {
 #ifndef NDEBUG
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
-			cout<<"extracted "<<u;
+			// cout<<"extracted "<<u;
 			if(kplex.size()+1 >= 2*K) {
-			cout<<" pruning "<<u;
+			// cout<<" pruning "<<u;
 				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, p_rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
 				if(ids_n) {
 					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
@@ -449,8 +449,7 @@ void Graph::kPlex_exact() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
-			cout<<" solving "<<u;
-
+			// cout<<" solving "<<u;
 				kplex_solver->load_graph(ids_n, vp, sz1h);
 				kplex_solver->kPlex(K, kplex.size()+1, kplex, true);
 			}
