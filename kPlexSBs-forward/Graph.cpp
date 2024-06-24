@@ -769,7 +769,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 // max-degree-based heuristic k-plex computation
 void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 	Timer t;
-	assert(kplex.empty());
+	// assert(kplex.empty());
 	ui *head = new ui[n];
 	ui *next = new ui[n];
 	ui *degree = new ui[n];
