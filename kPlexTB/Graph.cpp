@@ -321,7 +321,7 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
-		// #define REVERSE
+#define REVERSE
 #ifdef REVERSE
 				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
 					ui u = peel_sequence[i];
