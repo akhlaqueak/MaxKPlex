@@ -141,8 +141,7 @@ public:
 		fill(buf, buf + m, 0);
 		
 		for (ui u : adj)
-			set(u);
-		
+			set(u);	
 	}
 };
 
