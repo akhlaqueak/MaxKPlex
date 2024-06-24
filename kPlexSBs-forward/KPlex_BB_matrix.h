@@ -6,9 +6,9 @@
 // #include "switches.h"
 ui cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
-// #define SEESAW
-// #define B_BRANCHINGS
+#define REDUCTIONS
+#define SEESAW
+#define B_BRANCHINGS
 
 // Timer seesaw, reductions, branchings;
 
@@ -1705,6 +1705,7 @@ private:
         ui ub = TISUB(S_end);
 
         ui vlc = 0;
+        return ub;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
         {
@@ -1740,7 +1741,6 @@ private:
                 bmp.set(i);
             }
         }
-        return ub;
         for (ui i = S_end; i < R_end; i++)
         {
             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
