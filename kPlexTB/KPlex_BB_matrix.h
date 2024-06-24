@@ -390,7 +390,7 @@ private:
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
-			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
+			printf("!!! BB_Search found a larger kplex of size: %u, prev size: %u\n", size, best_solution_size);
 			found_larger = true;
 		
 		best_solution_size = size;
