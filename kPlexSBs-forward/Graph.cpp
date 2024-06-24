@@ -393,31 +393,37 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t = UB;
-#define FORWARD
-#ifdef FORWARD
-		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
-			ui u, key;
-			bool ret_tmp = linear_heap->pop_min(u, key);
-			assert(ret_tmp);
-			if(key < kplex.size()+1-K) {
-				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
-					Qv[0] = u; Qv_n = 1;
-					if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-					else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+		bool forward=false;
+		ui u, key;
+		ui n_stop=n;
+		Timer dir_switch;
+		ui swith_thresh = 10;
+
+		for(int i = 0;i < n_stop&&m&&kplex.size() < UB;i ++) {
+			if(forward){
+				bool ret_tmp = linear_heap->pop_min(u, key);
+				assert(ret_tmp);
+				if(key < kplex.size()+1-K) {
+					if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
+						Qv[0] = u; Qv_n = 1;
+						if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+						else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					}
+					continue;
 				}
-				continue;
+				if(m == 0) break;
+	#ifndef NDEBUG
+				if(degree[u] != key) printf("u=%u, degree=%u, key=%u, kplex.size=%lu\n", u, degree[u], key, kplex.size());
+	#endif
+				assert(degree[u] == key);
 			}
-			if(m == 0) break;
-#ifndef NDEBUG
-			if(degree[u] != key) printf("u=%u, degree=%u, key=%u, kplex.size=%lu\n", u, degree[u], key, kplex.size());
-#endif
-			assert(degree[u] == key);
-#else
-			for(int i = n;i > 0&&m&&kplex.size() < UB;i --) {
-				ui u=peel_sequence[i-1];
+
+			else{
+				u=peel_sequence[n-i-1];
 				if(degree[u]==0 or degree[u]<kplex.size()+1-K) continue;
 				UB_t = kplex.size()+1;
-#endif
+			}
+
 
 			ui *ids = Qv;
 			ui ids_n = 0, sz1h=0;
@@ -457,16 +463,23 @@ void Graph::kPlex_exact() {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 				cout<<"a larger kplex found at: "<<u<<endl;
 			}
-			// cout<<endl;
-#ifdef FORWARD
-			Qv[0] = u; Qv_n = 1;
-			if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
-				//output_one_kplex(); break;
-				m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			
-			else if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-#endif
+
+			if(forward){
+				Qv[0] = u; Qv_n = 1;
+				if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
+					//output_one_kplex(); break;
+					m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				
+				else if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			}
+
+			if(dir_switch.elapsed()/1000000 > swith_thresh){
+				n_stop = n-i;
+				i = -1; // setting -1 because loop has to increment to 0
+				forward = true;
+			}
+
 #ifndef NDEBUG
 			printf("Number of remaining undirected edges: %s\n", Utility::integer_to_string(m/2).c_str());
 #endif
