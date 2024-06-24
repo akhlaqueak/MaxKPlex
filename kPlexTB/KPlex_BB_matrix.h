@@ -1767,7 +1767,7 @@ private:
                 std::swap(PI, PIMax);
             }
         }
-		cout<<PIMax.size()<<" "<<R_end-S_end<<".";
+		cout<<PIMax.size()<< " " <<ub<<" "<<R_end-S_end<<"...";
         return ub;
     }
 };
