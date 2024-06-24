@@ -707,8 +707,8 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 
 	ui new_size = 1;
 	for(ui i = 1;i < nr_size;i ++) {
-		if(exists[ids[i]] == 10 or p_rid[u]>p_rid[ids[i]]) exists[ids[i]] = 0;
-		else ids[new_size++] = ids[i];
+		if(exists[ids[i]] == 10 or ) exists[ids[i]] = 0;
+		else if(p_rid[u]<p_rid[ids[i]]) ids[new_size++] = ids[i];
 	}
 #ifndef NDEBUG
 	if(new_size + Q_n != nr_size) {
@@ -726,7 +726,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	nr_size = new_size;
 	for(ui i = old_nr_size;i < ids_n;i ++) {
 		if(degree[ids[i]] + 2*K <= kplex.size()+2) exists[ids[i]] = 0;
-		else ids[new_size++] = ids[i];
+		else if(p_rid[u]<p_rid[ids[i]]) ids[new_size++] = ids[i];
 	}
 	ids_n = new_size;
 #ifndef NDEBUG
