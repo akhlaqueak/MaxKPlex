@@ -1768,6 +1768,7 @@ private:
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
+			if(PI.size()==0) continue;
             double cost = min(support(S_end, SR[i]), (ui)PI.size());
             double dise = PI.size() / cost;
 			if(cost==0) cout<<"ERRor"<<dise<<endl;
