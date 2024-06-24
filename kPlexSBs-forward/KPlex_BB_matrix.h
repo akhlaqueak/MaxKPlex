@@ -1786,7 +1786,7 @@ private:
                 PI.swap(PIMax);
             }
         }
-        return ub;
+        return 0;
     }
 };
 #endif
