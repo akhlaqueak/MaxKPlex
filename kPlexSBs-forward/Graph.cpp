@@ -393,7 +393,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t = UB;
-// #define FORWARD
+#define FORWARD
 #ifdef FORWARD
 		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
@@ -416,7 +416,7 @@ void Graph::kPlex_exact() {
 			for(int i = n;i > 0&&m&&kplex.size() < UB;i --) {
 				ui u=peel_sequence[i-1];
 				if(degree[u]==0 or degree[u]<kplex.size()+1-K) continue;
-				// UB_t = kplex.size()+1;
+				UB_t = kplex.size()+1;
 #endif
 
 			ui *ids = Qv;
