@@ -1750,7 +1750,7 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
-            if (nv <= ub - support(S_end, SR[i]))
+            if (nv < ub - support(S_end, SR[i]))
             {
                 ISc.push_back(i);
                 bmp.set(i);
