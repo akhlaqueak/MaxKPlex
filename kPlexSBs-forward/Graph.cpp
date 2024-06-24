@@ -401,6 +401,7 @@ void Graph::kPlex_exact() {
 
 		for(int i = 0;i < n_stop&&m&&kplex.size() < UB;i ++) {
 			if(forward){
+				UB_t = UB;
 				bool ret_tmp = linear_heap->pop_min(u, key);
 				assert(ret_tmp);
 				if(key < kplex.size()+1-K) {
@@ -478,6 +479,7 @@ void Graph::kPlex_exact() {
 				n_stop = n-i;
 				i = -1; // setting -1 because loop has to increment to 0
 				forward = true;
+				cout<<"Direction changed."<<endl;
 			}
 
 #ifndef NDEBUG
