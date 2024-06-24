@@ -647,7 +647,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
-		// if(p_rid[u]<p_rid[v])
+		if(p_rid[u]<p_rid[v])
 		{
 			ids[ids_n++] = v; exists[v] = 2;
 		}
@@ -657,15 +657,15 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	ui Q_n = 0;
 	// compact adjacency list of neighbors of u
 	for(ui i = 1;i < ids_n;i ++) {
-		u = ids[i];
-		u_n = pstart[u];
-		degree[u] = 0;
-		for(ept j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
+		ui v = ids[i];
+		u_n = pstart[v];
+		degree[v] = 0;
+		for(ept j = pstart[v];j < pend[v];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
-			if(exists[edges[j]] == 2) ++ degree[u];
+			if(exists[edges[j]] == 2 and p_rid[u]<p_rid[v]) ++ degree[v];
 		}
-		pend[u] = u_n;
-		if(degree[u]+2*K <= kplex.size()) Q[Q_n++] = u;
+		pend[v] = u_n;
+		if(degree[v]+2*K <= kplex.size()) Q[Q_n++] = v;
 	}
 	for(ui i = 0;i < Q_n;i ++) {
 		u = Q[i];
@@ -689,7 +689,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 		ui uu = ids[i];
 		for(ept j = pstart[uu];j < pend[uu];j ++) {
 			if(!exists[edges[j]] 
-			// and p_rid[u]<p_rid[edges[j]]
+			and p_rid[u]<p_rid[edges[j]]
 			) {
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
