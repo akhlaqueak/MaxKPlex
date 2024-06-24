@@ -7,7 +7,7 @@
 ui cfactor=1;
 
 #define REDUCTIONS
-// #define SEESAW
+#define SEESAW
 #define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
@@ -1603,17 +1603,14 @@ private:
 	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-		ui* SR_t = neighbors;
-		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
-		ui sr = 0;
-
         while (R_end>S_end)
         {
             
-            double ubp = tryPartition(S_end, R_end);
-            // double ubp = 0;
-            double ubc = tryColor(S_end, R_end);
+            double ubp = 
+			tryPartition(S_end, R_end);
+            // 0;
+			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
                 ISc.size() / ubc > PIMax.size() / ubp or
                 (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
@@ -1632,12 +1629,8 @@ private:
                     swap_pos(v, --R_end);
                 UB += ubp;
             }
-            // cout<<C.size()<<" "<<ISp.size();
+
         }
-		// recover candidate set... 
-		// for(ui i=0;i<sr;i++){
-		// 	SR[S_end+i] = SR_t[i];
-		// }
 		seesaw.tock();
         return UB;
     }
@@ -1757,9 +1750,9 @@ private:
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
-			PI.clear();
             if (support(S_end, SR[i]) == 0)
                 continue;
+			PI.clear();
             for (ui j = S_end; j < R_end; j++)
             {
                 if (!is_neigh(i, j))
@@ -1771,9 +1764,10 @@ private:
             if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
             {
                 maxdise = dise, ub = cost;
-                PI.swap(PIMax);
+                std::swap(PI, PIMax);
             }
         }
+		cout<<PIMax.size()<<" "<<R_end-S_end<<".";
         return ub;
     }
 };
