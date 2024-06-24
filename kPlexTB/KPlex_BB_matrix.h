@@ -1647,10 +1647,8 @@ private:
         ISc.clear();
         if (S_end==R_end)
             return;
-        ISc.push_back(S_end);
 
-        // check.tick();
-        for (ui i = S_end+1; i < R_end; i++)
+        for (ui i = S_end; i < R_end; i++)
         {
             bool flag = true;
             for (ui j : ISc)
@@ -1662,7 +1660,6 @@ private:
             if (flag)
                 ISc.push_back(i);
         }
-        // check.tock();
     }
     ui support(ui S_end, ui u)
     {
