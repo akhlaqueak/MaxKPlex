@@ -475,7 +475,7 @@ void Graph::kPlex_exact() {
 				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 
-			if(dir_switch.elapsed()/1000000 > swith_thresh){
+			if(!forward and dir_switch.elapsed()/1000000 > swith_thresh ){
 				n_stop = n-i;
 				i = -1; // setting -1 because loop has to increment to 0
 				forward = true;
