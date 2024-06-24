@@ -646,7 +646,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
-		if(p_rid[u]<p_rid[v])
+		if(p_rid[u] < p_rid[v])
 		{
 			ids[ids_n++] = v; exists[v] = 2;
 		}
@@ -661,7 +661,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 		degree[v] = 0;
 		for(ept j = pstart[v];j < pend[v];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
-			if(exists[edges[j]] == 2 and p_rid[u]<p_rid[v]) ++ degree[v];
+			if(exists[edges[j]] == 2) ++ degree[v];
 		}
 		pend[v] = u_n;
 		if(degree[v]+2*K <= kplex.size()) Q[Q_n++] = v;
@@ -685,8 +685,8 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, ui* p_ri
 	
 	ui nr_size = ids_n;
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
-		ui uu = ids[i];
-		for(ept j = pstart[uu];j < pend[uu];j ++) {
+		ui v = ids[i];
+		for(ept j = pstart[v];j < pend[v];j ++) {
 			if(!exists[edges[j]] 
 			and p_rid[u]<p_rid[edges[j]]
 			) {
