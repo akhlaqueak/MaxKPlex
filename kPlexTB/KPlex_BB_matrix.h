@@ -1600,7 +1600,7 @@ private:
 
 
 
-	   ui seesawUB(ui S_end, ui R_end)
+	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
 		ui* SR_t = neighbors;
@@ -1768,6 +1768,7 @@ private:
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
+			if(PI.size()==0) cout<<"ERRor"<<endl;
             double cost = min(support(S_end, SR[i]), (ui)PI.size());
             double dise = PI.size() / cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
