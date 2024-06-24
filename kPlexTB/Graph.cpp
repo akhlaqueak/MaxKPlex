@@ -322,7 +322,7 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-// #define FORWARD
+#define FORWARD
 #ifdef FORWARD
 				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
 					ui u = peel_sequence[i];
