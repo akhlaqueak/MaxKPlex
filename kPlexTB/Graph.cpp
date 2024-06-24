@@ -321,13 +321,15 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
-#define REVERSE
-#ifdef REVERSE
+				ui UB_t = UB;
+// #define FORWARD
+#ifdef FORWARD
 				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
 					ui u = peel_sequence[i];
 #else
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
+					UB_t = kplex.size()+1;
 #endif
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 					// printf("solving %u \n", u);
@@ -346,7 +348,7 @@ void Graph::kPlex_exact(int mode) {
 
 					ui t_old_size = kplex.size();
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
-						kplex_solver_m->kPlex(K, kplex.size()+1, kplex, true);
+						kplex_solver_m->kPlex(K, UB_t, kplex, true);
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
