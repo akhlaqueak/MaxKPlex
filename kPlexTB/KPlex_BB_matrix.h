@@ -1756,7 +1756,7 @@ private:
 	ui tryPartition(ui S_end, ui R_end)
     {
         double maxdise = 0;
-        ui ub = 0, maxsize=0;
+        ui ub = 0;
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
@@ -1769,13 +1769,11 @@ private:
                     PI.push_back(j);
             }
 			if(PI.size()==0) continue;
-            double cost = min(support(S_end, SR[i]), (ui)PI.size());
-			if(cost==0) cout<<"Eror"<<endl;
-            double dise = PI.size() / cost;
-            if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
+            ui cost = min(support(S_end, SR[i]), (ui)PI.size());
+            double dise = (double) PI.size() / (double) cost;
+            if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
             {
                 maxdise = dise, ub = cost;
-                maxsize = PI.size();
                 PI.swap(PIMax);
             }
         }
