@@ -35,16 +35,16 @@ run_jobs() {
 get_results() {
     result=results.out
     rm $result
-    for k in {2..5}; do
-        echo -en "**** k=$k ****,,," >>$result
-    done
-    echo -en "\ndatasets,|," >>$result
+    # for k in {2..5}; do
+    #     echo -en "**** k=$k ****,,," >>$result
+    # done
+    echo -en "datasets," >>$result
 
     for k in {2..5}; do
+        echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
-        echo -en "|," >>$result
     done
 
     echo >>$result
