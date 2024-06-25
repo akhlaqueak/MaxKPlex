@@ -397,7 +397,7 @@ void Graph::kPlex_exact() {
 		ui u, key;
 		ui p_right=n, p_left = 0;
 		Timer dir_switch;
-		ui switch_thresh = 400;
+		ui switch_thresh = 10;
 
 		while(p_left < p_right &&m&&kplex.size() < UB) {
 			if(forward){
@@ -422,7 +422,7 @@ void Graph::kPlex_exact() {
 			}
 
 			else{
-				u=peel_sequence[--right];
+				u=peel_sequence[--p_right];
 				if(degree[u]==0 or degree[u]<kplex.size()+1-K) continue;
 				UB_t = kplex.size()+1;
 			}
@@ -477,7 +477,7 @@ void Graph::kPlex_exact() {
 				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 
-			if(dir_switch.elapsed()/1000000 > cswith_thresh ){
+			if(dir_switch.elapsed()/1000000 > switch_thresh ){
 				forward = !forward;
 				dir_switch.restart();
 				cout<<"Direction changed."<<endl;
