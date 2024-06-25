@@ -200,7 +200,7 @@ solutions='kPlexSBs-dual'
 del_prev
 run_jobs 00:20:00
 
-solutions='kPlexT kPlexTBs-forward kPlexTBs-reverse kPlexTBs-TISUB kPlexTBs-VLC kPlexSBs-forward kPlexSBs-reverse'
+solutions='kPlexT kPlexTBs-forward kPlexTBs-reverse kPlexTBs-TISUB kPlexTBs-VLC kPlexSBs-dual'
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
