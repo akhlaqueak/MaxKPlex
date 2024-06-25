@@ -1800,6 +1800,7 @@ private:
                 std::swap(ISc.back(), ISc[vlc++]);
                 bmp.set(i);
             }
+			
         }
 		// return ub;
         for (ui i = S_end; i < R_end; i++)
