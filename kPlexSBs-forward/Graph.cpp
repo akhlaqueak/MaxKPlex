@@ -317,18 +317,15 @@ void Graph::kPlex_exact() {
 					kplex[i] = out_mapping[kplex[i]];
 				}
 				if(kplex.size()+1 > 2*K) {
-					// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 					shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
 				}
 			}
 
-		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
-
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
 
-		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-		linear_heap->init(n, n-1, peel_sequence, degree);
+		// ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
+		heap->init(n, n-1, peel_sequence, degree);
 
 		// assert(pend == nullptr);
 		pend = new ept[n];
@@ -359,10 +356,10 @@ void Graph::kPlex_exact() {
 		ui Qv_n = 0;
 
 		if(kplex.size()+1 > 2*K) {
-			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
 		}
-		// degen(n, peel_sequence, core, pstart, edges, degree, vis, linear_heap, false);
+		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 
 		Timer tt;
 
@@ -404,13 +401,13 @@ void Graph::kPlex_exact() {
 			if(forward){
 				UB_t = UB; // left direction can give a kplex of any size < UB 
 				p_left++;
-				bool ret_tmp = linear_heap->pop_min(u, key);
+				bool ret_tmp = heap->pop_min(u, key);
 				assert(ret_tmp);
 				if(key < kplex.size()+1-K) {
-					if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
+					if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in heap
 						Qv[0] = u; Qv_n = 1;
-						if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-						else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+						if(kplex.size()+1>2*K) m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+						else m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 					}
 					continue;
 				}
@@ -473,10 +470,10 @@ void Graph::kPlex_exact() {
 				Qv[0] = u; Qv_n = 1;
 				if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
 					//output_one_kplex(); break;
-					m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				
-				else if(kplex.size()+1>2*K) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				else if(kplex.size()+1>2*K) m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				else m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 
 			if(dual_mode and dir_switch.elapsed()/1000000 > switch_thresh ){
@@ -504,7 +501,7 @@ void Graph::kPlex_exact() {
 		}
 
 		delete kplex_solver;
-		delete linear_heap;
+		delete heap;
 		delete[] t_degree;
 		delete[] exists;
 		delete[] out_mapping;
