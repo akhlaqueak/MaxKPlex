@@ -393,7 +393,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t;
-		bool forward=true, dual = false;
+		bool forward=true, dual_mode = false;
 		ui u, key;
 		ui p_right=n, p_left = 0;
 		Timer dir_switch;
@@ -477,7 +477,7 @@ void Graph::kPlex_exact() {
 				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 
-			if(dual and dir_switch.elapsed()/1000000 > switch_thresh ){
+			if(dual_mode and dir_switch.elapsed()/1000000 > switch_thresh ){
 				forward = !forward;
 				dir_switch.restart();
 				cout<<"Direction changed."<<endl;

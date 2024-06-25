@@ -195,13 +195,13 @@ make_solutions() {
 }
 
 datasets=$(ls ~/graphs/ablation/*.bin)
-solutions='kPlexTBs-foward kPlexTBs-reverse kPlexSBs-dual'
+solutions='kPlexTBs-foward kPlexTBs-reverse kPlexTBs-dual'
 
 del_prev
 run_jobs 00:30:00
 
 
-solutions='kPlexT kPlexTBs-foward kPlexTBs-reverse kPlexSBs-dual'
+solutions='kPlexT kPlexTBs-foward kPlexTBs-reverse kPlexTBs-dual'
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
