@@ -322,16 +322,20 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-#define FORWARD
-#ifdef FORWARD
-				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
-					ui u = peel_sequence[i];
-#else
-				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
-					ui u = peel_sequence[i-1];
-					UB_t = kplex.size()+1;
-#endif
-					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
+				bool forward=true, dual_mode = true;
+				Timer dual_mode_timer;
+				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
+
+
+				while(p_left < p_right &&kplex.size() < UB) {
+					ui u;
+					if(forward){
+						u = peel_sequence[p_left++];
+					}
+					else{
+						u = peel_sequence[--p_right];
+					}
+					if(pend[u]-pstart[u]+K <= kplex.size()||(p_right - p_left+1) < kplex.size()) continue;
 					// printf("solving %u \n", u);
 
 					fflush(stdout);
@@ -352,6 +356,12 @@ void Graph::kPlex_exact(int mode) {
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+					}
+
+					if(dual_mode and dual_mode_timer.elapsed()/1000000 > dual_mode_thresh ){
+						forward = !forward;
+						dual_mode_timer.restart();
+						cout<<"Direction changed."<<endl;
 					}
 				}
 				delete kplex_solver_m;
