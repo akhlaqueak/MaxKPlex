@@ -430,6 +430,7 @@ void Graph::kPlex_exact() {
 
 			ui *ids = Qv;
 			ui ids_n = 0, sz1h=0;
+			
 #ifndef NDEBUG
 			for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif

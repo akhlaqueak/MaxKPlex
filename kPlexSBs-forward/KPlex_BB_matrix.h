@@ -370,7 +370,7 @@ private:
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
-					// todo commentingoff degree, see the effect
+			// 		todo commentingoff degree, see the effect
             // degree[u]=neighbors_n;
             for (ui j = 0; j < neighbors_n; j++)
             {
@@ -1700,49 +1700,108 @@ private:
         }
         return maxsup;
     }
-    ui tryColor(ui S_end, ui R_end)
+    // ui tryColor(ui S_end, ui R_end)
+    // {
+    //     createIS(S_end, R_end);
+    //     ui ub = TISUB(S_end);
+
+
+	// 	auto& lcv = PI;
+	// 	auto& cv = PIMax;
+	// 	lcv.clear();
+    //     // return ub;
+    //     // collect loose vertices i.e. v \in ISc | support(v) > ub
+    //     for (ui i = 0; i < ISc.size(); i++)
+    //     {
+    //         if (support(S_end, SR[ISc[i]]) > ub)
+    //             lcv.push_back(i);
+    //     }
+	// 	bmp2.setup(lcv, n);
+    //     bmp.setup(ISc, n);
+
+    //     for (ui i = S_end; lcv.size() < ub and i < R_end; i++)
+    //     {
+    //         if (bmp.test(i)) // this loop running for C\ISc
+    //             continue;
+	// 		cv.clear();
+	// 		// collect conflict vertices with i
+    //         for (ui j : ISc) 
+    //             // this loop runs in ISc\LCV
+    //             if (!bmp2.test(j) and is_neigh(i, j))
+	// 				cv.push_back(j);
+
+
+    //         if (lcv.size() + cv.size() + 1 <= ub)
+    //         {
+	// 			for(ui j:cv){
+	// 				lcv.push_back(j);
+	// 				bmp2.set(j);
+	// 			}
+	// 			lcv.push_back(i);
+	// 			bmp2.set(i);
+    //             ISc.push_back(i);
+    //             bmp.set(i);
+    //         }
+    //     }
+    //     for (ui i = S_end; i < R_end; i++)
+    //     {
+    //         if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
+    //             continue;
+    //         ui nv = 0;
+    //         for (ui j: ISc)
+    //         {
+    //             if (is_neigh(i, j))
+    //                 nv++;
+    //         }
+    //         if (nv < ub - support(S_end, SR[i]))
+    //         {
+    //             ISc.push_back(i);
+    //             bmp.set(i);
+    //         }
+    //     }
+    //     return ub;
+    // }
+
+	  ui tryColor(ui S_end, ui R_end)
     {
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
-
-
-		auto& lcv = PI;
-		auto& cv = PIMax;
-		lcv.clear();
-        // return ub;
+        ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
         {
             if (support(S_end, SR[ISc[i]]) > ub)
-                lcv.push_back(i);
+            {
+                std::swap(ISc[i], ISc[vlc]);
+                vlc++;
+            }
         }
-		bmp2.setup(lcv, n);
-        bmp.setup(ISc, n);
+        // ISc[0... vlc) we have loose vertices
 
-        for (ui i = S_end; lcv.size() < ub and i < R_end; i++)
+        // Lookup inIS(&lookup, &ISc, true);
+        bmp.setup(ISc, n);
+        for (ui i = S_end; vlc < ub and i < R_end; i++)
         {
             if (bmp.test(i)) // this loop running for C\ISc
                 continue;
-			cv.clear();
-			// collect conflict vertices with i
-            for (ui j : ISc) 
-                // this loop runs in ISc\LCV
-                if (!bmp2.test(j) and is_neigh(i, j))
-					cv.push_back(j);
-
-
-            if (lcv.size() + cv.size() + 1 <= ub)
+            ui vc = 0;
+            for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
             {
-				for(ui j:cv){
-					lcv.push_back(j);
-					bmp2.set(j);
-				}
-				lcv.push_back(i);
-				bmp2.set(i);
+                if (is_neigh(i, ISc[j]))
+                {
+                    std::swap(ISc[vlc + vc], ISc[j]);
+                    vc++;
+                }
+            }
+            if (vlc + vc + 1 <= ub)
+            {
+                vlc += vc;
                 ISc.push_back(i);
+                std::swap(ISc.back(), ISc[vlc++]);
                 bmp.set(i);
             }
         }
+		// return ub;
         for (ui i = S_end; i < R_end; i++)
         {
             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
@@ -1753,7 +1812,8 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
-            if (nv < ub - support(S_end, SR[i]))
+
+            if (nv + support(S_end, SR[i]) <= ub )
             {
                 ISc.push_back(i);
                 bmp.set(i);
@@ -1761,6 +1821,9 @@ private:
         }
         return ub;
     }
+	bool is_neigh(ui i, ui j){
+		return matrix[SR[i]*n+SR[j]];
+	}
 	bool is_neigh(ui i, ui j){
 		return matrix[SR[i]*n+SR[j]];
 	}
