@@ -1621,9 +1621,9 @@ private:
         while (R_end>S_end)
         {
             
-            double ubp = tryPartition(S_end, R_end);
             // double ubp=0;
             double ubc = tryColor(S_end, R_end);
+            double ubp = tryPartition(S_end, R_end);
             if (ubp == 0 or
                 ISc.size() / ubc > PIMax.size() / ubp or
                 (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
