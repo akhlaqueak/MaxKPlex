@@ -397,7 +397,7 @@ void Graph::kPlex_exact() {
 		ui u, key;
 		ui n_stop=n;
 		Timer dir_switch;
-		ui swith_thresh = 10;
+		ui swith_thresh = 400;
 
 		for(int i = 0;i < n_stop&&m&&kplex.size() < UB;i ++) {
 			if(forward){
