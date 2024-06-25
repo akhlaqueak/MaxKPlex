@@ -317,7 +317,7 @@ void Graph::kPlex_exact() {
 					kplex[i] = out_mapping[kplex[i]];
 				}
 				if(kplex.size()+1 > 2*K) {
-					degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
+					// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 					shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
 				}
 			}
