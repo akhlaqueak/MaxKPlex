@@ -1821,9 +1821,7 @@ private:
         }
         return ub;
     }
-	bool is_neigh(ui i, ui j){
-		return matrix[SR[i]*n+SR[j]];
-	}
+
 	bool is_neigh(ui i, ui j){
 		return matrix[SR[i]*n+SR[j]];
 	}
