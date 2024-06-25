@@ -6,7 +6,7 @@
 // #include "switches.h"
 ui cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
+#define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
 
@@ -776,13 +776,11 @@ private:
             if (support(S_end, u) == 0)
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
-            // Lookup neig(&lookup, &g.adjList[u]);
-            // bmp.setup(g.adjList[u], g.V);
+
             for (ui j = S_end; j < R_end; j++)
             {
                 ui v = SR[j];
                 if (!matrix[u * n + v])
-                    // PI[u].push_back(v);
                     LPI[u * n + psz[u]++] = v;
             }
         }

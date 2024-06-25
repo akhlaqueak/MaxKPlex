@@ -392,16 +392,17 @@ void Graph::kPlex_exact() {
 
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
-		ui UB_t = UB;
+		ui UB_t;
 		bool forward=false;
 		ui u, key;
-		ui n_stop=n;
+		ui p_right=n, p_left = 0;
 		Timer dir_switch;
-		ui swith_thresh = 400;
+		ui switch_thresh = 400;
 
-		for(int i = 0;i < n_stop&&m&&kplex.size() < UB;i ++) {
+		while(p_left < p_right &&m&&kplex.size() < UB) {
 			if(forward){
-				UB_t = UB;
+				UB_t = UB; // left direction can give a kplex of any size < UB 
+				p_left++;
 				bool ret_tmp = linear_heap->pop_min(u, key);
 				assert(ret_tmp);
 				if(key < kplex.size()+1-K) {
@@ -413,6 +414,7 @@ void Graph::kPlex_exact() {
 					continue;
 				}
 				if(m == 0) break;
+
 	#ifndef NDEBUG
 				if(degree[u] != key) printf("u=%u, degree=%u, key=%u, kplex.size=%lu\n", u, degree[u], key, kplex.size());
 	#endif
@@ -420,7 +422,7 @@ void Graph::kPlex_exact() {
 			}
 
 			else{
-				u=peel_sequence[n-i-1];
+				u=peel_sequence[--right];
 				if(degree[u]==0 or degree[u]<kplex.size()+1-K) continue;
 				UB_t = kplex.size()+1;
 			}
@@ -456,7 +458,7 @@ void Graph::kPlex_exact() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
-			// cout<<" solving "<<u;
+
 				kplex_solver->load_graph(ids_n, vp, sz1h);
 				kplex_solver->kPlex(K, UB_t, kplex, true);
 			}
@@ -475,10 +477,9 @@ void Graph::kPlex_exact() {
 				else m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 
-			if(!forward and dir_switch.elapsed()/1000000 > swith_thresh ){
-				n_stop = n-i;
-				i = -1; // setting -1 because loop has to increment to 0
-				forward = true;
+			if(dir_switch.elapsed()/1000000 > cswith_thresh ){
+				forward = !forward;
+				dir_switch.restart();
 				cout<<"Direction changed."<<endl;
 			}
 
