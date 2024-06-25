@@ -322,7 +322,7 @@ void Graph::kPlex_exact() {
 				}
 			}
 
-		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
+		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
