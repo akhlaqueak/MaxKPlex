@@ -517,7 +517,7 @@ private:
 		#ifdef SEESAW
 		seesaw.tick();
 		ui comp = CSIZE*CSIZE*S_end; //C^2*S
-		if (comp < 10000 and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (comp > 100 and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
