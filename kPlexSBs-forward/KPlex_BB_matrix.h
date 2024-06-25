@@ -19,7 +19,7 @@ private:
 	char *matrix;
 	long long matrix_size;
 	vector<ui> PI, PIMax, ISc;
-	MBitSet bmp;
+	MBitSet bmp, bmp2;
 
 	ui *cnC;
 	ui* peelOrder;
@@ -143,6 +143,7 @@ public:
 		PIMax.reserve(n);
 		ISc.reserve(n);
 		bmp.init(n);
+		bmp2.init(n);
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = new ui[matrix_size];
 #endif
@@ -1704,40 +1705,41 @@ private:
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
 
-        ui vlc = 0;
-        return ub;
+
+		auto& lcv = PI;
+		auto& cv = PIMax;
+		lcv.clear();
+        // return ub;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
         {
             if (support(S_end, SR[ISc[i]]) > ub)
-            {
-                std::swap(ISc[i], ISc[vlc]);
-                vlc++;
-            }
+                lcv.push_back(i);
         }
-        // ISc[0... vlc) we have loose vertices
-
-        // Lookup inIS(&lookup, &ISc, true);
+		bmp2.setup(lcv, n);
         bmp.setup(ISc, n);
-        for (ui i = S_end; vlc < ub and i < R_end; i++)
+
+        for (ui i = S_end; lcv.size() < ub and i < R_end; i++)
         {
             if (bmp.test(i)) // this loop running for C\ISc
                 continue;
-            ui vc = 0;
-            for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
+			cv.clear();
+			// collect conflict vertices with i
+            for (ui j : ISc) 
+                // this loop runs in ISc\LCV
+                if (!bmp2.test(j) and is_neigh(i, j))
+					cv.push_back(j);
+
+
+            if (lcv.size() + cv.size() + 1 <= ub)
             {
-                ui v = ISc[j];
-                if (is_neigh(i, v))
-                {
-                    std::swap(ISc[vlc + vc], ISc[j]);
-                    vc++;
-                }
-            }
-            if (vlc + vc + 1 <= ub)
-            {
-                vlc += vc;
+				for(ui j:cv){
+					lcv.push_back(j);
+					bmp2.set(j);
+				}
+				lcv.push_back(i);
+				bmp2.set(i);
                 ISc.push_back(i);
-                std::swap(ISc.back(), ISc[vlc++]);
                 bmp.set(i);
             }
         }
