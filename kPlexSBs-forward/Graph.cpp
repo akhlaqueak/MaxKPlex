@@ -322,7 +322,6 @@ void Graph::kPlex_exact() {
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
-		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 		// ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
 		heap->init(n, n-1, peel_sequence, degree);
