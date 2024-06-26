@@ -6,7 +6,7 @@
 // #include "switches.h"
 ui cfactor=1;
 
-// #define REDUCTIONS
+#define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
 
