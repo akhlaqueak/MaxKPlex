@@ -452,17 +452,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		#ifdef SEESAW
-		seesaw.tick();
-		// ui comp = CSIZE*CSIZE*S_end; //C^2*S
-		// if (comp > 100 and seesawUB(S_end, R_end)<=best_solution_size) {
-		ui beta = best_solution_size - S_end;
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
-		seesaw.tock();
-		#endif
+
 		ui S2_n = 0;
 		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
@@ -491,7 +481,17 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-
+		#ifdef SEESAW
+		seesaw.tick();
+		// ui comp = CSIZE*CSIZE*S_end; //C^2*S
+		// if (comp > 100 and seesawUB(S_end, R_end)<=best_solution_size) {
+		ui beta = best_solution_size - S_end;
+		if (seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		seesaw.tock();
+		#endif
 		// greedily add vertices to S
 		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
 			//printf("here2\n");
