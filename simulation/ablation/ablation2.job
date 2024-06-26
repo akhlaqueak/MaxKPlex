@@ -198,7 +198,7 @@ datasets=$(ls ~/graphs/ablation/*.bin)
 solutions='kPlexTBs-forward kPlexSBs-forward'
 
 del_prev
-run_jobs 10:00:00
+run_jobs 3:00:00
 
 
 solutions="Maple kPlexT $solutions"
