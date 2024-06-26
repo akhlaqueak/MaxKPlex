@@ -322,7 +322,7 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=true, dual_mode = true;
+				bool forward=true, dual_mode = false;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 
@@ -362,9 +362,9 @@ void Graph::kPlex_exact(int mode) {
 						forward = !forward;
 						dual_mode_timer.restart();
 						if(forward)
-						cout<<"Direction changed, moving forward order"<<endl;
+						cout<<"Direction changed, L->R"<<endl;
 						else
-						cout<<"Direction changed, moving reverse order"<<endl;
+						cout<<"Direction changed, R->L"<<endl;
 					}
 				}
 				delete kplex_solver_m;
