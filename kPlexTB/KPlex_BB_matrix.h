@@ -6,9 +6,9 @@
 // #include "switches.h"
 ui cfactor=1;
 
-#define REDUCTIONS
-#define SEESAW
-#define B_BRANCHINGS
+// #define REDUCTIONS
+// #define SEESAW
+// #define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
 
