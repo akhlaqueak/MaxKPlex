@@ -554,6 +554,7 @@ private:
 		branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
+		ui br = t_R_end-R_end;
 		while(R_end<t_R_end){
 			// move branching vertex back to C
 			ui u = SR[R_end];
@@ -569,7 +570,7 @@ private:
 				if(i < S_end) ++ degree_in_S[u];
 			}
 
-
+			br--;
 			// if a larger kplex is found, branches will be generated only at root level
 			if(root_level) found_larger=false;
 			else
@@ -579,7 +580,7 @@ private:
 			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-
+		if(br) cout<<"Eror"<<endl;
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 // ******************* Ended our branching stuff here... 
@@ -1752,8 +1753,8 @@ private:
 	  ui tryColor(ui S_end, ui R_end)
     {
         createIS(S_end, R_end);
-		return min((ui)ISc.size(), K);
         ui ub = TISUB(S_end);
+		
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
