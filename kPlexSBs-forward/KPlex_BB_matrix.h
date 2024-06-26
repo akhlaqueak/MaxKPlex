@@ -576,16 +576,9 @@ private:
 			if(found_larger) continue;
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-			// if(best_solution_size >= _UB_) return ;
+			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		// for(ui i=R_end-1;i>=S_end;i--){
-		// 	ui u = Qc.back();
-		// 	Qc.pop();
-		// 	SR[i] = u;
-		// 	SR_rid[u] = i;
-		// }
-
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
@@ -826,15 +819,12 @@ private:
                 {
                     // Removing pi* from all pi in PI
                     ui u = SR[i];
-                    if (u == maxpi)
+                    if (u == maxpi or psz[u]==0)
                         continue;
                     ui j = 0;
                     for (ui k = 0; k < psz[u]; k++)
                         if (!bmp.test(LPI[u * n + k]))
-                            // if (!bmp.test(PI[u][k]))
-                            // PI[u][j++] = PI[u][k];
-                            LPI[u * n + j++] = LPI[u * n + k];
-                    // PI[u].resize(j);
+                            LPI[u * n + j] = LPI[u * n + k], j++;
                     psz[u] = j;
                 }
                 // remove maxpi...

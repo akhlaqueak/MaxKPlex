@@ -400,6 +400,11 @@ void Graph::kPlex_exact() {
 		Timer dir_switch;
 		ui switch_thresh = 10;
 
+		if(forward)
+			cout<<"Direction: L->R"<<endl;
+		else
+			cout<<"Direction: R->L"<<endl;
+
 		while(p_left < p_right &&m&&kplex.size() < UB) {
 			if(forward){
 				UB_t = UB; // left direction can give a kplex of any size < UB 
@@ -482,7 +487,11 @@ void Graph::kPlex_exact() {
 			if(dual_mode and dir_switch.elapsed()/1000000 > switch_thresh ){
 				forward = !forward;
 				dir_switch.restart();
-				cout<<"Direction changed."<<endl;
+				cout<<"Direction changed: ";
+				if(forward)
+				cout<<"L->R"<<endl;
+				else
+				cout<<"R->L"<<endl;
 			}
 
 #ifndef NDEBUG
