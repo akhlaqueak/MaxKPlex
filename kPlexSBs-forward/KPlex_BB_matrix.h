@@ -1604,10 +1604,7 @@ private:
 		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
 		ui sr = 0;
-		// save candidate set temporarily
-		// for(ui i=S_end;i<R_end;i++){
-		// 	SR_t[sr++]=SR[i];
-		// }
+
         while (R_end>S_end)
         {
             
