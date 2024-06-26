@@ -1752,8 +1752,8 @@ private:
 	  ui tryColor(ui S_end, ui R_end)
     {
         createIS(S_end, R_end);
+		return min((ui)ISc.size(), K);
         ui ub = TISUB(S_end);
-		return ub;
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
