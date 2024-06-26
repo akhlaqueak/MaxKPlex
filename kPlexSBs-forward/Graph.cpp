@@ -474,15 +474,16 @@ void Graph::kPlex_exact() {
 				cout<<"a larger kplex found at: "<<u<<endl;
 			}
 
-			// if(forward){
-			// 	Qv[0] = u; Qv_n = 1;
-			// 	if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
-			// 		//output_one_kplex(); break;
-			// 		m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			if(forward){
+				Qv[0] = u; Qv_n = 1;
+				if(kplex.size() != pre_size&&kplex.size()+1 > 2*K) 
+					//output_one_kplex(); break;
+				// 	m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				
-			// 	else if(kplex.size()+1>2*K) m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			// 	else m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			// }
+				// else 
+				if(kplex.size()+1>2*K) m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				else m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+			}
 
 			if(dual_mode and dir_switch.elapsed()/1000000 > switch_thresh ){
 				forward = !forward;
