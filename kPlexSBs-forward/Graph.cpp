@@ -394,7 +394,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t;
-		bool forward=false, dual_mode = false;
+		bool forward=true, dual_mode = false;
 		ui u, key;
 		ui p_right=n, p_left = 0;
 		Timer dir_switch;
@@ -1122,6 +1122,7 @@ char Graph::find(ui u, ui w, ept &b, ept e, char *deleted, ept &idx, ui *edgelis
 
 // return the number of peeled edges
 ept Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold, ui *Qe, bool initialize_Qe, ui t_threshold, ui *tri_cnt, ui *active_edgelist, ui &active_edgelist_n, ui *edge_list, ui *edgelist_pointer, char *deleted, ui *degree, ept *pstart, ept *pend, ui *edges, char *exists) {
+	return 0;
 	ept Qe_n = 0;
 	if(initialize_Qe) {
 		ept active_edgelist_newn = 0;
