@@ -8,7 +8,7 @@ ui cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-// #define B_BRANCHINGS
+#define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
 
@@ -514,7 +514,8 @@ private:
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
-		if (CSIZE > cfactor*beta and seesawUB(S_end, R_end)<=best_solution_size) {
+		ui comp = S_end*S_end * CSIZE;
+		if (comp < 100 and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
