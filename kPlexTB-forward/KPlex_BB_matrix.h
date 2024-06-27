@@ -1605,25 +1605,18 @@ private:
 
 
 	   ui seesawUB(ui S_end, ui R_end)
-    {
+      {
         ui UB = S_end;
-		ui* SR_t = neighbors;
-		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
-		ui sr = 0;
-		// save candidate set temporarily
-		// for(ui i=S_end;i<R_end;i++){
-		// 	SR_t[sr++]=SR[i];
-		// }
         while (R_end>S_end)
         {
             
             double ubp = tryPartition(S_end, R_end);
-            
-            double ubc = tryColor(S_end, R_end);
+
+			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
-                ISc.size() / ubc > PIMax.size() / ubp or
-                (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
+               ( ISc.size() / ubc > PIMax.size() / ubp) or
+                ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
                 for (ui v : ISc)
@@ -1639,159 +1632,21 @@ private:
                     swap_pos(v, --R_end);
                 UB += ubp;
             }
-            // cout<<C.size()<<" "<<ISp.size();
+
         }
-		// recover candidate set... 
-		// for(ui i=0;i<sr;i++){
-		// 	SR[S_end+i] = SR_t[i];
-		// }
 		seesaw.tock();
         return UB;
     }
-
-//     void createIS(ui S_end, ui R_end)
-//     {
-//         ISc.clear();
-//         if (S_end==R_end)
-//             return;
-//         ISc.push_back(S_end);
-
-//         // check.tick();
-//         for (ui i = S_end+1; i < R_end; i++)
-//         {
-//             bool flag = true;
-//             for (ui j : ISc)
-//                 if (is_neigh(i, j))
-//                 {
-//                     flag = false;
-//                     break;
-//                 }
-//             if (flag)
-//                 ISc.push_back(i);
-//         }
-//         // check.tock();
-//     }
-//     ui support(ui S_end, ui u)
-//     {
-//         return K - (S_end - degree_in_S[u]);
-//     }
-
-//     ui TISUB(ui S_end)
-//     {
-//         ui maxsup = 0;
-//         for (ui i = 0; i < ISc.size(); i++)
-//         {
-//             for (ui j = i + 1; j < ISc.size(); j++)
-//             {
-//                 if (support(S_end, SR[ISc[j]]) > support(S_end, SR[ISc[i]]))
-//                     std::swap(ISc[i], ISc[j]);
-//             }
-//             // if (i+1 > support(ISc[i])){
-//             //     return i;
-//             // }
-//             // not using <= condition because i is starting from 0...
-//             if (support(S_end, SR[ISc[i]]) > i)
-//                 maxsup++;
-//             else
-//                 break;
-//         }
-//         return maxsup;
-//     }
-//     ui tryColor(ui S_end, ui R_end)
-//     {
-//         createIS(S_end, R_end);
-//         ui ub = TISUB(S_end);
-
-//         ui vlc = 0;
-//         // collect loose vertices i.e. v \in ISc | support(v) > ub
-//         for (ui i = 0; i < ISc.size(); i++)
-//         {
-//             if (support(S_end, SR[ISc[i]]) > ub)
-//             {
-//                 std::swap(ISc[i], ISc[vlc]);
-//                 vlc++;
-//             }
-//         }
-//         // ISc[0... vlc) we have loose vertices
-
-//         // Lookup inIS(&lookup, &ISc, true);
-//         bmp.setup(ISc, n);
-//         for (ui i = S_end; vlc < ub and i < R_end; i++)
-//         {
-//             if (bmp.test(i)) // this loop running for C\ISc
-//                 continue;
-//             ui vc = 0;
-//             for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
-//             {
-//                 ui v = ISc[j];
-//                 if (is_neigh(i, v))
-//                 {
-//                     std::swap(ISc[vlc + vc], ISc[j]);
-//                     vc++;
-//                 }
-//             }
-//             if (vlc + vc + 1 <= ub)
-//             {
-//                 vlc += vc;
-//                 ISc.push_back(i);
-//                 std::swap(ISc.back(), ISc[vlc++]);
-//                 bmp.set(i);
-//             }
-//         }
-//         for (ui i = S_end; i < R_end; i++)
-//         {
-//             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
-//                 continue;
-//             ui nv = 0;
-//             for (ui j: ISc)
-//             {
-//                 if (is_neigh(i, j))
-//                     nv++;
-//             }
-//             if (nv <= ub - support(S_end, SR[i]))
-//             {
-//                 ISc.push_back(i);
-//                 bmp.set(i);
-//             }
-//         }
-//         return ub;
-//     }
-// 	bool is_neigh(ui i, ui j){
-// 		return matrix[SR[i]*n+SR[j]];
-// 	}
 	
-// 	ui tryPartition(ui S_end, ui R_end)
-//     {
-//         double maxdise = 0;
-//         ui ub = 0, maxsize=0;
-// 		PIMax.clear();
-//         for (ui i = 0; i < S_end; i++)
-//         {
-// 			PI.clear();
-//             if (support(S_end, SR[i]) == 0)
-//                 continue;
-//             for (ui j = S_end; j < R_end; j++)
-//             {
-//                 if (!is_neigh(i, j))
-//                     PI.push_back(j);
-//             }
-//             double cost = min(support(S_end, SR[i]), (ui)PI.size());
-//             double dise = PI.size() / cost;
-//             if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
-//             {
-//                 maxdise = dise, ub = cost;
-//                 maxsize = PI.size();
-//                 PI.swap(PIMax);
-//             }
-//         }
-//         return ub;
-//     }
-// };
-// #endif
- void createIS(ui S_end, ui R_end)
+    void createIS(ui S_end, ui R_end)
     {
         ISc.clear();
-        for (ui i = S_end; i < R_end; i++)
+        if (S_end==R_end)
+            return;
+        ISc.push_back(S_end);
+
+        // check.tick();
+        for (ui i = S_end+1; i < R_end; i++)
         {
             bool flag = true;
             for (ui j : ISc)
@@ -1803,6 +1658,7 @@ private:
             if (flag)
                 ISc.push_back(i);
         }
+        // check.tock();
     }
     ui support(ui S_end, ui u)
     {
@@ -1834,6 +1690,7 @@ private:
     {
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
+
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
@@ -1855,7 +1712,8 @@ private:
             ui vc = 0;
             for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
             {
-                if (is_neigh(i, ISc[j]))
+                ui v = ISc[j];
+                if (is_neigh(i, v))
                 {
                     std::swap(ISc[vlc + vc], ISc[j]);
                     vc++;
@@ -1869,7 +1727,6 @@ private:
                 bmp.set(i);
             }
         }
-		return ub;
         for (ui i = S_end; i < R_end; i++)
         {
             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
@@ -1880,8 +1737,7 @@ private:
                 if (is_neigh(i, j))
                     nv++;
             }
-
-            if (nv + support(S_end, SR[i]) <= ub )
+            if (nv <= ub - support(S_end, SR[i]))
             {
                 ISc.push_back(i);
                 bmp.set(i);
@@ -1896,25 +1752,25 @@ private:
 	ui tryPartition(ui S_end, ui R_end)
     {
         double maxdise = 0;
-        ui ub = 0;
+        ui ub = 0, maxsize=0;
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
+			PI.clear();
             if (support(S_end, SR[i]) == 0)
                 continue;
-			PI.clear();
             for (ui j = S_end; j < R_end; j++)
             {
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
-			if(PI.empty()) continue;
-            ui cost = min(support(S_end, SR[i]), (ui)PI.size());
-            double dise = (double) PI.size() / (double) cost;
-            if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
+            double cost = min(support(S_end, SR[i]), (ui)PI.size());
+            double dise = PI.size() / cost;
+            if (dise > maxdise or (dise == maxdise and PI.size() > maxsize))
             {
                 maxdise = dise, ub = cost;
-                std::swap(PI, PIMax);
+                maxsize = PI.size();
+                PI.swap(PIMax);
             }
         }
         return ub;
