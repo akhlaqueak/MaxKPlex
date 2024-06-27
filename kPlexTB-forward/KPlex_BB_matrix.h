@@ -3,10 +3,12 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-#include "switches.h"
+// #include "switches.h"
 ui cfactor=1;
 
-
+#define REDUCTIONS
+#define SEESAW
+#define B_BRANCHINGS
 Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {

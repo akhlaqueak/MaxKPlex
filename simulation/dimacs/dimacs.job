@@ -143,14 +143,8 @@ del_prev() {
 }
 
 # datasets=`ls ~/graphs/network_repo/*.bin ~/graphs/dimacs10/*.bin ~/graphs/dimacs/*.bin | xargs -n 1 basename`
-# datasets=$(ls ~/graphs/network_repo/*.bin ~/graphs/dimacs/*.bin ~/graphs/dimacs10/*.bin)
-datasets='
-soc-BlogCatalog.bin
-soc-flickr.bin
-soc-orkut.bin
-soc-buzznet.bin
-soc-digg.bin
-'
+datasets=$(ls ~/graphs/network_repo/*.bin ~/graphs/dimacs/*.bin ~/graphs/dimacs10/*.bin)
+
 # solutions='kPlexTBs'
 solutions='kPlexS Maple kPlexT kPlexTBs'
 
