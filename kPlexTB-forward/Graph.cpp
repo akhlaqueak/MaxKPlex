@@ -347,6 +347,14 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
+					if(dual_mode and dual_mode_timer.elapsed()/1000000 > dual_mode_thresh ){
+						forward = !forward;
+						dual_mode_timer.restart();
+						if(forward)
+						cout<<"Direction changed, L->R"<<endl;
+						else
+						cout<<"Direction changed, R->L"<<endl;
+					}
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
 					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
@@ -365,14 +373,6 @@ void Graph::kPlex_exact(int mode) {
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
 
-					if(dual_mode and dual_mode_timer.elapsed()/1000000 > dual_mode_thresh ){
-						forward = !forward;
-						dual_mode_timer.restart();
-						if(forward)
-						cout<<"Direction changed, L->R"<<endl;
-						else
-						cout<<"Direction changed, R->L"<<endl;
-					}
 				}
 				delete kplex_solver_m;
 
