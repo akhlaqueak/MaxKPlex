@@ -343,11 +343,11 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
-					// printf("solving %u \n", u);
+					printf("solving %u \n", u);
 
 					fflush(stdout);
 
-					if(dual_mode and dual_mode_timer.elapsed()/1000000 > dual_mode_thresh ){
+					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
 						forward = !forward;
 						dual_mode_timer.restart();
 						if(forward)
