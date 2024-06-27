@@ -195,7 +195,7 @@ make_solutions() {
 }
 
 datasets=$(ls ~/graphs/ablation/*.bin)
-solutions='kPlexTBs-with-seesaw kPlexSBs-reverse kPlexSBs-dual'
+solutions='kPlexTBs-with-seesaw kPlexTBs-no-reductions'
 
 del_prev
 run_jobs 10:00:00
