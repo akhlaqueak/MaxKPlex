@@ -201,7 +201,7 @@ del_prev
 run_jobs 3:00:00
 
 
-solutions="Maple kPlexT $solutions"
+solutions="Maple kPlexT kPlexTBs-forward kPlexSBs-forward"
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 

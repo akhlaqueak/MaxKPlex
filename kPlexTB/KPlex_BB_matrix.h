@@ -7,7 +7,7 @@
 ui cfactor=1;
 
 #define REDUCTIONS
-// #define SEESAW
+#define SEESAW
 #define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
@@ -504,7 +504,6 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		ui beta = best_solution_size - S_end;
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
@@ -514,7 +513,8 @@ private:
 		}
 		#ifdef SEESAW
 		seesaw.tick();
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		ui beta = best_solution_size - S_end;
+		if (CSIZE > cfactor*beta and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -1607,9 +1607,8 @@ private:
         while (R_end>S_end)
         {
             
-            double ubp = 
-			tryPartition(S_end, R_end);
-            // 0;
+            double ubp = tryPartition(S_end, R_end);
+
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
                ( ISc.size() / ubc > PIMax.size() / ubp) or
@@ -1755,7 +1754,7 @@ private:
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
-			if(PI.size()==0) continue;
+			if(PI.empty()) continue;
             ui cost = min(support(S_end, SR[i]), (ui)PI.size());
             double dise = (double) PI.size() / (double) cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
