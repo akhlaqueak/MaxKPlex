@@ -333,14 +333,16 @@ void Graph::kPlex_exact(int mode) {
 				while(p_left < p_right &&kplex.size() < UB) {
 					ui u;
 					if(forward){
+						if(n-p_left<=kplex.size()) continue;
 						u = peel_sequence[p_left++];
 						UB_t = UB;
 					}
 					else{
 						u = peel_sequence[--p_right];
+						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
-					if(pend[u]-pstart[u]+K <= kplex.size()||(p_right - p_left+1) < kplex.size()) continue;
+					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 					// printf("solving %u \n", u);
 
 					fflush(stdout);
