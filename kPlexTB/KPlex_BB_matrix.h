@@ -5,8 +5,8 @@
 #include "Timer.h"
 
 ui cfactor=1;
-#define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
+// #define _SECOND_ORDER_PRUNING_
+// #define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
 
