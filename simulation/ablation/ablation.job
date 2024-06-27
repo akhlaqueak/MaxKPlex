@@ -195,10 +195,10 @@ make_solutions() {
 }
 
 datasets=$(ls ~/graphs/ablation/*.bin)
-solutions='kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings kPlexTBs-comp-100'
+solutions='kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
 
 del_prev
-run_jobs 10:00:00
+run_jobs 04:00:00
 
 
 solutions="Maple kPlexT kPlexSBs-forward kPlexSBs-reverse kPlexSBs-dual"
