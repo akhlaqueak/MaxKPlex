@@ -343,7 +343,7 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
-					printf("solving %u \n", u);
+					// printf("solving %u \n", u);
 
 					fflush(stdout);
 
