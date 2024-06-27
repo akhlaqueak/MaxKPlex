@@ -3,9 +3,9 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-// #include "switches.h"
-ui cfactor=1;
 
+ui cfactor=1;
+#define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
