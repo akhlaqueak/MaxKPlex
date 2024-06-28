@@ -267,7 +267,6 @@ void Graph::kPlex_exact(int mode) {
 	kplex.clear();
 	heuristic_kplex_max_degree(10);
 
-	kplex.resize(max((ui)kplex.size(), 2*K-2)); // screen out trivial cases.
 
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
@@ -278,6 +277,7 @@ void Graph::kPlex_exact(int mode) {
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 	assert(kplex.size() >= K);
 
+	kplex.resize(max((ui)kplex.size(), 2*K-2)); // screen out trivial cases.
 	if(kplex.size() < UB) {
 		ui old_size = kplex.size();
 		ui *out_mapping = new ui[n];
