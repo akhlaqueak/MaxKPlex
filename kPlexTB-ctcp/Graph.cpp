@@ -568,7 +568,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 
 	for(ui i = 0;i < ids.size();i ++) {
 		ui v = ids[i];
-		for(ept j = pstart[v];j < pstart[v+1];j ++) if(exists[edges[j]] and v>edges[j] and !deleted[edgelist_pointer[j]]) {
+		for(ept j = pstart[v];j < pstart[v+1];j ++) if(exists[edges[j]] and v>edges[j] and p_rid[u]<p_rid[edges[j]]) {
 			if(rid[v] < ids.size()&&rid[edges[j]] < ids.size())
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
 			else
