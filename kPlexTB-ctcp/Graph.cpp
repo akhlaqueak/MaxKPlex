@@ -499,7 +499,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
-
+	for(ui i = 0;i < n;i ++) if(exists[i]) cout<<"*";
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pstart[u+1];i ++) {
@@ -567,7 +567,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 
 	for(ui i = 0;i < ids.size();i ++) {
 		ui v = ids[i];
-		for(ept j = pstart[v];j < pend[v];j ++) if(exists[v] and exists[edges[j]] and v>edges[j]) {
+		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]] and v>edges[j]) {
 			if(rid[v] < ids.size()&&rid[edges[j]] < ids.size())
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
 			else
