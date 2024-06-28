@@ -548,6 +548,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		}
 	}
 
+	for(ui i = 0;i < ids.size();i ++) rid[i] = 0;
 	ui new_size = 1;
 	for(ui i = 1;i < old_size;i ++) {
 		if(exists[ids[i]] == 3) exists[ids[i]] = 0;
@@ -570,7 +571,6 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
-	for(ui i = 0;i < ids.size();i ++) rid[i] = 0;
 	return old_size;
 }
 
