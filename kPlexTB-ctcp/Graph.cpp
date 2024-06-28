@@ -577,6 +577,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
+	for(ui i = 0;i < n;i ++) (exists[i]) cout<<"Eror";
 	return old_size;
 }
 
