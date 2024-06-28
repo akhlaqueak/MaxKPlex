@@ -34,6 +34,12 @@ public:
 	void kPlex_exact(int mode) ;
 
 private:
+	void print_array(const char *str, auto *array, ui idx_start, ui idx_end, ui l) {
+		for(ui i = 0;i < l;i ++) printf(" ");
+		printf("%s:", str);
+		for(ui i = idx_start;i < idx_end;i ++) printf(" %u", array[i]);
+		printf("\n");
+	}
 	void reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pstart, ui *pend, ui *edges) ;
 	ui extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, char* deleted, ui *degree, std::vector<ui> &ids, ui *rid, std::vector<std::pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) ;
 	ui extract_subgraph_wo_prune(ui u, const ui *p_rid, std::vector<ui> &ids, ui *rid, std::vector<std::pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) ;

@@ -571,6 +571,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	return old_size;
 }
 
+
 ui Graph::extract_subgraph_wo_prune(ui u, const ui *p_rid, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1; rid[u] = 0;
