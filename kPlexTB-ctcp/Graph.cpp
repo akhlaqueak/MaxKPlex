@@ -499,6 +499,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
+	for(ui i = 0;i < n;i ++) exists[i] = 0;
 
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
