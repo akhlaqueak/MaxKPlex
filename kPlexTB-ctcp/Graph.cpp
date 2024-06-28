@@ -536,7 +536,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 1;i < old_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
 		for(ept j = pstart[v];j < pstart[v+1];j ++) {
-			if(delete[edges[j]] or p_rid[edges[j]] < p_rid[u]) continue;
+			if(deleted[edges[j]] or p_rid[edges[j]] < p_rid[u]) continue;
 			if(!exists[edges[j]]) {
 				ids.push_back(edges[j]);
 				exists[edges[j]] = 1;
