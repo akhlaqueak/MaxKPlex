@@ -500,7 +500,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pend[u];i ++) {
-		if(p_rid[edges[i]] > p_rid[u] and !deleted[edges[i]]);
+		if(p_rid[edges[i]] > p_rid[u] and !deleted[edges[i]])
 		ids.push_back(edges[i]); exists[edges[i]] = 2;
 	}
 	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
@@ -513,7 +513,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		ui v = ids[i];
 		degree[v] = 0;
 		for(ept j = pstart[v];j < pstart[v+1];j ++) {
-			if(exists[edges[j]]&&p_rid[edges[j]] > p_rid[u]) ++ degree[v];
+			if(exists[edges[j]]) ++ degree[v];
 		}
 		if(degree[v] < triangle_threshold) Q[Q_n++] = v;
 	}
@@ -536,7 +536,8 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 1;i < old_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
 		for(ept j = pstart[v];j < pstart[v+1];j ++) {
-			if(!deleted[edges[j]] && !exists[edges[j]]&&p_rid[edges[j]] > p_rid[u]) {
+			if(delete[edges[j]] or p_rid[edges[j]] < p_rid[u]) continue;
+			if(!exists[edges[j]]) {
 				ids.push_back(edges[j]);
 				exists[edges[j]] = 1;
 				degree[edges[j]] = 1;
