@@ -703,7 +703,7 @@ ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<p
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
 		for(ept j = pstart[v];j < pend[v];j ++) {
-			// if(!exists[edges[j]] and (p_rid[u] < p_rid[edges[j]])) 
+			if(!exists[edges[j]]) 
 			{
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
