@@ -393,8 +393,9 @@ void Graph::kPlex_exact(int mode) {
 					}
 
 					fflush(stdout);
+// ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui,ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_and_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend, edges);
 					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
@@ -491,7 +492,7 @@ void Graph::reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pst
 // each of u's neighbors must have at least triangle_threshold common neighbors with u
 // each of u's non-neighbor must have at least cn_threshold common neighbors with u
 // after pruning, u must have at least degree_threshold neighbors
-ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
+ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui* deleted, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
@@ -499,7 +500,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pend[u];i ++) {
-		assert(p_rid[edges[i]] > p_rid[u]);
+		if(p_rid[edges[i]] > p_rid[u] and !deleted[edges[i]]);
 		ids.push_back(edges[i]); exists[edges[i]] = 2;
 	}
 	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
@@ -511,15 +512,15 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 1;i < ids.size();i ++) {
 		ui v = ids[i];
 		degree[v] = 0;
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) {
-			if(exists[edges[j]]) ++ degree[v];
+		for(ept j = pstart[v];j < pstart[v+1];j ++) {
+			if(exists[edges[j]]&&p_rid[edges[j]] > p_rid[u]) ++ degree[v];
 		}
 		if(degree[v] < triangle_threshold) Q[Q_n++] = v;
 	}
 	for(ui i = 0;i < Q_n;i ++) {
 		ui v = Q[i];
 		exists[v] = 3;
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) if(exists[edges[j]] == 2) {
+		for(ept j = pstart[v];j < pstart[v+1];j ++) if(exists[edges[j]] == 2) {
 			if(degree[edges[j]] == triangle_threshold) Q[Q_n++] = edges[j];
 			-- degree[edges[j]];
 		}
@@ -534,8 +535,8 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ui old_size = ids.size();
 	for(ui i = 1;i < old_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) {
-			if(!exists[edges[j]]) {
+		for(ept j = pstart[v];j < pstart[v+1];j ++) {
+			if(!deleted[edges[j]] && !exists[edges[j]]&&p_rid[edges[j]] > p_rid[u]) {
 				ids.push_back(edges[j]);
 				exists[edges[j]] = 1;
 				degree[edges[j]] = 1;
@@ -1125,6 +1126,44 @@ void Graph::oriented_triangle_counting(ui n, ui m, ept *pstart, ept *pend, ui *e
 #endif
 }
 
+// orient graph and triangle counting
+void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ept *pstart, ept *pend, ui *edges, ui *tri_cnt, ui *adj) {
+	ui *rid = adj;
+	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
+	for(ui i = 0;i < n;i ++) {
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+	}
+
+#ifndef NDEBUG
+	long long sum = 0;
+	for(int i = 0;i < n;i ++) sum += pend[i] - pstart[i];
+	// printf("%lld %lld\n", sum, m);
+	assert(sum*2 == m);
+#endif
+
+	memset(adj, 0, sizeof(ui)*n);
+	long long cnt = 0;
+	memset(tri_cnt, 0, sizeof(ui)*m);
+	for(ui u = 0;u < n;u ++) {
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = j+1;
+
+		for(ept j = pstart[u];j < pend[u];j ++) {
+			ui v = edges[j];
+			for(ept k = pstart[v];k < pend[v];k ++) if(adj[edges[k]]) {
+				++ tri_cnt[j];
+				++ tri_cnt[k];
+				++ tri_cnt[adj[edges[k]]-1];
+				++ cnt;
+			}
+		}
+
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = 0;
+	}
+#ifndef NDEBUG
+	//printf("*** Total number of triangles: %s\n", Utility::integer_to_string(cnt).c_str());
+#endif
+}
 // reorganize the adjacency lists
 // and sort each adjacency list to be in increasing order
 void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ept *pstart, ept *pend, ept *pend2, ui *edges, ui *edgelist_pointer, ui *buf) {
