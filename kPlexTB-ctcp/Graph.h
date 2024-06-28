@@ -41,7 +41,7 @@ private:
 		printf("\n");
 	}
 	void reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pstart, ui *pend, ui *edges) ;
-	ui extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, char* deleted, ui *degree, std::vector<ui> &ids, ui *rid, std::vector<std::pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) ;
+	ui extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, char* deleted, ui *degree, std::vector<ui> &ids, ui *rid, std::vector<std::pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend) ;
 	ui extract_subgraph_wo_prune(ui u, const ui *p_rid, std::vector<ui> &ids, ui *rid, std::vector<std::pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) ;
 
 	void write_subgraph(ui n, const std::vector<std::pair<int,int> > &edge_list) ;
