@@ -502,7 +502,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
-	for(ept i = pstart[u];i < pend[u];i ++) {
+	for(ept i = pstart[u];i < pstart[u+1];i ++) {
 		if(p_rid[edges[i]] > p_rid[u] and !deleted[edgelist_pointer[i]])
 		ids.push_back(edges[i]); exists[edges[i]] = 2;
 	}
@@ -568,8 +568,10 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 0;i < ids.size();i ++) {
 		ui v = ids[i];
 		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]] and v>edges[j]) {
-			assert(rid[v] < ids.size()&&rid[edges[j]] < ids.size());
+			if(rid[v] < ids.size()&&rid[edges[j]] < ids.size())
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
+			else
+				printf("ERRROR %u ", rid[v]);
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
