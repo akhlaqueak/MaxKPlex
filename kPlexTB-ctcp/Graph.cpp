@@ -316,6 +316,7 @@ void Graph::kPlex_exact(int mode) {
 			memset(deleted, 0, sizeof(char)*(m>>1));
 			char *exists = new char[n];
 			memset(exists, 0, sizeof(char)*n);
+			edgelist_pointer = new ui[m];
 
 			ui *Qv = new ui[n];
 			ui Qv_n = 0;
