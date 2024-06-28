@@ -507,7 +507,6 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	}
 	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
 
-	print_array("ids1", ids.data(), 0, ids.size(), 0);
 	// Utility::print_array("ids1", ids.data(), 0, ids.size(), 0);
 
 	ui *Q = rid;
@@ -560,6 +559,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		else ids[new_size++] = ids[i];
 	}
 	ids.resize(new_size);
+	print_array("ids1", ids.data(), 0, ids.size(), 0);
 
 	for(ui i = 0;i < ids.size();i ++) rid[ids[i]] = i;
 	for(ui i = 0;i < ids.size();i ++) {
