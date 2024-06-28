@@ -322,7 +322,7 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=true, dual_mode = false;
+				bool forward=false, dual_mode = true;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 400, p_left = 0, p_right = n;
 				if(forward)
@@ -336,7 +336,6 @@ void Graph::kPlex_exact(int mode) {
 						u = peel_sequence[p_left++];
 						if(n-p_left+1<=kplex.size()) continue;
 						UB_t = UB;
-						// UB_t = kplex.size()+1;
 					}
 					else{
 						u = peel_sequence[--p_right];
