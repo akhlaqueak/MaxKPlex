@@ -319,6 +319,7 @@ void Graph::kPlex_exact(int mode) {
 
 			ui *Qv = new ui[n];
 			ui Qv_n = 0;
+			printf("%u, ", n);
 			print_array("peel_seq:", peel_sequence, 0, n, 0); 
 
 			for(ui u = 0;u < n;u ++) degree[u] = pend[u]-pstart[u];
