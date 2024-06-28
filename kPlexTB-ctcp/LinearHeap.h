@@ -60,7 +60,7 @@ public:
 		for(ui i = 0;i < _n;i ++) {
 			ui id = _id_s[i];
 			ui key = _key_s[id];
-			//assert(id < n); assert(key <= _key_cap);
+			assert(id < n); assert(key <= _key_cap);
 
 			key_s[id] = key; pre_s[id] = n; next_s[id] = head_s[key];
 			if(head_s[key] != n) pre_s[head_s[key]] = id;
