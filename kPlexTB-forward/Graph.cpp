@@ -228,6 +228,7 @@ void Graph::kPlex_degen() {
 	kplex.clear();
 	heuristic_kplex_max_degree(10);
 
+
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
 	ui *degree = new ui[n];
@@ -265,6 +266,8 @@ void Graph::kPlex_exact(int mode) {
 
 	kplex.clear();
 	heuristic_kplex_max_degree(10);
+
+	kplex.resize(max((ui)kplex.size(), 2*K-2)); // screen out trivial cases.
 
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
