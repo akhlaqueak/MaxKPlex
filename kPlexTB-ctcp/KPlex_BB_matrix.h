@@ -1595,7 +1595,7 @@ private:
 		return n;
 	}
 
-	void print_array(const char *str, const ui *array, ui idx_start, ui idx_end, ui l) {
+	void print_array(const char *str, auto *array, ui idx_start, ui idx_end, ui l) {
 		for(ui i = 0;i < l;i ++) printf(" ");
 		printf("%s:", str);
 		for(ui i = idx_start;i < idx_end;i ++) printf(" %u", array[i]);
