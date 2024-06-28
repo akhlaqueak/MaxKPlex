@@ -397,7 +397,7 @@ void Graph::kPlex_exact(int mode) {
 					fflush(stdout);
 // ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui,ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend, edges);
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend, edgelist_pointer);
 					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
