@@ -492,7 +492,7 @@ void Graph::reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pst
 // each of u's neighbors must have at least triangle_threshold common neighbors with u
 // each of u's non-neighbor must have at least cn_threshold common neighbors with u
 // after pruning, u must have at least degree_threshold neighbors
-ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui* deleted, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
+ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, char* deleted, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
