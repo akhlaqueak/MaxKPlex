@@ -319,6 +319,7 @@ void Graph::kPlex_exact(int mode) {
 			edgelist_pointer = new ui[m];
 
 			ui *Qv = new ui[n];
+			ui *t_degree = new ui[n];
 			ui Qv_n = 0;
 			printf("%u, ", n);
 
@@ -398,7 +399,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend);
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, t_degree, ids, rid, vp, vis, pstart, pend);
 					// else 
 					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 					// cout<<"processing "<<ids.size();
