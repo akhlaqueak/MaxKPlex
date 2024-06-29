@@ -1269,7 +1269,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 	}
 #endif
 
-	// printf("%lu\n", Qe_n);
+	printf("called for %u\n", Qv[0]);
 
 	ept deleted_edges_n = 0;
 	ui Qv_idx = 0;
