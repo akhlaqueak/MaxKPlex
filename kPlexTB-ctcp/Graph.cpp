@@ -388,8 +388,8 @@ void Graph::kPlex_exact(int mode) {
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 					// printf("solving %u \n", u);
 
-					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
-						forward = !forward;
+					if(!forward and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
+						forward = true;
 						dual_mode_timer.restart();
 						if(forward)
 						cout<<"Direction changed, L->R"<<endl;
