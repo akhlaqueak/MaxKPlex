@@ -1270,7 +1270,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 	}
 #endif
 
-	printf("called for %u\n", Qv[0]);
+	// printf("called for %u\n", Qv[0]);
 
 	ept deleted_edges_n = 0;
 	ui Qv_idx = 0;
@@ -1288,7 +1288,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 			for(ept k = pstart[u];k < pend[u];k ++) deleted[edgelist_pointer[k]] = 1;
 			deleted_edges_n += pend[u] - pstart[u];
 			linear_heap->decrement(u, degree[u]); degree[u] = 0;
-			printf("Removed %u\n", u);
+			// printf("Removed %u\n", u);
 
 			for(ept k= pstart[u];k < pend[u];k ++) {
 				ui v = edges[k];
