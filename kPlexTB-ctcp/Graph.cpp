@@ -397,7 +397,7 @@ void Graph::kPlex_exact(int mode) {
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend);
 					// else 
 					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-					cout<<"processing "<<u;
+					cout<<"processing "<<sz1h;
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 					cout<<"continued "<<u<<endl;;
 
