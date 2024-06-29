@@ -573,8 +573,8 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		// and v>edges[j] and p_rid[u]<p_rid[edges[j]]) {
 			if(rid[v] < ids.size()&&rid[edges[j]] < ids.size()&&v<edges[j])
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
-			else
-				printf("ERRROR %u, %u: %u", rid[v], rid[edges[j]], ids.size());
+			// else
+			// 	printf("ERRROR %u, %u: %u", rid[v], rid[edges[j]], ids.size());
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
