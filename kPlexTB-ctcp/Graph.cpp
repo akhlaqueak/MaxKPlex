@@ -1391,8 +1391,8 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 		Qe_n = 0;
 	}
 #ifndef NDEBUG
-#endif
 	printf("*** Truss removed %s undirected edges\n", Utility::integer_to_string(deleted_edges_n).c_str());
+#endif
 	return deleted_edges_n;
 }
 
