@@ -322,7 +322,7 @@ void Graph::kPlex_exact(int mode) {
 			ui Qv_n = 0;
 			printf("%u, ", n);
 
-			for(ui u = 0;u < n;u ++) degree[u] = pstart[u+1]-pstart[u];
+			for(ui u = 0;u < n;u ++) degree[u] = pend[u]-pstart[u];
 			// print_array("peel_seq:", degree, 0, n, 0); 
 			heap->init(n, n-1, peel_sequence, degree);
 
@@ -351,7 +351,7 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=true, dual_mode = false;
+				bool forward=false, dual_mode = false;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
@@ -362,9 +362,6 @@ void Graph::kPlex_exact(int mode) {
 				while(p_left < p_right &&kplex.size() < UB) {
 					ui u, key;
 					if(forward){
-						// u = peel_sequence[p_left++];
-						// if(n-p_left+1<=kplex.size()) continue;
-
 						bool ret_tmp = heap->pop_min(u, key);
 						p_left++;
 						if(key < kplex.size()+1-K) {
