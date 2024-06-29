@@ -504,7 +504,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pend[u];i ++) {
 		if(p_rid[edges[i]] > p_rid[u] and !deleted[edgelist_pointer[i]])
-		ids.push_back(edges[i]); exists[edges[i]] = 2;
+		{ids.push_back(edges[i]); exists[edges[i]] = 2;}
 	}
 	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
 
