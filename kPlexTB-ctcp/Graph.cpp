@@ -510,7 +510,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 
 	// print_array("ids1", ids.data(), 0, ids.size(), 0);
 
-	ui *Q = pend_buf;
+	ui *Q = rid;
 	ui Q_n = 0;
 	for(ui i = 1;i < ids.size();i ++) {
 		ui v = ids[i];
