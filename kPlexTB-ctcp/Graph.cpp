@@ -398,8 +398,8 @@ void Graph::kPlex_exact(int mode) {
 					fflush(stdout);
 // ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui,ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 
-					// if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend);
-					// else 
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend);
+					else 
 					sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
@@ -503,14 +503,14 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pend[u];i ++) {
-		// if(p_rid[edges[i]] > p_rid[u] and !deleted[edgelist_pointer[i]])
+		if(p_rid[edges[i]] > p_rid[u] and !deleted[edgelist_pointer[i]])
 		ids.push_back(edges[i]); exists[edges[i]] = 2;
 	}
 	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
 
 	// print_array("ids1", ids.data(), 0, ids.size(), 0);
 
-	ui *Q = rid;
+	ui *Q = pend_buf;
 	ui Q_n = 0;
 	for(ui i = 1;i < ids.size();i ++) {
 		ui v = ids[i];
@@ -539,8 +539,8 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 1;i < old_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
 		for(ept j = pstart[v];j < pend[v];j ++) {
-			// if(deleted[edgelist_pointer[j]] or p_rid[edges[j]] < p_rid[u] or exists[edges[j]]==3)
-				// continue;
+			if(deleted[edgelist_pointer[j]] or p_rid[edges[j]] < p_rid[u] or exists[edges[j]]==3)
+				continue;
 			if(!exists[edges[j]]) {
 				ids.push_back(edges[j]);
 				exists[edges[j]] = 1;
