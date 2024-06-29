@@ -323,7 +323,7 @@ void Graph::kPlex_exact(int mode) {
 			printf("%u, ", n);
 
 			for(ui u = 0;u < n;u ++) degree[u] = pstart[u+1]-pstart[u];
-			print_array("peel_seq:", degree, 0, n, 0); 
+			// print_array("peel_seq:", degree, 0, n, 0); 
 			heap->init(n, n-1, peel_sequence, degree);
 
 			ui *peel_sequence_rid = core;
@@ -395,10 +395,11 @@ void Graph::kPlex_exact(int mode) {
 					fflush(stdout);
 
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, degree, ids, rid, vp, vis, pstart, pend);
-					else 
-					sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-
+					// else 
+					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
+					cout<<"processing "<<u;
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
+					cout<<"continued "<<u<<endl;;
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
