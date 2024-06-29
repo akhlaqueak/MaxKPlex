@@ -331,6 +331,9 @@ void Graph::kPlex_exact(int mode) {
 			oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 			reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
 
+			for(ui u = 0;u < n;u ++) cout<<degree[u]<<" - "<<pend[u]-pstart[u]<<" - "<<pstart[u+1]-pstart[u]<<endl;
+
+
 			KPLEX_BB *kplex_solver = new KPLEX_BB();
 			kplex_solver->allocateMemory(n);
 			{
