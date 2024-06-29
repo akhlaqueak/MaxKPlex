@@ -363,7 +363,7 @@ void Graph::kPlex_exact(int mode) {
 				else
 					cout<<"Direction: R->L"<<endl;
 
-				while(p_left < p_right &&kplex.size() < UB) {
+				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
 					if(forward){
 						bool ret_tmp = heap->pop_min(u, key);
@@ -1269,7 +1269,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 	}
 #endif
 
-	//printf("%lu\n", Qe_n);
+	printf("%lu\n", Qe_n);
 
 	ept deleted_edges_n = 0;
 	ui Qv_idx = 0;
