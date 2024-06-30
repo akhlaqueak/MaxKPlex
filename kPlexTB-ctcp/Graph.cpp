@@ -386,8 +386,12 @@ void Graph::kPlex_exact(int mode) {
 						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
+									if(forward)
+					cout<<"Direction: L->R"<<endl;
+				else
+					cout<<"Direction: R->L"<<endl;
+					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", u);
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
-					printf("%u: ", u);
 
 
 
