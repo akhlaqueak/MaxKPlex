@@ -390,7 +390,7 @@ void Graph::kPlex_exact(int mode) {
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", u);
+					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", p_left, p_right, n, m, u);
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
