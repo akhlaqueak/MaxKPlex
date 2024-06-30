@@ -360,7 +360,7 @@ void Graph::kPlex_exact(int mode) {
 				ui UB_t = UB;
 				bool forward=true, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 200, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 100, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
