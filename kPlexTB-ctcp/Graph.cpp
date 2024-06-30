@@ -363,8 +363,12 @@ void Graph::kPlex_exact(int mode) {
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-				// 	kplex.resize(71);
-				// Qv_n = 0;
+					kplex.resize(69);
+						Qv_n=0;
+						
+						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-K) Qv[Qv_n++] = i;
+						cout<<"Removing"<<Qv_n<<endl;
+						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
@@ -430,10 +434,6 @@ void Graph::kPlex_exact(int mode) {
 
 						// dual_mode_timer.restart();
 
-						Qv_n=0;
-						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-K) Qv[Qv_n++] = i;
-						cout<<"Removing"<<Qv_n<<endl;
-						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
 						if(forward)
 						cout<<"Direction changed, L->R"<<endl;
