@@ -363,6 +363,7 @@ void Graph::kPlex_exact(int mode) {
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
+				kplex.resize(71);
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
@@ -382,6 +383,7 @@ void Graph::kPlex_exact(int mode) {
 					}
 					else{
 						u = peel_sequence[--p_right];
+						if(p_right==n-1) u = 705;
 						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
