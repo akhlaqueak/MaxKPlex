@@ -363,7 +363,7 @@ void Graph::kPlex_exact(int mode) {
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-					kplex.resize(67);
+					kplex.resize(71);
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
