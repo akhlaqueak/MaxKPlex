@@ -358,7 +358,7 @@ void Graph::kPlex_exact(int mode) {
 				ui UB_t = UB;
 				bool forward=false, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
@@ -425,7 +425,7 @@ void Graph::kPlex_exact(int mode) {
 						// forward = !forward; // dual solutions
 						forward=true; //makes dd solutions
 						dual_mode = false;
-						// kplex.resize(71);
+						kplex.resize(70);
 
 						// dual_mode_timer.restart();
 
