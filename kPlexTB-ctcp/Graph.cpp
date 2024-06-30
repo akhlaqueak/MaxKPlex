@@ -366,8 +366,8 @@ void Graph::kPlex_exact(int mode) {
 				else
 					cout<<"Direction: R->L"<<endl;
 				
-				kplex.resize(70);
-				m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+				// kplex.resize(70);
+				// m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
 				while(kplex.size() < UB) {
 					ui u, key;
