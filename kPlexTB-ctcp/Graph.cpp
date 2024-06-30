@@ -365,6 +365,7 @@ void Graph::kPlex_exact(int mode) {
 					cout<<"Direction: R->L"<<endl;
 					kplex.resize(69);
 						Qv_n=0;
+			print_array("degrees:", degree, 0, n, 0); 
 						
 						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-K) Qv[Qv_n++] = i;
 						cout<<"Removing"<<Qv_n<<endl;
