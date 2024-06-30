@@ -358,9 +358,9 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=false, dual_mode = true;
+				bool forward=true, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
@@ -384,10 +384,10 @@ void Graph::kPlex_exact(int mode) {
 								if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 								else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 							}
-							cout<<"u deleted "<<key<<endl;
+							// cout<<"u deleted "<<key<<endl;
 							continue;
 						}
-						if(m == 0 or p_left==n) break;
+						if(m == 0) break;
 						UB_t = UB;
 					}
 					else{
@@ -398,7 +398,7 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 
-					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
+					// printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
@@ -434,14 +434,7 @@ void Graph::kPlex_exact(int mode) {
 					}
 
 					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
-						// forward = !forward; // dual solutions
-						forward=true; //makes dd solutions
-						dual_mode = false;
-						kplex.resize(69);
-
-						// dual_mode_timer.restart();
-
-
+						forward = !forward; // dual solutions
 						if(forward)
 						cout<<"Direction changed, L->R"<<endl;
 						else
