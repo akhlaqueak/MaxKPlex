@@ -356,14 +356,14 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=true, dual_mode = true;
+				bool forward=true, dual_mode = false;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-					kplex.resize(69);
+					kplex.resize(71);
 						Qv_n=0;
 			print_array("degrees:", degree, 0, n, 0); 
 						
