@@ -373,6 +373,7 @@ void Graph::kPlex_exact(int mode) {
 					ui u, key;
 
 					if(forward){
+						if(p_left==n) break; 
 						bool ret_tmp = heap->pop_min(u, key);
 						p_left++;
 						if(processed[u]) continue;
@@ -392,8 +393,8 @@ void Graph::kPlex_exact(int mode) {
 					else{
 						if(p_right==0) break;
 						u = peel_sequence[--p_right];
+						if(n-p_right<=kplex.size() or processed[u]) continue;
 						processed[u] = 1;
-						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
 
