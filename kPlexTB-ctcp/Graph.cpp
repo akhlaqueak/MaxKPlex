@@ -388,14 +388,7 @@ void Graph::kPlex_exact(int mode) {
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 					// printf("solving %u \n", u);
 
-					if(!forward and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
-						forward = true;
-						dual_mode_timer.restart();
-						if(forward)
-						cout<<"Direction changed, L->R"<<endl;
-						else
-						cout<<"Direction changed, R->L"<<endl;
-					}
+
 
 					fflush(stdout);
 
@@ -426,6 +419,15 @@ void Graph::kPlex_exact(int mode) {
 						else 
 						if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 						else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					}
+
+					if(!forward and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
+						forward = true;
+						dual_mode_timer.restart();
+						if(forward)
+						cout<<"Direction changed, L->R"<<endl;
+						else
+						cout<<"Direction changed, R->L"<<endl;
 					}
 				}
 				delete kplex_solver_m;
