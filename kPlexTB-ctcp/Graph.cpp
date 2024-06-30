@@ -356,13 +356,14 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=false, dual_mode = true;
+				bool forward=true, dual_mode = false;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
+					kplex.resize(67);
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
