@@ -435,6 +435,7 @@ void Graph::kPlex_exact(int mode) {
 
 					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
 						forward = !forward; // dual solutions
+						dual_mode_timer.restart();
 						if(forward)
 						cout<<"Direction changed, L->R"<<endl;
 						else
