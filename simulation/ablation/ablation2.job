@@ -196,7 +196,8 @@ make_solutions() {
 
 datasets=$(ls ~/graphs/ablation/*.bin)
 # solutions='kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
-solutions='kPlexTBs-forward kPlexTBs-reverse kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
+# solutions='kPlexTBs-forward kPlexTBs-reverse kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
+solutions='kPlexTBs-ctcp-dual-100 kPlexTBs-ctcp-dual-200 kPlexTBs-ctcp-dual-400 kPlexTBs-ctcp-dd-100 kPlexTBs-ctcp-dd-200 kPlexTBs-ctcp-dd-400'
 del_prev
 run_jobs 10:00:00
 
