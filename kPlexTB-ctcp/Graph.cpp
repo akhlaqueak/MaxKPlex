@@ -383,7 +383,7 @@ void Graph::kPlex_exact(int mode) {
 					}
 					else{
 						u = peel_sequence[--p_right];
-						if(p_right==n-1) u = 705;
+						if(p_right==n-1) u = 705; else
 						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
