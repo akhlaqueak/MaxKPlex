@@ -358,12 +358,12 @@ void Graph::kPlex_exact(int mode) {
 				ui UB_t = UB;
 				bool forward=false, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-				kplex.resize(71);
+
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
@@ -383,12 +383,11 @@ void Graph::kPlex_exact(int mode) {
 					}
 					else{
 						u = peel_sequence[--p_right];
-						if(p_right==n-1) u = 705; else
 						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
-					// printf("solving %u \n", u);
+					printf("%u: ", u);
 
 
 
