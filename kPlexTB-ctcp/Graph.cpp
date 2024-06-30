@@ -356,20 +356,13 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=true, dual_mode = false;
+				bool forward=false, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
-					kplex.resize(71);
-						Qv_n=0;
-			print_array("degrees:", degree, 0, n, 0); 
-						
-						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-K) Qv[Qv_n++] = i;
-						cout<<"Removing"<<Qv_n<<endl;
-						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
@@ -432,6 +425,7 @@ void Graph::kPlex_exact(int mode) {
 						// forward = !forward;
 						forward=true; //makes dd solutions
 						dual_mode = false;
+						kplex.resize(71);
 
 						// dual_mode_timer.restart();
 
