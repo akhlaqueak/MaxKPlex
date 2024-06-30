@@ -372,7 +372,6 @@ void Graph::kPlex_exact(int mode) {
 				else
 					cout<<"Direction: R->L"<<endl;
 					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", p_left, p_right, n, m, u);
-					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 					if(forward){
 						bool ret_tmp = heap->pop_min(u, key);
@@ -394,6 +393,7 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 
+					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
 					fflush(stdout);
