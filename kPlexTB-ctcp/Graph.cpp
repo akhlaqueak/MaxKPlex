@@ -367,6 +367,13 @@ void Graph::kPlex_exact(int mode) {
 
 				while(p_left < p_right&&n &&kplex.size() < UB) {
 					ui u, key;
+									if(forward)
+					cout<<"Direction: L->R"<<endl;
+				else
+					cout<<"Direction: R->L"<<endl;
+					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", p_left, p_right, n, m, u);
+					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
+
 					if(forward){
 						bool ret_tmp = heap->pop_min(u, key);
 						p_left++;
@@ -386,12 +393,6 @@ void Graph::kPlex_exact(int mode) {
 						if(n-p_right<=kplex.size()) continue;
 						UB_t = kplex.size()+1;
 					}
-									if(forward)
-					cout<<"Direction: L->R"<<endl;
-				else
-					cout<<"Direction: R->L"<<endl;
-					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u ", p_left, p_right, n, m, u);
-					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
 
