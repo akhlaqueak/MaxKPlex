@@ -358,7 +358,7 @@ void Graph::kPlex_exact(int mode) {
 				ui UB_t = UB;
 				bool forward=false, dual_mode = true;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 100, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 50, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
@@ -431,7 +431,7 @@ void Graph::kPlex_exact(int mode) {
 						// dual_mode_timer.restart();
 
 						Qv_n=0;
-						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-2*K) Qv[Qv_n++] = i;
+						for(ui i=0;i<n;i++) if(degree[i]<kplex.size()+1-K) Qv[Qv_n++] = i;
 						cout<<"Removing"<<Qv_n<<endl;
 						m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
