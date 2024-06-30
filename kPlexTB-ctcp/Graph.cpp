@@ -425,7 +425,7 @@ void Graph::kPlex_exact(int mode) {
 						// forward = !forward; // dual solutions
 						forward=true; //makes dd solutions
 						dual_mode = false;
-						kplex.resize(70);
+						kplex.resize(69);
 
 						// dual_mode_timer.restart();
 
