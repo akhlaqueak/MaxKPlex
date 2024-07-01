@@ -547,10 +547,10 @@ private:
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
-		branchings.tick();
+		// branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
 		if(root_level) cout<<"Branchings"<<t_R_end<<"->"<<R_end<<" ";
-		branchings.tock();
+		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
@@ -788,6 +788,7 @@ private:
         }
         ui beta = best_solution_size - S_end;
         ui cend = S_end;
+		branchings.tick();
         while (true)
         {
             ui maxpi = -1;
@@ -846,7 +847,7 @@ private:
             if (beta == 0)
                 break;
         }
-
+		branchings.tock();
 
         if (beta > 0)
             cend += min(beta, R_end - cend);
