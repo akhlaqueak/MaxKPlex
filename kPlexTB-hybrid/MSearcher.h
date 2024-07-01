@@ -102,7 +102,7 @@ public:
         }
     }
 
-    void load(ui _n, const std::vector<std::pair<int,int> > &vp) {
+    void load(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
 		n = _n;
         matrix = new char[n*n];
         commNeis = new ui[n*n];
