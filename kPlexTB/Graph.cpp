@@ -353,7 +353,7 @@ void Graph::kPlex_exact(int mode) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
-					printf(">>%s \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+					printf("iteration: %u \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f\n", n, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 				}
 				delete kplex_solver_m;
 

@@ -549,6 +549,7 @@ private:
 		// }
 		branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
+		if(root_level) cout<<"Branchings"<<t_R_end<<"->"<<R_end<<" ";
 		branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
