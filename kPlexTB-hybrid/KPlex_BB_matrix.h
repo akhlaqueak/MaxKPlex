@@ -207,6 +207,7 @@ public:
 		ui R_end;
 		initialization(R_end, must_include_0);
 		if(seesawUB(0, R_end)<=_UB_){cout<<"Failed... "; return;}
+		else return;
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();

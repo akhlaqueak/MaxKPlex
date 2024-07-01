@@ -301,6 +301,7 @@ void Graph::kPlex_exact(int mode) {
 			}
 
 			Timer tt;
+			kplex.resize(67);
 
 			KPLEX_BB *kplex_solver = new KPLEX_BB();
 			kplex_solver->allocateMemory(n);
