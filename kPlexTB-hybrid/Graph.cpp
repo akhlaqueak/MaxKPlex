@@ -352,7 +352,7 @@ void Graph::kPlex_exact(int mode) {
 					ui t_old_size = kplex.size();
 						// kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						// kplex_solver_m->kPlex(K, UB_t, kplex, true);
-					kp_solver->load(ids, vp);
+					kp_solver->load(ids.size(), vp);
 					kp_solver->run(K, kplex);
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex found at %u", u);
