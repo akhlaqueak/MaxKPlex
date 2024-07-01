@@ -778,12 +778,13 @@ private:
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
             // Lookup neig(&lookup, &g.adjList[u]);
             // bmp.setup(g.adjList[u], g.V);
+			ui* t_LPI = LPI+u*n;
             for (ui j = S_end; j < R_end; j++)
             {
                 ui v = SR[j];
                 if (!matrix[u * n + v])
                     // PI[u].push_back(v);
-                    LPI[u * n + psz[u]++] = v;
+                    t_LPI[psz[u]++] = v;
             }
         }
         ui beta = best_solution_size - S_end;
@@ -827,14 +828,16 @@ private:
                 {
                     // Removing pi* from all pi in PI
                     ui u = SR[i];
-                    if (u == maxpi)
+                    if (u == maxpi or psz[u]==0)
                         continue;
                     ui j = 0;
+					ui* t_LPI = LPI+u*n;
                     for (ui k = 0; k < psz[u]; k++)
                         if (!bmp.test(LPI[u * n + k]))
                             // if (!bmp.test(PI[u][k]))
                             // PI[u][j++] = PI[u][k];
-                            LPI[u * n + j++] = LPI[u * n + k];
+							t_LPI[j++] = t_LPI[k];
+                            // LPI[u * n + j++] = LPI[u * n + k];
                     // PI[u].resize(j);
                     psz[u] = j;
                 }
