@@ -161,7 +161,7 @@ public:
 	{
 		cap = _cap;
 		n = cap;
-		buf = new ui[n];
+		buf = new char[n];
 		fill(buf, buf + n, 0);
 		// for (ui i = 0; i < n; ++i)
 		// 	buf[i] = 0;
@@ -170,7 +170,7 @@ public:
 	{
 		cap = _cap;
 		n = cap;
-		buf = new ui[n];
+		buf = new char[n];
 		fill(buf, buf + n, 0);
 	}
 	~MBitSet()
