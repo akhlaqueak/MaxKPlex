@@ -325,7 +325,7 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t;
-#define FORWARD
+// #define FORWARD
 #ifdef FORWARD
 				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
 					ui u = peel_sequence[i];
@@ -350,10 +350,13 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 					cout<<density<<" ";
 					ui t_old_size = kplex.size();
-						// kplex_solver_m->load_graph(ids.size(), vp, sz1h);
-						// kplex_solver_m->kPlex(K, UB_t, kplex, true);
-					kp_solver->load(ids.size(), vp);
-					kp_solver->run(K, kplex);
+					if(density>0.8){
+						kp_solver->load(ids.size(), vp);
+						kp_solver->run(K, kplex);
+					}else{
+						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
+						kplex_solver_m->kPlex(K, UB_t, kplex, true);
+					}
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
