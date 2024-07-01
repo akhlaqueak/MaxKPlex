@@ -301,7 +301,6 @@ void Graph::kPlex_exact(int mode) {
 			}
 
 			Timer tt;
-			kplex.resize(67);
 
 			KPLEX_BB *kplex_solver = new KPLEX_BB();
 			kplex_solver->allocateMemory(n);
@@ -351,7 +350,7 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 					cout<<density<<" ";
 					ui t_old_size = kplex.size();
-					if(density>1){
+					if(density>0.5){
 						kp_solver->load(ids.size(), vp);
 						kp_solver->run(K, kplex);
 					}else{
@@ -359,11 +358,11 @@ void Graph::kPlex_exact(int mode) {
 						kplex_solver_m->kPlex(K, UB_t, kplex, true);
 					}
 					if(kplex.size() > t_old_size) {
-						printf("Larger kplex found at %u", u);
+						printf("Larger kplex of size %u found at %u", kplex.size(), u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
 					// printf("solving %u \n", i);
-					printf(" total_elapased: %llu iteration: %u u: %u \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f\n", tt.elapsed(), i, u, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+					// printf(" total_elapased: %llu iteration: %u u: %u \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f\n", tt.elapsed(), i, u, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 				}
 				delete kplex_solver_m;
 
