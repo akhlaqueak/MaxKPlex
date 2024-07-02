@@ -735,7 +735,7 @@ void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 		if(degree[i] > max_degree) max_degree = degree[i];
 		next[i] = head[degree[i]];
 		head[degree[i]] = i;
-	} // continued... 
+	} 
 
 	for(ui processed_vertices = 0;max_degree + K >= kplex.size()&&processed_vertices < processed_threshold;processed_vertices ++) {
 		ui u = n;

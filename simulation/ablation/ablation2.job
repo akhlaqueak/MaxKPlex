@@ -137,11 +137,11 @@ del_prev() {
 }
 
 SOL='kPlexTBs-hybrid'
-solutions='0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.90'
+solutions='0.75 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.90 0.95'
 datasets=$(ls ~/graphs/ablation/*.bin)
 
 del_prev
-run_jobs 02:00:00
+run_jobs 06:00:00
 
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
