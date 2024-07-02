@@ -16,7 +16,7 @@ run_jobs() {
     for fn in $datasets; do
         for sol in $solutions; do
             for k in {2..5}; do
-                srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $fn -a exact -k $k -c 3 >> $SOL-$sol-$k.out &
+                srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $fn -a exact -k $k -c $sol >> $SOL-$sol-$k.out &
             done
         done
     done
