@@ -110,7 +110,6 @@ get_cost() {
 
     result=seesaw.out
     rm $result
-    sol=kplex-nosetEnum
     for k in {2..5}; do
         echo >>$result
 
