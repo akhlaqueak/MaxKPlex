@@ -145,7 +145,7 @@ del_prev() {
 
 datasets=$(ls ~/graphs/ablation/*.bin)
 # kPlexTBs-with-ctcp need to be run
-solutions='kPlexS Maple kPlexT kPlexTBs  kPlexTBs-binary-branch kPlexTBs-no-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw-no-reductions'
+solutions='kPlexTBs  kPlexTBs-with-seesaw kPlexTBs-binary-branch kPlexTBs-no-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw-no-reductions'
 
 del_prev
 run_jobs 06:00:00
