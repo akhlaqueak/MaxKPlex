@@ -19,7 +19,8 @@ run_jobs() {
                 graph=~/graphs/network_repo/$fn
                 if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $graph $k >>$sol-$k.out &
-                elif [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'kPlexTBs' ]; then
+                fi
+                if [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'kPlexTBs' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $graph -a exact -k $k -c 3 >>$sol-$k.out &
                 else
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $graph -a exact -k $k -c $sol >> $SOL-$sol-$k.out &
