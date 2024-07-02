@@ -50,7 +50,7 @@ get_results() {
 
     for fn in $datasets; do
         echo -en "$fn,|," >>$result
-        for k in {2..5}; do
+        for k in {5..10}; do
 
             line=()
             outfile=''
@@ -93,7 +93,7 @@ get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
     result=kpsize.out
     rm $result
-    for k in {2..5}; do
+    for k in {5..10}; do
         echo "================= k=$k =================" >>$result
         echo -en "datasets," >>$result
         for sol in $solutions; do
