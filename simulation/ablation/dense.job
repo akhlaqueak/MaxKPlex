@@ -55,7 +55,7 @@ get_results() {
             line=()
             outfile=''
             for sol in $solutions; do
-                elif [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'Maple' ] || [ $sol == 'kPlexTBs' ]; then
+                if [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'Maple' ] || [ $sol == 'kPlexTBs' ]; then
                     outfile=$sol-$k.out
                 else
                     outfile=$SOL-$sol-$k.out
