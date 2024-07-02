@@ -350,7 +350,8 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 
 					ui t_old_size = kplex.size();
-					if(density>0.4){
+					cout<<"Density threshold: "<<cfactor<<endl;
+					if(density>cfactor){
 						kp_solver->load(ids.size(), vp);
 						kp_solver->run(K, kplex);
 					}else{
@@ -1312,7 +1313,7 @@ int main(int argc, char *argv[]) {
 	auto graph_option = op.add<Value<string>>("g", "graph", "\'path to input graph file\'");
 	auto alg_option = op.add<Value<string>>("a", "alg", "\'algorithm name\' (degen | exact | verify)", "exact", &alg);
 	auto k_option = op.add<Value<int>>("k", "k", "\'the value of k for k-plex\'");
-	auto c_option = op.add<Value<int>>("c", "c", "\'the value of c-factor\'");
+	auto c_option = op.add<Value<double>>("c", "c", "\'the value of c-factor\'");
 	op.add<Switch>("o", "output", "\'write the kplex to ./kplex.txt\'", &output);
 	op.add<Switch>("b", "binary", "\'read the input graph from binary files b_adj.bin and b_degree.bin\'", &binary_input);
 

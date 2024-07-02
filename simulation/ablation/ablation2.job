@@ -16,16 +16,7 @@ run_jobs() {
     for fn in $datasets; do
         for sol in $solutions; do
             for k in {2..5}; do
-                outfile=$sol-$k.out
-                op=$(grep $fn $outfile)
-                if [ -z "${op}" ]; then
-                    echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                    if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                        srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >>$sol-$k.out &
-                    else
-                        srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
-                    fi
-                fi
+                srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $fn -a exact -k $k -c 3 >> $SOL-$sol-$k.out &
             done
         done
     done
@@ -55,7 +46,7 @@ get_results() {
 
             line=()
             for sol in $solutions; do
-                outfile=$sol-$k.out
+                outfile=$SOL-$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     line+=('9999999999')
@@ -100,7 +91,7 @@ get_kpsize() {
         for fn in $datasets; do
             echo -en "$fn," >>$result
             for sol in $solutions; do
-                outfile=$sol-$k.out
+                outfile=$SOL-$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     echo -en '-,' >>$result
@@ -145,66 +136,12 @@ del_prev() {
     done
 }
 
-make_solutions() {
-
-    cd ../../kPlexTB
-    make
-    cp kPlexT ../simulation/ablation/kPlexTBs
-
-    cp switches.h temp.h
-
-    echo -e "
-#define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
-#define SEESAW
-#define B_BRANCHINGS
-" > switches.h
-    make
-    cp kPlexT ../simulation/ablation/kPlexT-with
-
-    echo -e "
-//#define _SECOND_ORDER_PRUNING_
-//#define B_BRANCHINGS
-#define REDUCTIONS
-#define SEESAW
-" > switches.h
-    make
-    cp kPlexT ../simulation/ablation/kPlexT-no-branchings
-
-    echo -e "
-//#define _SECOND_ORDER_PRUNING_
-//#define REDUCTIONS
-#define SEESAW
-#define B_BRANCHINGS
-" > switches.h
-    make
-    cp kPlexT ../simulation/ablation/kPlexT-no-reductions
-
-    echo -e "
-//#define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
-//#define SEESAW
-#define B_BRANCHINGS
-" >switches.h
-    make
-    cp kPlexT ../simulation/ablation/kPlexT-no-seesaw
-
-    mv temp.h switches.h
-    make
-    cd ../simulation/ablation
-}
-
+SOL='kPlexTBs-hybrid'
+solutions='0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.90'
 datasets=$(ls ~/graphs/ablation/*.bin)
-# solutions='kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
-# solutions='kPlexTBs-forward kPlexTBs-reverse kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
 
-solutions='kPlexTBs-ctcp-dual-10 kPlexTBs-ctcp-dual-100 kPlexTBs-ctcp-dual-200 kPlexTBs-ctcp-dual-400' 
-kPlexTBs-ctcp-dual-forward-10 kPlexTBs-ctcp-dual-forward-100 kPlexTBs-ctcp-dual-forward-200 kPlexTBs-ctcp-dual-forward-400'
-run_jobs 10:00:00
-
-
-# solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
-# solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
+del_prev
+run_jobs 02:00:00
 
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)

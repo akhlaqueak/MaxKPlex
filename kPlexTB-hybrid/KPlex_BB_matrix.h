@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 
-ui cfactor=1;
+double cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
@@ -517,7 +517,7 @@ private:
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*cfactor  and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
