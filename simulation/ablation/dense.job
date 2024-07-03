@@ -143,7 +143,7 @@ del_prev() {
     done
 }
 
-krange={2..5}
+krange=$(seq 2 5)
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 SOL='kPlexTBs-hybrid'
 # datasets='soc-digg.bin
