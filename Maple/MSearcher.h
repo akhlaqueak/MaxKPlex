@@ -476,8 +476,7 @@ if(enable){
             }
         }
 }
-        // return CTCP();
-		return false;
+        return CTCP();
     }
 
     bool CTCP() {
