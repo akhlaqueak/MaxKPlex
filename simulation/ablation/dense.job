@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=TBs-hybrid             ### Name of the job
+#SBATCH --job-name=dense             ### Name of the job
 #SBATCH --ntasks=128                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
@@ -17,14 +17,9 @@ run_jobs() {
         for sol in $solutions; do
             for k in {5..10}; do
                 graph=~/graphs/network_repo/$fn
-                if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $graph $k >>$sol-$k.out &
-                fi
-                if [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'kPlexTBs' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $graph -a exact -k $k -c 3 >>$sol-$k.out &
-                else
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $graph -a exact -k $k -c $sol >> $SOL-$sol-$k.out &
-                fi
+
+                srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $graph -a exact -k $k -c $sol >>$SOL-$sol-$k.out &
+
             done
         done
     done
@@ -39,7 +34,7 @@ get_results() {
     # done
     echo -en "datasets," >>$result
 
-    for k in {2..5}; do
+    for k in {5..10}; do
         echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
@@ -55,11 +50,8 @@ get_results() {
             line=()
             outfile=''
             for sol in $solutions; do
-                if [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'Maple' ] || [ $sol == 'kPlexTBs' ]; then
-                    outfile=$sol-$k.out
-                else
-                    outfile=$SOL-$sol-$k.out
-                fi
+
+                outfile=$SOL-$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     line+=('9999999999')
@@ -105,11 +97,8 @@ get_kpsize() {
             echo -en "$fn," >>$result
             outfile=''
             for sol in $solutions; do
-                if [ $sol == 'kPlexS' ] || [ $sol == 'kPlexT' ] || [ $sol == 'Maple' ] || [ $sol == 'kPlexTBs' ]; then
-                    outfile=$sol-$k.out
-                else
-                    outfile=$SOL-$sol-$k.out
-                fi
+
+                outfile=$SOL-$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     echo -en '-,' >>$result
@@ -154,7 +143,7 @@ del_prev() {
 }
 
 SOL='kPlexTBs-hybrid'
-solutions='kPlexS Maple kPlexT kPlexTBs 0.76 0.78 0.80 0.82 0.84 0.86 0.88 0.90 0.92 0.94 0.96'
+solutions=$(seq 0.5 0.05 0.95)
 datasets='soc-digg.bin
 socfb-Duke14.bin
 tech-as-skitter.bin
@@ -166,9 +155,8 @@ soc-youtube-snap.bin
 soc-lastfm.bin
 soc-youtube.bin'
 
-# del_prev
-run_jobs 06:00:00
-
+del_prev
+run_jobs 00:15:00
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
