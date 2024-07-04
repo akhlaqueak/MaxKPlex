@@ -143,7 +143,7 @@ del_prev() {
     done
 }
 
-krange=$(seq 2 5)
+krange=$(seq 5 5)
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 SOL='kPlexTBs-hybrid'
 # datasets='soc-digg.bin
@@ -158,8 +158,8 @@ SOL='kPlexTBs-hybrid'
 # soc-youtube.bin'
 
 solutions=$(seq 0.5 0.05 0.9)
-del_prev
-run_jobs 00:30:00
+# del_prev
+run_jobs 02:00:00
 
 get_results
 get_kpsize
