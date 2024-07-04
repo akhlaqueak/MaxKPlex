@@ -737,11 +737,11 @@ if(enable){
     bool updateR() {
     	for(ui i = 0;i < P_end;i ++) if(neiInG[PC[i]] + K <= bestSz) return true;
 
-if(enable){
-    	for(ui i = 0;i < P_end;i ++) for(ui j = i+1;j < P_end;j ++) {
-    		if(upper_bound_based_prune(P_end, PC[i], PC[j])) return true;
-    	}
-}
+		if(enable){
+				for(ui i = 0;i < P_end;i ++) for(ui j = i+1;j < P_end;j ++) {
+					if(upper_bound_based_prune(P_end, PC[i], PC[j])) return true;
+				}
+		}
 
     	for(ui i = P_end;i < C_end;i ++) if(lvlID[PC[i]] > lvl){
     		if(P_end - neiInP[PC[i]] >= K||neiInG[PC[i]] + K <= bestSz) {
