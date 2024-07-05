@@ -235,14 +235,14 @@ private:
         memset(lvlID, 0, sizeof(ui)*n);
         for(ui i = 0;i < C_end;i ++) lvlID[PC[i]] = n;
 
-        // for(ui i = 0;i < C_end;i ++) for(ui j = i+1;j < C_end;j ++) {
-        // 	if(matrix[PC[i]*n + PC[j]]&&upper_bound_based_prune(0, PC[i], PC[j])) {
-        // 		Qe.push(std::make_pair(PC[i], PC[j]));
-        // 	}
-        // }
+        for(ui i = 0;i < C_end;i ++) for(ui j = i+1;j < C_end;j ++) {
+        	if(matrix[PC[i]*n + PC[j]]&&upper_bound_based_prune(0, PC[i], PC[j])) {
+        		Qe.push(std::make_pair(PC[i], PC[j]));
+        	}
+        }
 
-        // removeSz = 0;
-        // if(CTCP()) C_end = 0;
+        removeSz = 0;
+        if(CTCP()) C_end = 0;
     }
 
 	bool checkNei(int u) {
@@ -322,9 +322,9 @@ private:
 			nodeCnt++;
         	return ;
         }
-        else if(C_end == bestSz + 1){
-			return ;
-		}
+        // else if(C_end == bestSz + 1){
+		// 	return ;
+		// }
 
 		//reduction for high degree vertices
         ui pivot = n;
