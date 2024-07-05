@@ -322,29 +322,29 @@ private:
 			nodeCnt++;
         	return ;
         }
-        // else if(C_end == bestSz + 1){
-		// 	return ;
-		// }
+        else if(C_end == bestSz + 1){
+			return ;
+		}
 
 		//reduction for high degree vertices
         ui pivot = n;
-		for(ui i = P_end;i < C_end;i ++) {
-			ui v = PC[i];
-			const int NotNei=C_end-neiInG[v];
-			if(NotNei <= 2) {
-				pivot = v;
-				break;
-			}
-			else if(neiInP[v] == P_end) {
-				if(NotNei == 3 && checkTriangle(v)) {
-					pivot = v;
-					break;
-				}else if(NotNei <= K+1 && checkNei(v)){
-					pivot = v;
-					break;
-				}
-			}
-		}
+		// for(ui i = P_end;i < C_end;i ++) {
+		// 	ui v = PC[i];
+		// 	const int NotNei=C_end-neiInG[v];
+		// 	if(NotNei <= 2) {
+		// 		pivot = v;
+		// 		break;
+		// 	}
+		// 	else if(neiInP[v] == P_end) {
+		// 		if(NotNei == 3 && checkTriangle(v)) {
+		// 			pivot = v;
+		// 			break;
+		// 		}else if(NotNei <= K+1 && checkNei(v)){
+		// 			pivot = v;
+		// 			break;
+		// 		}
+		// 	}
+		// }
 
 		//reduction for the whole P
 		if(pivot == n){
