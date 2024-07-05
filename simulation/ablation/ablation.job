@@ -146,8 +146,8 @@ del_prev() {
 datasets=$(ls ~/graphs/ablation/*.bin)
 # kPlexTBs-with-ctcp need to be run
 # solutions='kPlexTBs  kPlexTBs-with-seesaw kPlexTBs-binary-branch kPlexTBs-no-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw-no-reductions'
-# solutions='kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
-# solutions='kPlexTBs-ctcp-dual-10 kPlexTBs-ctcp-dual-100 kPlexTBs-ctcp-dual-200 kPlexTBs-ctcp-dual-400'
+solutions='kPlexTBs kPlexTBs-forward kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
+solutions='kPlexTBs kPlexTBs-ctcp-forward kPlexTBs-ctcp-dual-10 kPlexTBs-ctcp-dual-100 kPlexTBs-ctcp-dual-200 kPlexTBs-ctcp-dual-400'
 
 solutions='kPlexTBs-ctcp-forward kPlexTBs-forward'
 
@@ -155,6 +155,15 @@ del_prev
 run_jobs 00:30:00
 
 
+
+
+hyb=$(seq 0.5 0.05 0.9)
+
+solutions='Maple kPlexTBs'
+
+for h in $hyb; do
+    solutions="$solutions kPlexTBs-hybrid-$h"
+done
 # solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
 # solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
 

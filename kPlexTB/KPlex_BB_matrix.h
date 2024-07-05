@@ -512,6 +512,10 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		if(bound(S_end, R_end)>=R_end){
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
@@ -1857,6 +1861,35 @@ private:
             }
         }
         return ub;
+    }
+	ui bound(ui S_end, ui R_end) {
+    	vp.clear();
+    	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(neiInG[SR[i]]-neiInP[SR[i]]), SR[i]));
+    	sort(vp.begin(), vp.end());
+    	ui UB = S_end, cursor = S_end;
+    	for(ui i = 0;i < (ui)vp.size(); i++) {
+    		ui u = vp[i].second;
+    		if(vp[i].first == 0) continue;// boundary vertex
+    		ui count = 0;
+    		char *t_matrix = matrix + u*n;
+    		for(ui j = cursor;j < R_end;j ++) if(!t_matrix[SR[j]]) {
+    			if(j != cursor + count) swap_pos(j, cursor+count);
+    			++ count;
+    		}
+    		ui t_ub = count;
+    		if(vp[i].first < t_ub) t_ub = vp[i].first;
+    		if(UB + t_ub <= best_solution_size) {
+    			UB += t_ub;
+    			cursor += count;
+    		}
+    		else {
+    			return cursor + (best_solution_size - UB);
+    		}
+    	}
+		cursor+=(best_solution_size-UB);
+		if(cursor>R_end)cursor=C_end;
+    	return cursor;
     }
 };
 #endif

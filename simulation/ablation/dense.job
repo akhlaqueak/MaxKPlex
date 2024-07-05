@@ -159,7 +159,7 @@ SOL='kPlexTBs-hybrid'
 
 solutions=$(seq 0.5 0.05 0.9)
 # del_prev
-run_jobs 02:00:00
+# run_jobs 02:00:00
 
 get_results
 get_kpsize
