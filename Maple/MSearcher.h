@@ -140,7 +140,7 @@ public:
 					subCnt++;
 					subSum+=(long long)(C_end-bestSz);
 					lvl++,reduce(0, 0),lvl--;
-					enable=true;
+					enable=false;
 				}
 			}
 		}
