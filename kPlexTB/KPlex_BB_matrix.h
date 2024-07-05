@@ -1888,7 +1888,7 @@ private:
     		}
     	}
 		cursor+=(best_solution_size-UB);
-		if(cursor>R_end)cursor=C_end;
+		if(cursor>R_end)cursor=R_end;
     	return cursor;
     }
 };
