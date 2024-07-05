@@ -298,7 +298,7 @@ void Graph::search() {
 			bool mflag=false;
 			
 			if( K<3 || max_n==oldn ) kplex_solver->enableInput=false;
-			if( K>=10 ) kplex_solver->enableInput=false;
+			if( K>=10 ) kplex_solver->enableInput=true;
 
 			// if(last_m<0.8*m) {
 			if(true){
