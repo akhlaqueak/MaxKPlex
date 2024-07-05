@@ -347,26 +347,26 @@ private:
 		}
 
 		//reduction for the whole P
-		// if(pivot == n){
-		// 	int cursor=bound();
-		// 	if(cursor>=C_end){
-		// 		return;
-		// 	}
-		// 	if(cursor+1==C_end) pivot=PC[cursor];
-		// }
+		if(pivot == n){
+			int cursor=bound();
+			if(cursor>=C_end){
+				return;
+			}
+			if(cursor+1==C_end) pivot=PC[cursor];
+		}
 		
-		// //reduction for high degree vertices
-		// if(pivot < n){
-       	// 	ui oldRemoveSz = removeSz;
-		// 	if(!moveC2P_R(pivot))lvl++, reduce(begIdx, endIdx), lvl--;
-       	// 	unR(oldRemoveSz);
-		// 	moveP2C();
-		// 	return;
-		// }
+		//reduction for high degree vertices
+		if(pivot < n){
+       		ui oldRemoveSz = removeSz;
+			if(!moveC2P_R(pivot))lvl++, reduce(begIdx, endIdx), lvl--;
+       		unR(oldRemoveSz);
+			moveP2C();
+			return;
+		}
 
 		//no more un-reduced lazy branches
-		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
-			branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
+		// if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
+		// 	branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
 
 		pivot = addList[-- endIdx];
 
