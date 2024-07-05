@@ -328,41 +328,41 @@ private:
 
 		//reduction for high degree vertices
         ui pivot = n;
-		// for(ui i = P_end;i < C_end;i ++) {
-		// 	ui v = PC[i];
-		// 	const int NotNei=C_end-neiInG[v];
-		// 	if(NotNei <= 2) {
-		// 		pivot = v;
-		// 		break;
-		// 	}
-		// 	else if(neiInP[v] == P_end) {
-		// 		if(NotNei == 3 && checkTriangle(v)) {
-		// 			pivot = v;
-		// 			break;
-		// 		}else if(NotNei <= K+1 && checkNei(v)){
-		// 			pivot = v;
-		// 			break;
-		// 		}
-		// 	}
-		// }
+		for(ui i = P_end;i < C_end;i ++) {
+			ui v = PC[i];
+			const int NotNei=C_end-neiInG[v];
+			if(NotNei <= 2) {
+				pivot = v;
+				break;
+			}
+			else if(neiInP[v] == P_end) {
+				if(NotNei == 3 && checkTriangle(v)) {
+					pivot = v;
+					break;
+				}else if(NotNei <= K+1 && checkNei(v)){
+					pivot = v;
+					break;
+				}
+			}
+		}
 
 		//reduction for the whole P
-		if(pivot == n){
-			int cursor=bound();
-			if(cursor>=C_end){
-				return;
-			}
-			if(cursor+1==C_end) pivot=PC[cursor];
-		}
+		// if(pivot == n){
+		// 	int cursor=bound();
+		// 	if(cursor>=C_end){
+		// 		return;
+		// 	}
+		// 	if(cursor+1==C_end) pivot=PC[cursor];
+		// }
 		
-		//reduction for high degree vertices
-		if(pivot < n){
-       		ui oldRemoveSz = removeSz;
-			if(!moveC2P_R(pivot))lvl++, reduce(begIdx, endIdx), lvl--;
-       		unR(oldRemoveSz);
-			moveP2C();
-			return;
-		}
+		// //reduction for high degree vertices
+		// if(pivot < n){
+       	// 	ui oldRemoveSz = removeSz;
+		// 	if(!moveC2P_R(pivot))lvl++, reduce(begIdx, endIdx), lvl--;
+       	// 	unR(oldRemoveSz);
+		// 	moveP2C();
+		// 	return;
+		// }
 
 		//no more un-reduced lazy branches
 		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
