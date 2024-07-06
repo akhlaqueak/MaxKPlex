@@ -5,7 +5,7 @@
 #include "Timer.h"
 
 ui cfactor=1;
-// #define _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 // #define SEESAW
 #define B_BRANCHINGS
@@ -20,6 +20,7 @@ private:
 	long long matrix_size;
 	vecui PI, PIMax, ISc;
 	MBitSet bmp;
+	bool ctcp_enabled=false;
 
 	ui *cnC;
 	ui* peelOrder;
@@ -199,6 +200,7 @@ public:
 	void kPlex(ui K_, ui UB_, std::vector<ui> &kplex, bool must_include_0) {
 		K = K_;
 		_UB_ = UB_;
+		ctcp_enabled = K>5;
 		if(K <= 1) {
 			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
 			return ;
@@ -336,25 +338,25 @@ private:
 
 		if(!Qv.empty()) printf("!!! Something wrong. Qv must be empty in initialization\n");
 
-#ifdef _SECOND_ORDER_PRUNING_
-		for(ui i = 0;i < R_end;i ++) {
-			ui neighbors_n = 0;
-			char *t_matrix = matrix + SR[i]*n;
-			for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
-			for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
-				++ cn[neighbors[j]*n + neighbors[k]];
-				++ cn[neighbors[k]*n + neighbors[j]];
-			}
+// #ifdef _SECOND_ORDER_PRUNING_
+	if(ctcp_enabled) {for(ui i = 0;i < R_end;i ++) {
+		ui neighbors_n = 0;
+		char *t_matrix = matrix + SR[i]*n;
+		for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
+		for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
+			++ cn[neighbors[j]*n + neighbors[k]];
+			++ cn[neighbors[k]*n + neighbors[j]];
 		}
+	}
 
-		while(!Qe.empty()) Qe.pop();
-		for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
-			if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
-				Qe.push(std::make_pair(SR[i], SR[j]));
-			}
+	while(!Qe.empty()) Qe.pop();
+	for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
+		if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
+			Qe.push(std::make_pair(SR[i], SR[j]));
 		}
-		removed_edges_n = 0;
-#endif
+	}
+	removed_edges_n = 0;}
+// #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
 		#ifdef REDUCTIONS
@@ -439,10 +441,12 @@ private:
 
 		ui old_removed_edges_n = 0, old_S_end = S_end, old_R_end = R_end;
 		assert(Qv.empty());
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		while(!Qe.empty()) Qe.pop();
 		old_removed_edges_n = removed_edges_n;
-#endif
+		}
+// #endif
 
 		// choosing 0 as branching vertex
 		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
@@ -1176,7 +1180,9 @@ private:
 		}
 #endif
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
+
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			int v = nonneighbors[i];
 			if(SR_rid[v] < S_end||level_id[v] == level) continue;
@@ -1215,17 +1221,19 @@ private:
 				}
 			}
 		}
-#endif
+		}
+// #endif
 
 		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
 	}
 
 	bool remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level) {
-#ifdef _SECOND_ORDER_PRUNING_
-		while(!Qv.empty()||!Qe.empty()) {
-#else
-		while(!Qv.empty()) {
-#endif
+// #ifdef _SECOND_ORDER_PRUNING_
+// 		while(!Qv.empty()||!Qe.empty()) {
+// #else
+// 		while(!Qv.empty()) {
+// #endif
+		while((ctcp_enabled&&!Qe.empty())||!Qv.empty()){
 			while(!Qv.empty()) {
 				ui u = Qv.front(); Qv.pop(); // remove u
 				assert(SR[SR_rid[u]] == u);
@@ -1256,7 +1264,9 @@ private:
 					return false;
 				}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled){
+
 				for(ui i = 1;i < neighbors_n;i ++) {
 					ui w = neighbors[i];
 					for(ui j = 0;j < i;j ++) {
@@ -1290,10 +1300,13 @@ private:
 					}
 				}
 				if(terminate) return false;
-#endif
+// #endif
+			}
 			}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
+
 			if(Qe.empty()) break;
 
 			ui v = Qe.front().first, w =  Qe.front().second; Qe.pop();
@@ -1350,7 +1363,8 @@ private:
 				}
 				else if(matrix[v*n + SR[i]]) Qe.push(std::make_pair(v, SR[i]));
 			}
-#endif
+// #endif
+		}
 		}
 
 		return true;
@@ -1396,7 +1410,9 @@ private:
 				++ degree[u];
 				if(i < S_end) ++ degree_in_S[u];
 			}
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled){
+
 			for(ui i = 0;i < neighbors_n;i ++) {
 				ui v = neighbors[i];
 				for(ui j = i + 1;j < neighbors_n;j ++) {
@@ -1421,7 +1437,8 @@ private:
 				assert(t_cn[SR[i]] == common_neighbors);
 #endif
 			}
-#endif
+// #endif
+			}
 		}
 
 #ifndef NDEBUG
@@ -1446,7 +1463,8 @@ private:
 				neighbors[neighbors_n ++] = w;
 				-- degree_in_S[w];
 			}
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 			for(ui i = 0;i < neighbors_n;i ++) {
 				ui v = neighbors[i];
 				for(ui j = i + 1;j < neighbors_n;j ++) {
@@ -1471,7 +1489,8 @@ private:
 				assert(t_cn[SR[i]] == common_neighbors);
 #endif
 			}
-#endif
+// #endif
+		}
 		}
 
 #ifndef NDEBUG
@@ -1485,7 +1504,8 @@ private:
 		}
 #endif
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = old_removed_edges_n;i < removed_edges_n; i ++) { // insert edge back into matrix
 			ui v = removed_edges[i].first, w = removed_edges[i].second;
 			assert(SR_rid[v] >= S_end&&SR_rid[v] < R_end&&SR_rid[w] >= S_end&&SR_rid[w] < R_end);
@@ -1509,8 +1529,8 @@ private:
 			}
 		}
 		removed_edges_n = old_removed_edges_n;
-#endif
-
+// #endif
+		}
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -1556,7 +1576,8 @@ private:
 		}
 		if(terminate) return false;
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = 1;i < neighbors_n;i ++) if(level_id[neighbors[i]] > level) {
 			ui w = neighbors[i];
 			for(ui j = 0;j < i;j ++) {
@@ -1576,18 +1597,21 @@ private:
 				}
 			}
 		}
-#endif
+// #endif
+		}
 		return true;
 	}
 
 	bool collect_removable_vertices_and_edges(ui S_end, ui R_end, ui level) {
 		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_solution_size) return false;
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = 0;i < S_end;i ++) for(ui j = i+1;j < S_end;j ++) {
 			if(upper_bound_based_prune(S_end, SR[i], SR[j])) return false;
 		}
-#endif
+		}
+// #endif
 
 		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level){
 			ui v = SR[i];
@@ -1598,11 +1622,12 @@ private:
 			}
 			char *t_matrix = matrix + v*n;
 			for(ui j = 0;j < S_end;j ++) {
-#ifdef _SECOND_ORDER_PRUNING_
-				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||upper_bound_based_prune(S_end, v, SR[j]))
-#else
-				if(S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])
-#endif
+// #ifdef _SECOND_ORDER_PRUNING_
+// 				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||upper_bound_based_prune(S_end, v, SR[j]))
+// #else
+// 				if(S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])
+// #endif
+				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||(ctcp_enabled&&upper_bound_based_prune(S_end, v, SR[j])))
 				{
 					level_id[v] = level;
 					Qv.push(v);
@@ -1611,18 +1636,20 @@ private:
 			}
 		}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level) {
 			for(ui j = i+1;j < R_end;j ++) if(level_id[SR[j]] > level&&matrix[SR[i]*n + SR[j]]) {
 				if(upper_bound_based_prune(S_end, SR[i], SR[j])) Qe.push(std::make_pair(SR[i], SR[j]));
 			}
 		}
-#endif
+// #endif
+		}
 
 		return true;
 	}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
 	bool upper_bound_based_prune(ui S_end, ui u, ui v) {
 		// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
 		ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
@@ -1636,7 +1663,7 @@ private:
 		}
 		return ub <= best_solution_size;
 	}
-#endif
+// #endif
 
 	void swap_pos(ui i, ui j) {
 		std::swap(SR[i], SR[j]);
