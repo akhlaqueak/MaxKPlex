@@ -345,7 +345,7 @@ void Graph::kPlex_exact(int mode) {
 					++ search_cnt;
 					total_density += density;
 					if(density < min_density) min_density = density;
-					cout<<density<<" ";
+					cout<<density<<endl;
 					ui t_old_size = kplex.size();
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, UB_t, kplex, true);
