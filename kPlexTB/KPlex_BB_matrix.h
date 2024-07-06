@@ -451,16 +451,16 @@ private:
 			return ;
 		}
 		seesaw.tick();
-		// ui S2_n = 0;
-		// for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
+		ui S2_n = 0;
+		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
-		// if(S2_n >= 2) {
-		// 	collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
-		// 	if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
-		// 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 		return ;
-		// 	}
-		// }
+		if(S2_n >= 2) {
+			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
+			if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
+				restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+				return ;
+			}
+		}
 		seesaw.tock();
 
 #ifndef NDEBUG
@@ -482,11 +482,11 @@ private:
 #endif
 
 		// greedily add vertices to S
-		// if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-		// 	//printf("here2\n");
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {

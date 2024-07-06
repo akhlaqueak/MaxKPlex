@@ -317,6 +317,7 @@ void Graph::search() {
 					// if(kplex.size() != pre_size && kplex.size()> 2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				}
 				while(kplex.size()!=pre_size);
+			// cout<<"Density"<<density<<" ";
 			}
 			else {
 				extract_graph(n, m, degree, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
@@ -410,7 +411,7 @@ void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<int,int> > &edge_list, u
 
 	if(s_n > 0&&kplex.size()+1 > 2*K) {
 	//if(false) {
-		//printf("before n = %u, m = %lu\n", s_n, s_m);
+		printf("before n = %u, m = %lu\n", s_n, s_m);
 		oriented_triangle_counting(s_n, s_m, s_peel_sequence, s_pstart, s_pend, s_edges, s_edgelist_pointer, rid);
 		reorganize_oriented_graph(s_n, s_tri_cnt, s_edge_list, s_pstart, s_pend, pend_buf, s_edges, s_edgelist_pointer, rid);
 		for(ui i = 0;i < s_n;i ++) {
@@ -432,7 +433,7 @@ void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<int,int> > &edge_list, u
 		for(ui i = 0;i < s_n;i ++) ids[i] = Qv[i];
 		_n = s_n;
 		assert(edge_list.size()*2 == s_m);
-		//printf("*after n = %u, m = %lu\n", s_n, s_m);
+		printf("*after n = %u, m = %lu\n", s_n, s_m);
 	}
 	else {
 		_n = s_n;
