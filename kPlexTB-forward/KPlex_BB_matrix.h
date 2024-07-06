@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 
-ui cfactor=1;
+double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 // #define SEESAW
