@@ -146,9 +146,7 @@ del_prev() {
 krange='5 7 10 15 20'
 # datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 SOL=kPlexTBs-ctcp-forward
-datasets='soc-BlogCatalog.bin
-soc-buzznet.bin
-soc-flickr.bin
+datasets='
 soc-digg.bin
 socfb-Duke14.bin
 tech-as-skitter.bin
@@ -179,8 +177,7 @@ socfb-uci-uni.bin
 sc-ldoor.bin
 inf-road-usa.bin
 soc-douban.bin
-ia-fb-messages.bin
-soc-FourSquare.bin'
+'
 
 solutions=$(seq 0.5 0.05 0.9)
 del_prev
