@@ -345,10 +345,11 @@ void Graph::kPlex_exact(int mode) {
 					++ search_cnt;
 					total_density += density;
 					if(density < min_density) min_density = density;
-					// cout<<density<<" ";
+					cout<<density<<" ";
 					ui t_old_size = kplex.size();
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, UB_t, kplex, true);
+					cout<<"search completed"<<endl;
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];

@@ -365,8 +365,8 @@ private:
 		}
 
 		//no more un-reduced lazy branches
-		// if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
-		// 	branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
+		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
+			branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
 
 		pivot = addList[-- endIdx];
 
