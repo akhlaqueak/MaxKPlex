@@ -553,30 +553,44 @@ private:
 
 #ifdef B_BRANCHINGS
 // ******************* Adding our branching stuff here... 
-		ui t_R_end=R_end;
+		
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
 		// branchings.tick();
-		R_end = getBranchings(S_end, R_end, level);
+		ui t_R_end = getBranchings(S_end, R_end, level);
 
 		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
-		while(R_end<t_R_end){
+		while(t_R_end<R_end){
 			// move branching vertex back to C
-			ui u = SR[R_end];
-			assert(level_id[u] == level&&SR_rid[u] == R_end);
-			R_end++;
-			level_id[u] = n;
-			char *t_matrix = matrix + u*n;
-			degree[u] = degree_in_S[u] = 0;
-			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
-				ui w = SR[i];
-				++ degree[w];
-				++ degree[u];
-				if(i < S_end) ++ degree_in_S[u];
+			ui u = SR[t_R_end];
+
+			// find the highest degen vertex
+			for(ui i=t_R_end+1;i<R_end;i++){
+				ui v=SR[i];
+				if(peelOrder[v]>peelOrder[u]){
+					swap_pos(t_R_end, i);
+					u=v;
+				}
 			}
+			t_R_end++;
+			for(ui i=t_R_end;i<R_end;i++){
+				ui v = SR[i];
+				if(level_id[v] == level) continue;
+				level_id[v] = level;
+				Qv.push(v);
+			}
+			// level_id[u] = n;
+			// char *t_matrix = matrix + u*n;
+			// degree[u] = degree_in_S[u] = 0;
+			// for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+			// 	ui w = SR[i];
+			// 	++ degree[w];
+			// 	++ degree[u];
+			// 	if(i < S_end) ++ degree_in_S[u];
+			// }
 
 			if(best_solution_size >= _UB_) return ;
 			if(root_level) found_larger=false;
@@ -950,31 +964,31 @@ private:
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
-		for(ui i=cend; i<R_end; i++){
-			// get a vertex with highest peelOrder at location i
-			ui u = SR[i], ind = i;
-			for (ui j = i + 1; j < R_end; j++)
-			{
-				ui v = SR[j];
-				if (peelOrder[v] > peelOrder[u])
-					ind = j, u = v;
-			}
-			if(i!=ind)
-				swap_pos(i, ind);
-		}
-			// remove vertex at i location
-			// assert(level_id[u] == level&&SR_rid[u] == R_end);
-		while(R_end > cend){
-			ui u = SR[--R_end];
-			level_id[u] = level;
-			char *t_matrix = matrix + u*n;
-			degree[u] = degree_in_S[u] = 0;
-			for(ui i = 0;i < R_end;i ++) {
-				ui w = SR[i];
-				// if(level_id[w]==level) continue;
-				if(t_matrix[w]) -- degree[w];
-			}
-		}
+		// for(ui i=cend; i<R_end; i++){
+		// 	// get a vertex with highest peelOrder at location i
+		// 	ui u = SR[i], ind = i;
+		// 	for (ui j = i + 1; j < R_end; j++)
+		// 	{
+		// 		ui v = SR[j];
+		// 		if (peelOrder[v] > peelOrder[u])
+		// 			ind = j, u = v;
+		// 	}
+		// 	if(i!=ind)
+		// 		swap_pos(i, ind);
+		// }
+		// 	// remove vertex at i location
+		// 	// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		// while(R_end > cend){
+		// 	ui u = SR[--R_end];
+		// 	level_id[u] = level;
+		// 	char *t_matrix = matrix + u*n;
+		// 	degree[u] = degree_in_S[u] = 0;
+		// 	for(ui i = 0;i < R_end;i ++) {
+		// 		ui w = SR[i];
+		// 		// if(level_id[w]==level) continue;
+		// 		if(t_matrix[w]) -- degree[w];
+		// 	}
+		// }
 		// assert(R_end==cend);
 		// for(ui i = 0;i < R_end;i ++) {
 		// 	ui d1 = 0, d2 = 0;
@@ -1121,7 +1135,7 @@ private:
 		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
 #endif
 
-		while(!Qv.empty()) {cout<<"-";Qv.pop();}
+		// while(!Qv.empty()) {cout<<"-";Qv.pop();}
 		// reduction rules based on the fact that each vertex can have at most k-1 nonneighbors
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			ui v = nonneighbors[i];
