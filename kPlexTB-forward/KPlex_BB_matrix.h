@@ -7,7 +7,7 @@
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
-// #define SEESAW
+#define SEESAW
 #define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
