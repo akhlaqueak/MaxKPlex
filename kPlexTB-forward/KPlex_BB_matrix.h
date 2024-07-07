@@ -517,16 +517,16 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		if(bound(S_end, R_end)>=R_end){
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if(bound(S_end, R_end)>=R_end){
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*cfactor  and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
