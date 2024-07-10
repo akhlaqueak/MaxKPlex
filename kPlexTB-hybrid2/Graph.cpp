@@ -337,8 +337,8 @@ void Graph::kPlex_exact(int mode) {
 						printf("solving by kPlexTB ");
 					}
 					else if(todo.size()){
-						u=todo.top();
-						todo.pop();
+						u=todo.back();
+						todo.pop_back();
 						printf("solving by maple ");
 						dbdd_instance=true;
 					}
