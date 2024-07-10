@@ -360,6 +360,8 @@ void Graph::kPlex_exact(int mode) {
 					ui t_old_size = kplex.size();
 					if(i)
 					iteration.restart();
+					else 
+					cfactor=1000000000;
 					// if(true){
 					if(dbdd_instance){
 						kp_solver->load(ids.size(), vp);
