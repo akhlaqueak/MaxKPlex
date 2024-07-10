@@ -359,7 +359,7 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 
 					ui t_old_size = kplex.size();
-					
+					iteration.restart();
 					// if(true){
 					if(dbdd_instance){
 						kp_solver->load(ids.size(), vp);
