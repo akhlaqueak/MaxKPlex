@@ -337,6 +337,7 @@ void Graph::kPlex_exact(int mode) {
 						printf("solving by kPlexTB ");
 					}
 					else if(todo.size()){
+					cfactor=1000000000;
 						u=todo.back();
 						todo.pop_back();
 						printf("solving by maple, remaining: %u", todo.size());
@@ -358,10 +359,7 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 
 					ui t_old_size = kplex.size();
-					if(i)
-					iteration.restart();
-					else 
-					cfactor=1000000000;
+					
 					// if(true){
 					if(dbdd_instance){
 						kp_solver->load(ids.size(), vp);
