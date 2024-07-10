@@ -48,7 +48,7 @@ private:
 	ui *SR; // union of S and R, where S is at the front
 	ui *SR_rid; // reverse ID for SR
 	std::queue<ui> Qv;
-	std::queue<ui> Qc;
+	// std::queue<ui> Qc;
 	ui *level_id;
 	ui max_level;
     ui *LPI;
