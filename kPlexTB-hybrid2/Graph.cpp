@@ -339,7 +339,7 @@ void Graph::kPlex_exact(int mode) {
 					else if(todo.size()){
 						u=todo.back();
 						todo.pop_back();
-						printf("solving by maple, remaining: ", todo.size());
+						printf("solving by maple, remaining: %u", todo.size());
 						dbdd_instance=true;
 					}
 
