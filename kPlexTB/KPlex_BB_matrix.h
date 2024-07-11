@@ -444,7 +444,7 @@ private:
 		old_removed_edges_n = removed_edges_n;
 #endif
 
-		seesaw.tick();
+
 		// choosing 0 as branching vertex
 		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
 			//printf("here1\n");
@@ -515,7 +515,6 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		seesaw.tock();
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
@@ -589,8 +588,9 @@ private:
 		// 	SR_rid[u] = i;
 		// }
 
-
+		seesaw.tick();
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		seesaw.tock();
 
 // ******************* Ended our branching stuff here... 
 #else
@@ -1700,7 +1700,7 @@ private:
 	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-		seesaw.tick();
+
         while (R_end>S_end)
         {
             
@@ -1727,7 +1727,6 @@ private:
             }
 
         }
-		seesaw.tock();
         return UB;
     }
 
