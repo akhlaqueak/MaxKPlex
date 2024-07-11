@@ -334,13 +334,13 @@ void Graph::kPlex_exact(int mode) {
 					if(i>0){
 						u = peel_sequence[--i];
 						dbdd_instance=false;
-						printf("solving by kPlexTB ");
+						// printf("solving by kPlexTB ");
 					}
 					else if(todo.size()){
 					cfactor=1000000000;
 						u=todo.back();
 						todo.pop_back();
-						printf("solving by maple, remaining: %u", todo.size());
+						// printf("solving by maple, remaining: %u", todo.size());
 						dbdd_instance=true;
 					}
 
