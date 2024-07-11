@@ -1119,7 +1119,7 @@ private:
 		return true;
 	}
 	
-	move_u_to_R_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
+	void move_u_to_R_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
 		S_end--;
 		ui neighbors_n = 0;
 		char *t_matrix = matrix + u*n;
