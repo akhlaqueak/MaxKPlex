@@ -6,8 +6,8 @@
 
 ui cfactor=1;
 #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
-// #define SEESAW
+#define REDUCTIONS
+#define SEESAW
 #define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings;
@@ -511,16 +511,16 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		if(bound(S_end, R_end)>=R_end){
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if(bound(S_end, R_end)>=R_end){
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*cfactor  and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -577,14 +577,12 @@ private:
 			else
 			if(found_larger) continue;
 
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-		// seesaw.tick();
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-		// seesaw.tock();
-			if(move_u_to_S_wo_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
+		seesaw.tick();
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+		seesaw.tock();
 
-			move_u_to_R_wo_prune(u, S_end, R_end, level);
 		}
 		// for(ui i=R_end-1;i>=S_end;i--){
 		// 	ui u = Qc.back();
@@ -1101,7 +1099,7 @@ private:
 			else nonneighbors[nonneighbors_n++] = SR[i];
 		}
 	}
-	bool move_u_to_S_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
+	ui move_u_to_S_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
 		assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end&&SR[SR_rid[u]] == u);
 		assert(degree_in_S[u] + K > S_end);
 #ifndef NDEBUG
@@ -1116,6 +1114,7 @@ private:
 		get_neighbors_and_nonneighbors(u, R_end, neighbors_n, nonneighbors_n);
 		assert(neighbors_n + nonneighbors_n == R_end-1);
 		for(ui i = 0;i < neighbors_n;i ++) ++ degree_in_S[neighbors[i]];
+		for(ui i=0;i<S_end;i++) if(support(S_end, SR[i])==0)
 		return true;
 	}
 	
@@ -1128,6 +1127,7 @@ private:
 			neighbors[neighbors_n ++] = w;
 			-- degree_in_S[w];
 		}
+
 	}
 
 	bool move_u_to_S_with_prune(ui u, ui &S_end, ui &R_end, ui level) {
