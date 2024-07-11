@@ -486,7 +486,6 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		seesaw.tock();
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -516,6 +515,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		seesaw.tock();
 		#ifdef SEESAW
 		seesaw.tick();
 		ui beta = best_solution_size - S_end;
