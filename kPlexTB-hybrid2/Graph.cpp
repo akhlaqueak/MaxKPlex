@@ -340,7 +340,7 @@ void Graph::kPlex_exact(int mode) {
 					cfactor=1000000000;
 						u=todo.back();
 						todo.pop_back();
-						printf("solving by maple, remaining: %u", todo.size());
+						printf("solving by maple, remaining: %u ", todo.size());
 						dbdd_instance=true;
 					}
 
@@ -360,15 +360,17 @@ void Graph::kPlex_exact(int mode) {
 
 					ui t_old_size = kplex.size();
 					iteration.restart();
-					
+
 					if(dbdd_instance){
 						kp_solver->load(ids.size(), vp);
 						kp_solver->run(K, kplex);
 					}else{
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, UB, kplex, true);
-						if(iteration.elapsed()>=cfactor)
+						if(iteration.elapsed()>=cfactor){
 						todo.push_back(u);
+						printf("time over... ");
+						}
 					}
 					if(kplex.size() > t_old_size) {
 						printf("Larger kplex of size %u found at %u", kplex.size(), u);
