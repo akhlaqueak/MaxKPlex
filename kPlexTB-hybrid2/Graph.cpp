@@ -334,7 +334,7 @@ void Graph::kPlex_exact(int mode) {
 					if(i>0){
 						u = peel_sequence[--i];
 						dbdd_instance=false;
-						printf("solving by kPlexTB ");
+						// printf("solving by kPlexTB ");
 					}
 					else if(todo.size()){
 					cfactor=1000000000;
