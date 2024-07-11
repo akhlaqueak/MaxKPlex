@@ -16,8 +16,8 @@ run_jobs() {
     for fn in $datasets; do
         for sol in $solutions; do
             for k in $krange; do
-                graph=~/graphs/network_repo/$fn
-                # graph=~/graphs/ablation/$fn
+                # graph=~/graphs/network_repo/$fn
+                graph=~/graphs/ablation/$fn
 
                 srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$SOL -b -g $graph -a exact -k $k -c $sol >>$SOL-$sol-$k.out &
 
@@ -144,43 +144,43 @@ del_prev() {
     done
 }
 
-krange='7 10 15 20'
-# datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
-SOL=kPlexTBs-ctcp-forward
-datasets='
-soc-digg.bin
-socfb-Duke14.bin
-tech-as-skitter.bin
-soc-LiveMocha.bin
-ia-wiki-Talk.bin
-soc-orkut.bin
-soc-gowalla.bin
-soc-youtube-snap.bin
-soc-lastfm.bin
-soc-youtube.bin
-socfb-B-anon.bin
-socfb-A-anon.bin
-web-wikipedia2009.bin
-soc-pokec.bin
-ia-enron-large.bin
-socfb-Stanford3.bin
-socfb-CMU.bin
-sc-nasasrb.bin
-socfb-MIT.bin
-soc-epinions.bin
-sc-pwtk.bin
-soc-twitter-follows.bin
-socfb-Indiana.bin
-soc-delicious.bin
-scc_reality.bin
-ia-email-EU.bin
-socfb-uci-uni.bin
-sc-ldoor.bin
-inf-road-usa.bin
-soc-douban.bin
-'
+krange='2 3 4 5'
+datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
+SOL=kPlexTBs-hybrid2
+# datasets='
+# soc-digg.bin
+# socfb-Duke14.bin
+# tech-as-skitter.bin
+# soc-LiveMocha.bin
+# ia-wiki-Talk.bin
+# soc-orkut.bin
+# soc-gowalla.bin
+# soc-youtube-snap.bin
+# soc-lastfm.bin
+# soc-youtube.bin
+# socfb-B-anon.bin
+# socfb-A-anon.bin
+# web-wikipedia2009.bin
+# soc-pokec.bin
+# ia-enron-large.bin
+# socfb-Stanford3.bin
+# socfb-CMU.bin
+# sc-nasasrb.bin
+# socfb-MIT.bin
+# soc-epinions.bin
+# sc-pwtk.bin
+# soc-twitter-follows.bin
+# socfb-Indiana.bin
+# soc-delicious.bin
+# scc_reality.bin
+# ia-email-EU.bin
+# socfb-uci-uni.bin
+# sc-ldoor.bin
+# inf-road-usa.bin
+# soc-douban.bin
+# '
 
-solutions=$(seq 0.2 0.1 0.9)
+solutions="1000000 5000000 10000000 20000000"
 # del_prev
 run_jobs 00:30:00
 # solutions=$(seq 0.2 0.05 0.9)
