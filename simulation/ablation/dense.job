@@ -52,7 +52,8 @@ get_results() {
             outfile=''
             for sol in $solutions; do
 
-                outfile=$SOL-$sol-$k.out
+                outfile=$sol-$k.out
+                # outfile=$SOL-$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     line+=('9999999999')
@@ -143,7 +144,7 @@ del_prev() {
     done
 }
 
-krange='5 7 10 15 20'
+krange='7 10 15 20'
 # datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 SOL=kPlexTBs-ctcp-forward
 datasets='

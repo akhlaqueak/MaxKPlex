@@ -444,13 +444,13 @@ private:
 		old_removed_edges_n = removed_edges_n;
 #endif
 
+		seesaw.tick();
 		// choosing 0 as branching vertex
 		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
 			//printf("here1\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		seesaw.tick();
 		ui S2_n = 0;
 		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
@@ -461,7 +461,6 @@ private:
 				return ;
 			}
 		}
-		seesaw.tock();
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -487,6 +486,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		seesaw.tock();
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
