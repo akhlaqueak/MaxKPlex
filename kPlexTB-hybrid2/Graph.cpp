@@ -376,7 +376,7 @@ void Graph::kPlex_exact(int mode) {
 						printf("Larger kplex of size %u found at %u", kplex.size(), u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
-					printf("%f\n", iteration.elapsed()/1000.0);
+					// printf("%f\n", iteration.elapsed()/1000.0);
 					// printf("density %f ", density);
 					// printf(" total_elapased: %llu iteration: %u u: %u \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f\n", tt.elapsed(), i, u, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 				}
