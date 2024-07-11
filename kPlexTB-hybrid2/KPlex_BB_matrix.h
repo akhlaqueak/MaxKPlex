@@ -451,6 +451,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		if(iteration.elapsed()>=cfactor) return;
 
 		ui S2_n = 0;
 		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
@@ -462,6 +463,7 @@ private:
 				return ;
 			}
 		}
+		if(iteration.elapsed()>=cfactor) return;
 
 
 #ifndef NDEBUG
@@ -548,6 +550,7 @@ private:
 		ui t_R_end=R_end;
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
+		if(iteration.elapsed()>=cfactor) return;
 		// }
 		// branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
@@ -556,6 +559,7 @@ private:
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
+		if(iteration.elapsed()>=cfactor) return;
 			// move branching vertex back to C
 			ui u = SR[R_end];
 			assert(level_id[u] == level&&SR_rid[u] == R_end);
@@ -586,6 +590,7 @@ private:
 		// 	SR_rid[u] = i;
 		// }
 
+		if(iteration.elapsed()>=cfactor) return;
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
