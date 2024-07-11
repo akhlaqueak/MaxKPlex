@@ -1100,6 +1100,7 @@ private:
 	}
 
 	bool move_u_to_S_with_prune(ui u, ui &S_end, ui &R_end, ui level) {
+		branchings.tick();
 		assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end&&SR[SR_rid[u]] == u);
 		assert(degree_in_S[u] + K > S_end);
 #ifndef NDEBUG
@@ -1218,8 +1219,9 @@ private:
 			}
 		}
 #endif
-
-		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
+		bool ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+		branchings.tock();
+		return ret;
 	}
 
 	bool remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level) {
