@@ -579,9 +579,8 @@ private:
 
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-		seesaw.tick();
+
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-		seesaw.tock();
 
 		}
 		// for(ui i=R_end-1;i>=S_end;i--){
@@ -591,9 +590,7 @@ private:
 		// 	SR_rid[u] = i;
 		// }
 
-		seesaw.tick();
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		seesaw.tock();
 
 // ******************* Ended our branching stuff here... 
 #else
@@ -1114,7 +1111,7 @@ private:
 		get_neighbors_and_nonneighbors(u, R_end, neighbors_n, nonneighbors_n);
 		assert(neighbors_n + nonneighbors_n == R_end-1);
 		for(ui i = 0;i < neighbors_n;i ++) ++ degree_in_S[neighbors[i]];
-		for(ui i=0;i<S_end;i++) if(support(S_end, SR[i])==0)
+
 		return true;
 	}
 	
