@@ -416,7 +416,7 @@ private:
 		for(ui i = 0;i < neighbors_n;i ++) -- degree_in_S[neighbors[i]], -- degree[neighbors[i]];
 	}
 
-	ui move_u_to_S_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
+	ui move_u_to_S_wo_prune(ui u, ui &S_end, ui &R_end) {
 		if(SR_rid[u] != S_end) swap_pos(S_end, SR_rid[u]);
 		++ S_end;
 		ui neighbors_n = 0, nonneighbors_n = 0;
