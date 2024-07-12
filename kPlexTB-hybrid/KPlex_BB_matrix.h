@@ -213,6 +213,8 @@ public:
 		}
 	}
 
+
+
 	int main(int argc, char *argv[]) {
 		if(argc < 3) {
 			printf("Usage: [1]exe [2]dir [3]k\n");
@@ -403,6 +405,88 @@ private:
 	bool is_kplex(ui R_end) {
 		for(ui i = 0;i < R_end;i ++) if(degree[SR[i]] + K < R_end) return false;
 		return true;
+	}
+
+	void remove_u_from_SR_wo_prune(ui &S_end, ui &R_end){
+		ui u=SR[S_end-1];
+		swap_pos(--S_end, --R_end);
+		ui neighbors_n = 0, nonneighbors_n = 0;
+		get_neighbors_and_nonneighbors(u, R_end, neighbors_n, nonneighbors_n);
+		assert(neighbors_n + nonneighbors_n == R_end-1);
+		for(ui i = 0;i < neighbors_n;i ++) -- degree_in_S[neighbors[i]], -- degree[neighbors[i]];
+	}
+
+	ui move_u_to_S_wo_prune(ui u, ui &S_end, ui &R_end, ui level) {
+		if(SR_rid[u] != S_end) swap_pos(S_end, SR_rid[u]);
+		++ S_end;
+		ui neighbors_n = 0, nonneighbors_n = 0;
+		get_neighbors_and_nonneighbors(u, R_end, neighbors_n, nonneighbors_n);
+		assert(neighbors_n + nonneighbors_n == R_end-1);
+		for(ui i = 0;i < neighbors_n;i ++) ++ degree_in_S[neighbors[i]];
+		return reduce_R(S_end, R_end);
+	}
+
+	ui reduce_R(ui S_end, ui &R_end){
+		ui old_R_end=R_end;
+		for(ui i=S_end; i<R_end;){
+			if(support(S_end, SR[i])==0) swap_pos(i, --R_end);
+			else i++;
+		}
+		for(ui i=0;i<S_end;i++){
+			if(support(S_end, SR[i])==0)
+			for(ui j=S_end;j<R_end;){
+				if(!matrix[i*n+j])swap_pos(j, --R_end);
+				else j++;
+			}
+		}
+		return old_R_end-R_end;
+	}
+
+	void recover_R(ui S_end, ui& R_end, ui sz){
+		for(ui i=0;i<sz;i++){
+			ui u=SR[R_end++];
+			degree[u]=degree_in_S[u]=0;
+			char* t_matrix=matrix+u*n;
+			for(ui j=0;j<R_end;j++){
+				ui v = SR[j];
+				if(t_matrix[v]){
+					degree[v]++, degree[u]++;
+					if(j<S_end) degree_in_S[u]++;
+				}
+			}
+		}
+	}
+
+	void BB_search_minimal(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
+		if(S_end > best_solution_size) store_solution(S_end);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+
+		ui pivot = n;
+		if(choose_zero) pivot=0;
+		for(ui i=S_end;i<R_end&&pivot==n;i++){
+			if(degree[SR[i]]-R_end>=2)
+				pivot = SR[i];
+		}
+
+		if(pivot!=n){
+			// if pivot is found, we create only one branch
+			ui removed_sz = move_u_to_S_wo_prune(pivot, S_end, R_end);
+			BB_search_minimal(S_end, R_end, level+1, false);
+			recover_R(S_end, R_end, removed_sz);
+			return;
+		}
+
+		pivot = SR[S_end];
+		// one branch includes pivot to S
+		ui removed_sz=move_u_to_S_wo_prune(pivot, S_end, R_end);
+		BB_search_minimal(S_end, R_end, level+1, false);
+		recover_R(S_end, R_end, removed_sz);
+
+		// other branch excludes from R
+		remove_u_from_SR_wo_prune(S_end, R_end);
+		BB_search_minimal(S_end, R_end, level+1, false);
+		recover_R(S_end, R_end, 1); //
 	}
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {

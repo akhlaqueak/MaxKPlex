@@ -336,6 +336,7 @@ private:
 				break;
 			}
 			else if(neiInP[v] == P_end) {
+				// 2 non-neigh in C, call it p, q. checkTriangle checking that p and q are not connected with each other
 				if(NotNei == 3 && checkTriangle(v)) {
 					pivot = v;
 					break;
