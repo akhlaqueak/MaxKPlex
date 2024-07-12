@@ -206,7 +206,7 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end;
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search_minimal(0, R_end, must_include_0);
+		if(R_end&&best_solution_size < _UB_) BB_search_minimal(0, R_end, 1, must_include_0);
 		// if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
@@ -464,41 +464,43 @@ private:
 		}
 	}
 
-	void BB_search_minimal(ui S_end, ui R_end, bool choose_zero=false) {
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+	// void BB_search_minimal(ui S_end, ui R_end, bool choose_zero=false) {
+	// 	if(S_end > best_solution_size) store_solution(S_end);
+	// 	if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+	// 	if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 
-		ui pivot = n;
-		if(choose_zero) pivot=0;
-		else
-		for(ui i=S_end;i<R_end;i++){
-			if(degree[SR[i]]-R_end>=2)
-				pivot = SR[i];
-		}
+	// 	ui pivot = n;
+	// 	if(choose_zero) pivot=0;
+	// 	else
+	// 	for(ui i=S_end;i<R_end;i++){
+	// 		if(degree[SR[i]]-R_end>=2){
+	// 			pivot = SR[i];
+	// 			break;
+	// 		}
+	// 	}
 
-		if(pivot!=n){
-			// if pivot is found, we create only one branch
-			ui removed_sz = move_u_to_S_wo_prune(pivot, S_end, R_end);
-			cout<<removed_sz<<' ';
-			BB_search_minimal(S_end, R_end);
-			recover_R(S_end, R_end, removed_sz);
-			return;
-		}
+	// 	if(pivot!=n){
+	// 		// if pivot is found, we create only one branch
+	// 		ui removed_sz = move_u_to_S_wo_prune(pivot, S_end, R_end);
+	// 		cout<<removed_sz<<' ';
+	// 		BB_search_minimal(S_end, R_end);
+	// 		recover_R(S_end, R_end, removed_sz);
+	// 		return;
+	// 	}
 
-		pivot = SR[S_end];
-		// one branch includes pivot to S
-		ui removed_sz=move_u_to_S_wo_prune(pivot, S_end, R_end);
-			cout<<2;
-		BB_search_minimal(S_end, R_end);
-		recover_R(S_end, R_end, removed_sz);
+	// 	pivot = SR[S_end];
+	// 	// one branch includes pivot to S
+	// 	ui removed_sz=move_u_to_S_wo_prune(pivot, S_end, R_end);
+	// 		cout<<2;
+	// 	BB_search_minimal(S_end, R_end);
+	// 	recover_R(S_end, R_end, removed_sz);
 
-		// other branch excludes from R
-		remove_u_from_SR_wo_prune(S_end, R_end);
-			cout<<3;
-		BB_search_minimal(S_end, R_end);
-		recover_R(S_end, R_end, 1); //
-	}
+	// 	// other branch excludes from R
+	// 	remove_u_from_SR_wo_prune(S_end, R_end);
+	// 		cout<<3;
+	// 	BB_search_minimal(S_end, R_end);
+	// 	recover_R(S_end, R_end, 1); //
+	// }
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
 		if(S_end > best_solution_size) store_solution(S_end);
@@ -855,6 +857,72 @@ private:
 #endif
 	}
 
+	void BB_search_minimal(ui S_end, ui R_end, ui level, bool choose_zero) {
+		if(S_end > best_solution_size) store_solution(S_end);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+
+
+
+		ui old_removed_edges_n = 0, old_S_end = S_end, old_R_end = R_end;
+
+
+		// choosing 0 as branching vertex
+		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
+			//printf("here1\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+
+
+		// greedily add vertices to S
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+
+
+		if(S_end > best_solution_size) store_solution(S_end);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
+			//printf("here3\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+
+
+
+
+		ui u = choose_branch_vertex(S_end, R_end);
+		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
+
+
+		// the first branch includes u into S
+		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+
+		if(move_u_to_S_with_prune(u, S_end, R_end, level)) {
+
+			BB_search(S_end, R_end, level+1, false);
+		}
+		if(best_solution_size >= _UB_) return ;
+		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
+		//printf("here4\n");
+		restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);
+
+
+		// u is the last emelent in S i.e. SR[S_end-1]
+		// this function removes u from entire graph... 
+		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
+
+
+			//printf("enter recursion\n");
+			BB_search(S_end, R_end, level+1, false);
+		
+		if(best_solution_size >= _UB_) return ;
+
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+	}
 
 	ui choose_u_directly(ui S_end, ui R_end){
 		for(ui i=S_end;i<R_end;i++){
