@@ -874,13 +874,19 @@ private:
 			return ;
 		}
 
-
-		// greedily add vertices to S
-		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-			//printf("here2\n");
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
+		while (true)
+		{
+			ui pivot=n;
+			for(ui i=S_end;i<R_end;i++){
+				if (R_end-degree[SR[i]]>=2)
+				{	
+					pivot=SR[i]; break;
+				}
+			}
+			if(pivot==n) break;
+			else move_u_to_S_with_prune(pivot, S_end, R_end, level);
 		}
+		
 
 
 		if(S_end > best_solution_size) store_solution(S_end);
