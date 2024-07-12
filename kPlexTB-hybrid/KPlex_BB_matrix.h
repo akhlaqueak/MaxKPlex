@@ -480,7 +480,7 @@ private:
 		if(pivot!=n){
 			// if pivot is found, we create only one branch
 			ui removed_sz = move_u_to_S_wo_prune(pivot, S_end, R_end);
-			cout<<1;
+			cout<<removed_sz<<' ';
 			BB_search_minimal(S_end, R_end);
 			recover_R(S_end, R_end, removed_sz);
 			return;
