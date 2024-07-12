@@ -6,7 +6,7 @@
 
 double cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
+// #define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
 
@@ -206,7 +206,8 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end;
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search_minimal(0, R_end, 1, must_include_0, true);
+		if(R_end&&best_solution_size < _UB_) BB_search_minimal(0, R_end, must_include_0);
+		// if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
@@ -429,7 +430,7 @@ private:
 	ui reduce_R(ui S_end, ui &R_end){
 		ui old_R_end=R_end;
 		for(ui i=S_end; i<R_end;){
-			if(support(S_end, SR[i])==0) swap_pos(i, --R_end);
+			if(support(S_end, SR[i])<=1) swap_pos(i, --R_end);
 			else i++;
 		}
 		for(ui i=0;i<S_end;i++){
@@ -457,7 +458,7 @@ private:
 		}
 	}
 
-	void BB_search_minimal(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
+	void BB_search_minimal(ui S_end, ui R_end, bool choose_zero=false) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
@@ -472,7 +473,7 @@ private:
 		if(pivot!=n){
 			// if pivot is found, we create only one branch
 			ui removed_sz = move_u_to_S_wo_prune(pivot, S_end, R_end);
-			BB_search_minimal(S_end, R_end, level+1, false);
+			BB_search_minimal(S_end, R_end);
 			recover_R(S_end, R_end, removed_sz);
 			return;
 		}
@@ -480,12 +481,12 @@ private:
 		pivot = SR[S_end];
 		// one branch includes pivot to S
 		ui removed_sz=move_u_to_S_wo_prune(pivot, S_end, R_end);
-		BB_search_minimal(S_end, R_end, level+1, false);
+		BB_search_minimal(S_end, R_end);
 		recover_R(S_end, R_end, removed_sz);
 
 		// other branch excludes from R
 		remove_u_from_SR_wo_prune(S_end, R_end);
-		BB_search_minimal(S_end, R_end, level+1, false);
+		BB_search_minimal(S_end, R_end);
 		recover_R(S_end, R_end, 1); //
 	}
 
