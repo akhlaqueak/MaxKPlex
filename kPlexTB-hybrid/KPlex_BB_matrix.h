@@ -206,7 +206,7 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end;
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
+		if(R_end&&best_solution_size < _UB_) BB_search_minimal(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
