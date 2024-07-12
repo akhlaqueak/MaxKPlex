@@ -430,7 +430,7 @@ private:
 	ui reduce_R(ui S_end, ui &R_end){
 		ui old_R_end=R_end;
 		for(ui i=S_end; i<R_end;){
-			if(support(S_end, SR[i])<=1) swap_pos(i, --R_end);
+			if(support(S_end, SR[i])==0) swap_pos(i, --R_end);
 			else i++;
 		}
 		for(ui i=0;i<S_end;i++){
@@ -439,6 +439,12 @@ private:
 				if(!matrix[i*n+j])swap_pos(j, --R_end);
 				else j++;
 			}
+		}
+		for(ui i=R_end; i<old_R_end;i++){
+			ui u=SR[i];
+			char* t_matrix=matrix+u*n;
+			for(ui j=0;j<R_end;j++)
+				if(t_matrix[SR[j]]) degree[SR[j]]--;
 		}
 		return old_R_end-R_end;
 	}
