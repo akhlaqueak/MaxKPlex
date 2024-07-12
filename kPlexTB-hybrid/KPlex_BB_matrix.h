@@ -465,9 +465,9 @@ private:
 	}
 
 	void BB_search_minimal(ui S_end, ui R_end, bool choose_zero=false) {
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+		// if(S_end > best_solution_size) store_solution(S_end);
+		// if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		// if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 
 		ui pivot = n;
 		if(choose_zero) pivot=0;
