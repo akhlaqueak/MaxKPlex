@@ -270,7 +270,7 @@ private:
 
 	void branch(ui &begIdx, ui &endIdx){
 		nodeCnt++, edgeCnt++; endIdx=begIdx;
-		ui minnei=0x3f3f3f3f; ui pivot;
+		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
 		for(ui i = P_end;i < C_end;i ++) {
 			ui v = PC[i];
@@ -289,6 +289,8 @@ private:
 				pivot = v;
 			}
 		}
+		// pivot is a two-hop qualified neighbor if it is found. else pivot is min degree vertex in C
+		// non-nighbors of pivot are stored in addList
 		t_matrix = matrix + pivot*n;
 		for(ui i = P_end;i < C_end;i ++) if(!t_matrix[PC[i]]) {
 			if(addListSz == endIdx) {
@@ -298,7 +300,7 @@ private:
 			}
 			else addList[endIdx++] = PC[i];
 		}
-		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return neiInG[a]>neiInG[b];});
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return neiInG[a]<neiInG[b];});
 	}
 
     void reduce(ui begIdx, ui endIdx) {
@@ -368,6 +370,9 @@ private:
 		//no more un-reduced lazy branches
 		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
 			branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
+
+		// begIdx never changes, it's always zero. endIndex is set to begindex in every call before adding elements to it
+		// only last element is read as a pivot
 
 		pivot = addList[-- endIdx];
 
