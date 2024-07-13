@@ -300,7 +300,7 @@ private:
 			}
 			else addList[endIdx++] = PC[i];
 		}
-		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return neiInG[a]<neiInG[b];});
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return neiInG[a]>neiInG[b];});
 	}
 
     void reduce(ui begIdx, ui endIdx) {
@@ -371,8 +371,7 @@ private:
 		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
 			branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
 
-		// begIdx never changes, it's always zero. endIndex is set to begindex in every call before adding elements to it
-		// only last element is read as a pivot
+		printf("%u-%u\n", begIdx, endIdx);
 
 		pivot = addList[-- endIdx];
 
