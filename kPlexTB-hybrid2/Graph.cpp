@@ -353,7 +353,7 @@ void Graph::kPlex_exact(int mode) {
 					}
 
 						fflush(stdout);
-					if(tt.elapsed()/1e6/60>=1) exit(0);
+					if(tt.elapsed()/1e6/60>=30) exit(0);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 

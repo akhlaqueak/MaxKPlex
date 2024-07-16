@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#SBATCH --job-name=TBs-ablation             ### Name of the job
+#SBATCH --ntasks=96                    ### Number of Tasks
+#SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
+#SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
+#SBATCH --partition=medium             ### Cheaha Partition
+#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
+#SBATCH --mail-type=END
+#SBATCH --mail-user=akhlaque.ak@gmail.com
+
+./kPlexTBs -g ~/graphs/ablation/san200-0-7-1.bin -k 2 -b -c 1000000000
+cp gmon.out gmon-san200-0-7-1-k2
+./kPlexTBs -g ~/graphs/ablation/san200-0-7-1.bin -k 3 -b -c 1000000000
+cp gmon.out gmon-san200-0-7-1-k3
+./kPlexTBs -g ~/graphs/ablation/san200-0-9-2.bin -k 2 -b -c 1000000000
+cp gmon.out gmon-san200-0-9-2-k2
+./kPlexTBs -g ~/graphs/ablation/MANN-a45.bin -k 2 -b -c 1000000000
+cp gmon.out gmon-MANN-a45-k2
+./kPlexTBs -g ~/graphs/ablation/MANN-a81.bin -k 2 -b -c 1000000000
+cp gmon.out gmon-MANN-a81-k2
