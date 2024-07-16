@@ -308,7 +308,7 @@ void Graph::kPlex_exact(int mode) {
 			{
 				vector<ui> ids;
 				vector<pair<ui,ui> > vp;
-				vector<ui> todo;
+				vector<vector<pair<ui, ui>>> todo;
 
 				ui *peel_sequence_rid = core;
 				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
@@ -335,21 +335,24 @@ void Graph::kPlex_exact(int mode) {
 						u = peel_sequence[--i];
 						dbdd_instance=false;
 						// printf("solving by kPlexTB ");
+						if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
+
+						fflush(stdout);
+
+						if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
+						else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 					}
 					else if(todo.size()){
-					cfactor=1000000000;
-						u=todo.back();
+						cfactor=1e12;
+						vp=todo.back();
+						ids.resize(vp.back().first);
+						sz1h=vp.back().second;
+						vp.pop_back();
 						todo.pop_back();
-						printf("solving by maple, remaining: %u ", todo.size());
-						dbdd_instance=true;
+						printf("solving pending graphs, remaining: %u ", todo.size());
+						// dbdd_instance=true;
 					}
 
-					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
-
-					fflush(stdout);
-
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
-					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 
@@ -368,8 +371,9 @@ void Graph::kPlex_exact(int mode) {
 						kplex_solver_m->load_graph(ids.size(), vp, sz1h);
 						kplex_solver_m->kPlex(K, UB, kplex, true);
 						if(iteration.elapsed()>=cfactor){
-						todo.push_back(u);
-						printf("time over... ");
+							vp.push_back({ids.size(), sz1h});
+							todo.push_back(std::move(vp));
+							printf("time over... ");
 						}
 					}
 					if(kplex.size() > t_old_size) {
