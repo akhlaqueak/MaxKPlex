@@ -180,11 +180,12 @@ SOL=kPlexTBs-hybrid2
 # soc-douban.bin
 # '
 
-solutions="Maple kPlexTBs kPlexTBs-hybrid2-1000000 kPlexTBs-hybrid2-5000000 kPlexTBs-hybrid2-10000000 kPlexTBs-hybrid2-20000000"
+solutions='1000000 5000000 10000000 20000000'
 del_prev
 run_jobs 00:30:00
 # solutions=$(seq 0.2 0.05 0.9)
 
+solutions="Maple kPlexTBs kPlexTBs-hybrid2-1000000 kPlexTBs-hybrid2-5000000 kPlexTBs-hybrid2-10000000 kPlexTBs-hybrid2-20000000"
 get_results
 get_kpsize
 get_cost
