@@ -8,7 +8,7 @@ double cfactor=1;
 // #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-// #define B_BRANCHINGS
+#define B_BRANCHINGS
 
 Timer seesaw, reductions, branchings, iteration;
 
@@ -553,11 +553,11 @@ private:
 		if(iteration.elapsed()>=cfactor) return;
 		// }
 		// branchings.tick();
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = partition_dise_branchings(S_end, R_end, level);
 		cout<<S_end<<" "<<t_R_end<<" "<<R_end<<" "<<t_R_end-R_end<<endl;
 
 		// branchings.tock();
-		// R_end = getBranchings(S_end, R_end);
+		// R_end = partition_dise_branchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		while(R_end<t_R_end){
 		if(iteration.elapsed()>=cfactor) return;
@@ -776,7 +776,7 @@ private:
 		}
 		return n;
 	}
-    // ui getBranchings(ui S_end, ui R_end, ui level)
+    // ui partition_dise_branchings(ui S_end, ui R_end, ui level)
     // {
     //     for (ui i = 0; i < S_end; i++)
     //     {
@@ -860,7 +860,7 @@ private:
     //             break;
     //     }
 	// 	branchings.tock();
-    ui getBranchings(ui S_end, ui R_end, ui level)
+    ui partition_dise_branchings(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
         {
@@ -1142,36 +1142,7 @@ private:
 
 		// reduction rules based on Theorem 9, 10, 11
 		#ifdef REDUCTIONS
-		for(ui j = S_end;j < R_end;j ++)  {
-			ui v = SR[j];
-			if(level_id[v] == level) continue; // v is already pruned... 
-			bool rem=false;
-		    if (u < sz1h and v < sz1h)
-            {
-                // Theorem 11
-                // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
-                rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
-            }
-            else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
-            {
-                // Theorem 10
-                // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
-                rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
-            }
-            else
-            {
-                // Theorem 9
-                // u and v both are two hop neighbors
-                rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
-            }
-			if(rem) {
-				level_id[v] = level;
-				Qv.push(v);
-			}
-		}
+			reduce_on_cn_R(S_end, R_end, level);
 		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
@@ -1223,7 +1194,7 @@ private:
 
 		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
 	}
-
+	
 	bool remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level) {
 #ifdef _SECOND_ORDER_PRUNING_
 		while(!Qv.empty()||!Qe.empty()) {
@@ -1533,7 +1504,38 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 	}
-
+	void reduce_on_cn_R(ui S_end, ui R_end, ui level){
+				for(ui j = S_end;j < R_end;j ++)  {
+			ui v = SR[j];
+			if(level_id[v] == level) continue; // v is already pruned... 
+			bool rem=false;
+		    if (u < sz1h and v < sz1h)
+            {
+                // Theorem 11
+                // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
+            }
+            else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
+            {
+                // Theorem 10
+                // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
+                rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
+            }
+            else
+            {
+                // Theorem 9
+                // u and v both are two hop neighbors
+                rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
+                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
+            }
+			if(rem) {
+				level_id[v] = level;
+				Qv.push(v);
+			}
+		}
+	}
 	bool remove_u_from_S_with_prune(ui &S_end, ui &R_end, ui level) {
 		assert(S_end);
 		ui u = SR[S_end-1];
