@@ -554,6 +554,7 @@ private:
 		// }
 		// branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
+		cout<<S_end<<" "<<t_R_end<<" "<<R_end<<" "<<t_R_end-R_end<<endl;
 
 		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
