@@ -1142,7 +1142,7 @@ private:
 
 		// reduction rules based on Theorem 9, 10, 11
 		#ifdef REDUCTIONS
-			reduce_on_cn_R(ui u, S_end, R_end, level);
+			reduce_on_cn_R(u, S_end, R_end, level);
 		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
