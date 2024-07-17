@@ -325,7 +325,7 @@ private:
         	return ;
         }
         else if(C_end == bestSz + 1){
-			return ;
+			return ; 
 		}
 
 		//reduction for high degree vertices

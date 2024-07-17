@@ -9,6 +9,7 @@ double cfactor=1;
 #define REDUCTIONS
 #define SEESAW
 #define B_BRANCHINGS
+std::queue<std::pair<ui, ui>> sbound;
 
 Timer seesaw, reductions, branchings, iteration;
 
@@ -524,10 +525,13 @@ private:
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
 		// if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
-		// if (seesawUB(S_end, R_end)<=best_solution_size) {
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		
+		ui ub = seesawUB(S_end, R_end);
+		if (ub<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		sbound.push({R_end, ub});
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
