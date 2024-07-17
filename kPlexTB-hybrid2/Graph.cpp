@@ -356,7 +356,7 @@ void Graph::kPlex_exact(int mode) {
 					if(tt.elapsed()/1e6/60>=1){
 						while(sbound.size()){
 							auto p=sbound.front();sbound.pop();
-							cout<<p.first<<" "<<p.second;
+							cout<<p.first<<" "<<p.second<<endl;
 						}
 						exit(0);
 					} 
