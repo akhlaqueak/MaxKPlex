@@ -454,16 +454,16 @@ private:
 		}
 		if(iteration.elapsed()>=cfactor) return;
 
-		// ui S2_n = 0;
-		// for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
+		ui S2_n = 0;
+		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
-		// if(S2_n >= 2) {
-		// 	collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
-		// 	if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
-		// 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 		return ;
-		// 	}
-		// }
+		if(S2_n >= 2) {
+			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
+			if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
+				restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+				return ;
+			}
+		}
 		if(iteration.elapsed()>=cfactor) return;
 
 
@@ -491,10 +491,10 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		if(bound(S_end, R_end)>=R_end){
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if(bound(S_end, R_end)>=R_end){
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -1718,8 +1718,8 @@ private:
         while (R_end>S_end)
         {
             
-            // double ubp = tryPartition(S_end, R_end);
-			double ubp=0;
+            double ubp = tryPartition(S_end, R_end);
+			// double ubp=0;
 
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
