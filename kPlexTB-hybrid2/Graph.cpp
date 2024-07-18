@@ -283,7 +283,7 @@ void Graph::kPlex_exact(int mode) {
 		bool dbdd_instance=false;
 
 		core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
-
+		cout<< "shrinking time" << t.elapsed()<<endl;
 		if(mode == 0) {
 			if(kplex.size()+1 > 2*K) {
 				CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
