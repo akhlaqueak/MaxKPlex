@@ -524,7 +524,7 @@ private:
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta  and seesawUB(S_end, R_end)<=best_solution_size) {
 		
 		// ui ub = seesawUB(S_end, R_end);
 		// sbound.push({R_end, ub});
