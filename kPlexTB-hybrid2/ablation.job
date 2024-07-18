@@ -13,17 +13,15 @@
 
 ./kplex-full -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
 sleep 10
-gprof kplex-full gmon.out > MANN-a81-k5-full
-
+gprof kplex-full gmon.out >MANN-a81-k5-full
 
 ./kplex-colorbound -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
 sleep 10
-gprof kplex-colorbound gmon.out > MANN-a81-k5-colorbound
+gprof kplex-colorbound gmon.out >MANN-a81-k5-colorbound
 
 ./kplex-seesaw -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
 sleep 10
-gprof kplex-seesaw gmon.out > MANN-a81-k5-seesaw
-
+gprof kplex-seesaw gmon.out >MANN-a81-k5-seesaw
 
 # ./kplex -g ~/graphs/ablation/san200-0-7-1.bin -k 3 -b -c 1000000000
 # cp gmon.out gmon-san200-0-7-1-k3
@@ -33,3 +31,20 @@ gprof kplex-seesaw gmon.out > MANN-a81-k5-seesaw
 # cp gmon.out gmon-MANN-a45-k2
 # ./kplex -g ~/graphs/ablation/MANN-a81.bin -k 2 -b -c 1000000000
 # cp gmon.out gmon-MANN-a81-k2
+
+input="seesaw.csv"
+thresh=31
+failed=0
+passed=0
+while IFS= read -r line; do
+    line=($line)
+    if (( $(bc <<< ${line[1]} > 31) )); then
+        echo ${line[1]}
+        ((passed++));
+    else    
+        ((failed++));
+    fi
+done <"$input"
+
+echo $failed
+echo $passed
