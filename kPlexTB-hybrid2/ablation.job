@@ -11,10 +11,19 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-./kplex -g ~/graphs/ablation/san200-0-7-1.bin -k 2 -b -c 1000000000
+./kplex-full -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
 sleep 10
-cp gmon.out gmon-san200-0-7-1-k2
-gprof kplex gmon-san200-0-7-1-k2 > gmon-san200-0-7-1-k2-color.out
+gprof kplex-full gmon.out > MANN-a81-k5-full
+
+
+./kplex-colorbound -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
+sleep 10
+gprof kplex-colorbound gmon.out > MANN-a81-k5-colorbound
+
+./kplex-seesaw -g ~/graphs/ablation/MANN-a81.bin -k 5 -b -c 1000000000
+sleep 10
+gprof kplex-seesaw gmon.out > MANN-a81-k5-seesaw
+
 
 # ./kplex -g ~/graphs/ablation/san200-0-7-1.bin -k 3 -b -c 1000000000
 # cp gmon.out gmon-san200-0-7-1-k3
