@@ -265,7 +265,7 @@ void Graph::kPlex_exact(int mode) {
 	}
 
 	kplex.resize(2*K-2); // trivial cases pruned out... 
-	heuristic_kplex_max_degree(10);
+	// heuristic_kplex_max_degree(10);
 
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
