@@ -1058,7 +1058,7 @@ private:
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
-				if(R_end-degree[u]<=2) {candidates[candidates_n++]=u; continue;}
+				// if(R_end-degree[u]<=2) {candidates[candidates_n++]=u; continue;}
 
 				char *t_matrix = matrix + u*n;
 				bool OK = true;
