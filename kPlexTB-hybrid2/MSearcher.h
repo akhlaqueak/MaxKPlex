@@ -824,5 +824,6 @@ if(enable){
 
 	bool COND(ui v){
 		return (neiInG[v]+K<=bestSz+1)||(neiInP[v]+K==P_end+1)||(neiInP[0]+K==P_end+1);
+		// 	v can restrict solution to bestSz+1 || v becomes boundary vertex after adding to P|| 0 becomes boundary vertex after v to P
 	}
 };

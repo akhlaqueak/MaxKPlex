@@ -11,9 +11,9 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
-./kplex-full -g ~/graphs/ablation/san200-0-7-1.bin -k 2 -b -c 1000000000
-sleep 10
-gprof kplex-full gmon.out > san200-0-7-1.out
+# ./kplex-full -g ~/graphs/ablation/san200-0-7-1.bin -k 2 -b -c 1000000000
+# sleep 10
+# gprof kplex-full gmon.out > san200-0-7-1.out
 
 ./kplex-full -g ~/graphs/ablation/soc-orkut.bin -k 5 -b -c 1000000000
 sleep 10
