@@ -387,7 +387,7 @@ private:
 		else removed[removeSz ++] = std::make_pair(-1,pivot);
 		bool pruned = moveP2X_R();
         if(!pruned && bestSz > oldBestSz) pruned = updateR();
-        if(!pruned && !CTCP()) lvl++, reduce(0, 0), lvl--;
+        if(!pruned && !CTCP()) lvl++, reduce(endIdx, endIdx), lvl--;
         unR(oldRemoveSz);
     }
 
