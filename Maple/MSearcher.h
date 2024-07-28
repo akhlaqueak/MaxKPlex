@@ -371,7 +371,7 @@ private:
 		if(begIdx >= endIdx || PC_rid[addList[endIdx-1]] >= C_end || PC_rid[addList[endIdx-1]] < P_end)
 			branch(begIdx,endIdx); //branch in lazy way for better reduction of generated branches
 
-		printf("%u-%u\n", begIdx, endIdx);
+		// printf("%u-%u\n", begIdx, endIdx);
 
 		pivot = addList[-- endIdx];
 
