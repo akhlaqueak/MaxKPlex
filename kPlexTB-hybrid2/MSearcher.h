@@ -378,7 +378,7 @@ private:
         unR(oldRemoveSz);
 
         while(!Qe.empty()) Qe.pop();
-        // the second branch exclude u from S
+        // the second branch exclude u from G
 
 		if(removed.size() == removeSz) {
 			removed.push_back(std::make_pair(-1,pivot));
@@ -387,7 +387,7 @@ private:
 		else removed[removeSz ++] = std::make_pair(-1,pivot);
 		bool pruned = moveP2X_R();
         if(!pruned && bestSz > oldBestSz) pruned = updateR();
-        if(!pruned && !CTCP()) lvl++, reduce(endIdx, endIdx), lvl--;
+        if(!pruned && !CTCP()) lvl++, reduce(0, 0), lvl--;
         unR(oldRemoveSz);
     }
 
