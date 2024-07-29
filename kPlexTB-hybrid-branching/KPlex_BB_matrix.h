@@ -634,7 +634,7 @@ else{
 // ******************* following block is original branching...  
 }
 
-#ifndef B_BRANCHINGS
+#ifdef BINARY_BRANCHINGS
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
