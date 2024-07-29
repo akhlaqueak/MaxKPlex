@@ -609,7 +609,7 @@ private:
 
 		// printf("%u-%u\n", begIdx, endIdx);
 
-		ui pivot = addList[-- endIdx];
+		ui u = addList[-- endIdx];
 
         // the first branch includes u into S
 		{
