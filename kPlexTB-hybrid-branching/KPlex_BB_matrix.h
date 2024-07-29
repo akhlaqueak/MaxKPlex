@@ -1085,12 +1085,11 @@ else{
 				if(R_end - degree[u] > K) continue;
 
 				char *t_matrix = matrix + u*n;
-				bool OK = true;
+				ui notNei = 0;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-					OK = false;
-					break;
+					if(notNei++) break;
 				}
-				if(OK) candidates[candidates_n ++] = u;
+				if(notNei==0 or (R_end==degree_in_S[u] and notNei==1)) candidates[candidates_n ++] = u;
 			}
 
 			if(!candidates_n) break;
