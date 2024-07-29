@@ -554,7 +554,8 @@ private:
 #endif
 
 
-#ifdef B_BRANCHINGS
+if(density<0.9){
+
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 		// for(ui i=S_end;i<R_end;i++){
@@ -600,10 +601,11 @@ private:
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
+}
 // ******************* Ended our branching stuff here... 
 
-#else
-#ifdef MAPLE_BRANCHINGS
+else{
+
 
 		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
 			branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
@@ -630,7 +632,9 @@ private:
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 // ******************* following block is original branching...  
-#else
+}
+
+#ifndef B_BRANCHINGS
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -795,7 +799,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 #endif
-#endif
+
 	}
 
 
