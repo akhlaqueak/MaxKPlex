@@ -58,6 +58,7 @@ private:
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
 	std::vector<ui> addList; ui addListSz=0;
+	double density;
 
 public:
 	KPLEX_BB_MATRIX() {
@@ -165,7 +166,7 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp, ui _sz1h) {
 		n = _n;
 		sz1h = _sz1h;
-		double density=vp.size()*2/(double)n/(n-1);
+		density=vp.size()*2/(double)n/(n-1);
 		ctcp_enabled=K>5;
 		if(((long long)n)*n > matrix_size) {
 			do {
@@ -459,7 +460,7 @@ private:
 		}
 		seesaw.tick();
 		ui S2_n = 0;
-		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
+		for(ui i = 0;density<0.9&&i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
 		if(S2_n >= 2) {
 			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
@@ -528,7 +529,7 @@ private:
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (density < 0.9 and CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -1761,7 +1762,6 @@ private:
         {
             
             double ubp = tryPartition(S_end, R_end);
-
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
                ( ISc.size() / ubc > PIMax.size() / ubp) or
