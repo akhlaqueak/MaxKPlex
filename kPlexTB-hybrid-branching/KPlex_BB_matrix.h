@@ -410,7 +410,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx, ui endIdx) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
