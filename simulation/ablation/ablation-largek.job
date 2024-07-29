@@ -178,7 +178,7 @@ soc-douban.bin
 '
 krange='7 10 15 20'
 
-solutions='kp-full kp-dense-no-prune'
+solutions='kp-full kp-dense-no-prune kp-hybrid-branching'
 
 del_prev
 run_jobs 00:60:00
