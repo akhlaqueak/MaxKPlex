@@ -15,7 +15,7 @@ run_jobs() {
     # for kplex in $solutions; do
     for fn in $datasets; do
         for sol in $solutions; do
-            for k in {2..5}; do
+            for k in $krange; do
                 outfile=$sol-$k.out
                 echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
                 if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
@@ -32,12 +32,12 @@ run_jobs() {
 get_results() {
     result=results.out
     rm $result
-    # for k in {2..5}; do
+    # for k in $krange; do
     #     echo -en "**** k=$k ****,,," >>$result
     # done
     echo -en "datasets," >>$result
 
-    for k in {2..5}; do
+    for k in $krange; do
         echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
@@ -48,7 +48,7 @@ get_results() {
 
     for fn in $datasets; do
         echo -en "$fn,|," >>$result
-        for k in {2..5}; do
+        for k in $krange; do
 
             line=()
             for sol in $solutions; do
@@ -86,7 +86,7 @@ get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
     result=kpsize.out
     rm $result
-    for k in {2..5}; do
+    for k in $krange; do
         echo "================= k=$k =================" >>$result
         echo -en "datasets," >>$result
         for sol in $solutions; do
@@ -116,7 +116,7 @@ get_cost() {
     result=seesaw.out
     rm $result
     sol=kplex-nosetEnum
-    for k in {2..5}; do
+    for k in $krange; do
         echo >>$result
 
         echo "seesaw-cost" >>$result
@@ -138,31 +138,26 @@ get_cost() {
 
 del_prev() {
     for sol in $solutions; do
-        rm $sol-*.out
+        for k in $krange; do
+            rm $sol-$k.out
+        done
     done
 }
-
-
+krange='2 3 4 5'
 datasets=$(ls ~/graphs/ablation/*.bin)
-# kPlexTBs-with-ctcp need to be run
-# solutions='kPlexTBs  kPlexTBs-with-seesaw kPlexTBs-binary-branch kPlexTBs-no-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw-no-reductions'
-solutions='kPlexTBs kPlexTBs-forward kPlexTBs-dual-10 kPlexTBs-dual-100 kPlexTBs-dual-200 kPlexTBs-dual-400'
-solutions='kPlexTBs kPlexTBs-ctcp-forward kPlexTBs-ctcp-dual-10 kPlexTBs-ctcp-dual-100 kPlexTBs-ctcp-dual-200 kPlexTBs-ctcp-dual-400'
 
-solutions='kPlexTBs-ctcp-forward kPlexTBs-forward'
+solutions='kp-full kp-dense-no-prune'
 
 del_prev
-run_jobs 00:30:00
+run_jobs 00:60:00
 
 
 
 
-hyb=$(seq 0.5 0.05 0.9)
+sol='Maple kPlexTBs'
 
-solutions='Maple kPlexTBs'
-
-for h in $hyb; do
-    solutions="$solutions kPlexTBs-hybrid-$h"
+for h in $sol; do
+    solutions="$solutions $h"
 done
 # solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
 # solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
