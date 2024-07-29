@@ -166,7 +166,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		double density=vp.size()*2/(double)n/(n-1);
-		ctcp_enabled=K>5&&density>=cfactor;
+		ctcp_enabled=K>5;
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
