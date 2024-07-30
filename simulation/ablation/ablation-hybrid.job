@@ -148,8 +148,8 @@ datasets=$(ls ~/graphs/ablation/*.bin)
 
 solutions='kp-full'
 
-del_prev
-run_jobs 00:60:00
+# del_prev
+# run_jobs 00:60:00
 
 
 

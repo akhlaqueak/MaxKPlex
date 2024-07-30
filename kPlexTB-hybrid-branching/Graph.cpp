@@ -304,14 +304,46 @@ void Graph::kPlex_exact(int mode) {
 
 			Timer tt;
 
+			
+			ui *edge_list = new ui[m];
+			ui *tri_cnt = new ui[m/2];
+			ui *active_edgelist = new ui[m>>1];
+			ui active_edgelist_n = m>>1;
+			for(ui i = 0;i < (m>>1);i ++) active_edgelist[i] = i;
+
+			ui *Qe = new ui[m>>1];
+			char *deleted = new char[m>>1];
+			memset(deleted, 0, sizeof(char)*(m>>1));
+			char *exists = new char[n];
+			memset(exists, 0, sizeof(char)*n);
+			edgelist_pointer = new ui[m];
+			char* processed=new char[n];
+			memset(processed, 0, sizeof(char)*n);
+
+			ui *Qv = new ui[n];
+			ui *t_degree = new ui[n];
+			ui Qv_n = 0;
+			printf("%u, ", n);
+
+			for(ui u = 0;u < n;u ++) degree[u] = pstart[u+1]-pstart[u];
+			// print_array("peel_seq:", degree, 0, n, 0); 
+			heap->init(n, n-1, peel_sequence, degree);
+
+			ui *peel_sequence_rid = core;
+			for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
+			oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+			reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
+
+			for(ui u = 0;u < n;u ++) pend[u] = pstart[u+1];
+			// cout<<degree[u]<<" - "<<pend[u]-pstart[u]<<" - "<<pstart[u+1]-pstart[u]<<endl;
+
+
 			KPLEX_BB *kplex_solver = new KPLEX_BB();
 			kplex_solver->allocateMemory(n);
 			{
 				vector<ui> ids;
 				vector<pair<ui,ui> > vp;
 
-				ui *peel_sequence_rid = core;
-				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
 
 				memset(vis, 0, sizeof(char)*n);
 
@@ -322,47 +354,62 @@ void Graph::kPlex_exact(int mode) {
 				double min_density = 1, total_density = 0;
 
 				if(pend == nullptr) pend = new ept[n+1];
-				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
+
+				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=false, dual_mode = false;
+				bool forward=true, dual_mode = false;
 				Timer dual_mode_timer;
-				ui dual_mode_thresh = 400, p_left = 0, p_right = n;
+				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
 					cout<<"Direction: L->R"<<endl;
 				else
 					cout<<"Direction: R->L"<<endl;
+				
+				// kplex.resize(70);
+				// m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 
-				while(p_left < p_right &&kplex.size() < UB) {
-					ui u;
+				while(kplex.size() < UB) {
+					ui u, key;
+
 					if(forward){
-						u = peel_sequence[p_left++];
-						if(n-p_left+1<=kplex.size()) continue;
+						if(p_left==n) break; 
+						bool ret_tmp = heap->pop_min(u, key);
+						p_left++;
+						if(processed[u]) continue;
+						processed[u] =  1;
+						if(key < kplex.size()+1-K) {
+							if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in heap
+								Qv[0] = u; Qv_n = 1;
+								if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+								else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+							}
+							// cout<<"u deleted "<<key<<endl;
+							continue;
+						}
+						if(m == 0) break;
 						UB_t = UB;
 					}
 					else{
+						if(p_right==0) break;
 						u = peel_sequence[--p_right];
-						if(n-p_right<=kplex.size()) continue;
+						if(n-p_right<=kplex.size() or processed[u]) continue;
+						processed[u] = 1;
 						UB_t = kplex.size()+1;
 					}
-					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
-					// printf("solving %u \n", u);
 
-					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
-						forward = !forward;
-						dual_mode_timer.restart();
-						if(forward)
-						cout<<"Direction changed, L->R"<<endl;
-						else
-						cout<<"Direction changed, R->L"<<endl;
-					}
+					// printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
+					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
+
 
 					fflush(stdout);
 
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
-					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-
+					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, t_degree, ids, rid, vp, vis, pstart, pend);
+					// else 
+					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
+					// cout<<"processing "<<ids.size();
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
+					// cout<<"continued "<<u<<endl;;
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
@@ -376,7 +423,24 @@ void Graph::kPlex_exact(int mode) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
+					if(forward){
+						Qv[0] = u; Qv_n = 1;
+						if(kplex.size() != t_old_size&&kplex.size()+1 > 2*K) 
+							//output_one_kplex(); break;
+							m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+						else 
+						if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+						else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+					}
 
+					if(dual_mode and dual_mode_timer.elapsed()/1'000'000 > dual_mode_thresh ){
+						forward = !forward; // dual solutions
+						dual_mode_timer.restart();
+						if(forward)
+						cout<<"Direction changed, L->R"<<endl;
+						else
+						cout<<"Direction changed, R->L"<<endl;
+					}
 				}
 				delete kplex_solver_m;
 
@@ -446,27 +510,28 @@ void Graph::reorganize_adjacency_lists(ui n, ui *peel_sequence, ui *rid, ui *pst
 // each of u's neighbors must have at least triangle_threshold common neighbors with u
 // each of u's non-neighbor must have at least cn_threshold common neighbors with u
 // after pruning, u must have at least degree_threshold neighbors
-ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
+ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_threshold, ui cn_threshold, const ui *p_rid, char* deleted, ui *degree, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend) {
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
+	// for(ui i = 0;i < n;i ++) exists[i] = 0;
 
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
 	for(ept i = pstart[u];i < pend[u];i ++) {
-		assert(p_rid[edges[i]] > p_rid[u]);
-		ids.push_back(edges[i]); exists[edges[i]] = 2;
+		if(p_rid[edges[i]] > p_rid[u] and !deleted[edgelist_pointer[i]])
+		{ids.push_back(edges[i]); exists[edges[i]] = 2;}
 	}
-	assert(pend[u] >= pstart[u+1]||p_rid[edges[pend[u]]] < p_rid[u]);
+	assert(pend[u] >= pend[u]||p_rid[edges[pend[u]]] < p_rid[u]);
 
-	// Utility::print_array("ids1", ids.data(), 0, ids.size(), 0);
+	// print_array("ids1", ids.data(), 0, ids.size(), 0);
 
 	ui *Q = rid;
 	ui Q_n = 0;
 	for(ui i = 1;i < ids.size();i ++) {
 		ui v = ids[i];
 		degree[v] = 0;
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) {
+		for(ept j = pstart[v];j < pend[v];j ++) {
 			if(exists[edges[j]]) ++ degree[v];
 		}
 		if(degree[v] < triangle_threshold) Q[Q_n++] = v;
@@ -474,7 +539,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	for(ui i = 0;i < Q_n;i ++) {
 		ui v = Q[i];
 		exists[v] = 3;
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) if(exists[edges[j]] == 2) {
+		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]] == 2) {
 			if(degree[edges[j]] == triangle_threshold) Q[Q_n++] = edges[j];
 			-- degree[edges[j]];
 		}
@@ -489,7 +554,9 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ui old_size = ids.size();
 	for(ui i = 1;i < old_size;i ++) if(exists[ids[i]] == 2) {
 		ui v = ids[i];
-		for(ept j = pstart[v];j < pstart[v+1]&&p_rid[edges[j]] > p_rid[u];j ++) {
+		for(ept j = pstart[v];j < pend[v];j ++) {
+			if(deleted[edgelist_pointer[j]] or p_rid[edges[j]] < p_rid[u] )
+				continue;
 			if(!exists[edges[j]]) {
 				ids.push_back(edges[j]);
 				exists[edges[j]] = 1;
@@ -504,24 +571,31 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 		if(exists[ids[i]] == 3) exists[ids[i]] = 0;
 		else ids[new_size++] = ids[i];
 	}
+
 	assert(new_size + Q_n == old_size);
 	for(ui i = old_size;i < ids.size();i ++) {
 		if(degree[ids[i]] < cn_threshold) exists[ids[i]] = 0;
 		else ids[new_size++] = ids[i];
 	}
 	ids.resize(new_size);
+	// print_array("ids2", ids.data(), 0, ids.size(), 0);
 
 	for(ui i = 0;i < ids.size();i ++) rid[ids[i]] = i;
+
 	for(ui i = 0;i < ids.size();i ++) {
 		ui v = ids[i];
-		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]]) {
-			assert(rid[v] < ids.size()&&rid[edges[j]] < ids.size());
+		for(ept j = pstart[v];j < pend[v];j ++) if(exists[edges[j]] && v>edges[j]) {
+			// if(rid[v] < ids.size()&&rid[edges[j]] < ids.size()&&v<edges[j])
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
+			// else
+			// 	printf("ERRROR %u, %u: %u", rid[v], rid[edges[j]], ids.size());
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
+	for(ui i = 0;i < n;i ++) if(exists[i]) cout<<"Eror";
 	return old_size;
 }
+
 
 ui Graph::extract_subgraph_wo_prune(ui u, const ui *p_rid, vector<ui> &ids, ui *rid, vector<pair<ui,ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges) {
 	ids.clear(); vp.clear();
@@ -612,13 +686,14 @@ void Graph::extract_subgraph_full(const ui *ids, ui ids_n, ui *rid, vector<pair<
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui,ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
+ui Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui,ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
 	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
+		// if(p_rid[u] < p_rid[v])
 		ids[ids_n++] = v; exists[v] = 2;
 	}
 	pend[u] = u_n;
@@ -649,14 +724,15 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 	if(ids_n - 1 - Q_n + K <= kplex.size()) {
 		for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 		ids_n = 0;
-		return ;
+		return 0;
 	}
 	
 	ui nr_size = ids_n;
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
-		u = ids[i];
-		for(ept j = pstart[u];j < pend[u];j ++) {
-			if(!exists[edges[j]]) {
+		ui v = ids[i];
+		for(ept j = pstart[v];j < pend[v];j ++) {
+			if(!exists[edges[j]]) 
+			{
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
 				degree[edges[j]] = 1;
@@ -729,6 +805,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(exists[i] == 0);
 #endif
+	return nr_size;
 }
 
 // max-degree-based heuristic k-plex computation
@@ -1078,6 +1155,44 @@ void Graph::oriented_triangle_counting(ui n, ui m, ept *pstart, ept *pend, ui *e
 #endif
 }
 
+// orient graph and triangle counting
+void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ept *pstart, ept *pend, ui *edges, ui *tri_cnt, ui *adj) {
+	ui *rid = adj;
+	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
+	for(ui i = 0;i < n;i ++) {
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+	}
+
+#ifndef NDEBUG
+	long long sum = 0;
+	for(int i = 0;i < n;i ++) sum += pend[i] - pstart[i];
+	// printf("%lld %lld\n", sum, m);
+	assert(sum*2 == m);
+#endif
+
+	memset(adj, 0, sizeof(ui)*n);
+	long long cnt = 0;
+	memset(tri_cnt, 0, sizeof(ui)*m);
+	for(ui u = 0;u < n;u ++) {
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = j+1;
+
+		for(ept j = pstart[u];j < pend[u];j ++) {
+			ui v = edges[j];
+			for(ept k = pstart[v];k < pend[v];k ++) if(adj[edges[k]]) {
+				++ tri_cnt[j];
+				++ tri_cnt[k];
+				++ tri_cnt[adj[edges[k]]-1];
+				++ cnt;
+			}
+		}
+
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = 0;
+	}
+#ifndef NDEBUG
+	//printf("*** Total number of triangles: %s\n", Utility::integer_to_string(cnt).c_str());
+#endif
+}
 // reorganize the adjacency lists
 // and sort each adjacency list to be in increasing order
 void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ept *pstart, ept *pend, ept *pend2, ui *edges, ui *edgelist_pointer, ui *buf) {
@@ -1169,7 +1284,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 	}
 #endif
 
-	//printf("%lu\n", Qe_n);
+	// printf("called for %u\n", Qv[0]);
 
 	ept deleted_edges_n = 0;
 	ui Qv_idx = 0;
@@ -1187,7 +1302,7 @@ ept Graph::peeling(ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold
 			for(ept k = pstart[u];k < pend[u];k ++) deleted[edgelist_pointer[k]] = 1;
 			deleted_edges_n += pend[u] - pstart[u];
 			linear_heap->decrement(u, degree[u]); degree[u] = 0;
-			//printf("Removed %u\n", u);
+			// printf("Removed %u\n", u);
 
 			for(ept k= pstart[u];k < pend[u];k ++) {
 				ui v = edges[k];
@@ -1326,7 +1441,7 @@ int main(int argc, char *argv[]) {
 	auto graph_option = op.add<Value<string>>("g", "graph", "\'path to input graph file\'");
 	auto alg_option = op.add<Value<string>>("a", "alg", "\'algorithm name\' (degen | exact | verify)", "exact", &alg);
 	auto k_option = op.add<Value<int>>("k", "k", "\'the value of k for k-plex\'");
-	auto c_option = op.add<Value<double>>("c", "c", "\'the value of c-factor\'");
+	auto c_option = op.add<Value<int>>("c", "c", "\'the value of c-factor\'");
 	op.add<Switch>("o", "output", "\'write the kplex to ./kplex.txt\'", &output);
 	op.add<Switch>("b", "binary", "\'read the input graph from binary files b_adj.bin and b_degree.bin\'", &binary_input);
 

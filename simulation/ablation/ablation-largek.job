@@ -180,10 +180,10 @@ krange='7 10 15 20'
 
 solutions='kp-full'
 
-del_prev
-run_jobs 00:60:00
+# del_prev
+# run_jobs 00:60:00
 
-sol='Maple kPlexTBs kp-full'
+solutions='Maple kPlexTBs kp-full'
 
 get_results
 # get_kpsize
