@@ -146,7 +146,7 @@ del_prev() {
 krange='2 3 4 5'
 datasets=$(ls ~/graphs/ablation/*.bin)
 
-solutions='kp-full-ctcp'
+solutions='kp-forward kp-backward'
 
 del_prev
 run_jobs 00:30:00
@@ -154,7 +154,7 @@ run_jobs 00:30:00
 
 
 
-solutions='Maple kPlexTBs kp-full kp-full-ctcp'
+solutions="Maple kPlexTBs $solutions"
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
