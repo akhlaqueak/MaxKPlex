@@ -1090,6 +1090,7 @@ else{
 				bool OK=false;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
 					nonneighbors[nn++]=SR[j];
+					if(nn==3) break;
 				}
 				if(nn==0) OK=true;
 				else if (R_end==degree_in_S[u]){
