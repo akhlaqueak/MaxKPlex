@@ -301,7 +301,11 @@ void Graph::kPlex_exact(int mode) {
 				if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 				else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 			}
-
+			if(n<=kplex.size()) {
+				printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+				printf("\tMaxKPlex_Size: %lu t_Total: %f additional: %f\n", kplex.size(), t.elapsed()/1000000.0, 0.0);
+				return ;
+			}
 			Timer tt;
 
 			
