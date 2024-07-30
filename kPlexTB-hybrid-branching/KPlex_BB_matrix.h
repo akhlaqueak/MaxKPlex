@@ -554,7 +554,7 @@ private:
 #endif
 
 
-if(sparse&&K<=5){
+if(K<=5){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
