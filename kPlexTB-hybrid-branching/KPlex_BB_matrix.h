@@ -990,7 +990,7 @@ else{
 			for (ui j = i + 1; j < R_end; j++)
 			{
 				ui v = SR[j];
-				if (peelOrder[v] > peelOrder[u])
+				if (peelOrder[v] < peelOrder[u])
 					ind = j, u = v;
 			}
 			if(i!=ind)
