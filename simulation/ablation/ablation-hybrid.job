@@ -146,7 +146,7 @@ del_prev() {
 krange='2 3 4 5 6 7 10 15 20'
 datasets=$(ls ~/graphs/test/*.bin)
 
-solutions='kp-backward kp-forward kp-innerforward'
+solutions='kp-ctcp-enabled'
 
 del_prev
 run_jobs 00:30:00
@@ -157,10 +157,8 @@ run_jobs 00:30:00
 # solutions="Maple kPlexTBs $solutions"
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
-solutions='kp-backward kp-forward'
+solutions='kp-forward kp-ctcp-enabled'
 get_results
 
-solutions='kp-backward kp-innerforward'
-get_results
 # get_kpsize
 # get_cost
