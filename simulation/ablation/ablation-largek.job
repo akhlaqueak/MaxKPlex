@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=large            ### Name of the job
+#SBATCH --job-name=test2             ### Name of the job
 #SBATCH --ntasks=96                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
@@ -21,7 +21,7 @@ run_jobs() {
                 if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >>$sol-$k.out &
                 else
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g ~/graphs/network_repo/$fn -a exact -k $k -c 3 >>$sol-$k.out &
+                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
                 fi
             done
         done
@@ -143,47 +143,21 @@ del_prev() {
         done
     done
 }
+krange='2 3 4 5 6 7 10 15 20'
+datasets=$(ls ~/graphs/test/*.bin)
 
-datasets='
-soc-digg.bin
-socfb-Duke14.bin
-tech-as-skitter.bin
-soc-LiveMocha.bin
-ia-wiki-Talk.bin
-soc-orkut.bin
-soc-gowalla.bin
-soc-youtube-snap.bin
-soc-lastfm.bin
-soc-youtube.bin
-socfb-B-anon.bin
-socfb-A-anon.bin
-web-wikipedia2009.bin
-soc-pokec.bin
-ia-enron-large.bin
-socfb-Stanford3.bin
-socfb-CMU.bin
-sc-nasasrb.bin
-socfb-MIT.bin
-soc-epinions.bin
-sc-pwtk.bin
-soc-twitter-follows.bin
-socfb-Indiana.bin
-soc-delicious.bin
-scc_reality.bin
-ia-email-EU.bin
-socfb-uci-uni.bin
-sc-ldoor.bin
-inf-road-usa.bin
-soc-douban.bin
-'
-krange='7 10 15 20'
-
-solutions='kp-forward kp-backward'
+solutions='kp-innerforward'
 
 del_prev
-run_jobs 00:30:00
+run_jobs 00:15:00
 
-solutions="Maple kPlexTBs $solutions"
+solutions='kp-backward kp-innerforward'
+
+
+
+# solutions="Maple kPlexTBs $solutions"
+
+datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
 
 get_results
 # get_kpsize
