@@ -143,10 +143,10 @@ del_prev() {
         done
     done
 }
-krange='2 3 4 5'
+krange='2 3 4 5 7 10 15 20'
 datasets=$(ls ~/graphs/ablation/*.bin)
 
-solutions='kp-forward kp-backward'
+solutions='kp-full'
 
 del_prev
 run_jobs 00:30:00
