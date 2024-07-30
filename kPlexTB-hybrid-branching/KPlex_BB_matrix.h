@@ -1088,15 +1088,16 @@ else{
 
 				char *t_matrix = matrix + u*n;
 				ui nn = 0;
-				bool OK=false;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
+				bool OK=false, tight=true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+					if(nn>=2&&!tight) break;
 					nonneighbors[nn++]=SR[j];
-					if(nn==3) break;
+					if(R_end - degree[SR[j]] > K) 
+						tight=false;
 				}
-				if(nn==0) OK=true;
-				else if (R_end==degree_in_S[u]){
+				if(tight) OK=true;
+				else if (R_end==degree_in_S[u])
 					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
-				} 
 				if(OK) candidates[candidates_n ++] = u;
 			}
 
