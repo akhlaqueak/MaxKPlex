@@ -178,21 +178,21 @@ soc-douban.bin
 '
 krange='7 10 15 20'
 
-solutions='kp-full kp-dense-no-prune kp-hybrid-branching'
+solutions='Maple kp-full kp-dense-no-prune kp-hybrid-branching kp-hybrid-branching-addrule'
 
-del_prev
-run_jobs 00:60:00
+# del_prev
+# run_jobs 00:60:00
 
 sol='Maple kPlexTBs'
 
-for h in $sol; do
-    solutions="$solutions $h"
-done
+# for h in $sol; do
+#     solutions="$solutions $h"
+# done
 # solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
 # solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
 
-datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
+# datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
 get_results
-get_kpsize
-get_cost
+# get_kpsize
+# get_cost

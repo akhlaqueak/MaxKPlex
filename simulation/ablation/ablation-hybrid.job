@@ -146,10 +146,10 @@ del_prev() {
 krange='2 3 4 5'
 datasets=$(ls ~/graphs/ablation/*.bin)
 
-solutions='kp-hybrid-branching-addrule'
+solutions='Maple kPlexTBs kp-hybrid-branching-addrule kp-full kp-hybrid-branching kp-dense-no-prune'
 
-del_prev
-run_jobs 00:60:00
+# del_prev
+# run_jobs 00:60:00
 
 
 

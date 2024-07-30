@@ -1079,17 +1079,23 @@ else{
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
+			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
 				char *t_matrix = matrix + u*n;
-				ui notNei = 0;
+				ui nn = 0;
+				book OK=false;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-					if(notNei++) break;
+					nonneighbors[nn++]=SR[j];
 				}
-				if(notNei==0 or (R_end==degree_in_S[u] and notNei==1)) candidates[candidates_n ++] = u;
+				if(nn==0) OK=true;
+				else if (R_end==degree_in_S[u]){
+					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
+				} 
+				if(OK) candidates[candidates_n ++] = u;
 			}
 
 			if(!candidates_n) break;
