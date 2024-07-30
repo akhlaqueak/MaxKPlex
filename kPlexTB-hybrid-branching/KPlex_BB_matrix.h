@@ -176,7 +176,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
-		cout<<"allocating... "<<matrix_size<<endl;
+		// cout<<"allocating... "<<matrix_size<<endl;
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}

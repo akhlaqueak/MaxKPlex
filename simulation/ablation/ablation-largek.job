@@ -181,7 +181,7 @@ krange='7 10 15 20'
 solutions='kp-full-ctcp'
 
 del_prev
-run_jobs 00:60:00
+run_jobs 00:30:00
 
 solutions='Maple kPlexTBs kp-full kp-full-ctcp'
 
