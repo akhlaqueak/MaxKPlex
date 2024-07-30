@@ -146,25 +146,18 @@ del_prev() {
 krange='2 3 4 5'
 datasets=$(ls ~/graphs/ablation/*.bin)
 
-solutions='Maple kPlexTBs kp-hybrid-branching-addrule kp-full kp-hybrid-branching kp-dense-no-prune'
+solutions='kp-full'
 
-# del_prev
-# run_jobs 00:60:00
-
-
+del_prev
+run_jobs 00:60:00
 
 
-sol='Maple kPlexTBs'
 
-for h in $sol; do
-    solutions="$solutions $h"
-done
-# solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
-# solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
 
+solutions='Maple kPlexTBs kp-full'
 
 datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
 
 get_results
-get_kpsize
-get_cost
+# get_kpsize
+# get_cost
