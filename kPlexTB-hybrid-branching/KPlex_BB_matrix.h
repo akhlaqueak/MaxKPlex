@@ -1087,7 +1087,7 @@ else{
 
 				char *t_matrix = matrix + u*n;
 				ui nn = 0;
-				book OK=false;
+				bool OK=false;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
 					nonneighbors[nn++]=SR[j];
 				}
