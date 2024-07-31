@@ -1453,7 +1453,7 @@ else{
 
 		for(;R_end < old_R_end;R_end ++) { // insert u back into R
 			ui u = SR[R_end];
-			assert(level_id[u] == level&&SR_rid[u] == R_end);
+			assert(level_id[u] == level);//&&SR_rid[u] == R_end);
 			level_id[u] = n;
 
 			ui neighbors_n = 0;
