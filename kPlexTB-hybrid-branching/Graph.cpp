@@ -368,9 +368,6 @@ void Graph::kPlex_exact(int mode) {
 				else
 					cout<<"Direction: R->L"<<endl;
 				
-				// kplex.resize(70);
-				// m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-
 				while(kplex.size() < UB) {
 					ui u, key;
 
@@ -379,14 +376,14 @@ void Graph::kPlex_exact(int mode) {
 						bool ret_tmp = heap->pop_min(u, key);
 						p_left++;
 						if(processed[u]) continue;
-						processed[u] =  1;
+						processed[u] = 1;
 						if(key < kplex.size()+1-K) {
 							if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in heap
 								Qv[0] = u; Qv_n = 1;
 								if(kplex.size()+1>2*K) m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 								else m -= 2*peeling(heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, 0, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 							}
-							cout<<"u deleted "<<key<<endl;
+							// cout<<"u deleted "<<key<<endl;
 							continue;
 						}
 						if(m == 0) break;
@@ -400,7 +397,7 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 
-					// printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
+					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
