@@ -1155,9 +1155,10 @@ else{
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
-		ui begIdx=addList.size(), endIdx=begIdx+R_end-cend;
+		ui begIdx=addList.size();
 		addList.insert(addList.end(), SR+cend, SR+R_end);
-		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]<peelOrder[b];});
+		ui endIdx = addList.size();
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
 		return R_end-cend;
 		
 		/*
