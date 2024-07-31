@@ -570,7 +570,7 @@ if(true){
 		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
-		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++)){
+		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 			// move branching vertex back to C
 			// ui u = SR[R_end];
 			// assert(level_id[u] == level&&SR_rid[u] == R_end);
