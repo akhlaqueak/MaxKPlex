@@ -152,14 +152,14 @@ del_prev() {
         done
     done
 }
-krange='10 15 20'
+krange='5 7 10 15 20'
 datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
 solutions='kp-sbs-maple kp-sbs-ours'
 
 del_prev
-run_jobs 00:30:00
+run_jobs 00:10:00
 
 
 
