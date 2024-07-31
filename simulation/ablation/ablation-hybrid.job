@@ -156,7 +156,7 @@ krange='10 15 20'
 datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
-solutions='kp-sbs'
+solutions='kp-sbs-maple kp-sbs-ours'
 
 del_prev
 run_jobs 00:30:00
@@ -167,7 +167,7 @@ run_jobs 00:30:00
 # solutions="Maple kPlexTBs $solutions"
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
-solutions='kp-sbs Maple'
+solutions="Maple $solutions"
 get_results
 get_kpsize
 # get_cost
