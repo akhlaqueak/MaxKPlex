@@ -1158,7 +1158,7 @@ else{
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
 		ui begIdx=addIdx;
 		for(ui i=cend;i<R_end;i++){
-			if(addList.size()==addIdx) addList.push_back(SR[i])
+			if(addList.size()==addIdx) addList.push_back(SR[i]);
 			else addList[addIdx++]=SR[i];
 		}
 		ui endIdx = addIdx;
