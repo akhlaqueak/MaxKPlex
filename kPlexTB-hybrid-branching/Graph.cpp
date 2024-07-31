@@ -397,7 +397,7 @@ void Graph::kPlex_exact(int mode) {
 						UB_t = kplex.size()+1;
 					}
 
-					printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
+					// printf("p_left: %u, p_right: %u, n: %u, m: %u, u: %u degree: %u\n", p_left, p_right, n, m, u, pend[u]-pstart[u]);
 					if(pend[u]-pstart[u]+K <= kplex.size()) continue;
 
 
@@ -406,7 +406,7 @@ void Graph::kPlex_exact(int mode) {
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, t_degree, ids, rid, vp, vis, pstart, pend);
 					// else 
 					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-					// cout<<"processing "<<ids.size();
+					cout<<"processing "<<ids.size();
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 					// cout<<"continued "<<u<<endl;;
 
