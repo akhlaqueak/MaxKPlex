@@ -406,7 +406,7 @@ void Graph::kPlex_exact(int mode) {
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, t_degree, ids, rid, vp, vis, pstart, pend);
 					// else 
 					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-					cout<<"processing "<<ids.size();
+					if(ids.size()) cout<<processing<<ids.size()<<" ";
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 					// cout<<"continued "<<u<<endl;;
 
@@ -513,7 +513,6 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(!exists[i]);
 #endif
-	// for(ui i = 0;i < n;i ++) exists[i] = 0;
 
 	ids.clear(); vp.clear();
 	ids.push_back(u); exists[u] = 1;
