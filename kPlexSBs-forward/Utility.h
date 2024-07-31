@@ -14,7 +14,7 @@
 #include <queue>
 #include <set>
 
-// #define NDEBUG
+#define NDEBUG
 #include <cassert>
 
 using ui = unsigned int; // vertex type
