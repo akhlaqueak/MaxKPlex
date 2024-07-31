@@ -10,7 +10,7 @@ double cfactor=1;
 #define SEESAW
 #define MAPLE_BRANCHINGS
 // #define B_BRANCHINGS
-
+#define BINARY_BRANCHINGS
 // Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {
@@ -604,10 +604,10 @@ if(false){
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
-}
-// ******************* Ended our branching stuff here... 
+// }
+// // ******************* Ended our branching stuff here... 
 
-else{
+// else{
 
 
 		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
