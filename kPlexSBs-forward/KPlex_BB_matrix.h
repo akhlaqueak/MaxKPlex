@@ -54,6 +54,7 @@ private:
 	ui max_level;
     ui *LPI;
     ui *psz;
+	ui addIdx;
 
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
@@ -210,7 +211,7 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
-		ui R_end; addList.clear();
+		ui R_end; addIdx=0;
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
@@ -566,7 +567,7 @@ if(true){
 		// }
 		// branchings.tick();
 		ui branches=getBranchings(S_end, R_end, level);
-		ui endIdx=addList.size();
+		ui endIdx=addIdx;
 		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
@@ -1155,9 +1156,12 @@ else{
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
-		ui begIdx=addList.size();
-		addList.insert(addList.end(), SR+cend, SR+R_end);
-		ui endIdx = addList.size();
+		ui begIdx=addIdx;
+		for(ui i=cend;i<R_end;i++){
+			if(addList.size()==addIdx) addList.push_back(SR[i])
+			else addList[addIdx++]=SR[i];
+		}
+		ui endIdx = addIdx;
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
 		return R_end-cend;
 		
