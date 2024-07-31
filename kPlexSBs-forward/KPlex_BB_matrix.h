@@ -167,7 +167,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
-		ctcp_enabled=(K>=8);
+		ctcp_enabled=false;//(K>=8);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -561,16 +561,12 @@ if(true){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
-		// for(ui i=S_end;i<R_end;i++){
-		// 	Qc.push(SR[i]);
-		// }
 		/*
 		ui branches=getBranchings(S_end, R_end, level);
 		ui endIdx=addList.size();
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 		*/
-		// branchings.tick();
-		// branchings.tock();
+
 		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
@@ -601,13 +597,6 @@ if(true){
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		// for(ui i=R_end-1;i>=S_end;i--){
-		// 	ui u = Qc.back();
-		// 	Qc.pop();
-		// 	SR[i] = u;
-		// 	SR_rid[u] = i;
-		// }
-
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
