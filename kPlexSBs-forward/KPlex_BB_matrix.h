@@ -571,7 +571,7 @@ if(true){
 		*/
 		// branchings.tick();
 		// branchings.tock();
-		R_end = getBranchings(S_end, R_end);
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
