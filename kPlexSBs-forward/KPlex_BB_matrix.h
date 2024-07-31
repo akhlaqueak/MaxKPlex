@@ -11,7 +11,7 @@ double cfactor=1;
 #define MAPLE_BRANCHINGS
 // #define B_BRANCHINGS
 
-Timer seesaw, reductions, branchings;
+// Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {
 private:
@@ -19,7 +19,7 @@ private:
 
 	char *matrix;
 	long long matrix_size;
-	vecui PI, PIMax, ISc;
+	vector<ui> PI, PIMax, ISc;
 	MBitSet bmp;
 	bool ctcp_enabled=false;
 
