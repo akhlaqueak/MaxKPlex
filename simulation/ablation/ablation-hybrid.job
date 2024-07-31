@@ -167,7 +167,7 @@ run_jobs 00:30:00
 # solutions="Maple kPlexTBs $solutions"
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
-get_results
 solutions='kp-sbs Maple'
+get_results
 get_kpsize
 # get_cost
