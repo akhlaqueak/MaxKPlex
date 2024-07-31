@@ -167,7 +167,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
-		ctcp_enabled=(K>=8);
+		ctcp_enabled=false;//(K>=8);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -490,11 +490,11 @@ private:
 #endif
 
 		// greedily add vertices to S
-		// if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-		// 	//printf("here2\n");
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
