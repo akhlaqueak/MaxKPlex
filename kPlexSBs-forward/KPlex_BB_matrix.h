@@ -394,7 +394,7 @@ private:
 		#endif
 	}
 
-	void store_solution(ui size) {
+	void store_solution(ui size, book iskplex=false) {
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
@@ -404,7 +404,7 @@ private:
 		
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
-		for(ui i = 0;i < best_solution_size;i ++) {
+		for(ui i = 0;iskplex&&i < best_solution_size;i ++) {
 			if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" ";
 		}
 	}
@@ -416,8 +416,8 @@ private:
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
 		if(S_end > best_solution_size) store_solution(S_end);
-		// if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		// if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, true);
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -493,11 +493,11 @@ private:
 #endif
 
 		// greedily add vertices to S
-		// if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-		// 	//printf("here2\n");
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -517,7 +517,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, true);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
 			//printf("here3\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
