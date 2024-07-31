@@ -564,26 +564,29 @@ if(true){
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
-		// branchings.tick();
+		/*
 		ui branches=getBranchings(S_end, R_end, level);
 		ui endIdx=addList.size();
-		// branchings.tock();
-		// R_end = getBranchings(S_end, R_end);
-		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
+		*/
+		// branchings.tick();
+		// branchings.tock();
+		R_end = getBranchings(S_end, R_end);
+		while(R_end<t_R_end){
+		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
-			// ui u = SR[R_end];
-			// assert(level_id[u] == level&&SR_rid[u] == R_end);
-			// R_end++;
-			// level_id[u] = n;
-			// char *t_matrix = matrix + u*n;
-			// degree[u] = degree_in_S[u] = 0;
-			// for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
-			// 	ui w = SR[i];
-			// 	++ degree[w];
-			// 	++ degree[u];
-			// 	if(i < S_end) ++ degree_in_S[u];
-			// }
+			ui u = SR[R_end];
+			assert(level_id[u] == level&&SR_rid[u] == R_end);
+			R_end++;
+			level_id[u] = n;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				ui w = SR[i];
+				++ degree[w];
+				++ degree[u];
+				if(i < S_end) ++ degree_in_S[u];
+			}
 
 			if(best_solution_size >= _UB_) return ;
 			if(root_level) found_larger=false;
@@ -1155,13 +1158,14 @@ else{
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
+		/*
 		ui begIdx=addList.size();
 		addList.insert(addList.end(), SR+cend, SR+R_end);
 		ui endIdx = addList.size();
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
 		return R_end-cend;
+		*/
 		
-		/*
 		for(ui i=cend; i<R_end; i++){
 			// get a vertex with highest peelOrder at location i
 			ui u = SR[i], ind = i;
@@ -1186,7 +1190,7 @@ else{
 				// if(level_id[w]==level) continue;
 				if(t_matrix[w]) -- degree[w];
 			}
-		}*/
+		}
 		// assert(R_end==cend);
 		// for(ui i = 0;i < R_end;i ++) {
 		// 	ui d1 = 0, d2 = 0;
