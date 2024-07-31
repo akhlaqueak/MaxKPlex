@@ -3,14 +3,15 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-// #include "switches.h"
-ui cfactor=1;
-// #define _SECOND_ORDER_PRUNING_
+
+double cfactor=1;
+#define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-#define B_BRANCHINGS
+#define MAPLE_BRANCHINGS
+// #define B_BRANCHINGS
 
-// Timer seesaw, reductions, branchings;
+Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {
 private:
@@ -18,8 +19,9 @@ private:
 
 	char *matrix;
 	long long matrix_size;
-	vector<ui> PI, PIMax, ISc;
-	MBitSet bmp, bmp2;
+	vecui PI, PIMax, ISc;
+	MBitSet bmp;
+	bool ctcp_enabled=false;
 
 	ui *cnC;
 	ui* peelOrder;
@@ -35,7 +37,7 @@ private:
 	ui *degree;
 	ui *degree_in_S;
 
-	ui K;
+	ui K=2;
 	ui *best_solution;
 	ui best_solution_size;
 	ui _UB_;
@@ -47,7 +49,7 @@ private:
 	ui *SR; // union of S and R, where S is at the front
 	ui *SR_rid; // reverse ID for SR
 	std::queue<ui> Qv;
-	std::queue<ui> Qc;
+	// std::queue<ui> Qc;
 	ui *level_id;
 	ui max_level;
     ui *LPI;
@@ -55,6 +57,8 @@ private:
 
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
+	std::vector<ui> addList; ui addListSz=0;
+	double sparse;
 
 public:
 	KPLEX_BB_MATRIX() {
@@ -143,7 +147,6 @@ public:
 		PIMax.reserve(n);
 		ISc.reserve(n);
 		bmp.init(n);
-		bmp2.init(n);
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = new ui[matrix_size];
 #endif
@@ -163,6 +166,8 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp, ui _sz1h) {
 		n = _n;
 		sz1h = _sz1h;
+		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
+		ctcp_enabled=(K>=8);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -171,7 +176,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
-		cout<<"allocating... "<<matrix_size<<endl;
+		// cout<<"allocating... "<<matrix_size<<endl;
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
@@ -214,27 +219,27 @@ public:
 		}
 	}
 
-	int main(int argc, char *argv[]) {
-		if(argc < 3) {
-			printf("Usage: [1]exe [2]dir [3]k\n");
-			return 0;
-		}
-		readGraph_binary(argv[1]);
-		printf("Finish reading graph\n");
-		K = atoi(argv[2]);
-		if(K == 1) {
-			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
-			return 0;
-		}
-		best_solution_size = 1;
-		_UB_ = n;
-		ui R_end;
-		Timer t;
-		initialization(R_end, false);
-		if(R_end) BB_search(0, R_end, 1, 0, true);
-		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
-		return 0;
-	}
+	// int main(int argc, char *argv[]) {
+	// 	if(argc < 3) {
+	// 		printf("Usage: [1]exe [2]dir [3]k\n");
+	// 		return 0;
+	// 	}
+	// 	readGraph_binary(argv[1]);
+	// 	printf("Finish reading graph\n");
+	// 	K = atoi(argv[2]);
+	// 	if(K == 1) {
+	// 		printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
+	// 		return 0;
+	// 	}
+	// 	best_solution_size = 1;
+	// 	_UB_ = n;
+	// 	ui R_end;
+	// 	Timer t;
+	// 	initialization(R_end, false);
+	// 	if(R_end) BB_search(0, R_end, 1, 0, true, false);
+	// 	printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
+	// 	return 0;
+	// }
 
 private:
 	void readGraph_binary(char* dir) {
@@ -337,25 +342,25 @@ private:
 
 		if(!Qv.empty()) printf("!!! Something wrong. Qv must be empty in initialization\n");
 
-#ifdef _SECOND_ORDER_PRUNING_
-		for(ui i = 0;i < R_end;i ++) {
-			ui neighbors_n = 0;
-			char *t_matrix = matrix + SR[i]*n;
-			for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
-			for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
-				++ cn[neighbors[j]*n + neighbors[k]];
-				++ cn[neighbors[k]*n + neighbors[j]];
-			}
+// #ifdef _SECOND_ORDER_PRUNING_
+	if(ctcp_enabled) {for(ui i = 0;i < R_end;i ++) {
+		ui neighbors_n = 0;
+		char *t_matrix = matrix + SR[i]*n;
+		for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
+		for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
+			++ cn[neighbors[j]*n + neighbors[k]];
+			++ cn[neighbors[k]*n + neighbors[j]];
 		}
+	}
 
-		while(!Qe.empty()) Qe.pop();
-		for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
-			if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
-				Qe.push(std::make_pair(SR[i], SR[j]));
-			}
+	while(!Qe.empty()) Qe.pop();
+	for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
+		if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
+			Qe.push(std::make_pair(SR[i], SR[j]));
 		}
-		removed_edges_n = 0;
-#endif
+	}
+	removed_edges_n = 0;}
+// #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
 		#ifdef REDUCTIONS
@@ -370,8 +375,7 @@ private:
             for (ui j = 0; j < R_end; j++)
                 if (t_matrix[SR[j]])
                     neighbors[neighbors_n++] = SR[j];
-			// 		todo commentingoff degree, see the effect
-            // degree[u]=neighbors_n;
+            degree[u]=neighbors_n;
             for (ui j = 0; j < neighbors_n; j++)
             {
                 ui v = neighbors[j];
@@ -395,7 +399,7 @@ private:
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
-			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
+			printf("!!! BB_Search found a larger kplex of size: %u, prev size: %u\n", size, best_solution_size);
 			found_larger = true;
 		
 		best_solution_size = size;
@@ -407,7 +411,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
@@ -441,10 +445,12 @@ private:
 
 		ui old_removed_edges_n = 0, old_S_end = S_end, old_R_end = R_end;
 		assert(Qv.empty());
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		while(!Qe.empty()) Qe.pop();
 		old_removed_edges_n = removed_edges_n;
-#endif
+		}
+// #endif
 
 		// choosing 0 as branching vertex
 		if(choose_zero&&SR_rid[0] < R_end&&!move_u_to_S_with_prune(0, S_end, R_end, level)) {
@@ -452,17 +458,18 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		seesaw.tick();
+		ui S2_n = 0;
+		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
-		// ui S2_n = 0;
-		// for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
-
-		// if(S2_n >= 2) {
-		// 	collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
-		// 	if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
-		// 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 		return ;
-		// 	}
-		// }
+		if(S2_n >= 2) {
+			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
+			if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
+				restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+				return ;
+			}
+		}
+		seesaw.tock();
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -509,11 +516,25 @@ private:
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
-			// printf("here3\n");
+			//printf("here3\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-
+		// if(bound(S_end, R_end)>=R_end){
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
+		#ifdef SEESAW
+		seesaw.tick();
+		ui beta = best_solution_size - S_end;
+		// ui comp = S_end*S_end * CSIZE;
+		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		seesaw.tock();
+		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -531,30 +552,21 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		#ifdef SEESAW
-		seesaw.tick();
-		// ui comp = CSIZE*CSIZE*S_end; //C^2*S
-		// if (comp > 100 and seesawUB(S_end, R_end)<=best_solution_size) {
-		ui beta = best_solution_size - S_end;
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
-		seesaw.tock();
-		#endif
 
-#ifdef B_BRANCHINGS
+
+if(true){
+
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 		// for(ui i=S_end;i<R_end;i++){
 		// 	Qc.push(SR[i]);
 		// }
-		branchings.tick();
+		// branchings.tick();
 		R_end = getBranchings(S_end, R_end, level);
-		branchings.tock();
+
+		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
-		ui br = t_R_end-R_end;
 		while(R_end<t_R_end){
 			// move branching vertex back to C
 			ui u = SR[R_end];
@@ -570,25 +582,60 @@ private:
 				if(i < S_end) ++ degree_in_S[u];
 			}
 
-			br--;
-			// if a larger kplex is found, branches will be generated only at root level
+			if(best_solution_size >= _UB_) return ;
 			if(root_level) found_larger=false;
 			else
 			if(found_larger) continue;
+
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
-			if(best_solution_size >= _UB_) return ;
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		if(br) cout<<"Eror"<<endl;
+		// for(ui i=R_end-1;i>=S_end;i--){
+		// 	ui u = Qc.back();
+		// 	Qc.pop();
+		// 	SR[i] = u;
+		// 	SR_rid[u] = i;
+		// }
+
+
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
+}
 // ******************* Ended our branching stuff here... 
-#else
 
+else{
+
+
+		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
+			branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
+
+		// printf("%u-%u\n", begIdx, endIdx);
+
+		ui u = addList[-- endIdx];
+
+        // the first branch includes u into S
+		{
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
+
+        // the second branch exclude u from G	
+		{
+			while(!Qv.empty()) Qv.pop();
+			Qv.push(u);
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 // ******************* following block is original branching...  
+}
 
+#ifdef BINARY_BRANCHINGS
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -639,7 +686,7 @@ private:
 			}
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-			BB_search(S_end, R_end, level+1, false);
+			BB_search(S_end, R_end, level+1, false, false);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
@@ -728,7 +775,7 @@ private:
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 			//printf("enter recursion\n");
-			BB_search(S_end, R_end, level+1, false);
+			BB_search(S_end, R_end, level+1, false, false);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end >= old_S_end&&R_end <= old_R_end);
@@ -753,6 +800,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 #endif
+
 	}
 
 
@@ -763,25 +811,113 @@ private:
 		}
 		return n;
 	}
+    // ui getBranchings(ui S_end, ui R_end, ui level)
+    // {
+    //     for (ui i = 0; i < S_end; i++)
+    //     {
+    //         ui u = SR[i];
+    //         psz[u] = 0;
+    //         if (support(S_end, u) == 0)
+    //             continue;
+    //         // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+    //         // Lookup neig(&lookup, &g.adjList[u]);
+    //         // bmp.setup(g.adjList[u], g.V);
+	// 		ui* t_LPI = LPI+u*n;
+    //         for (ui j = S_end; j < R_end; j++)
+    //         {
+    //             ui v = SR[j];
+    //             if (!matrix[u * n + v])
+    //                 // PI[u].push_back(v);
+    //                 t_LPI[psz[u]++] = v;
+    //         }
+    //     }
+    //     ui beta = best_solution_size - S_end;
+    //     ui cend = S_end;
+	// 	branchings.tick();
+    //     while (true)
+    //     {
+    //         ui maxpi = -1;
+    //         double maxdise = 0;
+    //         for (ui i = 0; i < S_end; i++)
+    //         {
+    //             ui u = SR[i];
+    //             if (psz[u] == 0)
+    //                 continue;
+    //             double cost = min(support(S_end, u), psz[u]);
+    //             double dise = psz[u] / cost;
+    //             if (cost <= beta and dise > maxdise)
+    //                 maxpi = u, maxdise = dise;
+    //         }
+    //         if (maxpi != -1)
+    //         {
+    //             bmp.reset(n);
+    //             for (ui i = 0; i < psz[maxpi]; i++)
+    //                 bmp.set(LPI[maxpi * n + i]);
+    //             // remove pi* from C
+    //             for (ui i = cend; i < R_end; i++)
+    //             {
+    //                 ui v = SR[i];
+    //                 if (bmp.test(v))
+    //                 {
+    //                     // rather than removing from C, we are changing the positions within C.
+    //                     // When function completes
+    //                     // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
+    //                     swap_pos(cend++, i);
+    //                 }
+    //             }
+    //             // beta-=cost(pi*)
+    //             beta -= min(support(S_end, maxpi), psz[maxpi]);
+    //             // remove maxpi from every pi
+    //             for (ui i = 0; i < S_end; i++)
+    //             {
+    //                 // Removing pi* from all pi in PI
+    //                 ui u = SR[i];
+    //                 if (u == maxpi or psz[u]==0)
+    //                     continue;
+    //                 ui j = 0;
+	// 				ui* t_LPI = LPI+u*n;
+    //                 for (ui k = 0; k < psz[u]; k++)
+    //                     if (!bmp.test(LPI[u * n + k]))
+    //                         // if (!bmp.test(PI[u][k]))
+    //                         // PI[u][j++] = PI[u][k];
+	// 						t_LPI[j++] = t_LPI[k];
+    //                         // LPI[u * n + j++] = LPI[u * n + k];
+    //                 // PI[u].resize(j);
+    //                 psz[u] = j;
+    //             }
+    //             // remove maxpi...
+    //             // PI[maxpi].clear();
+    //             psz[maxpi] = 0;
+    //         }
+    //         else
+    //             break;
+    //         if (beta == 0)
+    //             break;
+    //     }
+	// 	branchings.tock();
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
         {
             ui u = SR[i];
-            psz[u] = 0;
+            psz[i] = 0;
             if (support(S_end, u) == 0)
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
-
+            // Lookup neig(&lookup, &g.adjList[u]);
+            // bmp.setup(g.adjList[u], g.V);
+			ui* t_LPI = LPI+i*n;
             for (ui j = S_end; j < R_end; j++)
             {
                 ui v = SR[j];
                 if (!matrix[u * n + v])
-                    LPI[u * n + psz[u]++] = v;
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
             }
         }
         ui beta = best_solution_size - S_end;
         ui cend = S_end;
+		branchings.tick();
         while (true)
         {
             ui maxpi = -1;
@@ -789,12 +925,12 @@ private:
             for (ui i = 0; i < S_end; i++)
             {
                 ui u = SR[i];
-                if (psz[u] == 0)
+                if (psz[i] == 0)
                     continue;
-                double cost = min(support(S_end, u), psz[u]);
-                double dise = psz[u] / cost;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
                 if (cost <= beta and dise > maxdise)
-                    maxpi = u, maxdise = dise;
+                    maxpi = i, maxdise = dise;
             }
             if (maxpi != -1)
             {
@@ -814,19 +950,24 @@ private:
                     }
                 }
                 // beta-=cost(pi*)
-                beta -= min(support(S_end, maxpi), psz[maxpi]);
+                beta -= min(support(S_end, SR[maxpi]), psz[maxpi]);
                 // remove maxpi from every pi
                 for (ui i = 0; i < S_end; i++)
                 {
                     // Removing pi* from all pi in PI
-                    ui u = SR[i];
-                    if (u == maxpi or psz[u]==0)
+                    if (i == maxpi or psz[i]==0)
                         continue;
+                    ui u = SR[i];
                     ui j = 0;
-                    for (ui k = 0; k < psz[u]; k++)
-                        if (!bmp.test(LPI[u * n + k]))
-                            LPI[u * n + j] = LPI[u * n + k], j++;
-                    psz[u] = j;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (!bmp.test(t_LPI[k]))
+                            // if (!bmp.test(PI[u][k]))
+                            // PI[u][j++] = PI[u][k];
+							t_LPI[j++] = t_LPI[k];
+                            // LPI[u * n + j++] = LPI[u * n + k];
+                    // PI[u].resize(j);
+                    psz[i] = j;
                 }
                 // remove maxpi...
                 // PI[maxpi].clear();
@@ -837,12 +978,9 @@ private:
             if (beta == 0)
                 break;
         }
-
-
+		branchings.tock();
         if (beta > 0)
             cend += min(beta, R_end - cend);
-		
-		// todo consider updating degrees of removed branches... 
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
@@ -942,17 +1080,24 @@ private:
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
+			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
 				char *t_matrix = matrix + u*n;
-				bool OK = true;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-					OK = false;
-					break;
+				ui nn = 0;
+				bool OK=false, tight=true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+					if(nn>=2&&!tight) break;
+					nonneighbors[nn++]=SR[j];
+					if(R_end - degree[SR[j]] > K) 
+						tight=false;
 				}
+				if(tight) OK=true;
+				else if (R_end==degree_in_S[u])
+					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 				if(OK) candidates[candidates_n ++] = u;
 			}
 
@@ -1077,7 +1222,9 @@ private:
 		}
 #endif
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
+
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			int v = nonneighbors[i];
 			if(SR_rid[v] < S_end||level_id[v] == level) continue;
@@ -1116,17 +1263,19 @@ private:
 				}
 			}
 		}
-#endif
+		}
+// #endif
 
 		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
 	}
 
 	bool remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level) {
-#ifdef _SECOND_ORDER_PRUNING_
-		while(!Qv.empty()||!Qe.empty()) {
-#else
-		while(!Qv.empty()) {
-#endif
+// #ifdef _SECOND_ORDER_PRUNING_
+// 		while(!Qv.empty()||!Qe.empty()) {
+// #else
+// 		while(!Qv.empty()) {
+// #endif
+		while((ctcp_enabled&&!Qe.empty())||!Qv.empty()){
 			while(!Qv.empty()) {
 				ui u = Qv.front(); Qv.pop(); // remove u
 				assert(SR[SR_rid[u]] == u);
@@ -1157,7 +1306,9 @@ private:
 					return false;
 				}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled){
+
 				for(ui i = 1;i < neighbors_n;i ++) {
 					ui w = neighbors[i];
 					for(ui j = 0;j < i;j ++) {
@@ -1191,10 +1342,13 @@ private:
 					}
 				}
 				if(terminate) return false;
-#endif
+// #endif
+			}
 			}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
+
 			if(Qe.empty()) break;
 
 			ui v = Qe.front().first, w =  Qe.front().second; Qe.pop();
@@ -1251,7 +1405,8 @@ private:
 				}
 				else if(matrix[v*n + SR[i]]) Qe.push(std::make_pair(v, SR[i]));
 			}
-#endif
+// #endif
+		}
 		}
 
 		return true;
@@ -1297,7 +1452,9 @@ private:
 				++ degree[u];
 				if(i < S_end) ++ degree_in_S[u];
 			}
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled){
+
 			for(ui i = 0;i < neighbors_n;i ++) {
 				ui v = neighbors[i];
 				for(ui j = i + 1;j < neighbors_n;j ++) {
@@ -1322,7 +1479,8 @@ private:
 				assert(t_cn[SR[i]] == common_neighbors);
 #endif
 			}
-#endif
+// #endif
+			}
 		}
 
 #ifndef NDEBUG
@@ -1347,7 +1505,8 @@ private:
 				neighbors[neighbors_n ++] = w;
 				-- degree_in_S[w];
 			}
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 			for(ui i = 0;i < neighbors_n;i ++) {
 				ui v = neighbors[i];
 				for(ui j = i + 1;j < neighbors_n;j ++) {
@@ -1372,7 +1531,8 @@ private:
 				assert(t_cn[SR[i]] == common_neighbors);
 #endif
 			}
-#endif
+// #endif
+		}
 		}
 
 #ifndef NDEBUG
@@ -1386,7 +1546,8 @@ private:
 		}
 #endif
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = old_removed_edges_n;i < removed_edges_n; i ++) { // insert edge back into matrix
 			ui v = removed_edges[i].first, w = removed_edges[i].second;
 			assert(SR_rid[v] >= S_end&&SR_rid[v] < R_end&&SR_rid[w] >= S_end&&SR_rid[w] < R_end);
@@ -1410,8 +1571,8 @@ private:
 			}
 		}
 		removed_edges_n = old_removed_edges_n;
-#endif
-
+// #endif
+		}
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -1457,7 +1618,8 @@ private:
 		}
 		if(terminate) return false;
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = 1;i < neighbors_n;i ++) if(level_id[neighbors[i]] > level) {
 			ui w = neighbors[i];
 			for(ui j = 0;j < i;j ++) {
@@ -1477,18 +1639,21 @@ private:
 				}
 			}
 		}
-#endif
+// #endif
+		}
 		return true;
 	}
 
 	bool collect_removable_vertices_and_edges(ui S_end, ui R_end, ui level) {
 		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_solution_size) return false;
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = 0;i < S_end;i ++) for(ui j = i+1;j < S_end;j ++) {
 			if(upper_bound_based_prune(S_end, SR[i], SR[j])) return false;
 		}
-#endif
+		}
+// #endif
 
 		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level){
 			ui v = SR[i];
@@ -1499,11 +1664,12 @@ private:
 			}
 			char *t_matrix = matrix + v*n;
 			for(ui j = 0;j < S_end;j ++) {
-#ifdef _SECOND_ORDER_PRUNING_
-				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||upper_bound_based_prune(S_end, v, SR[j]))
-#else
-				if(S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])
-#endif
+// #ifdef _SECOND_ORDER_PRUNING_
+// 				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||upper_bound_based_prune(S_end, v, SR[j]))
+// #else
+// 				if(S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])
+// #endif
+				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||(ctcp_enabled&&upper_bound_based_prune(S_end, v, SR[j])))
 				{
 					level_id[v] = level;
 					Qv.push(v);
@@ -1512,18 +1678,20 @@ private:
 			}
 		}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
+		if(ctcp_enabled){
 		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level) {
 			for(ui j = i+1;j < R_end;j ++) if(level_id[SR[j]] > level&&matrix[SR[i]*n + SR[j]]) {
 				if(upper_bound_based_prune(S_end, SR[i], SR[j])) Qe.push(std::make_pair(SR[i], SR[j]));
 			}
 		}
-#endif
+// #endif
+		}
 
 		return true;
 	}
 
-#ifdef _SECOND_ORDER_PRUNING_
+// #ifdef _SECOND_ORDER_PRUNING_
 	bool upper_bound_based_prune(ui S_end, ui u, ui v) {
 		// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
 		ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
@@ -1537,7 +1705,7 @@ private:
 		}
 		return ub <= best_solution_size;
 	}
-#endif
+// #endif
 
 	void swap_pos(ui i, ui j) {
 		std::swap(SR[i], SR[j]);
@@ -1598,23 +1766,18 @@ private:
 
 
 
-	   ui seesawUB(ui S_end, ui R_end)
+	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-		ui* SR_t = neighbors;
-		ui* SR_rid_t = nonneighbors;
 		seesaw.tick();
-		ui sr = 0;
-
         while (R_end>S_end)
         {
             
-            double ubp=0;
-            // double ubp = tryPartition(S_end, R_end);
-            double ubc = tryColor(S_end, R_end);
+            double ubp = tryPartition(S_end, R_end);
+			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
-                ISc.size() / ubc > PIMax.size() / ubp or
-                (ISc.size() / ubc == PIMax.size() / ubp and ISc.size() > PIMax.size()))
+               ( ISc.size() / ubc > PIMax.size() / ubp) or
+                ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
                 for (ui v : ISc)
@@ -1630,12 +1793,8 @@ private:
                     swap_pos(v, --R_end);
                 UB += ubp;
             }
-            // cout<<C.size()<<" "<<ISp.size();
+
         }
-		// recover candidate set... 
-		// for(ui i=0;i<sr;i++){
-		// 	SR[S_end+i] = SR_t[i];
-		// }
 		seesaw.tock();
         return UB;
     }
@@ -1643,12 +1802,7 @@ private:
     void createIS(ui S_end, ui R_end)
     {
         ISc.clear();
-        if (S_end==R_end)
-            return;
-        ISc.push_back(S_end);
-
-        // check.tick();
-        for (ui i = S_end+1; i < R_end; i++)
+        for (ui i = S_end; i < R_end; i++)
         {
             bool flag = true;
             for (ui j : ISc)
@@ -1660,7 +1814,6 @@ private:
             if (flag)
                 ISc.push_back(i);
         }
-        // check.tock();
     }
     ui support(ui S_end, ui u)
     {
@@ -1688,73 +1841,10 @@ private:
         }
         return maxsup;
     }
-    // ui tryColor(ui S_end, ui R_end)
-    // {
-    //     createIS(S_end, R_end);
-    //     ui ub = TISUB(S_end);
-
-
-	// 	auto& lcv = PI;
-	// 	auto& cv = PIMax;
-	// 	lcv.clear();
-    //     // return ub;
-    //     // collect loose vertices i.e. v \in ISc | support(v) > ub
-    //     for (ui i = 0; i < ISc.size(); i++)
-    //     {
-    //         if (support(S_end, SR[ISc[i]]) > ub)
-    //             lcv.push_back(i);
-    //     }
-	// 	bmp2.setup(lcv, n);
-    //     bmp.setup(ISc, n);
-
-    //     for (ui i = S_end; lcv.size() < ub and i < R_end; i++)
-    //     {
-    //         if (bmp.test(i)) // this loop running for C\ISc
-    //             continue;
-	// 		cv.clear();
-	// 		// collect conflict vertices with i
-    //         for (ui j : ISc) 
-    //             // this loop runs in ISc\LCV
-    //             if (!bmp2.test(j) and is_neigh(i, j))
-	// 				cv.push_back(j);
-
-
-    //         if (lcv.size() + cv.size() + 1 <= ub)
-    //         {
-	// 			for(ui j:cv){
-	// 				lcv.push_back(j);
-	// 				bmp2.set(j);
-	// 			}
-	// 			lcv.push_back(i);
-	// 			bmp2.set(i);
-    //             ISc.push_back(i);
-    //             bmp.set(i);
-    //         }
-    //     }
-    //     for (ui i = S_end; i < R_end; i++)
-    //     {
-    //         if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
-    //             continue;
-    //         ui nv = 0;
-    //         for (ui j: ISc)
-    //         {
-    //             if (is_neigh(i, j))
-    //                 nv++;
-    //         }
-    //         if (nv < ub - support(S_end, SR[i]))
-    //         {
-    //             ISc.push_back(i);
-    //             bmp.set(i);
-    //         }
-    //     }
-    //     return ub;
-    // }
-
-	  ui tryColor(ui S_end, ui R_end)
+    ui tryColor(ui S_end, ui R_end)
     {
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
-		
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
@@ -1789,9 +1879,8 @@ private:
                 std::swap(ISc.back(), ISc[vlc++]);
                 bmp.set(i);
             }
-			
         }
-		// return ub;
+		return ub;
         for (ui i = S_end; i < R_end; i++)
         {
             if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
@@ -1811,7 +1900,6 @@ private:
         }
         return ub;
     }
-
 	bool is_neigh(ui i, ui j){
 		return matrix[SR[i]*n+SR[j]];
 	}
@@ -1823,24 +1911,92 @@ private:
 		PIMax.clear();
         for (ui i = 0; i < S_end; i++)
         {
-			PI.clear();
             if (support(S_end, SR[i]) == 0)
                 continue;
+			PI.clear();
             for (ui j = S_end; j < R_end; j++)
             {
                 if (!is_neigh(i, j))
                     PI.push_back(j);
             }
-			if(PI.size()==0) continue;
+			if(PI.empty()) continue;
             ui cost = min(support(S_end, SR[i]), (ui)PI.size());
             double dise = (double) PI.size() / (double) cost;
             if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
             {
                 maxdise = dise, ub = cost;
-                PI.swap(PIMax);
+                std::swap(PI, PIMax);
             }
         }
         return ub;
     }
+	ui bound(ui S_end, ui R_end) {
+    	vp.clear();
+    	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
+    	sort(vp.begin(), vp.end());
+    	ui UB = S_end, cursor = S_end;
+    	for(ui i = 0;i < (ui)vp.size(); i++) {
+    		ui u = vp[i].second;
+    		if(vp[i].first == 0) continue;// boundary vertex
+    		ui count = 0;
+    		char *t_matrix = matrix + u*n;
+    		for(ui j = cursor;j < R_end;j ++) if(!t_matrix[SR[j]]) {
+    			if(j != cursor + count) swap_pos(j, cursor+count);
+    			++ count;
+    		}
+    		ui t_ub = count;
+    		if(vp[i].first < t_ub) t_ub = vp[i].first;
+    		if(UB + t_ub <= best_solution_size) {
+    			UB += t_ub;
+    			cursor += count;
+    		}
+    		else {
+    			return cursor + (best_solution_size - UB);
+    		}
+    	}
+		cursor+=(best_solution_size-UB);
+		if(cursor>R_end)cursor=R_end;
+    	return cursor;
+    }
+
+	void branch(ui &begIdx, ui &endIdx, ui S_end, ui R_end){
+		endIdx=begIdx;
+		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
+		char *t_matrix = matrix + 0*n;
+		for(ui i = S_end;i < R_end;i ++) {
+			ui v = SR[i];
+			if(!t_matrix[v] && //HOP2 first
+			(degree[v]+K<=best_solution_size+1||
+			degree_in_S[v]+K==S_end+1||
+			degree_in_S[0]+K==S_end+1)
+			){ 
+				if(addListSz == endIdx) {
+					addList.push_back(v);
+					++ endIdx;
+					++ addListSz;
+				}
+				else addList[endIdx++] = v;
+				return;
+			}
+			if (degree_in_S[v] < minnei)
+			{
+				minnei = degree_in_S[v];
+				pivot = v;
+			}
+		}
+		// pivot is a two-hop qualified neighbor if it is found. else pivot is min degree vertex in C
+		// non-nighbors of pivot are stored in addList
+		t_matrix = matrix + pivot*n;
+		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) {
+			if(addListSz == endIdx) {
+				addList.push_back(SR[i]);
+				++ endIdx;
+				++ addListSz;
+			}
+			else addList[endIdx++] = SR[i];
+		}
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return degree_in_S[a]>degree_in_S[b];});
+	}
 };
 #endif
