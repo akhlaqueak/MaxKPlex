@@ -86,29 +86,38 @@ get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
     result=kpsize.out
     rm $result
+    # for k in $krange; do
+    #     echo -en "**** k=$k ****,,," >>$result
+    # done
+    echo -en "datasets," >>$result
+
     for k in $krange; do
-        echo "================= k=$k =================" >>$result
-        echo -en "datasets," >>$result
+        echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
-        # done
-        echo >>$result
-        for fn in $datasets; do
-            echo -en "$fn," >>$result
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn,|," >>$result
+        for k in $krange; do
             for sol in $solutions; do
                 outfile=$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
-                    echo -en '-,' >>$result
+                    echo -en 'x,' >>$result
                 else
                     op=($op)
                     echo -en "${op[-5]}," >>$result
                 fi
             done
-            echo >>$result
+            echo -en "|," >>$result
         done
+        echo >>$result
     done
+    cat $result
 }
 
 get_cost() {
@@ -159,6 +168,6 @@ run_jobs 00:30:00
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
 get_results
-
-# get_kpsize
+solutions='kp-sbs Maple'
+get_kpsize
 # get_cost
