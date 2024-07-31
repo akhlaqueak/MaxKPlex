@@ -360,7 +360,7 @@ void Graph::kPlex_exact(int mode) {
 				// reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t = UB;
-				bool forward=false, dual_mode = false;
+				bool forward=true, dual_mode = false;
 				Timer dual_mode_timer;
 				ui dual_mode_thresh = 10, p_left = 0, p_right = n;
 				if(forward)
@@ -409,7 +409,7 @@ void Graph::kPlex_exact(int mode) {
 					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, deleted, t_degree, ids, rid, vp, vis, pstart, pend);
 					// else 
 					// sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
-					cout<<"processing "<<ids.size();
+					// cout<<"processing "<<ids.size();
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 					// cout<<"continued "<<u<<endl;;
 
