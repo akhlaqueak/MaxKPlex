@@ -152,7 +152,7 @@ del_prev() {
         done
     done
 }
-krange='5 7 10 15 20'
+krange='2 3 4 5'
 datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'

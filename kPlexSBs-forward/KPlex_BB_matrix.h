@@ -440,8 +440,8 @@ private:
 			ui v = SR[i], w = SR[j];
 			ui common_neighbors = 0;
 			for(ui k = S_end;k < R_end;k ++) if(matrix[SR[k]*n + v]&&matrix[SR[k]*n + w]) ++ common_neighbors;
-			// assert(cn[v*n + w] == common_neighbors);
-			// assert(cn[w*n + v] == common_neighbors);
+			assert(cn[v*n + w] == common_neighbors);
+			assert(cn[w*n + v] == common_neighbors);
 		}
 #endif
 #endif
