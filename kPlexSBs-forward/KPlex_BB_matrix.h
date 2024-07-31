@@ -1157,8 +1157,9 @@ else{
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
 		ui begIdx=addList.size(), endIdx=begIdx+R_end-cend;
 		addList.insert(addList.end(), SR+cend, SR+R_end);
-		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]<peelOrder[b];});
 		return R_end-cend;
+		
 		/*
 		for(ui i=cend; i<R_end; i++){
 			// get a vertex with highest peelOrder at location i
