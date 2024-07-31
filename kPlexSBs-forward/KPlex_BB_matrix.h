@@ -394,7 +394,7 @@ private:
 		#endif
 	}
 
-	void store_solution(ui size, book iskplex=false) {
+	void store_solution(ui size, bool iskplex=false) {
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
