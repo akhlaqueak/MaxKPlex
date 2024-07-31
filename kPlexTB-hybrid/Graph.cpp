@@ -351,7 +351,7 @@ void Graph::kPlex_exact(int mode) {
 
 					ui t_old_size = kplex.size();
 
-					if(true){
+					if(false){
 						kp_solver->load(ids.size(), vp);
 						kp_solver->run(K, kplex);
 					}
