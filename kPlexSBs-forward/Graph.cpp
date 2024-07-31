@@ -394,7 +394,7 @@ void Graph::kPlex_exact() {
 		ui *p_rid = new ui[n];
 		for(ui i=0;i<n; i++)p_rid[peel_sequence[i]] = i;
 		ui UB_t;
-		bool forward=false, dual_mode = false;
+		bool forward=true, dual_mode = false;
 		ui u, key;
 		ui p_right=n, p_left = 0;
 		Timer dir_switch;
