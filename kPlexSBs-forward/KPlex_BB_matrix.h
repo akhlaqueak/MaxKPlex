@@ -211,7 +211,8 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
-		ui R_end; addIdx=0;
+		ui R_end; 
+		addIdx=0;
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
@@ -1158,7 +1159,7 @@ else{
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
 		ui begIdx=addIdx;
 		for(ui i=cend;i<R_end;i++){
-			if(addList.size()==addIdx) addList.push_back(SR[i]);
+			if(addList.size()==addIdx) addList.push_back(SR[i]), addIdx++;
 			else addList[addIdx++]=SR[i];
 		}
 		ui endIdx = addIdx;
