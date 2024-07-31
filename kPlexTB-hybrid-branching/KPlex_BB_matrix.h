@@ -167,7 +167,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
-		ctcp_enabled=false;//(K>=8);
+		ctcp_enabled=(K>=8);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -529,10 +529,10 @@ private:
 		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
