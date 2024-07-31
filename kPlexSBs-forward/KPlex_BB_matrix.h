@@ -210,7 +210,7 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
-		ui R_end;
+		ui R_end; addList.clear();
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
 		if(best_solution_size > kplex.size()) {
@@ -565,25 +565,25 @@ if(true){
 		// 	Qc.push(SR[i]);
 		// }
 		// branchings.tick();
-		R_end = getBranchings(S_end, R_end, level);
-
+		ui branches=getBranchings(S_end, R_end, level);
+		ui endIdx=addList.size();
 		// branchings.tock();
 		// R_end = getBranchings(S_end, R_end);
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
-		while(R_end<t_R_end){
+		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++)){
 			// move branching vertex back to C
-			ui u = SR[R_end];
-			assert(level_id[u] == level&&SR_rid[u] == R_end);
-			R_end++;
-			level_id[u] = n;
-			char *t_matrix = matrix + u*n;
-			degree[u] = degree_in_S[u] = 0;
-			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
-				ui w = SR[i];
-				++ degree[w];
-				++ degree[u];
-				if(i < S_end) ++ degree_in_S[u];
-			}
+			// ui u = SR[R_end];
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+			// R_end++;
+			// level_id[u] = n;
+			// char *t_matrix = matrix + u*n;
+			// degree[u] = degree_in_S[u] = 0;
+			// for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+			// 	ui w = SR[i];
+			// 	++ degree[w];
+			// 	++ degree[u];
+			// 	if(i < S_end) ++ degree_in_S[u];
+			// }
 
 			if(best_solution_size >= _UB_) return ;
 			if(root_level) found_larger=false;
@@ -591,6 +591,8 @@ if(true){
 			if(found_larger) continue;
 
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			ui u=addList[begIdx];
+			for(ui i=begIdx+1; i<endIdx;i++) Qv.push(addList[i]);
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
@@ -1153,6 +1155,11 @@ else{
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
+		ui begIdx=addList.size(), endIdx=begIdx+R_end-cend;
+		addList.insert(addList.end(), SR+cend, SR+R_end);
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
+		return R_end-cend;
+		/*
 		for(ui i=cend; i<R_end; i++){
 			// get a vertex with highest peelOrder at location i
 			ui u = SR[i], ind = i;
@@ -1177,7 +1184,7 @@ else{
 				// if(level_id[w]==level) continue;
 				if(t_matrix[w]) -- degree[w];
 			}
-		}
+		}*/
 		// assert(R_end==cend);
 		// for(ui i = 0;i < R_end;i ++) {
 		// 	ui d1 = 0, d2 = 0;
@@ -1342,7 +1349,7 @@ else{
 		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
 #endif
 
-		while(!Qv.empty()) Qv.pop();
+		// while(!Qv.empty()) Qv.pop();
 		// reduction rules based on the fact that each vertex can have at most k-1 nonneighbors
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			ui v = nonneighbors[i];
