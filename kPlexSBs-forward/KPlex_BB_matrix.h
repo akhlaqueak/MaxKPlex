@@ -1098,7 +1098,7 @@ else{
 				if(tight) OK=true;
 				// else if (R_end==degree_in_S[u])
 				// 	OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
-				// if(OK) candidates[candidates_n ++] = u;
+				if(OK) candidates[candidates_n ++] = u;
 			}
 
 			if(!candidates_n) break;
