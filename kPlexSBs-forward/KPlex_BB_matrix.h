@@ -167,7 +167,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
-		ctcp_enabled=false;//(K>=8);
+		ctcp_enabled=true;//(K>=8);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -1163,7 +1163,7 @@ else{
 			for (ui j = i + 1; j < R_end; j++)
 			{
 				ui v = SR[j];
-				if (peelOrder[v] < peelOrder[u])
+				if (peelOrder[v] > peelOrder[u])
 					ind = j, u = v;
 			}
 			if(i!=ind)
