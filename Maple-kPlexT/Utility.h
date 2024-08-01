@@ -60,4 +60,89 @@ public:
 	}
 };
 
+class MBitSet
+{
+private:
+public:
+	ui n;
+	ui cap;
+	ui *buf;
+
+	MBitSet()
+	{
+		buf = nullptr;
+		cap = n = 0;
+	}
+	MBitSet(ui _cap)
+	{
+		cap = _cap;
+		n = (cap >> 5) + 1;
+		buf = new ui[n];
+		fill(buf, buf + n, 0);
+		// for (ui i = 0; i < n; ++i)
+		// 	buf[i] = 0;
+	}
+	void init(ui _cap)
+	{
+		cap = _cap;
+		n = (cap >> 5) + 1;
+		buf = new ui[n];
+		fill(buf, buf + n, 0);
+	}
+	~MBitSet()
+	{
+		// todo doing double free, see what causing it and fix
+
+		if (buf != nullptr)
+			// delete[] buf;
+			buf = nullptr;
+	}
+	void reset()
+	{
+		fill(buf, buf + n, 0);
+	}
+	void reset(ui n)
+	{
+		fill(buf, buf + (n>>5)+1, 0);
+	}
+	void setAll()
+	{
+		fill(buf, buf + n, 0xffffffff);
+	}
+	// FLIP all the bits
+	void flip()
+	{
+		for (ui i = 0; i < n; ++i)
+			buf[i] = ~buf[i];
+	}
+	void set(ui x)
+	{
+		// assert(x < cap);
+		buf[x >> 5] |= (ui)1 << (x & 31);
+	}
+
+	bool test(ui x)
+	{
+		// cout << x << " " << n << " " << cap << endl;
+		return buf[x >> 5] >> (x & 31) & 1;
+	}
+
+	bool empty()
+	{
+		for (ui i = 0; i < n; ++i)
+			if (buf[i])
+				return false;
+		return true;
+	}
+	void setup(vector<ui> &adj, ui m)
+	{
+		m = (m >> 5) + 1;
+		fill(buf, buf + m, 0);
+		
+		for (ui u : adj)
+			set(u);
+		
+	}
+};
 #endif
+

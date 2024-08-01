@@ -12,7 +12,7 @@ double cfactor=1;
 #define INNER_CTCP 10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
-// Timer seesaw, reductions, branchings;
+Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {
 private:
