@@ -28,7 +28,7 @@ using ept = unsigned long; // edge pointer type; unsigned int can be used to pro
 
 #define pb push_back
 #define mp make_pair
-
+using namespace std;
 class Utility {
 public:
 	static FILE *open_file(const char *file_name, const char *mode) {
