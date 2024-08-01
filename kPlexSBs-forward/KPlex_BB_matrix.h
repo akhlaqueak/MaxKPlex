@@ -213,7 +213,7 @@ public:
 		best_solution_size = kplex.size();
 		ui R_end; addList.clear();
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
+		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true, 0, 0);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
@@ -610,7 +610,7 @@ else{
 		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
 			branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
 
-		printf("%u-%u\n", begIdx, endIdx);
+		// printf("%u-%u\n", begIdx, endIdx);
 
 		ui u = addList[-- endIdx];
 
@@ -625,8 +625,8 @@ else{
 			while(!Qv.empty()) Qv.pop();
 			Qv.push(u);
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
-			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
@@ -2185,6 +2185,7 @@ else{
 			}
 			else addList[endIdx++] = SR[i];
 		}
+		std::cout<<begIdx<<"-"<<endIdx<<endl;
 		auto comp=[&](int a,int b){return degree_in_S[a]>degree_in_S[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
 	}
