@@ -248,6 +248,7 @@ void Graph::search() {
 		ui *Qv = new ui[n];
 		ui Qv_n = 0;
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
+		kplex_solver->allocateMemory(n);
 		
 		if(kplex.size() > 2*K-2 ) {
 			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
