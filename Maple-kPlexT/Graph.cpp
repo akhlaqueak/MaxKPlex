@@ -328,8 +328,8 @@ void Graph::search() {
 			}
 			last_m=vp.size()*2;
 			ui pre_size = kplex.size();
-			printf("solving %u \n", u);
 			if(ids_n > kplex.size()) {
+			printf("solving %u \n", u);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
