@@ -9,6 +9,7 @@ double cfactor=1;
 #define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
+#define INNER_CTCP 10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 // Timer seesaw, reductions, branchings;
@@ -167,7 +168,7 @@ public:
 		n = _n;
 		sz1h = _sz1h;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
-		ctcp_enabled=(K>=8);
+		ctcp_enabled=(K>=INNER_CTCP);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
