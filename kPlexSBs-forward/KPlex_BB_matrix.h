@@ -2178,7 +2178,7 @@ else{
 		// non-nighbors of pivot are stored in addList
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) {
-			if(addListSz >= endIdx) {
+			if(addListSz == endIdx) {
 				addList.push_back(SR[i]);
 				++ endIdx;
 				++ addListSz;
