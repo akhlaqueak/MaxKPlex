@@ -710,22 +710,22 @@ else{
 #ifdef _SECOND_ORDER_PRUNING_
 		while(!Qe.empty()) Qe.pop();
 #endif
-		// ui v = n, candidates_n = 0; // the unique non-neighbor of u, and moreover v has exactly k non-neighbors
-		// ui *candidates = S2;
-		// if(degree[u]+2 == R_end) {
-		// 	char *t_matrix = matrix + u*n;
-		// 	for(ui i = 0;i < R_end;i ++) if(SR[i] != u&&!t_matrix[SR[i]]) {
-		// 		v = SR[i];
-		// 		break;
-		// 	}
-		// 	assert(degree[v]+K+1 <= R_end);
-		// 	if(degree[v]+K+1 != R_end) v = n;
-		// 	else {
-		// 		if(SR_rid[v] >= S_end) candidates[candidates_n++] = v;
-		// 		char *t_matrix = matrix + v*n;
-		// 		for(ui i = S_end;i < R_end;i ++) if(SR[i] != v&&SR[i] != u&&!t_matrix[SR[i]]) candidates[candidates_n ++] = SR[i];
-		// 	}
-		// }
+		ui v = n, candidates_n = 0; // the unique non-neighbor of u, and moreover v has exactly k non-neighbors
+		ui *candidates = S2;
+		if(degree[u]+2 == R_end) {
+			char *t_matrix = matrix + u*n;
+			for(ui i = 0;i < R_end;i ++) if(SR[i] != u&&!t_matrix[SR[i]]) {
+				v = SR[i];
+				break;
+			}
+			assert(degree[v]+K+1 <= R_end);
+			if(degree[v]+K+1 != R_end) v = n;
+			else {
+				if(SR_rid[v] >= S_end) candidates[candidates_n++] = v;
+				char *t_matrix = matrix + v*n;
+				for(ui i = S_end;i < R_end;i ++) if(SR[i] != v&&SR[i] != u&&!t_matrix[SR[i]]) candidates[candidates_n ++] = SR[i];
+			}
+		}
 		// u is the last emelent in S i.e. SR[S_end-1]
 		// this function removes u from entire graph... 
 		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
@@ -753,8 +753,7 @@ else{
 #endif
 
 		//printf("here 7\n");
-		if(succeed){
-			// &&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
+		if(succeed&&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
 #ifndef NDEBUG
 			for(ui i = 0;i < R_end;i ++) {
 				ui d1 = 0, d2 = 0;
