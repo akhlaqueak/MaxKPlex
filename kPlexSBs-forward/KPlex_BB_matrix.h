@@ -2183,9 +2183,11 @@ else{
 				++ endIdx;
 				++ addListSz;
 			}
-			else addList[endIdx++] = SR[i];
+			else {
+				addList[endIdx++] = SR[i]; cout<<endIdx<<" "<<addListSz<<",";
+			}
 		}
-		cout<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
+		cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
 		cout<<" -> ";
 		for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
 		cout<<endl<<endl;
