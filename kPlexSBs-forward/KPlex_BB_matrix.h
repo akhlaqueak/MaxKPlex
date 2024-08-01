@@ -798,9 +798,9 @@ else{
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
+*/
         // // the first branch includes u into S
 }
-*/
 
 // ******************* following block is original branching...  
 
