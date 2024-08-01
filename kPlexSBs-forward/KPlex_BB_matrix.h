@@ -213,7 +213,7 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
-		ui R_end; addList.clear();
+		ui R_end; 
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true, 0, 0);
 		if(best_solution_size > kplex.size()) {
