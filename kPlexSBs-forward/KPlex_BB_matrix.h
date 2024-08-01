@@ -2162,10 +2162,10 @@ else{
 			degree_in_S[v]+K==S_end+1||
 			degree_in_S[0]+K==S_end+1)
 			){ 
-				if(addListSz == endIdx) {
+				if(addList.size() == endIdx) {
 					addList.push_back(v);
 					++ endIdx;
-					++ addListSz;
+					// ++ addListSz;
 				}
 				else addList[endIdx++] = v;
 				return;
@@ -2180,13 +2180,13 @@ else{
 		// non-nighbors of pivot are stored in addList
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) {
-			if(addListSz == endIdx) {
+			if(addList.size() == endIdx) {
 				addList.push_back(SR[i]);
 				++ endIdx;
-				++ addListSz;
+				// ++ addListSz;
 			}
 			else {
-				addList[endIdx++] = SR[i]; cout<<endIdx<<" "<<addListSz<<",";
+				addList[endIdx++] = SR[i]; cout<<endIdx<<" "<<addList.size()<<",";
 			}
 		}
 		cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
