@@ -663,7 +663,7 @@ else{
 			}
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-			BB_search(S_end, R_end, level+1, false, false);
+			BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
@@ -753,7 +753,7 @@ else{
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 			//printf("enter recursion\n");
-			BB_search(S_end, R_end, level+1, false, false);
+			BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end >= old_S_end&&R_end <= old_R_end);
