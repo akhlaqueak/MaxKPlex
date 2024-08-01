@@ -560,7 +560,7 @@ private:
 #endif
 
 
-if(false){
+if(K<10){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
@@ -616,24 +616,24 @@ else{
 
 		ui u = addList[-- endIdx];
 
-		// {
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		// }
+		{
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
 
-        // // the second branch exclude u from G	
-		// {
-		// 	while(!Qv.empty()) Qv.pop();
-		// 	Qv.push(u);
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-		// 	// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		// }
-		// restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+        // the second branch exclude u from G	
+		{
+			while(!Qv.empty()) Qv.pop();
+			Qv.push(u);
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
-
+/*
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
 		//if(level > max_level) {
@@ -753,6 +753,7 @@ else{
 #endif
 
 		//printf("here 7\n");
+		// if(succeed){
 		if(succeed&&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
 #ifndef NDEBUG
 			for(ui i = 0;i < R_end;i ++) {
@@ -799,7 +800,7 @@ else{
 
         // // the first branch includes u into S
 }
-
+*/
 
 // ******************* following block is original branching...  
 
