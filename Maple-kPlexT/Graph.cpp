@@ -329,12 +329,12 @@ void Graph::search() {
 			last_m=vp.size()*2;
 			ui pre_size = kplex.size();
 			if(ids_n > kplex.size()) {
-			printf("solving %u \n", u);
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
 				kplex_solver->load_graph(ids_n, vp);
+			printf("loaded %u \n", u);
 				kplex_solver->kPlex(K, UB, kplex, true);
 				printf("solved\n");
 			}
