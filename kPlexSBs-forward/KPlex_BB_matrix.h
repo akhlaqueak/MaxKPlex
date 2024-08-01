@@ -610,7 +610,7 @@ else{
 		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
 			branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
 
-		// printf("%u-%u\n", begIdx, endIdx);
+		printf("%u-%u\n", begIdx, endIdx);
 
 		ui u = addList[-- endIdx];
 
