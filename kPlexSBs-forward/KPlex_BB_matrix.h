@@ -2189,10 +2189,10 @@ else{
 				addList[endIdx++] = SR[i]; cout<<endIdx<<" "<<addList.size()<<",";
 			}
 		}
-		cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
-		cout<<" -> ["<<begIdx<<","<<endIdx<<"] ";
-		for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
-		cout<<endl<<endl;
+		// cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
+		// cout<<" -> ["<<begIdx<<","<<endIdx<<"] ";
+		// for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
+		// cout<<endl<<endl;
 		auto comp=[&](int a,int b){return degree_in_S[a]>degree_in_S[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
 	}
