@@ -5,10 +5,10 @@ CC=g++ -flto -O3
 CFLAGS=-c -I. -std=c++20
 
 debug: CC+= -g
-	all
+	kPlexS
 
 prof: CC+= -pg
-	all
+	kPlexS
 
 all: kPlexS
 
