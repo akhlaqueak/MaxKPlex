@@ -613,7 +613,7 @@ else{
 		// printf("%u-%u\n", begIdx, endIdx);
 
 		ui u = addList[-- endIdx];
-
+/*
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
 		//if(level > max_level) {
@@ -779,24 +779,25 @@ else{
 #endif
 
 
+*/
 
         // // the first branch includes u into S
-		// {
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		// }
+		{
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
 
-        // // the second branch exclude u from G	
-		// {
-		// 	while(!Qv.empty()) Qv.pop();
-		// 	Qv.push(u);
-		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-		// 	// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
-		// 	if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		// }
-		// restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+        // the second branch exclude u from G	
+		{
+			while(!Qv.empty()) Qv.pop();
+			Qv.push(u);
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		}
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 // ******************* following block is original branching...  
 }
