@@ -167,7 +167,6 @@ public:
 	}
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
-		cout<<"here."<<endl;
 		n = _n;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
 		ctcp_enabled=(K>=INNER_CTCP);
@@ -183,6 +182,7 @@ public:
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
+		cout<<"here."<<endl;
 
 #ifdef _SECOND_ORDER_PRUNING_
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
