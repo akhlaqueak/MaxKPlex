@@ -442,7 +442,7 @@ void Graph::kPlex_exact() {
 #endif
 			// cout<<"extracted "<<u;
 			if(kplex.size()+1 >= 2*K) {
-			// cout<<" pruning "<<u;
+			cout<<" pruning "<<u<<endl;
 				sz1h = extract_subgraph_and_prune(u, ids, ids_n, rid, p_rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
 				if(ids_n) {
 					double density = (double(vp.size()*2))/ids_n/(ids_n-1);
