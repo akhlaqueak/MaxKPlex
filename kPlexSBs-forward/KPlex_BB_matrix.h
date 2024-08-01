@@ -2186,7 +2186,7 @@ else{
 				// ++ addListSz;
 			}
 			else {
-				addList[endIdx++] = SR[i]; cout<<endIdx<<" "<<addList.size()<<",";
+				addList[endIdx++] = SR[i]; 
 			}
 		}
 		// cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
