@@ -187,7 +187,7 @@ void Graph::verify_kplex() {
 void Graph::search() {
 	Timer t;
 	kplex.resize(2*K-2); //screen out trivial cases
-	int max_degree=0;
+	ui max_degree=0;
 	for(ui i = 0;i < n;i ++) {
 		if(pstart[i+1]-pstart[i] > max_degree) max_degree = pstart[i+1]-pstart[i];
 	}
@@ -271,14 +271,14 @@ void Graph::search() {
 		s_active_edgelist = new ui[m/2];
 		s_deleted = new char[m/2];
 
-		vector<pair<int,int> > vp; vp.reserve(m/2);
+		vector<pair<ui, ui> > vp; vp.reserve(m/2);
 		ui *t_degree = new ui[n];
 
 		ui max_n_prune = 0, max_n_search = 0, prune_cnt = 0, search_cnt = 0;
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
 		ui last_m=0;
 
-		for(int i = 0;i < n&&m&&kplex.size() < UB;i ++) {
+		for(ui i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
 			linear_heap->pop_min(u, key);
 			// if(key != 0) printf("u = %u, key = %u\n", u, key);
@@ -388,7 +388,7 @@ void Graph::search() {
 	if(kplex.size()==2*K-2) printf("!!! Warning: Trivial Case !!!\n");
 }
 
-void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {
+void Graph::write_subgraph(ui n, const vector<pair<ui, ui> > &edge_list) {
 	FILE *fout = Utility::open_file("edges.txt", "w");
 
 	fprintf(fout, "%u %lu\n", n, edge_list.size());
@@ -397,7 +397,7 @@ void Graph::write_subgraph(ui n, const vector<pair<int,int> > &edge_list) {
 	fclose(fout);
 }
 
-void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<int,int> > &edge_list, ui *rid, ui *Qv, ui *Qe, char *exists) {
+void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<ui, ui> > &edge_list, ui *rid, ui *Qv, ui *Qe, char *exists) {
 	ui s_n;
 	ept s_m;
 	load_graph_from_edgelist(_n, edge_list, s_n, s_m, s_degree, s_pstart, s_edges);
@@ -440,7 +440,7 @@ void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<int,int> > &edge_list, u
 	}
 }
 
-void Graph::load_graph_from_edgelist(ui _n, const vector<pair<int,int> > &edge_list, ui &n, ept &m, ui *degree, ept *pstart, ui *edges) {
+void Graph::load_graph_from_edgelist(ui _n, const vector<pair<ui, ui> > &edge_list, ui &n, ept &m, ui *degree, ept *pstart, ui *edges) {
 	n = _n;
 	m = (ui)edge_list.size()*2;
 	for(ui i = 0; i < n; i++) degree[i] = 0;
@@ -453,14 +453,14 @@ void Graph::load_graph_from_edgelist(ui _n, const vector<pair<int,int> > &edge_l
 	pstart[0] = 0;
 	for(ui i = 0;i < n;i ++) pstart[i+1] = pstart[i]+degree[i];
 	for(ept i = 0;i < m/2;i ++) {
-		int a = edge_list[i].first, b = edge_list[i].second;
+		ui a = edge_list[i].first, b = edge_list[i].second;
 		edges[pstart[a]++] = b;
 		edges[pstart[b]++] = a;
 	}
 	for(ui i = 0;i < n;i ++) pstart[i] -= degree[i];
 }
 
-void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	for(ui i=0; i<n; ++i){
 		if(degree[i]){
@@ -475,7 +475,7 @@ void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, v
 	}
 }
 
-void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	ids[ids_n++] = u; exists[u] = 1; rid[u] = 0;
 	ui u_n = pstart[u];
@@ -515,7 +515,7 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<int,int> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
@@ -644,7 +644,7 @@ void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 	ui *vis = new ui[n];
 	memset(vis, 0, sizeof(ui)*n);
 
-	int max_degree = 0;
+	ui max_degree = 0;
 	for(ui i = 0;i < n;i ++) head[i] = n;
 	for(ui i = 0;i < n;i ++) {
 		degree[i] = pstart[i+1]-pstart[i];
@@ -854,7 +854,7 @@ void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ept *pstar
 
 #ifndef NDEBUG
 	long long sum = 0;
-	for(int i = 0;i < n;i ++) sum += pend[i] - pstart[i];
+	for(ui i = 0;i < n;i ++) sum += pend[i] - pstart[i];
 	// printf("%lld %lld\n", sum, m);
 	assert(sum*2 == m);
 #endif
