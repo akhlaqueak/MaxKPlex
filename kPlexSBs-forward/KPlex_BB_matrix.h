@@ -64,7 +64,7 @@ private:
 public:
 	KPLEX_BB_MATRIX() {
 		// addList.resize(5000);addListSz=5000;
-		addListSz=0
+		addListSz=0;
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
