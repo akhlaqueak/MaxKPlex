@@ -167,6 +167,7 @@ public:
 	}
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
+		cout<<"here."<<endl;
 		n = _n;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
 		ctcp_enabled=(K>=INNER_CTCP);
