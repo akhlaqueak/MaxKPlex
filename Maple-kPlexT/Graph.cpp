@@ -310,7 +310,7 @@ void Graph::search() {
 						total_density_prune += density; ++ prune_cnt;
 						if(density < min_density_prune) min_density_prune = density;
 						if(ids_n > max_n_prune) max_n_prune = ids_n;
-			cout<<"Density"<<density<<" ";
+			// cout<<"Density"<<density<<" ";
 					}
 					if(ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
 					// Qv_n=0;
@@ -328,7 +328,7 @@ void Graph::search() {
 			}
 			last_m=vp.size()*2;
 			ui pre_size = kplex.size();
-			printf("solving %u ", u);
+			printf("solving %u \n", u);
 			if(ids_n > kplex.size()) {
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_search += density; ++ search_cnt;
@@ -336,6 +336,7 @@ void Graph::search() {
 				if(ids_n > max_n_search) max_n_search = ids_n;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
+				printf("solved\n");
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
