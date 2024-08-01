@@ -335,7 +335,7 @@ void Graph::search() {
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
 				kplex_solver->load_graph(ids_n, vp);
-				kplex_solver->kPlex(K, kplex, true);
+				kplex_solver->kPlex(K, UB, kplex, true);
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
