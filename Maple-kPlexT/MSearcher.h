@@ -182,7 +182,6 @@ public:
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
-		cout<<"here."<<endl;
 
 #ifdef _SECOND_ORDER_PRUNING_
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
@@ -303,7 +302,6 @@ private:
 		ui max_core = 0, idx = n;
 		for(ui i = 0;i < n;i ++) {
 			if(matrix[i]) sz1h++;
-			cout<<"1 hop neighbors"<<sz1h<<endl;
 			ui u, min_degree = n;
 			for(ui j = 0;j < n;j ++) if(!vis[j]&&degree[j] < min_degree) {
 				u = j;
