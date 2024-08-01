@@ -2190,7 +2190,7 @@ else{
 		// cout<<" -> ["<<begIdx<<","<<endIdx<<"] ";
 		// for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
 		// cout<<endl<<endl;
-		auto comp=[&](int a,int b){return degree_in_S[a]>degree_in_S[b];};
+		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
 	}
 };
