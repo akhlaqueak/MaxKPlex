@@ -282,7 +282,7 @@ void Graph::search() {
 		for(ui i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
 			linear_heap->pop_min(u, key);
-			if(key != 0) printf("u = %u, key = %u\n", u, key);
+			// if(key != 0) printf("u = %u, key = %u\n", u, key);
 			if(key < kplex.size()+1-K) {
 				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
 					Qv[0] = u; Qv_n = 1;
