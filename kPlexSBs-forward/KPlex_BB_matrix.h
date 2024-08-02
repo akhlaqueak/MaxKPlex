@@ -560,7 +560,7 @@ private:
 #endif
 
 
-if(K<10){
+if(K<10&&sparse){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
