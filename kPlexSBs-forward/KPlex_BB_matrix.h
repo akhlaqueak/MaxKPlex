@@ -1881,7 +1881,6 @@ else{
 
 // #ifdef _SECOND_ORDER_PRUNING_
 	bool upper_bound_based_prune(ui S_end, ui u, ui v) {
-		return false;
 		// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
 		ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
 		if(SR_rid[u] >= S_end) {
