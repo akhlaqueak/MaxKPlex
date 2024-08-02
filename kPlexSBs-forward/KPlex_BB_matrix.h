@@ -729,8 +729,8 @@ else{
 		// u is the last emelent in S i.e. SR[S_end-1]
 		// this function removes u from entire graph... 
 		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
-		if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
-		if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+		// if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
+		// if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
 
 #ifndef NDEBUG
 		if(succeed) {
@@ -753,8 +753,8 @@ else{
 #endif
 
 		//printf("here 7\n");
-		// if(succeed){
-		if(succeed&&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
+		if(succeed){
+		// if(succeed&&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
 #ifndef NDEBUG
 			for(ui i = 0;i < R_end;i ++) {
 				ui d1 = 0, d2 = 0;
