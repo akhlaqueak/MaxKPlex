@@ -156,7 +156,7 @@ krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
-solutions='kp-Maple'
+solutions='kp-ours-v2'
 
 del_prev
 run_jobs 00:30:00
@@ -168,7 +168,7 @@ run_jobs 00:30:00
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
 # solutions="Maple $solutions"
-solutions='kp-Maple kp-ours Maple kPlexT'
+solutions='kp-ours-v2 kp-ours Maple kPlexT'
 get_results
 
 get_kpsize
