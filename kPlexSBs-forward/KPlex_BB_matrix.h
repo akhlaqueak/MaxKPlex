@@ -563,10 +563,10 @@ private:
 ui vp=n;
 for(ui i=S_end; i<R_end;i++){
 	ui v = SR[i];
-	if(!t_matrix[v] && //HOP2 first
+	if(!matrix[v] && //HOP2 first
 	(degree[v]+K<=best_solution_size+1||
 	degree_in_S[v]+K==S_end+1||
-	degree_in_S[0]+K==S_end+1){
+	degree_in_S[0]+K==S_end+1)){
 		vp=v; break;
 	}
 }
