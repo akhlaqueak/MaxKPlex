@@ -386,7 +386,7 @@ void Graph::kPlex_exact() {
 
 
 		vector<pair<ui,ui> > vp; vp.reserve(m/2);
-		ui *t_degree = new ui[n];
+		ui *t_degree = new ui[max_n];
 
 		ui max_n_prune = 0, max_n_search = 0, prune_cnt = 0, search_cnt = 0;
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
