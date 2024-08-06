@@ -1,9 +1,9 @@
 #include "Graph.h"
+Timer branchings, part, color, t2, seesaw, reductions;
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
 #include "CTPrune.h"
 using namespace std;
-Timer branchings, part, color, t2, seesaw, reductions;
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
