@@ -8,9 +8,11 @@ double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 #define REDUCTIONS
 #define SEESAW
-#define B_BRANCHINGS
-
-Timer seesaw, reductions, branchings;
+#define MAPLE_BRANCHINGS
+#define INNER_CTCP 10
+// #define B_BRANCHINGS
+// #define BINARY_BRANCHINGS
+// Timer seesaw, reductions, branchings;
 
 class KPLEX_BB_MATRIX {
 private:
@@ -18,7 +20,7 @@ private:
 
 	char *matrix;
 	long long matrix_size;
-	vecui PI, PIMax, ISc;
+	vector<ui> PI, PIMax, ISc;
 	MBitSet bmp;
 	bool ctcp_enabled=false;
 
@@ -56,9 +58,13 @@ private:
 
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
+	std::vector<ui> addList; ui addListSz=0;
+	double sparse;
 
 public:
 	KPLEX_BB_MATRIX() {
+		// addList.resize(5000);addListSz=5000;
+		addListSz=0;
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
@@ -163,8 +169,8 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp, ui _sz1h) {
 		n = _n;
 		sz1h = _sz1h;
-		double density=vp.size()*2/(double)n/(n-1);
-		ctcp_enabled=K>5&&density>=cfactor;
+		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
+		ctcp_enabled=(K>=INNER_CTCP);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -173,7 +179,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
-		cout<<"allocating... "<<matrix_size<<endl;
+		// cout<<"allocating... "<<matrix_size<<endl;
 			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
@@ -207,36 +213,36 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
-		ui R_end;
+		ui R_end; 
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true);
+		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0, true, 0, 0);
 		if(best_solution_size > kplex.size()) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
 		}
 	}
 
-	int main(int argc, char *argv[]) {
-		if(argc < 3) {
-			printf("Usage: [1]exe [2]dir [3]k\n");
-			return 0;
-		}
-		readGraph_binary(argv[1]);
-		printf("Finish reading graph\n");
-		K = atoi(argv[2]);
-		if(K == 1) {
-			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
-			return 0;
-		}
-		best_solution_size = 1;
-		_UB_ = n;
-		ui R_end;
-		Timer t;
-		initialization(R_end, false);
-		if(R_end) BB_search(0, R_end, 1, 0, true);
-		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
-		return 0;
-	}
+	// int main(int argc, char *argv[]) {
+	// 	if(argc < 3) {
+	// 		printf("Usage: [1]exe [2]dir [3]k\n");
+	// 		return 0;
+	// 	}
+	// 	readGraph_binary(argv[1]);
+	// 	printf("Finish reading graph\n");
+	// 	K = atoi(argv[2]);
+	// 	if(K == 1) {
+	// 		printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
+	// 		return 0;
+	// 	}
+	// 	best_solution_size = 1;
+	// 	_UB_ = n;
+	// 	ui R_end;
+	// 	Timer t;
+	// 	initialization(R_end, false);
+	// 	if(R_end) BB_search(0, R_end, 1, 0, true, false);
+	// 	printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
+	// 	return 0;
+	// }
 
 private:
 	void readGraph_binary(char* dir) {
@@ -391,7 +397,7 @@ private:
 		#endif
 	}
 
-	void store_solution(ui size) {
+	void store_solution(ui size, bool verify) {
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
@@ -401,6 +407,9 @@ private:
 		
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
+		for(ui i = 0;verify&&i < best_solution_size;i ++) {
+			if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" Invalid ";
+		}
 	}
 
 	bool is_kplex(ui R_end) {
@@ -408,9 +417,9 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=false) {
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
+		if(S_end > best_solution_size) store_solution(S_end, true);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, false);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
 
 #ifndef NDEBUG
@@ -510,20 +519,20 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
+		if(S_end > best_solution_size) store_solution(S_end, true);
+		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, false);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_){
 			//printf("here3\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		ui beta = best_solution_size - S_end;
 		// if(bound(S_end, R_end)>=R_end){
 		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 		// 	return ;
 		// }
 		#ifdef SEESAW
 		seesaw.tick();
-		ui beta = best_solution_size - S_end;
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
 		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
@@ -550,20 +559,19 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
+if(true){
 
-#ifdef B_BRANCHINGS
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
-		// for(ui i=S_end;i<R_end;i++){
-		// 	Qc.push(SR[i]);
-		// }
-		// branchings.tick();
-		R_end = getBranchings(S_end, R_end, level);
+		/*
+		ui branches=getBranchings(S_end, R_end, level);
+		ui endIdx=addList.size();
+		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
+		*/
 
-		// branchings.tock();
-		// R_end = getBranchings(S_end, R_end);
-		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
+		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
 			ui u = SR[R_end];
 			assert(level_id[u] == level&&SR_rid[u] == R_end);
@@ -584,25 +592,217 @@ private:
 			if(found_larger) continue;
 
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			/*
+			ui u=addList[begIdx];
+			for(ui i=begIdx+1; i<endIdx;i++) {Qv.push(addList[i]); level_id[addList[i]]=level;}
+			*/
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
-		// for(ui i=R_end-1;i>=S_end;i--){
-		// 	ui u = Qc.back();
-		// 	Qc.pop();
-		// 	SR[i] = u;
-		// 	SR_rid[u] = i;
-		// }
-
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-
+}
 // ******************* Ended our branching stuff here... 
-#else
 
+else{
+
+
+		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
+			branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
+
+		// printf("%u-%u\n", begIdx, endIdx);
+
+		ui u = addList[-- endIdx];
+
+		// {
+		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+		// 	if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
+		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		// }
+
+        // // the second branch exclude u from G	
+		// {
+		// 	while(!Qv.empty()) Qv.pop();
+		// 	Qv.push(u);
+		// 	ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+		// 	if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+		// 	// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
+		// 	restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+		// }
+		// restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+
+
+		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
+
+		//if(level > max_level) {
+		//	max_level = level;
+		//	printf("max_level: %u\n", max_level);
+		//}
+
+		// the first branch includes u into S
+		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+#ifdef  _SECOND_ORDER_PRUNING_
+		t_old_removed_edges_n = removed_edges_n;
+#endif
+		assert(Qv.empty()&&Qe.empty());
+
+#ifndef NDEBUG
+		for(ui i = 0;i < R_end;i ++) {
+			ui d1 = 0, d2 = 0;
+			for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+			d2 = d1;
+			for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+			assert(d1 == degree_in_S[SR[i]]);
+			assert(d2 == degree[SR[i]]);
+		}
+		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
+		for(ui i = S_end;i < R_end;i ++) assert(degree_in_S[SR[i]] + K > S_end);
+		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
+			char *t_matrix = matrix + SR[i]*n;
+			for(ui j = S_end;j < R_end;j ++) assert(t_matrix[SR[j]]);
+		}
+		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+#endif
+		if(move_u_to_S_with_prune(u, S_end, R_end, level)) {
+#ifndef NDEBUG
+			for(ui i = 0;i < R_end;i ++) {
+				ui d1 = 0, d2 = 0;
+				for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+				d2 = d1;
+				for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+				assert(d1 == degree_in_S[SR[i]]);
+				assert(d2 == degree[SR[i]]);
+			}
+			for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
+			for(ui i = S_end;i < R_end;i ++) assert(degree_in_S[SR[i]] + K > S_end);
+			for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
+				char *t_matrix = matrix + SR[i]*n;
+				for(ui j = S_end;j < R_end;j ++) assert(t_matrix[SR[j]]);
+			}
+			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+#endif
+			BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
+		}
+		if(best_solution_size >= _UB_) return ;
+		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
+		//printf("here4\n");
+		restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);
+#ifdef  _SECOND_ORDER_PRUNING_
+		assert(removed_edges_n == t_old_removed_edges_n);
+#endif
+
+#ifndef NDEBUG
+		for(ui i = 0;i < R_end;i ++) {
+			ui d1 = 0, d2 = 0;
+			for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+			d2 = d1;
+			for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+			assert(d1 == degree_in_S[SR[i]]);
+			assert(d2 == degree[SR[i]]);
+		}
+		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+#endif
+
+		// the second branch exclude u from S
+		assert(Qv.empty());
+#ifdef _SECOND_ORDER_PRUNING_
+		while(!Qe.empty()) Qe.pop();
+#endif
+		ui v = n, candidates_n = 0; // the unique non-neighbor of u, and moreover v has exactly k non-neighbors
+		ui *candidates = S2;
+		if(degree[u]+2 == R_end) {
+			char *t_matrix = matrix + u*n;
+			for(ui i = 0;i < R_end;i ++) if(SR[i] != u&&!t_matrix[SR[i]]) {
+				v = SR[i];
+				break;
+			}
+			assert(degree[v]+K+1 <= R_end);
+			if(degree[v]+K+1 != R_end) v = n;
+			else {
+				if(SR_rid[v] >= S_end) candidates[candidates_n++] = v;
+				char *t_matrix = matrix + v*n;
+				for(ui i = S_end;i < R_end;i ++) if(SR[i] != v&&SR[i] != u&&!t_matrix[SR[i]]) candidates[candidates_n ++] = SR[i];
+			}
+		}
+		// u is the last emelent in S i.e. SR[S_end-1]
+		// this function removes u from entire graph... 
+		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
+		// if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
+		// if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+
+#ifndef NDEBUG
+		if(succeed) {
+			for(ui i = 0;i < R_end;i ++) {
+				ui d1 = 0, d2 = 0;
+				for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+				d2 = d1;
+				for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+				assert(d1 == degree_in_S[SR[i]]);
+				assert(d2 == degree[SR[i]]);
+			}
+			for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
+			for(ui i = S_end;i < R_end;i ++) assert(degree_in_S[SR[i]] + K > S_end);
+			for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
+				char *t_matrix = matrix + SR[i]*n;
+				for(ui j = S_end;j < R_end;j ++) assert(t_matrix[SR[j]]);
+			}
+			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+		}
+#endif
+
+		//printf("here 7\n");
+		if(succeed){
+		// if(succeed&&(v == n||greedily_add_nonneighbors(candidates, candidates_n, S_end, R_end, level))) {
+#ifndef NDEBUG
+			for(ui i = 0;i < R_end;i ++) {
+				ui d1 = 0, d2 = 0;
+				for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+				d2 = d1;
+				for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+				assert(d1 == degree_in_S[SR[i]]);
+				assert(d2 == degree[SR[i]]);
+			}
+			for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
+			for(ui i = S_end;i < R_end;i ++) assert(degree_in_S[SR[i]] + K > S_end);
+			for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
+				char *t_matrix = matrix + SR[i]*n;
+				for(ui j = S_end;j < R_end;j ++) assert(t_matrix[SR[j]]);
+			}
+			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+#endif
+			//printf("enter recursion\n");
+			BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
+		}
+		if(best_solution_size >= _UB_) return ;
+		assert(S_end >= old_S_end&&R_end <= old_R_end);
+		//printf("here5\n");
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		//printf("here6\n");
+#ifndef NDEBUG
+		for(ui i = 0;i < R_end;i ++) {
+			ui d1 = 0, d2 = 0;
+			for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+			d2 = d1;
+			for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+			assert(d1 == degree_in_S[SR[i]]);
+			assert(d2 == degree[SR[i]]);
+		}
+		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
+		for(ui i = S_end;i < R_end;i ++) assert(degree_in_S[SR[i]] + K > S_end);
+		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
+			char *t_matrix = matrix + SR[i]*n;
+			for(ui j = S_end;j < R_end;j ++) assert(t_matrix[SR[j]]);
+		}
+		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
+#endif
+
+
+        // // the first branch includes u into S
+}
 
 // ******************* following block is original branching...  
 
+#ifdef BINARY_BRANCHINGS
 		ui u = choose_branch_vertex(S_end, R_end);
 		assert(degree[u] + K > best_solution_size&&degree[u] + K > S_end);
 
@@ -653,7 +853,7 @@ private:
 			}
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-			BB_search(S_end, R_end, level+1, false);
+			BB_search(S_end, R_end, level+1, false, false);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end == t_old_S_end + 1&&SR[S_end-1] == u);
@@ -742,7 +942,7 @@ private:
 			for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 			//printf("enter recursion\n");
-			BB_search(S_end, R_end, level+1, false);
+			BB_search(S_end, R_end, level+1, false, false);
 		}
 		if(best_solution_size >= _UB_) return ;
 		assert(S_end >= old_S_end&&R_end <= old_R_end);
@@ -767,6 +967,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 #endif
+
 	}
 
 
@@ -863,6 +1064,7 @@ private:
 	// 	branchings.tock();
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
+		// ui cend=bound(S_end, R_end);
         for (ui i = 0; i < S_end; i++)
         {
             ui u = SR[i];
@@ -873,10 +1075,11 @@ private:
             // Lookup neig(&lookup, &g.adjList[u]);
             // bmp.setup(g.adjList[u], g.V);
 			ui* t_LPI = LPI+i*n;
+			char* t_matrix=matrix+u*n;
             for (ui j = S_end; j < R_end; j++)
             {
                 ui v = SR[j];
-                if (!matrix[u * n + v])
+                if (!t_matrix[v])
                     // PI[u].push_back(v);
                     t_LPI[psz[i]++] = v;
             }
@@ -950,6 +1153,16 @@ private:
 
             // vertices in [cend, R_end) range are Branching vertices
 			// sort the branching vertices in ascending order of peelOrder, and remove from C
+		/*
+		// ui begIdx=addList.size();
+		// addList.insert(addList.end(), SR+cend, SR+R_end);
+		// ui endIdx = addList.size();
+		// std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
+		// return R_end-cend;
+		// 
+
+		*/
+		
 		for(ui i=cend; i<R_end; i++){
 			// get a vertex with highest peelOrder at location i
 			ui u = SR[i], ind = i;
@@ -975,15 +1188,6 @@ private:
 				if(t_matrix[w]) -- degree[w];
 			}
 		}
-		// assert(R_end==cend);
-		// for(ui i = 0;i < R_end;i ++) {
-		// 	ui d1 = 0, d2 = 0;
-		// 	for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
-		// 	d2 = d1;
-		// 	for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
-		// 	assert(d1 == degree_in_S[SR[i]]);
-		// 	assert(d2 == degree[SR[i]]);
-		// }
         return cend;
     }
 	void collect_removable_vertices_based_on_total_edges(ui S2_n, ui S_end, ui R_end, ui level) {
@@ -1046,20 +1250,38 @@ private:
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
+			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
 				char *t_matrix = matrix + u*n;
-				bool OK = true;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-					OK = false;
-					break;
+				ui nn = 0;
+				bool OK=false, tight=true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+					if(nn>=2&&!tight) break;
+					nonneighbors[nn++]=SR[j];
+					if(R_end - degree[SR[j]] > K) 
+						tight=false;
 				}
+				if(tight) OK=true;
+				else if (R_end==degree_in_S[u])
+					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 				if(OK) candidates[candidates_n ++] = u;
 			}
+			// for(ui i = S_end;i < R_end;i ++) {
+			// 	ui u = SR[i];
+			// 	if(R_end - degree[u] > K) continue;
 
+			// 	char *t_matrix = matrix + u*n;
+			// 	bool OK = true;
+			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
+			// 		OK = false;
+			// 		break;
+			// 	}
+			// 	if(OK) candidates[candidates_n ++] = u;
+			// }
 			if(!candidates_n) break;
 
 			while(candidates_n) {
@@ -1733,7 +1955,6 @@ private:
         {
             
             double ubp = tryPartition(S_end, R_end);
-
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
                ( ISc.size() / ubc > PIMax.size() / ubp) or
@@ -1893,7 +2114,7 @@ private:
 	ui bound(ui S_end, ui R_end) {
     	vp.clear();
     	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
-		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(neiInG[SR[i]]-neiInP[SR[i]]), SR[i]));
+		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp.begin(), vp.end());
     	ui UB = S_end, cursor = S_end;
     	for(ui i = 0;i < (ui)vp.size(); i++) {
@@ -1919,5 +2140,51 @@ private:
 		if(cursor>R_end)cursor=R_end;
     	return cursor;
     }
+
+	void branch(ui &begIdx, ui &endIdx, ui S_end, ui R_end){
+		endIdx=begIdx;
+		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
+		char *t_matrix = matrix + 0*n;
+		for(ui i = S_end;i < R_end;i ++) {
+			ui v = SR[i];
+			if(!t_matrix[v] && //HOP2 first
+			(degree[v]+K<=best_solution_size+1||
+			degree_in_S[v]+K==S_end+1||
+			degree_in_S[0]+K==S_end+1)
+			){ 
+				if(addList.size() == endIdx) {
+					addList.push_back(v);
+					++ endIdx;
+					// ++ addListSz;
+				}
+				else addList[endIdx++] = v;
+				return;
+			}
+			if (degree_in_S[v] < minnei)
+			{
+				minnei = degree_in_S[v];
+				pivot = v;
+			}
+		}
+		// pivot is a two-hop qualified neighbor if it is found. else pivot is min degree vertex in C
+		// non-nighbors of pivot are stored in addList
+		t_matrix = matrix + pivot*n;
+		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) {
+			if(addList.size() == endIdx) {
+				addList.push_back(SR[i]);
+				++ endIdx;
+				// ++ addListSz;
+			}
+			else {
+				addList[endIdx++] = SR[i]; 
+			}
+		}
+		// cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
+		// cout<<" -> ["<<begIdx<<","<<endIdx<<"] ";
+		// for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
+		// cout<<endl<<endl;
+		auto comp=[&](int a,int b){return degree[a]>degree[b];};
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
+	}
 };
 #endif
