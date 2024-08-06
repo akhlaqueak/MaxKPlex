@@ -299,7 +299,8 @@ void Graph::search() {
 			bool mflag=false;
 			
 
-			cout<<"solving "<<u<<endl;
+			bool check=false;
+			// cout<<"solving "<<u<<endl;
 			// if(last_m<0.8*m) {
 			if(true){
 				ui pre_size;
@@ -311,9 +312,11 @@ void Graph::search() {
 						total_density_prune += density; ++ prune_cnt;
 						if(density < min_density_prune) min_density_prune = density;
 						if(ids_n > max_n_prune) max_n_prune = ids_n;
-						cout<<"Density"<<density<<" ";
+						// cout<<"Density"<<density<<" ";
 					}
 					if(ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
+					if(check) cout<<"Pruning again"<<endl;
+					check=true;
 					// Qv_n=0;
 					// if(kplex.size() != pre_size && kplex.size()> 2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				}
