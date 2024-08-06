@@ -297,7 +297,7 @@ void Graph::search() {
 			ui *ids = Qv;
 			ui ids_n = 0;
 			bool mflag=false;
-			
+			cout<<u<<" ";
 
 			bool check=false;
 			// if(last_m<0.8*m) {
