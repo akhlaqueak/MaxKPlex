@@ -6,6 +6,7 @@ Timer branchings, part, color, t2, seesaw, reductions;
 double c_size=1;
 #include "popl.hpp"
 #include "KPlex_BB_matrix.h"
+#include "CTPrune.h"
 
 using namespace std;
 using namespace popl;
@@ -305,26 +306,24 @@ void Graph::kPlex_exact() {
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
 
-		shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
-		delete[] core; core = NULL;
+		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+
+	
 		if(kplex.size()+1 > 2*K) {
-			m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
+			CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 		}
 		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
-			if(kplex.size() > old_size) {
-				old_size = kplex.size();
-				for(ui i = 0;i < kplex.size();i ++) {
-					assert(kplex[i] < n);
-					kplex[i] = out_mapping[kplex[i]];
-				}
-				if(kplex.size()+1 > 2*K) {
-					// degenerating again to find core, as it's required in shrink_graph
-					degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
-					shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
-				}
+		if(kplex.size() > old_size) {
+			old_size = kplex.size();
+			for(ui i = 0;i < kplex.size();i ++) {
+				assert(kplex[i] < n);
+				kplex[i] = out_mapping[kplex[i]];
 			}
+
+			if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+			else shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+		}
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
@@ -365,6 +364,7 @@ void Graph::kPlex_exact() {
 			m -= 2*peeling(n, heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
 		}
+
 		// degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 
 		Timer tt;
