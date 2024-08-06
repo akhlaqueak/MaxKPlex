@@ -559,38 +559,6 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
-
-// ui vp=n;
-// for(ui i=S_end; i<R_end;i++){
-// 	ui v = SR[i];
-// 	if(!matrix[v] && //HOP2 first
-// 	(degree[v]+K<=best_solution_size+1||
-// 	degree_in_S[v]+K==S_end+1||
-// 	degree_in_S[0]+K==S_end+1)){
-// 		vp=v; break;
-// 	}
-// }
-
-// if(vp!=n){
-// 		{
-// 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// 			if(move_u_to_S_with_prune(vp, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
-// 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 		}
-
-//         // the second branch exclude u from G	
-// 		{
-// 			while(!Qv.empty()) Qv.pop();
-// 			Qv.push(vp);
-// 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-// 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
-// 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 		}
-// 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-// }
-
-// else 
 if(true){
 
 // ******************* Adding our branching stuff here... 
@@ -1283,36 +1251,36 @@ else{
 			ui *candidates = S2;
 			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
-			for(ui i = S_end;i < R_end;i ++) {
-				ui u = SR[i];
-				if(R_end - degree[u] > K) continue;
-
-				char *t_matrix = matrix + u*n;
-				ui nn = 0;
-				bool OK=false, tight=true;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
-					if(nn>=2&&!tight) break;
-					nonneighbors[nn++]=SR[j];
-					if(R_end - degree[SR[j]] > K) 
-						tight=false;
-				}
-				if(tight) OK=true;
-				else if (R_end==degree_in_S[u])
-					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
-				if(OK) candidates[candidates_n ++] = u;
-			}
 			// for(ui i = S_end;i < R_end;i ++) {
 			// 	ui u = SR[i];
 			// 	if(R_end - degree[u] > K) continue;
 
 			// 	char *t_matrix = matrix + u*n;
-			// 	bool OK = true;
-			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-			// 		OK = false;
-			// 		break;
+			// 	ui nn = 0;
+			// 	bool OK=false, tight=true;
+			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+			// 		if(nn>=2&&!tight) break;
+			// 		nonneighbors[nn++]=SR[j];
+			// 		if(R_end - degree[SR[j]] > K) 
+			// 			tight=false;
 			// 	}
+			// 	if(tight) OK=true;
+			// 	else if (R_end==degree_in_S[u])
+			// 		OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 			// 	if(OK) candidates[candidates_n ++] = u;
 			// }
+			for(ui i = S_end;i < R_end;i ++) {
+				ui u = SR[i];
+				if(R_end - degree[u] > K) continue;
+
+				char *t_matrix = matrix + u*n;
+				bool OK = true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
+					OK = false;
+					break;
+				}
+				if(OK) candidates[candidates_n ++] = u;
+			}
 			if(!candidates_n) break;
 
 			while(candidates_n) {
