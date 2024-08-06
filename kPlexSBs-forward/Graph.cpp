@@ -308,20 +308,20 @@ void Graph::kPlex_exact() {
 		shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
 		// delete[] core; core = NULL;
 
-		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
+		// ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
-			if(kplex.size() > old_size) {
-				old_size = kplex.size();
-				for(ui i = 0;i < kplex.size();i ++) {
-					assert(kplex[i] < n);
-					kplex[i] = out_mapping[kplex[i]];
-				}
-				if(kplex.size()+1 > 2*K) {
-					// degenerating again to find core, as it's required in shrink_graph
-					degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
-					shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
-				}
-			}
+		// 	if(kplex.size() > old_size) {
+		// 		old_size = kplex.size();
+		// 		for(ui i = 0;i < kplex.size();i ++) {
+		// 			assert(kplex[i] < n);
+		// 			kplex[i] = out_mapping[kplex[i]];
+		// 		}
+		// 		if(kplex.size()+1 > 2*K) {
+		// 			// degenerating again to find core, as it's required in shrink_graph
+		// 			degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
+		// 			shrink_graph(n, m, peel_sequence, core, out_mapping, NULL, rid, pstart, edges, true);
+		// 		}
+		// 	}
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
