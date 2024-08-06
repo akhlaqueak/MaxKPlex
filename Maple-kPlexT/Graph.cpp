@@ -311,7 +311,7 @@ void Graph::search() {
 						total_density_prune += density; ++ prune_cnt;
 						if(density < min_density_prune) min_density_prune = density;
 						if(ids_n > max_n_prune) max_n_prune = ids_n;
-			// cout<<"Density"<<density<<" ";
+						cout<<"Density"<<density<<" ";
 					}
 					if(ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
 					// Qv_n=0;
