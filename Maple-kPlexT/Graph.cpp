@@ -300,7 +300,6 @@ void Graph::search() {
 			
 
 			bool check=false;
-			// cout<<"solving "<<u<<endl;
 			// if(last_m<0.8*m) {
 			if(true){
 				ui pre_size;
@@ -336,8 +335,10 @@ void Graph::search() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
+				Timer t1;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
+				cout<<t1.elapsed()<<endl;
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
