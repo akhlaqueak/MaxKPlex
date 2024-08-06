@@ -404,6 +404,7 @@ void Graph::kPlex_exact() {
 			cout<<"Direction: L->R"<<endl;
 		else
 			cout<<"Direction: R->L"<<endl;
+		return;
 
 		while(p_left < p_right &&m&&kplex.size() < UB) {
 			if(forward){
