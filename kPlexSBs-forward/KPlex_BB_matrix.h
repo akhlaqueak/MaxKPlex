@@ -1107,7 +1107,7 @@ else{
             // Lookup neig(&lookup, &g.adjList[u]);
             // bmp.setup(g.adjList[u], g.V);
 			ui* t_LPI = LPI+i*n;
-			ui* t_matrix=matrix+u*n;
+			char* t_matrix=matrix+u*n;
             for (ui j = S_end; j < R_end; j++)
             {
                 ui v = SR[j];
