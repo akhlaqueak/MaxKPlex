@@ -59,7 +59,7 @@ private:
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
 	std::vector<ui> addList; ui addListSz=0;
-	double sparse;
+	bool sparse;
 
 public:
 	KPLEX_BB_MATRIX() {
@@ -467,7 +467,7 @@ private:
 		}
 		seesaw.tick();
 		ui S2_n = 0;
-		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
+		for(ui i = 0;sparse&&i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
 		if(S2_n >= 2) {
 			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
