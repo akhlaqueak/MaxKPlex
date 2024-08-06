@@ -9,7 +9,7 @@ all: kPlexS
 debug: CC+= -g
 debug: kPlexS
 
-prof: CC+= -pg
+prof: CC= g++ -pg
 prof: kPlexS
 
 kPlexS: 
