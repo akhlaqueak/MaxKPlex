@@ -114,7 +114,7 @@ void Graph::read_graph_binary() {
         ui *degree = new ui[n];
         fread(degree, sizeof(ui), n, f);
         if (pstart != nullptr) delete[] pstart;
-        pstart = new unsigned long[n + 1];
+        pstart = new ept[n + 1];
         if (edges != nullptr) delete[] edges;
         edges = new ui[m];
 
