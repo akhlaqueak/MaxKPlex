@@ -168,7 +168,7 @@ public:
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
 		n = _n;
-		sparse=vp.size()*2/(double)n/(n-1) < 0.9;
+		sparse=vp.size()*2/(double)n/(n-1) < 0.8;
 		ctcp_enabled=(K>=INNER_CTCP);
 		if(((long long)n)*n > matrix_size) {
 			do {

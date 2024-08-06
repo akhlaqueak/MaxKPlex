@@ -299,7 +299,7 @@ void Graph::search() {
 			bool mflag=false;
 			
 
-
+			cout<<"solving "<<u<<". ";
 			// if(last_m<0.8*m) {
 			if(true){
 				ui pre_size;
