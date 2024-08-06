@@ -158,8 +158,8 @@ datasets=$(ls ~/graphs/test/*.bin)
 # solutions='kp-ctcp-enabled'
 solutions='kp-Maple'
 
-# del_prev
-# run_jobs 00:30:00
+del_prev
+run_jobs 00:30:00
 
 
 
