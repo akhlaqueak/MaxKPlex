@@ -1342,7 +1342,7 @@ else{
 		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
 #endif
 
-		// while(!Qv.empty()) Qv.pop();
+		while(!Qv.empty()) Qv.pop();
 		// reduction rules based on the fact that each vertex can have at most k-1 nonneighbors
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			ui v = nonneighbors[i];
