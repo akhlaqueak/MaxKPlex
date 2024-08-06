@@ -12,7 +12,7 @@
 #include <algorithm>
 
 using ui = unsigned int; // vertex type
-using ept = unsigned int; // edge pointer type; unsigned int can be used to process upto two billion undirected edges
+// using ept = unsigned int; // edge pointer type; unsigned int can be used to process upto two billion undirected edges
 
 namespace CTPrune {
 	// orient graph
