@@ -1251,36 +1251,36 @@ else{
 			ui *candidates = S2;
 			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
-			// for(ui i = S_end;i < R_end;i ++) {
-			// 	ui u = SR[i];
-			// 	if(R_end - degree[u] > K) continue;
-
-			// 	char *t_matrix = matrix + u*n;
-			// 	ui nn = 0;
-			// 	bool OK=false, tight=true;
-			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
-			// 		if(nn>=2&&!tight) break;
-			// 		nonneighbors[nn++]=SR[j];
-			// 		if(R_end - degree[SR[j]] > K) 
-			// 			tight=false;
-			// 	}
-			// 	if(tight) OK=true;
-			// 	else if (R_end==degree_in_S[u])
-			// 		OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
-			// 	if(OK) candidates[candidates_n ++] = u;
-			// }
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
 				char *t_matrix = matrix + u*n;
-				bool OK = true;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-					OK = false;
-					break;
+				ui nn = 0;
+				bool OK=false, tight=true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+					if(nn>=2&&!tight) break;
+					nonneighbors[nn++]=SR[j];
+					if(R_end - degree[SR[j]] > K) 
+						tight=false;
 				}
+				if(tight) OK=true;
+				else if (R_end==degree_in_S[u])
+					OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 				if(OK) candidates[candidates_n ++] = u;
 			}
+			// for(ui i = S_end;i < R_end;i ++) {
+			// 	ui u = SR[i];
+			// 	if(R_end - degree[u] > K) continue;
+
+			// 	char *t_matrix = matrix + u*n;
+			// 	bool OK = true;
+			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
+			// 		OK = false;
+			// 		break;
+			// 	}
+			// 	if(OK) candidates[candidates_n ++] = u;
+			// }
 			if(!candidates_n) break;
 
 			while(candidates_n) {

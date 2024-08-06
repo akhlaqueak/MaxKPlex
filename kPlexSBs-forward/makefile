@@ -6,6 +6,12 @@ CFLAGS=-c -I. -std=c++20
 
 all: kPlexS
 
+debug: CC+= -g
+debug: kPlexS
+
+prof: CC+= -pg
+prof: kPlexS
+
 kPlexS: 
 	${CC} Graph.cpp -o kPlexTBs
 
