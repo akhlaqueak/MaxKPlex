@@ -314,14 +314,12 @@ void Graph::search() {
 						if(ids_n > max_n_prune) max_n_prune = ids_n;
 						// cout<<"Density"<<density<<" ";
 					}
-					if(ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
-					if(check) cout<<"Pruning again"<<endl;
-					check=true;
+					// if(ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
+					
 					// Qv_n=0;
 					// if(kplex.size() != pre_size && kplex.size()> 2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				}
-				// while(kplex.size()!=pre_size);
-				while(false);
+				while(kplex.size()!=pre_size);
 			}
 			else {
 				extract_graph(n, m, degree, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
