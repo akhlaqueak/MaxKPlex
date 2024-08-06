@@ -9,7 +9,7 @@ class Graph {
 private:
 	std::string dir; //input graph directory
 	ui n; //number of nodes of the graph
-	ui m; //number of edges of the graph
+	ept m; //number of edges of the graph
 	ui K; //the value of k in k-plex
 
 	ept *pstart; //offset of neighbors of nodes
