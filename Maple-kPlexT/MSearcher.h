@@ -10,6 +10,7 @@ double cfactor=1;
 #define SEESAW
 #define MAPLE_BRANCHINGS
 #define INNER_CTCP 10
+#define BRANCH_COND true
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -561,7 +562,7 @@ private:
 #endif
 
 
-if(K<10){
+if(BRANCH_COND){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
