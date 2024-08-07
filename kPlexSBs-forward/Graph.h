@@ -61,7 +61,8 @@ private:
 	void reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ept *pstart, ept *pend, ept *pend2, ui *edges, ui *edgelist_pointer, ui *buf) ;
 	ept peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold, ui *Qe, bool initialize_Qe, ui t_threshold, ui *tri_cnt, ui *active_edgelist, ui &active_edgelist_n, ui *edge_list, ui *edgelist_pointer, char *deleted, ui *degree, ept *pstart, ept *pend, ui *edges, char *exists) ;
 	char find(ui u, ui w, ept &b, ept e, char *deleted, ept &idx, ui *edgelist_pointer, ui *edges) ;
-	void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, ui* edgelist_pointer, bool output);
+	void ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) ;
+
 	// functions for subgraph processing
 	void load_graph_from_edgelist(ui _n, const std::vector<std::pair<ui, ui> > &edge_list, ui &n, ept &m, ui *degree, ept *pstart, ui *edges) ;
 	void subgraph_prune(ui *ids, ui &_n, std::vector<std::pair<ui, ui> > &edge_list, ui *rid, ui *Qv, ui *Qe, char *exists) ;

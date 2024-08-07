@@ -1344,7 +1344,7 @@ int main(int argc, char *argv[]) {
 	printf("\n");
 	return 0;
 }
-void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, ui* edgelist_pointer, bool output) {
+void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
 	if(pend == nullptr) pend = new ept[n+1];
 	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
