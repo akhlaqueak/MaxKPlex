@@ -24,7 +24,7 @@
 #endif
 
 using ui = unsigned int; // vertex type
-// using ui = unsigned int; // edge pointer type; unsigned int can be used to process upto two billion undirected edges
+using ept = unsigned int; // edge pointer type; unsigned int can be used to process upto two billion undirected edges
 
 #define pb push_back
 #define mp make_pair

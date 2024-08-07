@@ -102,7 +102,7 @@ void Graph::read() {
 
 	ui *degree = new ui[n];
 	fread(degree, sizeof(int), n, f);
-	if(pstart == nullptr) pstart = new ui[n+1];
+	if(pstart == nullptr) pstart = new ept[n+1];
 	if(edges == nullptr) edges = new ui[m];
 
 	pstart[0] = 0;
@@ -193,14 +193,14 @@ void Graph::search() {
 	}
 	heuristic_kplex_max_degree(10);
 	ui oldn=n;
-	ui *peel_sequence = new ui[n];
+	ui *peel_sequ = new ui[n];
 	ui *core = new ui[n];
 	ui *degree = new ui[n];
 	char *vis = new char[n];
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 
-	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+	ui UB = degen(n, peel_sequ, core, pstart, edges, degree, vis, heap, true);
 
 	delete heap;
 	delete[] vis;
@@ -236,17 +236,17 @@ void Graph::search() {
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
 
 		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-		linear_heap->init(n, n-1, peel_sequence, degree);
+		linear_heap->init(n, n-1, peel_sequ, degree);
 
 		assert(pend == nullptr);
-		pend = new ui[n];
+		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
-		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+		oriented_triangle_counting(n, m, peel_sequ, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
-		// delete[] peel_sequence; peel_sequence = NULL;
+		// delete[] peel_sequ; peel_sequ = NULL;
 
-		pend_buf = new ui[n];
+		pend_buf = new ept[n];
 		ui *edge_list = new ui[m];
 		ui *tri_cnt = new ui[m/2];
 		reorganize_oriented_graph(n, tri_cnt, edge_list, pstart, pend, pend_buf, edges, edgelist_pointer, rid);
@@ -277,8 +277,8 @@ void Graph::search() {
 
 		int max_n = n - Qv_n;
 		s_degree = new ui[max_n];
-		s_pstart = new ui[max_n+1];
-		s_pend = new ui[max_n];
+		s_pstart = new ept[max_n+1];
+		s_pend = new ept[max_n];
 		s_edges = new ui[m];
 		s_peel_sequence = new ui[max_n];
 		s_core = new ui[max_n];
@@ -395,7 +395,7 @@ void Graph::search() {
 		delete[] deleted;
 	}
 	delete[] core;
-	delete[] peel_sequence;
+	delete[] peel_sequ;
 
 	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
 
@@ -420,7 +420,7 @@ void Graph::write_subgraph(ui n, const vector<pair<ui, ui> > &edge_list) {
 
 void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<ui, ui> > &edge_list, ui *rid, ui *Qv, ui *Qe, char *exists) {
 	ui s_n;
-	ui s_m;
+	ept s_m;
 	load_graph_from_edgelist(_n, edge_list, s_n, s_m, s_degree, s_pstart, s_edges);
 	degen(s_n, s_peel_sequence, s_core, s_pstart, s_edges, s_degree, s_vis, s_heap, false);
 	shrink_graph(s_n, s_m, s_peel_sequence, s_core, ids, ids, rid, s_pstart, s_edges, false);
@@ -434,7 +434,7 @@ void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<ui, ui> > &edge_list, ui
 			s_pend[i] = s_pstart[i+1];
 			s_degree[i] = s_pend[i] - s_pstart[i];
 		}
-		for(ui i = 0;i < (s_m>>1);i ++) s_active_edgelist[i] = i;
+		for(ept i = 0;i < (s_m>>1);i ++) s_active_edgelist[i] = i;
 		memset(s_deleted, 0, sizeof(char)*(s_m>>1));
 
 		ui s_active_edgelist_n = s_m>>1;
@@ -454,18 +454,18 @@ void Graph::subgraph_prune(ui *ids, ui &_n, vector<pair<ui, ui> > &edge_list, ui
 	else {
 		_n = s_n;
 		edge_list.clear();
-		for(ui i = 0;i < s_n;i ++) for(ui j = s_pstart[i];j < s_pstart[i+1];j ++) if(s_edges[j] > i) {
+		for(ui i = 0;i < s_n;i ++) for(ept j = s_pstart[i];j < s_pstart[i+1];j ++) if(s_edges[j] > i) {
 			edge_list.push_back(make_pair(s_edges[j], i));
 		}
 		assert(edge_list.size()*2 == s_m);
 	}
 }
 
-void Graph::load_graph_from_edgelist(ui _n, const vector<pair<ui, ui> > &edge_list, ui &n, ui &m, ui *degree, ui *pstart, ui *edges) {
+void Graph::load_graph_from_edgelist(ui _n, const vector<pair<ui, ui> > &edge_list, ui &n, ept &m, ui *degree, ept *pstart, ui *edges) {
 	n = _n;
 	m = (ui)edge_list.size()*2;
 	for(ui i = 0; i < n; i++) degree[i] = 0;
-	for(ui i = 0;i < m/2;i ++) {
+	for(ept i = 0;i < m/2;i ++) {
 		assert(edge_list[i].first >= 0&&edge_list[i].first < n&&edge_list[i].second >= 0&&edge_list[i].second < n);
 		degree[edge_list[i].first] ++;
 		degree[edge_list[i].second] ++;
@@ -473,7 +473,7 @@ void Graph::load_graph_from_edgelist(ui _n, const vector<pair<ui, ui> > &edge_li
 
 	pstart[0] = 0;
 	for(ui i = 0;i < n;i ++) pstart[i+1] = pstart[i]+degree[i];
-	for(ui i = 0;i < m/2;i ++) {
+	for(ept i = 0;i < m/2;i ++) {
 		ui a = edge_list[i].first, b = edge_list[i].second;
 		edges[pstart[a]++] = b;
 		edges[pstart[b]++] = a;
@@ -481,7 +481,7 @@ void Graph::load_graph_from_edgelist(ui _n, const vector<pair<ui, ui> > &edge_li
 	for(ui i = 0;i < n;i ++) pstart[i] -= degree[i];
 }
 
-void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ui *pstart, ui *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	for(ui i=0; i<n; ++i){
 		if(degree[i]){
@@ -490,17 +490,17 @@ void Graph::extract_graph(ui n, ui m, ui *degree, ui *ids, ui &ids_n, ui *rid, v
 	}
 	for(ui i = 0; i<ids_n ; i++) {
 		ui u = ids[i];
-		for(ui j = pstart[u];j < pend[u]; j++) if(!deleted[edgelist_pointer[j]] && u < edges[j]) {
+		for(ept j = pstart[u];j < pend[u]; j++) if(!deleted[edgelist_pointer[j]] && u < edges[j]) {
 			vp.push_back(make_pair(rid[u], rid[edges[j]]));
 		}
 	}
 }
 
-void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ui *pstart, ui *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, char *exists, ept *pstart, ept *pend, ui *edges, char *deleted, ui *edgelist_pointer) {
 	ids_n = 0; vp.clear();
 	ids[ids_n++] = u; exists[u] = 1; rid[u] = 0;
 	ui u_n = pstart[u];
-	for(ui i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
+	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
 		rid[v] = ids_n; ids[ids_n++] = v; exists[v] = 1;
@@ -510,7 +510,7 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, 
 	for(ui i = 1;i < old_size;i ++) {
 		u = ids[i];
 		u_n = pstart[u];
-		for(ui j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
 			ui v = edges[j];
 			if(exists[v]) continue;
@@ -520,14 +520,14 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, 
 	}
 	for(ui i = 0;i < old_size;i ++) {
 		u = ids[i];
-		for(ui j = pstart[u];j < pend[u];j ++) if(edges[j] > u) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(edges[j] > u) {
 			vp.push_back(make_pair(rid[u], rid[edges[j]]));
 		}
 	}
 	for(ui i = old_size;i < ids_n;i ++) {
 		u = ids[i];
 		u_n = pstart[u];
-		for(ui j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
 			if(edges[j] > u&&exists[edges[j]]) vp.push_back(make_pair(rid[u], rid[edges[j]]));
 		}
@@ -536,11 +536,11 @@ void Graph::extract_subgraph(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, 
 	for(ui i = 0;i < ids_n;i ++) exists[ids[i]] = 0;
 }
 
-void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ui *pend, char *deleted, ui *edgelist_pointer) {
+void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector<pair<ui, ui> > &vp, ui *Q, ui* degree, char *exists, ept *pend, char *deleted, ui *edgelist_pointer) {
 	vp.clear();
 	ids_n = 0; ids[ids_n++] = u; exists[u] = 1;
 	ui u_n = pstart[u];
-	for(ui i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
+	for(ept i = pstart[u];i < pend[u];i ++) if(!deleted[edgelist_pointer[i]]) {
 		edges[u_n] = edges[i]; edgelist_pointer[u_n++] = edgelist_pointer[i];
 		ui v = edges[i];
 		ids[ids_n++] = v; exists[v] = 2;
@@ -552,7 +552,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 		u = ids[i];
 		u_n = pstart[u];
 		degree[u] = 0;
-		for(ui j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
 			if(exists[edges[j]] == 2) ++ degree[u];
 		}
@@ -562,7 +562,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 	for(ui i = 0;i < Q_n;i ++) {
 		u = Q[i];
 		exists[u] = 10;
-		for(ui j = pstart[u];j < pend[u];j ++) if(exists[edges[j]] == 2) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(exists[edges[j]] == 2) {
 			if( (degree[edges[j]]--) + 2*K == kplex.size()+1) {
 				assert(Q_n < m/2);
 				Q[Q_n++] = edges[j];
@@ -579,7 +579,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 	ui nr_size = ids_n;
 	for(ui i = 1;i < nr_size;i ++) if(exists[ids[i]] == 2) {
 		u = ids[i];
-		for(ui j = pstart[u];j < pend[u];j ++) {
+		for(ept j = pstart[u];j < pend[u];j ++) {
 			if(!exists[edges[j]]) {
 				ids[ids_n++] = edges[j];
 				exists[edges[j]] = 3;
@@ -635,7 +635,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 
 	for(ui i = 0;i < nr_size;i ++) {
 		u = ids[i];
-		for(ui j = pstart[u];j < pend[u];j ++) if(exists[edges[j]]&&edges[j] > u) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(exists[edges[j]]&&edges[j] > u) {
 			assert(!deleted[edgelist_pointer[j]]);
 			vp.push_back(make_pair(rid[u], rid[edges[j]]));
 		}
@@ -643,7 +643,7 @@ void Graph::extract_subgraph_and_prune(ui u, ui *ids, ui &ids_n, ui *rid, vector
 	for(ui i = nr_size;i < ids_n;i ++) {
 		u = ids[i];
 		u_n = pstart[u];
-		for(ui j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
+		for(ept j = pstart[u];j < pend[u];j ++) if(!deleted[edgelist_pointer[j]]) {
 			edges[u_n] = edges[j]; edgelist_pointer[u_n++] = edgelist_pointer[j];
 			if(edges[j] > u&&exists[edges[j]]) vp.push_back(make_pair(rid[u], rid[edges[j]]));
 		}
@@ -762,7 +762,7 @@ void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 
 // degeneracy-based k-plex
 // return an upper bound of the maximum k-plex size
-ui Graph::degen(ui n, ui *peel_sequence, ui *core, ui *pstart, ui *edges, ui *degree, char *vis, ListLinearHeap *heap, bool output) {
+ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *degree, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
 
 	ui threshold = (kplex.size()+1 > K? kplex.size()+1-K: 0);
@@ -773,7 +773,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ui *pstart, ui *edges, ui *de
 	for(ui i = 0;i < n;i ++) if(degree[i] < threshold) peel_sequence[queue_n ++] = i;
 	for(ui i = 0;i < queue_n;i ++) {
 		ui u = peel_sequence[i]; degree[u] = 0;
-		for(ui j = pstart[u];j < pstart[u+1];j ++) if(degree[edges[j]] > 0) {
+		for(ept j = pstart[u];j < pstart[u+1];j ++) if(degree[edges[j]] > 0) {
 			if((degree[edges[j]] --) == threshold) peel_sequence[queue_n ++] = edges[j];
 		}
 	}
@@ -809,7 +809,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ui *pstart, ui *edges, ui *de
 			if(idx == n&&key + K >= new_size - i) idx = i;
 			vis[u] = 1;
 
-			for(ui j = pstart[u];j < pstart[u+1];j ++) if(vis[edges[j]] == 0) {
+			for(ept j = pstart[u];j < pstart[u+1];j ++) if(vis[edges[j]] == 0) {
 				heap->decrement(edges[j], 1);
 			}
 		}
@@ -827,7 +827,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ui *pstart, ui *edges, ui *de
 
 // in_mapping and out_mapping can be the same array
 // note that core is not maintained, and is assumed to not be used anymore
-void Graph::shrink_graph(ui &n, ui &m, ui *peel_sequence, ui *core, ui *out_mapping, ui *in_mapping, ui *rid, ui *pstart, ui *edges, bool output) {
+void Graph::shrink_graph(ui &n, ept &m, ui *peel_sequence, ui *core, ui *out_mapping, ui *in_mapping, ui *rid, ept *pstart, ui *edges, bool output) {
 	ui cnt = 0;
 	for(ui i = 0;i < n;i ++) if(core[i] + K > kplex.size()) {
 		rid[i] = cnt;
@@ -838,11 +838,11 @@ void Graph::shrink_graph(ui &n, ui &m, ui *peel_sequence, ui *core, ui *out_mapp
 
 	if(cnt != n) {
 		cnt = 0;
-		ui pos = 0;
+		ept pos = 0;
 		for(ui i = 0;i < n;i ++) if(core[i] + K > kplex.size()) {
-			ui t_start = pstart[i];
+			ept t_start = pstart[i];
 			pstart[cnt] = pos;
-			for(ui j = t_start;j < pstart[i+1];j ++) if(core[edges[j]] + K > kplex.size()) {
+			for(ept j = t_start;j < pstart[i+1];j ++) if(core[edges[j]] + K > kplex.size()) {
 				edges[pos ++] = rid[edges[j]];
 			}
 			++ cnt;
@@ -865,12 +865,12 @@ void Graph::shrink_graph(ui &n, ui &m, ui *peel_sequence, ui *core, ui *out_mapp
 }
 
 // orient graph and triangle counting
-void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ui *pstart, ui *pend, ui *edges, ui *tri_cnt, ui *adj) {
+void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ept *pstart, ept *pend, ui *edges, ui *tri_cnt, ui *adj) {
 	ui *rid = adj;
 	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
 	for(ui i = 0;i < n;i ++) {
-		ui &end = pend[i] = pstart[i];
-		for(ui j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
 	}
 
 #ifndef NDEBUG
@@ -884,11 +884,11 @@ void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ui *pstart
 	long long cnt = 0;
 	memset(tri_cnt, 0, sizeof(ui)*m);
 	for(ui u = 0;u < n;u ++) {
-		for(ui j = pstart[u];j < pend[u];j ++) adj[edges[j]] = j+1;
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = j+1;
 
-		for(ui j = pstart[u];j < pend[u];j ++) {
+		for(ept j = pstart[u];j < pend[u];j ++) {
 			ui v = edges[j];
-			for(ui k = pstart[v];k < pend[v];k ++) if(adj[edges[k]]) {
+			for(ept k = pstart[v];k < pend[v];k ++) if(adj[edges[k]]) {
 				++ tri_cnt[j];
 				++ tri_cnt[k];
 				++ tri_cnt[adj[edges[k]]-1];
@@ -896,7 +896,7 @@ void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ui *pstart
 			}
 		}
 
-		for(ui j = pstart[u];j < pend[u];j ++) adj[edges[j]] = 0;
+		for(ept j = pstart[u];j < pend[u];j ++) adj[edges[j]] = 0;
 	}
 #ifndef NDEBUG
 	//printf("*** Total number of triangles: %s\n", Utility::integer_to_string(cnt).c_str());
@@ -905,14 +905,14 @@ void Graph::oriented_triangle_counting(ui n, ui m, ui *peel_sequence, ui *pstart
 
 // reorganize the adjacency lists
 // and sort each adjacency list to be in increasing order
-void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ui *pstart, ui *pend, ui *pend2, ui *edges, ui *edgelist_pointer, ui *buf) {
+void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ept *pstart, ept *pend, ept *pend2, ui *edges, ui *edgelist_pointer, ui *buf) {
 	for(ui i = 0;i < n;i ++) pend2[i] = pend[i];
-	ui pos = 0;
+	ept pos = 0;
 	for(ui i = 0;i < n;i ++) {
-		for(ui j = pstart[i];j < pend[i];j ++) {
+		for(ept j = pstart[i];j < pend[i];j ++) {
 			tri_cnt[pos>>1] = edgelist_pointer[j]; edge_list[pos++] = i; edge_list[pos++] = edges[j];
 
-			ui &k = pend2[edges[j]];
+			ept &k = pend2[edges[j]];
 			edgelist_pointer[k] = edgelist_pointer[j] = (pos>>1)-1;
 			edges[k ++] = i;
 		}
@@ -927,17 +927,17 @@ void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ui *psta
 		pend[i] = pstart[i];
 	}
 	for(ui i = 0;i < n;i ++) {
-		for(ui j = pend2[i];j < pstart[i+1];j ++) {
-			ui &k = pend[edges[j]];
+		for(ept j = pend2[i];j < pstart[i+1];j ++) {
+			ept &k = pend[edges[j]];
 			edgelist_pointer[k] = edgelist_pointer[j];
 			edges[k ++] = i;
 		}
 	}
 
-	ui *ids = pend2;
+	ept *ids = pend2;
 	for(ui i = 0;i < n;i ++) {
 		if(pend[i] == pstart[i]||pend[i] == pstart[i+1]) continue;
-		ui j = pstart[i], k = pend[i], pos = 0;
+		ept j = pstart[i], k = pend[i], pos = 0;
 		while(j < pend[i]&&k < pstart[i+1]) {
 			if(edges[j] < edges[k]) {
 				ids[pos] = edges[j];
@@ -956,14 +956,14 @@ void Graph::reorganize_oriented_graph(ui n, ui *tri_cnt, ui *edge_list, ui *psta
 			ids[pos] = edges[k];
 			buf[pos ++] = edgelist_pointer[k ++];
 		}
-		for(ui j = 0;j < pos;j ++) {
+		for(ept j = 0;j < pos;j ++) {
 			edges[pstart[i] + j] = ids[j];
 			edgelist_pointer[pstart[i] + j] = buf[j];
 		}
 	}
 }
 
-char Graph::find(ui u, ui w, ui &b, ui e, char *deleted, ui &idx, ui *edgelist_pointer, ui *edges) {
+char Graph::find(ui u, ui w, ept &b, ept e, char *deleted, ept &idx, ui *edgelist_pointer, ui *edges) {
 	if(b >= e) return 0;
 
 	while(b+1 < e) {
@@ -981,12 +981,12 @@ char Graph::find(ui u, ui w, ui &b, ui e, char *deleted, ui &idx, ui *edgelist_p
 }
 
 // return the number of peeled edges
-ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold, ui *Qe, bool initialize_Qe, ui t_threshold, ui *tri_cnt, ui *active_edgelist, ui &active_edgelist_n, ui *edge_list, ui *edgelist_pointer, char *deleted, ui *degree, ui *pstart, ui *pend, ui *edges, char *exists) {
-	ui Qe_n = 0;
+ept Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Qv_n, ui d_threshold, ui *Qe, bool initialize_Qe, ui t_threshold, ui *tri_cnt, ui *active_edgelist, ui &active_edgelist_n, ui *edge_list, ui *edgelist_pointer, char *deleted, ui *degree, ept *pstart, ept *pend, ui *edges, char *exists) {
+	ept Qe_n = 0;
 #ifndef NO_TRUSS_PRUNE
 	if(initialize_Qe) {
-		ui active_edgelist_newn = 0;
-		for(ui j = 0;j < active_edgelist_n;j ++) if(!deleted[active_edgelist[j]]) {
+		ept active_edgelist_newn = 0;
+		for(ept j = 0;j < active_edgelist_n;j ++) if(!deleted[active_edgelist[j]]) {
 			if(tri_cnt[active_edgelist[j]] < t_threshold) Qe[Qe_n++] = active_edgelist[j];
 			else active_edgelist[active_edgelist_newn ++] = active_edgelist[j];
 		}
@@ -996,29 +996,29 @@ ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Q
 
 	//printf("%lu\n", Qe_n);
 
-	ui deleted_edges_n = 0;
+	ept deleted_edges_n = 0;
 	ui Qv_idx = 0;
 	while(Qv_idx < Qv_n || Qe_n) {
 		if(Qe_n == 0) {
 			//printf("hit\n");
 			ui u = Qv[Qv_idx ++]; // delete u from the graph due to have a degree < d_threshold
-			ui u_n = pstart[u];
-			for(ui k = pstart[u];k < pend[u];k ++) if(!deleted[edgelist_pointer[k]]) {
+			ept u_n = pstart[u];
+			for(ept k = pstart[u];k < pend[u];k ++) if(!deleted[edgelist_pointer[k]]) {
 				edges[u_n] = edges[k]; edgelist_pointer[u_n++] = edgelist_pointer[k];
 				exists[edges[k]] = 1;
 			}
 			pend[u] = u_n;
 
-			for(ui k = pstart[u];k < pend[u];k ++) deleted[edgelist_pointer[k]] = 1;
+			for(ept k = pstart[u];k < pend[u];k ++) deleted[edgelist_pointer[k]] = 1;
 			deleted_edges_n += pend[u] - pstart[u];
 			degree[u] = 0;
 			if(linear_heap != NULL) linear_heap->del(u);
 			//printf("Removed %u\n", u);
 
-			for(ui k= pstart[u];k < pend[u];k ++) {
+			for(ept k= pstart[u];k < pend[u];k ++) {
 				ui v = edges[k];
-				ui v_n = pstart[v];
-				for(ui x = pstart[v];x < pend[v];x ++) if(!deleted[edgelist_pointer[x]]) {
+				ept v_n = pstart[v];
+				for(ept x = pstart[v];x < pend[v];x ++) if(!deleted[edgelist_pointer[x]]) {
 					edges[v_n] = edges[x]; edgelist_pointer[v_n++] = edgelist_pointer[x];
 					if(edges[x] > v&&exists[edges[x]]) {
 						if( (tri_cnt[edgelist_pointer[x]]--) == t_threshold) Qe[Qe_n++] = edgelist_pointer[x];
@@ -1029,20 +1029,20 @@ ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Q
 				if( (degree[v]--) == d_threshold) {
 					Qv[Qv_n++] = v;
 					if(v == critical_vertex) {
-						for(ui k = pstart[u];k < pend[u];k ++) exists[edges[k]] = 0;
+						for(ept k = pstart[u];k < pend[u];k ++) exists[edges[k]] = 0;
 						return 0;
 					}
 				}
 				if(linear_heap != NULL) linear_heap->decrement(v, 1);
 			}
 
-			for(ui k = pstart[u];k < pend[u];k ++) exists[edges[k]] = 0;
+			for(ept k = pstart[u];k < pend[u];k ++) exists[edges[k]] = 0;
 		}
 #ifdef NO_TRUSS_PRUNE
 		Qe_n = 0;
 #endif
-		for(ui j = 0;j < Qe_n;j ++) {
-			ui idx = Qe[j];
+		for(ept j = 0;j < Qe_n;j ++) {
+			ept idx = Qe[j];
 			ui u = edge_list[idx<<1], v = edge_list[(idx<<1)+1];
 			ui tri_n = tri_cnt[idx];
 			//printf("remove %u %u\n", u, v);
@@ -1068,8 +1068,8 @@ ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Q
 
 			if(degree[u] > degree[v]*2) { // binary search
 			//if(false) {
-				ui v_n = pstart[v], start = pstart[u];
-				for(ui k = pstart[v];k < pend[v];k ++) if(!deleted[edgelist_pointer[k]]) {
+				ept v_n = pstart[v], start = pstart[u];
+				for(ept k = pstart[v];k < pend[v];k ++) if(!deleted[edgelist_pointer[k]]) {
 					edges[v_n] = edges[k]; edgelist_pointer[v_n++] = edgelist_pointer[k];
 
 					if(tri_n&&find(u, edges[k], start, pend[u], deleted, idx, edgelist_pointer, edges)) {
@@ -1082,8 +1082,8 @@ ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Q
 				assert(tri_n == 0);
 			}
 			else { // sorted_merge
-				ui ii = pstart[u], jj = pstart[v];
-				ui u_n = pstart[u], v_n = pstart[v];
+				ept ii = pstart[u], jj = pstart[v];
+				ept u_n = pstart[u], v_n = pstart[v];
 
 				while(true) {
 					while(ii < pend[u]&&deleted[edgelist_pointer[ii]]) ++ ii;
@@ -1130,18 +1130,18 @@ ui Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &Q
 	}
 	return deleted_edges_n;
 }
-void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ui *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) {
+void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
-	if(pend == nullptr) pend = new ui[n+1];
+	if(pend == nullptr) pend = new ept[n+1];
 	for(ui i = 0;i < n;i ++) rid[peel_sequence[i]] = i;
 	for(ui i = 0;i < n;i ++) {
-		ui &end = pend[i] = pstart[i];
-		for(ui j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
+		ept &end = pend[i] = pstart[i];
+		for(ept j = pstart[i];j < pstart[i+1];j ++) if(rid[edges[j]] > rid[i]) edges[end ++] = edges[j];
 	}
 
-	if(pend_buf == nullptr) pend_buf = new ui[n+1];
+	if(pend_buf == nullptr) pend_buf = new ept[n+1];
 	if(edgelist_pointer == nullptr) edgelist_pointer = new ui[m];
-	ui *pstart_s = pend_buf;
+	ept *pstart_s = pend_buf;
 	ui *pend_s = rid;
 	ui *edges_s = edgelist_pointer;
 
@@ -1207,12 +1207,12 @@ void Graph::ego_degen(ui n, ui m, ui *peel_sequence, ui *pstart, ui *edges, ui *
 			}
 
 			vis[v] = 0;
-			for(ui j = pstart_s[v];j < pend_s[v];j ++) if(vis[edges_s[j]]) heap->decrement(edges_s[j], 1);
+			for(ept j = pstart_s[v];j < pend_s[v];j ++) if(vis[edges_s[j]]) heap->decrement(edges_s[j], 1);
 		}
 		for(ui j = 0;j < vs.size();j ++) vis[vs[j]] = 0;
 	}
 	for(ui i = 0;i < n;i ++) pend_buf[i] = pend[i];
-	for(ui i = 0;i < n;i ++) for(ui j = pstart[i];j < pend[i];j ++) edges[pend_buf[edges[j]]++] = i;
+	for(ui i = 0;i < n;i ++) for(ept j = pstart[i];j < pend[i];j ++) edges[pend_buf[edges[j]]++] = i;
 #ifndef NDEBUG
 	for(ui i = 0;i < n;i ++) assert(pend_buf[i] == pstart[i+1]);
 #endif

@@ -63,7 +63,7 @@ private:
 	// functions for subgraph processing
 	void load_graph_from_edgelist(ui _n, const std::vector<std::pair<ui,ui> > &edge_list, ui &n, ept &m, ui *degree, ept *pstart, ui *edges) ;
 	void subgraph_prune(ui *ids, ui &_n, std::vector<std::pair<ui,ui> > &edge_list, ui *rid, ui *Qv, ui *Qe, char *exists) ;
-	void ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output);
+void ego_degen(ui n, ui m, ui *peel_sequence, ept *pstart, ui *edges, ui *degree, ui *rid, char *vis, ListLinearHeap *heap, bool output);
 
 };
 #endif
