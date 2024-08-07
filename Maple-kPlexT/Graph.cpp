@@ -210,6 +210,7 @@ void Graph::search() {
 		ui old_size = kplex.size();
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
+		ui *edgelist_pointer = new ui[m];
 
 		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
@@ -217,7 +218,7 @@ void Graph::search() {
 		if(kplex.size()+1 > 2*K) {
 			CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 		}
-		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
+		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
 
 		if(kplex.size() > old_size) {
 			old_size = kplex.size();
@@ -241,7 +242,6 @@ void Graph::search() {
 		assert(pend == nullptr);
 		pend = new ept[n];
 
-		ui *edgelist_pointer = new ui[m];
 		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
 		// delete[] peel_sequence; peel_sequence = NULL;
