@@ -313,7 +313,7 @@ void Graph::kPlex_exact() {
 		if(kplex.size()+1 > 2*K) {
 			CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 		}
-		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
+		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
 		if(kplex.size() > old_size) {
 			old_size = kplex.size();
