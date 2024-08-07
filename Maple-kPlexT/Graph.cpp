@@ -1,6 +1,6 @@
 #include "Graph.h"
 #include "MSearcher.h"
-
+#include "CTPrune.h"
 using namespace std;
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
@@ -211,8 +211,26 @@ void Graph::search() {
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
 
-		shrink_graph(n, m, seq, core, out_mapping, NULL, rid, pstart, edges, true);
-		// delete[] core; core = NULL;
+		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+
+	
+		if(kplex.size()+1 > 2*K) {
+			CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+		}
+		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
+
+		if(kplex.size() > old_size) {
+			old_size = kplex.size();
+			for(ui i = 0;i < kplex.size();i ++) {
+				assert(kplex[i] < n);
+				kplex[i] = out_mapping[kplex[i]];
+			}
+
+			if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+			else shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+		}
+		
+		delete[] core; core = NULL;
 
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
