@@ -202,9 +202,9 @@ void Graph::search() {
 
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
-	delete heap;
-	delete[] vis;
-	delete[] degree;
+	// delete heap;
+	// delete[] vis;
+	// delete[] degree;
 
 	if(kplex.size() < UB) {
 		ui old_size = kplex.size();
