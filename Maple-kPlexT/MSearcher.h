@@ -10,7 +10,7 @@ double cfactor=1;
 #define SEESAW
 #define MAPLE_BRANCHINGS
 #define INNER_CTCP 10
-#define BRANCH_COND K<10 and sparse
+#define BRANCH_COND K<10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -1264,19 +1264,21 @@ else{
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
+				if(R_end-degree[u]<=2) candidates[candidates_n ++] = u, continue;
 
 				char *t_matrix = matrix + u*n;
 				ui nn = 0;
-				bool OK=false, tight=true;
+				bool OK=false;
+				ui nonksat=0;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
-					if(nn>=2&&!tight) break;
 					nonneighbors[nn++]=SR[j];
+					if(nn>2&&nonksat) break;
 					if(R_end - degree[SR[j]] > K) 
-						tight=false;
+						nonksat++;
 				}
-				if(tight) OK=true;
-				// else if (R_end==degree_in_S[u])
-				// 	OK = (nn==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
+				if(!nonksat) OK=true;
+				else if (R_end==degree_in_S[u])
+					OK = (nonksat==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 				if(OK) candidates[candidates_n ++] = u;
 			}
 			// for(ui i = S_end;i < R_end;i ++) {
