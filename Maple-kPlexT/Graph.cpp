@@ -193,14 +193,14 @@ void Graph::search() {
 	}
 	heuristic_kplex_max_degree(10);
 	ui oldn=n;
-	ui *peel_sequ = new ui[n];
+	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
 	ui *degree = new ui[n];
 	char *vis = new char[n];
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 
-	ui UB = degen(n, peel_sequ, core, pstart, edges, degree, vis, heap, true);
+	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 	delete heap;
 	delete[] vis;
@@ -236,15 +236,15 @@ void Graph::search() {
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
 
 		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
-		linear_heap->init(n, n-1, peel_sequ, degree);
+		linear_heap->init(n, n-1, peel_sequence, degree);
 
 		assert(pend == nullptr);
 		pend = new ept[n];
 
 		ui *edgelist_pointer = new ui[m];
-		oriented_triangle_counting(n, m, peel_sequ, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
+		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
 		
-		// delete[] peel_sequ; peel_sequ = NULL;
+		// delete[] peel_sequence; peel_sequence = NULL;
 
 		pend_buf = new ept[n];
 		ui *edge_list = new ui[m];
@@ -395,7 +395,7 @@ void Graph::search() {
 		delete[] deleted;
 	}
 	delete[] core;
-	delete[] peel_sequ;
+	delete[] peel_sequence;
 
 	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
 
