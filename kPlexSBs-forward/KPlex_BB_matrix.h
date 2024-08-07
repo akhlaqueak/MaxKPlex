@@ -559,7 +559,7 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
-if(K<10){
+if(K<=5){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
