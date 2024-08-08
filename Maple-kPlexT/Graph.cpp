@@ -237,9 +237,9 @@ void Graph::search() {
 		delete[] core; core = NULL;
 
 		if(n<=kplex.size()){
-			
-		}
 			printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
+			return;
+		}
 		
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
