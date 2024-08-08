@@ -21,12 +21,12 @@ run_jobs() {
                 if [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol ~/graphs/test/$fn $k >> $sol-$k.out &
                 else
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
+                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g ~/graphs/test/$fn -a exact -k $k -c 3 >>$sol-$k.out &
                 fi
             done
         done
     done
-    wait
+    
 }
 
 get_results() {
@@ -180,9 +180,7 @@ soc-digg.bin
 socfb-Duke14.bin
 soc-LiveMocha.bin'
 del_prev
-run_jobs 03:00:00
-get_results
-cp results.out results-small.out
+run_jobs 0:00:00
 
 krange='7 10 15 20'
 datasets='san200-0-7-1.bin
@@ -198,5 +196,10 @@ soc-youtube-snap.bin
 tech-as-skitter.bin'
 del_prev
 run_jobs 03:00:00
+
+
+
+get_results
+cp results.out results-small.out
 get_results
 cp results.out results-large.out
