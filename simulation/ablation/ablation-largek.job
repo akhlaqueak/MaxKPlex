@@ -180,7 +180,7 @@ soc-digg.bin
 socfb-Duke14.bin
 soc-LiveMocha.bin'
 del_prev
-run_jobs 0:00:00
+run_jobs 03:00:00
 
 krange='7 10 15 20'
 datasets='san200-0-7-1.bin
@@ -197,9 +197,29 @@ tech-as-skitter.bin'
 del_prev
 run_jobs 03:00:00
 
+wait
 
-
-get_results
-cp results.out results-small.out
+krange='7 10 15 20'
 get_results
 cp results.out results-large.out
+
+krange='2 3 4 5'
+datasets='brock200-2.bin
+hamming6-2.bin
+ia-wiki-Talk.bin
+johnson8-4-4.bin
+keller4.bin
+MANN-a45.bin
+MANN-a81.bin
+p-hat500-1.bin
+p-hat700-1.bin
+san200-0-7-1.bin
+san200-0-9-2.bin
+sc-ldoor.bin
+sc-msdoor.bin
+soc-buzznet.bin
+soc-digg.bin
+socfb-Duke14.bin
+soc-LiveMocha.bin'
+get_results
+cp results.out results-small.out
