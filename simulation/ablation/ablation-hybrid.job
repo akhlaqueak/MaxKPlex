@@ -160,7 +160,7 @@ datasets=$(ls ~/graphs/test/*.bin)
 solutions='Maple-ours Maple kPlexT'
 
 del_prev
-run_jobs 00:30:00
+run_jobs 03:00:00
 
 
 
