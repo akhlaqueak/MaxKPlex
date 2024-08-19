@@ -2156,6 +2156,11 @@ else{
     }
 
 	void branch(ui &begIdx, ui &endIdx, ui S_end, ui R_end){
+		auto insertItem=[&](ui v){if(addList.size() == endIdx) {
+					addList.push_back(v);
+					++ endIdx;
+				}
+				else addList[endIdx++] = v;};
 		endIdx=begIdx;
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
@@ -2166,12 +2171,7 @@ else{
 			degree_in_S[v]+K==S_end+1||
 			degree_in_S[0]+K==S_end+1)
 			){ 
-				if(addList.size() == endIdx) {
-					addList.push_back(v);
-					++ endIdx;
-					// ++ addListSz;
-				}
-				else addList[endIdx++] = v;
+				insertItem(v);
 				return;
 			}
 			if (degree_in_S[v] < minnei)
@@ -2180,25 +2180,15 @@ else{
 				pivot = v;
 			}
 		}
-		// pivot is a two-hop qualified neighbor if it is found. else pivot is min degree vertex in C
-		// non-nighbors of pivot are stored in addList
+
 		t_matrix = matrix + pivot*n;
-		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) {
-			if(addList.size() == endIdx) {
-				addList.push_back(SR[i]);
-				++ endIdx;
-				// ++ addListSz;
-			}
-			else {
-				addList[endIdx++] = SR[i]; 
-			}
+		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]&&SR[i]!=pivot) {
+			insertItem(SR[i]);
 		}
-		// cout<<endl<<"SR "; for(ui i=S_end;i<R_end;i++)cout<<SR[i]<<" ";
-		// cout<<" -> ["<<begIdx<<","<<endIdx<<"] ";
-		// for(ui i=begIdx;i<endIdx;i++)cout<<addList[i]<<" ";
-		// cout<<endl<<endl;
+
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
+		insertItem(pivot);
 	}
 };
 #endif
