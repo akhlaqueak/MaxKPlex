@@ -2182,13 +2182,13 @@ else{
 		}
 
 		t_matrix = matrix + pivot*n;
-		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]&&SR[i]!=pivot) {
+		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
 			insertItem(SR[i]);
-		}
+		
 
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
-		insertItem(pivot);
+		// insertItem(pivot);
 	}
 };
 #endif
