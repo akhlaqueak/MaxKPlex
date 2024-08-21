@@ -159,7 +159,7 @@ del_prev() {
 
 
 
-solutions='Maple-ours Maple kPlexT'
+solutions='Maple-ours Maple-no-S2rule'
 
 krange='2 3 4 5'
 datasets='brock200-2.bin

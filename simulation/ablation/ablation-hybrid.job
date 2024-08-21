@@ -157,7 +157,7 @@ datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
 # solutions='kp-Maple-withadditional kp-Maple-noadditional'
-solutions='Maple-ours Maple kPlexT'
+solutions='Maple-ours Mple-no-s2rule'
 
 del_prev
 run_jobs 03:00:00
