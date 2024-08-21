@@ -6,7 +6,7 @@
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
-#define REDUCTIONS
+// #define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
 #define INNER_CTCP 10
@@ -2160,7 +2160,8 @@ else{
 					addList.push_back(v);
 					++ endIdx;
 				}
-				else addList[endIdx++] = v;};
+				else addList[endIdx++] = v;
+				};
 		endIdx=begIdx;
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
@@ -2188,7 +2189,6 @@ else{
 
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
-		// insertItem(pivot);
 	}
 };
 #endif
