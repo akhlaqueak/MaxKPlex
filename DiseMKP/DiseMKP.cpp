@@ -179,7 +179,7 @@ static void read_graph_binary(char* file_name) {
 		printf("Can not open file: %s\n", file_name);
 		exit(1);
 	}
-	ui tt, n, m, offset=0, nb_edge;
+	ui tt, n, m, offset=1, nb_edge;
 	fread(&tt, sizeof(ui), 1, f);
 	if (tt != sizeof(ui)) {
 		printf("sizeof unsigned ui is different: file %u, machine %lu\n", tt, sizeof(ui));
@@ -206,9 +206,9 @@ static void read_graph_binary(char* file_name) {
 	Max_Degree = 0;
 	N0_0 = NB_NODE;
 	for (ui node = 1; node <= NB_NODE; node++) {
-		for (ui j = 0; j < Node_Degree[node]; j++){
-			Node_Neibors[node][j]++;
-		}
+		// for (ui j = 0; j < Node_Degree[node]; j++){
+		// 	Node_Neibors[node][j]++;
+		// }
 		Node_Neibors[node][Node_Degree[node]] = NONE;		
 		if (Node_Degree[node] > Max_Degree)
 			Max_Degree = Node_Degree[node];
