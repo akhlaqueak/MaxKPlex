@@ -1587,10 +1587,9 @@ void print_compile_options(){
 	    }
 	  }
 	    printf(
-		 ">>%s @ %s |V| %d |E| %d K %d MaxKPX %d InitKPX %d Tree %lld Read_Time %4.2lf Init_Time %4.2lf Search_Time %4.2lf Total %4.2lf \\\\\n",
+		 ">>%s @ %s |V| %d |E| %d K %d MaxKPX %d Total %4.2lf Tree %lld \n",
 		 argv[1],getInstanceName(argv[1]),NB_NODE_O, NB_EDGE_O, PARA.KX,
-		 MAX_KPX_SIZE, HEUR_KPX_SIZE, BRANCHING_COUNT, READ_TIME, INIT_TIME,
-		 SEARCH_TIME - READ_TIME - INIT_TIME, SEARCH_TIME);	  
+		 MAX_KPX_SIZE, SEARCH_TIME, BRANCHING_COUNT);	  
 	    		
 	  return 0;
 	}
