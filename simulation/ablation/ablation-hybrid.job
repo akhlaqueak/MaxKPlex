@@ -18,7 +18,7 @@ run_jobs() {
             for k in $krange; do
                 outfile=$sol-$k.out
                 # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                if [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ]; then
+                if [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out &
                 else
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
@@ -157,7 +157,7 @@ datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
 # solutions='kp-Maple-withadditional kp-Maple-noadditional'
-solutions='Maple-no-s2rule'
+solutions='Maple-no-s2rule DiseMKP'
 
 del_prev
 run_jobs 03:00:00
