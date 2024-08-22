@@ -174,46 +174,32 @@ static void allcoate_memory_for_adjacency_list(int nb_node, int nb_edge,int offs
 using ui = unsigned int; // vertex type
 
 static void read_graph_binary(char* file_name) {
-	FILE *f = fopen(file_name, "r");
-	if(f == nullptr) {
-		printf("Can not open file: %s\n", file_name);
-		exit(1);
-	}
-	ui tt, n, m, offset=1, nb_edge;
-	fread(&tt, sizeof(ui), 1, f);
-	if (tt != sizeof(ui)) {
-		printf("sizeof unsigned ui is different: file %u, machine %lu\n", tt, sizeof(ui));
-	}
-	fread(&n, sizeof(ui), 1, f);	// the number of vertices
-	fread(&m, sizeof(ui), 1, f); // the number of edges (twice the acutal number).
- 
-	nb_edge=m/2;
-	NB_NODE = n;
-	NB_NODE = NB_NODE + offset;
-	
-	printf("R the graph size is %d\n", NB_NODE);
-	
-	Node_Neibors = (int **) malloc((NB_NODE + 1) * sizeof(int *));
-	allcoate_memory_for_adjacency_list(NB_NODE, nb_edge, offset);
-	memset(Node_Degree, 0, (NB_NODE + 1) * sizeof(int));
-    fread(Node_Degree+1, sizeof(ui), n, f);
-
-	for (ui i = 1; i <= NB_NODE; i++) 
-		if (Node_Degree[i] > 0)
-			fread(Node_Neibors[i], sizeof(ui), Node_Degree[i], f);
-
-	NB_EDGE = nb_edge;
-	Max_Degree = 0;
-	N0_0 = NB_NODE;
-	for (ui node = 1; node <= NB_NODE; node++) {
-		// for (ui j = 0; j < Node_Degree[node]; j++){
-		// 	Node_Neibors[node][j]++;
-		// }
-		Node_Neibors[node][Node_Degree[node]] = NONE;		
-		if (Node_Degree[node] > Max_Degree)
-			Max_Degree = Node_Degree[node];
-	}
-	UPPER_BOUND=Max_Degree+PARA.KX;
+  FILE *fp_in = fopen(input_file, "r");
+  using ui = unsigned int;
+  int m, n;
+  ui t;
+  fread(&t, sizeof(ui), 1, fp_in);
+  fread(&n, sizeof(ui), 1, fp_in); // the number of vertices
+  fread(&m, sizeof(ui), 1,
+        fp_in); // the number of edges (twice the acutal number).
+  fread(&Node_Degree[1], sizeof(ui), n, fp_in);
+  NB_NODE = n;
+  NB_EDGE = m;
+  NB_NODE_O = NB_NODE;
+  NB_EDGE_O = NB_EDGE;
+  printf("R the graph size is %d\n", NB_NODE);
+  Node_Neibors = (int **)malloc((NB_NODE + 1) * sizeof(int *));
+  allcoate_memory_for_adjacency_list(NB_NODE, NB_EDGE, 0);
+  Max_Degree = 0;
+  for (int i = 1; i <= NB_NODE; ++i) {
+    fread(Node_Neibors[i], sizeof(ui), Node_Degree[i], fp_in);
+    for (int j = 0; j < Node_Degree[i]; ++j)
+      Node_Neibors[i][j]++;
+    Node_Neibors[i][Node_Degree[i]] = NONE;
+    if (Node_Degree[i] > Max_Degree)
+      Max_Degree = Node_Degree[i];
+  }
+  UPPER_BOUND = Max_Degree + KX;
 }
 
 
