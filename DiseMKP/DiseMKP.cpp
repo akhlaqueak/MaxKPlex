@@ -199,7 +199,7 @@ static void read_graph_binary(char* file_name) {
     if (Node_Degree[i] > Max_Degree)
       Max_Degree = Node_Degree[i];
   }
-  UPPER_BOUND = Max_Degree + KX;
+  UPPER_BOUND = Max_Degree + PARA.KX;
 }
 
 
