@@ -187,7 +187,7 @@ static void read_graph_binary(char* file_name) {
 	fread(&n, sizeof(ui), 1, f);	// the number of vertices
 	fread(&m, sizeof(ui), 1, f); // the number of edges (twice the acutal number).
  
-	nb_edge=m;
+	nb_edge=m/2;
 	NB_NODE = n;
 	NB_NODE = NB_NODE + offset;
 	
