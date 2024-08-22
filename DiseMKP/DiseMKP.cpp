@@ -173,7 +173,7 @@ static void allcoate_memory_for_adjacency_list(int nb_node, int nb_edge,int offs
 }
 using ui = unsigned int; // vertex type
 
-static void read_graph_binary(char* file_name) {
+static void read_graph_binary(char* input_file) {
   FILE *fp_in = fopen(input_file, "r");
   using ui = unsigned int;
   int m, n;
