@@ -1523,10 +1523,8 @@ void print_compile_options(){
 		PARA.START_MAXSAT_THD=15;
 		PARA.CUT_OFF=0;
 		PARA.TIME_OUT=0;
-		for (int i = 2; i < argc; i++) {
-			if (strcmp(argv[i],"-x")==0){
-				sscanf(argv[++i], "%d", &PARA.KX);
-			}else if (strcmp(argv[i], "-o") == 0){
+		for (int i = 3; i < argc; i++) {
+			if (strcmp(argv[i], "-o") == 0){
 				sscanf(argv[++i], "%d", &PARA.ORDER);
 			}else if (strcmp(argv[i], "-f") == 0){
 				sscanf(argv[++i], "%d", &PARA.FORMAT);
@@ -1541,6 +1539,7 @@ void print_compile_options(){
 			}
 		}
 		strcpy(instance,argv[1]);
+		sscanf(argv[2], "%d", &PARA.KX);
 		printf("# Solving %d-plex in %s\n\n",PARA.KX,instance);
 	}
 
