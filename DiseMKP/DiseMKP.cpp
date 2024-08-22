@@ -179,7 +179,7 @@ static void read_graph_binary(char* file_name) {
 		printf("Can not open file: %s\n", file_name);
 		exit(1);
 	}
-	ui tt, n, m, offset=1, nb_edge;
+	ui tt, n, m, offset=0, nb_edge;
 	fread(&tt, sizeof(ui), 1, f);
 	if (tt != sizeof(ui)) {
 		printf("sizeof unsigned ui is different: file %u, machine %lu\n", tt, sizeof(ui));
