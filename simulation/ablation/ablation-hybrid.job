@@ -166,6 +166,7 @@ run_jobs 03:00:00
 
 
 # solutions="Maple kPlexTBs $solutions"
+solutions='Maple-ours kPlexT Maple DiseMKP'
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
 # solutions="Maple $solutions"

@@ -1540,7 +1540,7 @@ void print_compile_options(){
 		}
 		strcpy(instance,argv[1]);
 		sscanf(argv[2], "%d", &PARA.KX);
-		printf("# Solving %d-plex in %s\n\n",PARA.KX,instance);
+		// printf("# Solving %d-plex in %s\n\n",PARA.KX,instance);
 	}
 
 	static void check_solution(){
