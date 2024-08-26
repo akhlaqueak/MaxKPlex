@@ -3,8 +3,8 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-Timer thresh;
 double threshold=1e9;
+Timer thresh;
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
