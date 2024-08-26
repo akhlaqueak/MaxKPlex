@@ -3,6 +3,7 @@
 #include "CTPrune.h"
 #define K_THRESH 10
 using namespace std;
+
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
 	K = _K;
@@ -304,7 +305,6 @@ void Graph::search() {
 		ui max_n_prune = 0, max_n_search = 0, prune_cnt = 0, search_cnt = 0;
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
 		ui last_m=0;
-		Timer thresh;
 
 		for(ui i = 0;i < n&&m&&kplex.size() < UB;i ++) {
 			ui u, key;
