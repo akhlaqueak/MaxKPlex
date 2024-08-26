@@ -9,7 +9,7 @@ double cfactor=1;
 // #define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
-#define INNER_CTCP 10
+#define INNER_CTCP_COND K<10
 #define BRANCH_COND K<10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
@@ -170,7 +170,7 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
 		n = _n;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.8;
-		ctcp_enabled=(K>=INNER_CTCP);
+		ctcp_enabled=INNER_CTCP_COND;
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -467,16 +467,16 @@ private:
 			return ;
 		}
 
-		// ui S2_n = 0;
-		// for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
+		ui S2_n = 0;
+		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
-		// if(S2_n >= 2) {
-		// 	collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
-		// 	if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
-		// 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 		return ;
-		// 	}
-		// }
+		if(S2_n >= 2) {
+			collect_removable_vertices_based_on_total_edges(S2_n, S_end, R_end, level);
+			if(!remove_vertices_and_edges_with_prune(S_end, R_end, level)) {
+				restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+				return ;
+			}
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
