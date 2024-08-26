@@ -160,7 +160,8 @@ datasets=$(ls ~/graphs/test/*.bin)
 solutions='Maple-ours-latest'
 
 del_prev
-run_jobs 03:00:00
+run_jobs 30:00
+# run_jobs 03:00:00
 
 
 
