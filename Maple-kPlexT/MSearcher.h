@@ -6,7 +6,7 @@
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
+#define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
 #define INNER_CTCP_COND K<10
