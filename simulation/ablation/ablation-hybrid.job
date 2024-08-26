@@ -157,7 +157,7 @@ datasets=$(ls ~/graphs/test/*.bin)
 
 # solutions='kp-ctcp-enabled'
 # solutions='kp-Maple-withadditional kp-Maple-noadditional'
-solutions='DiseMKP'
+solutions='Maple-ours-latest'
 
 del_prev
 run_jobs 03:00:00
@@ -166,7 +166,8 @@ run_jobs 03:00:00
 
 
 # solutions="Maple kPlexTBs $solutions"
-solutions='Maple-ours kPlexT Maple DiseMKP'
+# solutions='Maple-ours kPlexT Maple DiseMKP'
+solutions='Maple-ours Maple-ours-latest'
 
 datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
 # solutions="Maple $solutions"
