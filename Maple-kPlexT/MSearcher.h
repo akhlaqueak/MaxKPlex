@@ -10,8 +10,8 @@ double cfactor=1;
 // #define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
-#define INNER_CTCP_COND true
-#define BRANCH_COND K<10
+#define INNER_CTCP_COND K
+#define BRANCH_COND K<10&&sparse
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -171,7 +171,7 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
 		n = _n;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.95;
-		ctcp_enabled=INNER_CTCP_COND;
+		ctcp_enabled=!(BRANCH_COND);
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
