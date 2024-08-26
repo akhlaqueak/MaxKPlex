@@ -320,7 +320,7 @@ void Graph::search() {
 			}
 			if(m == 0) break;
 			assert(degree[u] == key);
-			if(thresh.elapsed()>=100000000) break;
+			// if(thresh.elapsed()>=100000000) break;
 
 			ui *ids = Qv;
 			ui ids_n = 0;
