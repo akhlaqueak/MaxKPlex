@@ -3,7 +3,8 @@
 #define CSIZE (R_end-S_end)
 #include "Utility.h"
 #include "Timer.h"
-		Timer thresh;
+Timer thresh;
+double threshold=1e9;
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
@@ -421,7 +422,7 @@ private:
 	}
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
-		if(thresh.elapsed()>=100000000) return;
+		if(thresh.elapsed()/1e6>=threshold) return;
 		if(S_end > best_solution_size) store_solution(S_end, true);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, false);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
