@@ -320,12 +320,12 @@ void Graph::search() {
 			}
 			if(m == 0) break;
 			assert(degree[u] == key);
-			// if(thresh.elapsed()>=100000000) break;
+			if(thresh.elapsed()>=100000000) break;
 
 			ui *ids = Qv;
 			ui ids_n = 0;
 			bool mflag=false;
-			// cout<<u<<" ";
+			cout<<u<<endl;
 
 			bool check=false;
 			// if(last_m<0.8*m) {
