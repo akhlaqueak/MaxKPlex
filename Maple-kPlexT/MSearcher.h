@@ -575,7 +575,7 @@ if(BRANCH_COND){
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 		*/
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = getBranchings2(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -985,90 +985,37 @@ else{
 		}
 		return n;
 	}
-    // ui getBranchings(ui S_end, ui R_end, ui level)
-    // {
-    //     for (ui i = 0; i < S_end; i++)
-    //     {
-    //         ui u = SR[i];
-    //         psz[u] = 0;
-    //         if (support(S_end, u) == 0)
-    //             continue;
-    //         // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
-    //         // Lookup neig(&lookup, &g.adjList[u]);
-    //         // bmp.setup(g.adjList[u], g.V);
-	// 		ui* t_LPI = LPI+u*n;
-    //         for (ui j = S_end; j < R_end; j++)
-    //         {
-    //             ui v = SR[j];
-    //             if (!matrix[u * n + v])
-    //                 // PI[u].push_back(v);
-    //                 t_LPI[psz[u]++] = v;
-    //         }
-    //     }
-    //     ui beta = best_solution_size - S_end;
-    //     ui cend = S_end;
-	// 	branchings.tick();
-    //     while (true)
-    //     {
-    //         ui maxpi = -1;
-    //         double maxdise = 0;
-    //         for (ui i = 0; i < S_end; i++)
-    //         {
-    //             ui u = SR[i];
-    //             if (psz[u] == 0)
-    //                 continue;
-    //             double cost = min(support(S_end, u), psz[u]);
-    //             double dise = psz[u] / cost;
-    //             if (cost <= beta and dise > maxdise)
-    //                 maxpi = u, maxdise = dise;
-    //         }
-    //         if (maxpi != -1)
-    //         {
-    //             bmp.reset(n);
-    //             for (ui i = 0; i < psz[maxpi]; i++)
-    //                 bmp.set(LPI[maxpi * n + i]);
-    //             // remove pi* from C
-    //             for (ui i = cend; i < R_end; i++)
-    //             {
-    //                 ui v = SR[i];
-    //                 if (bmp.test(v))
-    //                 {
-    //                     // rather than removing from C, we are changing the positions within C.
-    //                     // When function completes
-    //                     // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
-    //                     swap_pos(cend++, i);
-    //                 }
-    //             }
-    //             // beta-=cost(pi*)
-    //             beta -= min(support(S_end, maxpi), psz[maxpi]);
-    //             // remove maxpi from every pi
-    //             for (ui i = 0; i < S_end; i++)
-    //             {
-    //                 // Removing pi* from all pi in PI
-    //                 ui u = SR[i];
-    //                 if (u == maxpi or psz[u]==0)
-    //                     continue;
-    //                 ui j = 0;
-	// 				ui* t_LPI = LPI+u*n;
-    //                 for (ui k = 0; k < psz[u]; k++)
-    //                     if (!bmp.test(LPI[u * n + k]))
-    //                         // if (!bmp.test(PI[u][k]))
-    //                         // PI[u][j++] = PI[u][k];
-	// 						t_LPI[j++] = t_LPI[k];
-    //                         // LPI[u * n + j++] = LPI[u * n + k];
-    //                 // PI[u].resize(j);
-    //                 psz[u] = j;
-    //             }
-    //             // remove maxpi...
-    //             // PI[maxpi].clear();
-    //             psz[maxpi] = 0;
-    //         }
-    //         else
-    //             break;
-    //         if (beta == 0)
-    //             break;
-    //     }
-	// 	branchings.tock();
+	ui getBranchings2(ui S_end, ui R_end, ui level){
+		ui cend=bound(S_end, R_end);
+		for(ui i=cend; i<R_end; i++){
+			// get a vertex with highest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] > peelOrder[u])
+					ind = j, u = v;
+			}
+			if(i!=ind)
+				swap_pos(i, ind);
+		}
+			// remove vertex at i location
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		while(R_end > cend){
+			ui u = SR[--R_end];
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+
+        return cend;
+	}
+
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
