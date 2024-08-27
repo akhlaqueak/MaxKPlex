@@ -531,7 +531,8 @@ private:
 			return ;
 		}
 		ui beta = best_solution_size - S_end;
-		if(CSIZE > beta*3  and bound(S_end, R_end)>=R_end){
+		if(bound(S_end, R_end)>=R_end){
+		// if(CSIZE > beta*3  and bound(S_end, R_end)>=R_end){
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
