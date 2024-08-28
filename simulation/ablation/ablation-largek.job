@@ -172,7 +172,7 @@ del_prev() {
 solutions='Maple-ours-latest Maple kPlexT DiseMKP'
 
 
-solutions='kp-ourBranching kp-mapleBranching'
+solutions='Ours-dis-CTCP Ours-en-CTCP'
 
 krange='2 3 4 5'
 datasets='brock200-2.bin

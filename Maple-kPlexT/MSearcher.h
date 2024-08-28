@@ -12,7 +12,7 @@ double cfactor=1;
 #define SEESAW
 #define MAPLE_BRANCHINGS
 #define BRANCH_COND K<10&&sparse
-#define INNER_CTCP_COND false
+#define INNER_CTCP_COND !BRANCH_COND
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;

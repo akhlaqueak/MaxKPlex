@@ -18,7 +18,7 @@ run_jobs() {
             for k in $krange; do
                 outfile=$sol-$k.out
                 # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                if [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
+                if [[ $sol =~ "Ours" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out &
                 else
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
@@ -153,28 +153,16 @@ del_prev() {
     done
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
-datasets=$(ls ~/graphs/test/*.bin)
+datasets=$(ls ~/graphs/test25/*.bin)
 
-# solutions='kp-ctcp-enabled'
-# solutions='kp-Maple-withadditional kp-Maple-noadditional'
-solutions='Maple-pbound-cond Maple-pbound Maple-branch2-nobound Maple-branch2'
+solutions='Ours-dis-CTCP Ours-en-CTCP'
 
 del_prev
 run_jobs 30:00
-# run_jobs 03:00:00
 
 
-
-
-# solutions="Maple kPlexTBs $solutions"
-# solutions='Maple-ours kPlexT Maple DiseMKP'
-solutions="Maple-ours-latest $solutions"
-
-datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
-# solutions="Maple $solutions"
-# solutions='kp-Maple kp-ours-TB Maple kPlexT'
+datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
 get_results
-
 get_kpsize
 # get_cost
 
