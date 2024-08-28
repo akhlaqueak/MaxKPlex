@@ -11,8 +11,8 @@ double cfactor=1;
 // #define REDUCTIONS
 #define SEESAW
 #define MAPLE_BRANCHINGS
-#define INNER_CTCP_COND K
 #define BRANCH_COND K<10&&sparse
+#define INNER_CTCP_COND true
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -172,7 +172,7 @@ public:
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
 		n = _n;
 		sparse=vp.size()*2/(double)n/(n-1) < 0.95;
-		ctcp_enabled=!(BRANCH_COND);
+		ctcp_enabled=INNER_CTCP_COND;
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -540,10 +540,10 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		// if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if (CSIZE > beta*3  and seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
@@ -575,7 +575,7 @@ if(BRANCH_COND){
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 		*/
 
-		R_end = getBranchings2(S_end, R_end, level);
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
