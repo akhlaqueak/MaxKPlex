@@ -26,7 +26,6 @@ run_jobs() {
             done
         done
     done
-    wait
 }
 
 get_results() {
@@ -158,15 +157,15 @@ solutions='Maple-ours kPlexT Maple DiseMKP'
 
 
 datasets=$(ls ~/graphs/dimacs/*.bin)
-run_jobs 30:00
+run_jobs 05:00
 
 datasets=$(ls ~/graphs/dimacs10/*.bin)
-run_jobs 30:00
+run_jobs 05:00
 
 datasets=$(ls ~/graphs/network_repo/*.bin)
-run_jobs 30:00
+run_jobs 05:00
 
-
+wait
 
 
 
