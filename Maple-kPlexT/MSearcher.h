@@ -9,7 +9,7 @@ Timer thresh;
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
-// #define SEESAW
+#define SEESAW
 #define MAPLE_BRANCHINGS
 #define BRANCH_COND (K<10&&sparse)
 #define INNER_CTCP_COND !BRANCH_COND
