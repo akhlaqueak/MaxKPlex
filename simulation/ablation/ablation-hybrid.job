@@ -28,26 +28,35 @@ run_jobs() {
     done
     wait
 }
-
 get_results() {
     result=results.out
     rm $result
-    # for k in $krange; do
-    #     echo -en "**** k=$k ****,,," >>$result
-    # done
-    echo -en "datasets," >>$result
+    echo -en "," >>$result
+    sn=($solutions)
+    for k in $krange; do
+        for sol in $solutions; do
+            if [[ $sol == $sn ]]; then
+                echo -en "k=$k," >>$result
+            else
+                echo -en "," >>$result
+            fi
+        done
+        echo -en "|," >>$result
+    done
+    echo -en "\n datasets," >>$result
+    
 
     for k in $krange; do
-        echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
+        echo -en "|," >>$result
     done
 
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn,|," >>$result
+        echo -en "${fn%.*}," >>$result
         for k in $krange; do
 
             line=()
@@ -81,6 +90,45 @@ get_results() {
     done
     cat $result
 }
+
+get_kpsize() {
+    # solutions='kplex-full kplex-doubt kPlexS Maple'
+    result=kpsize.out
+    rm $result
+    # for k in $krange; do
+    #     echo -en "**** k=$k ****,,," >>$result
+    # done
+    echo -en "datasets," >>$result
+
+    for k in $krange; do
+        echo -en "**k=$k**," >>$result
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn,|," >>$result
+        for k in $krange; do
+            for sol in $solutions; do
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    echo -en 'x,' >>$result
+                else
+                    op=($op)
+                    echo -en "${op[-5]}," >>$result
+                fi
+            done
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+
 
 get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
@@ -155,7 +203,7 @@ del_prev() {
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
 
-solutions='Ours-dis-CTCP Ours-en-CTCP Ours-dis-seesaw Ours-dis-S2Rule'
+solutions='Ours-dis-CTCP Ours-en-CTCP' # Ours-dis-seesaw Ours-dis-S2Rule'
 
 del_prev
 run_jobs 30:00
