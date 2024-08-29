@@ -10,7 +10,9 @@ double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
 #define SEESAW
-#define MAPLE_BRANCHINGS
+#define S2RULE
+
+
 #define BRANCH_COND (K<10&&sparse)
 #define INNER_CTCP_COND !BRANCH_COND
 // #define B_BRANCHINGS
@@ -470,6 +472,7 @@ private:
 			return ;
 		}
 
+#ifdef S2RULE
 		ui S2_n = 0;
 		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
@@ -480,6 +483,7 @@ private:
 				return ;
 			}
 		}
+#endif
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
