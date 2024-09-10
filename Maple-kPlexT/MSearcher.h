@@ -2148,7 +2148,7 @@ else{
 			insertItem(SR[i]);
 		
 
-		auto comp=[&](int a,int b){return degree[a]<degree[b];};
+		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(addList.data()+begIdx,addList.data()+endIdx,comp);
 	}
 };
