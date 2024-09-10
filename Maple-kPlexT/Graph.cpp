@@ -100,7 +100,7 @@ void Graph::read() {
 	fread(&n, sizeof(int), 1, f);
 	fread(&m, sizeof(int), 1, f);
 
-	printf("\tn = %s; m = %s (undirected)\n", Utility::integer_to_string(n).c_str(), Utility::integer_to_string(m/2).c_str());
+	// printf("\tn = %s; m = %s (undirected)\n", Utility::integer_to_string(n).c_str(), Utility::integer_to_string(m/2).c_str());
 
 	ui *degree = new ui[n];
 	fread(degree, sizeof(int), n, f);

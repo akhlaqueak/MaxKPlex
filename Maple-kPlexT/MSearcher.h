@@ -14,8 +14,10 @@ double cfactor=1;
 // #define PARBOUND
 
 
-#define BRANCH_COND (K<10&&sparse)
-#define INNER_CTCP_COND !BRANCH_COND
+// #define BRANCH_COND (K<10&&sparse)
+// #define INNER_CTCP_COND !BRANCH_COND
+#define BRANCH_COND (false)
+#define INNER_CTCP_COND K<10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
