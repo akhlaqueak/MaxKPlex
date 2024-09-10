@@ -2124,7 +2124,7 @@ else{
 				else addList[endIdx++] = v;
 				};
 		endIdx=begIdx;
-		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
+		ui minnei=0; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
 		for(ui i = S_end;i < R_end;i ++) {
 			ui v = SR[i];
@@ -2136,7 +2136,7 @@ else{
 				insertItem(v);
 				return;
 			}
-			if (degree_in_S[v] < minnei)
+			if (degree_in_S[v] > minnei)
 			{
 				minnei = degree_in_S[v];
 				pivot = v;
