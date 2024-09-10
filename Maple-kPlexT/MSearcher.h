@@ -2136,9 +2136,9 @@ else{
 				insertItem(v);
 				return;
 			}
-			if (degree[v] < minnei)
+			if (degree_in_S[v] < minnei)
 			{
-				minnei = degree[v];
+				minnei = degree_in_S[v];
 				pivot = v;
 			}
 		}
