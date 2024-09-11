@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #SBATCH --job-name=test             ### Name of the job
-#SBATCH --ntasks=128                    ### Number of Tasks
+#SBATCH --ntasks=256                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
 #SBATCH --partition=medium             ### Cheaha Partition
-#SBATCH --time=2:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
 #SBATCH --mail-type=END
@@ -203,7 +203,7 @@ del_prev() {
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
 
-solutions='Maple-00 Maple-00clear Maple-endIdx'
+solutions='Maple-zz Maple-zzclear Maple-endIdx'
 
 del_prev
 run_jobs 10:00
