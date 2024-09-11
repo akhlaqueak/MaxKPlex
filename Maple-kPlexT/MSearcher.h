@@ -628,7 +628,7 @@ else{
 
 
 		if(begIdx >= endIdx || SR_rid[addList[endIdx-1]] >= R_end || SR_rid[addList[endIdx-1]] < S_end)
-			branch(0,0, S_end, R_end); //branch in lazy way for better reduction of generated branches
+			begIdx=endIdx=0, branch(begIdx,endIdx, S_end, R_end); //branch in lazy way for better reduction of generated branches
 
 		// printf("%u-%u\n", begIdx, endIdx);
 
