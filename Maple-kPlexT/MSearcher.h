@@ -2130,8 +2130,8 @@ else{
 			ui v = SR[i];
 			if(!t_matrix[v] && //HOP2 first
 			(degree[v]+K<=best_solution_size+1||
-			degree[v]+K==S_end+1||
-			degree_in_S[0]+K==S_end+1)
+			support(S_end, v) == 1||
+			support(S_end, 0) == 1)
 			){ 
 				insertItem(v);
 				return;
