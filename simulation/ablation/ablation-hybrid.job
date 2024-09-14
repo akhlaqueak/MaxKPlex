@@ -149,7 +149,7 @@ get_kpsize() {
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn,|," >>$result
+        echo -en "$fn," >>$result
         for k in $krange; do
             for sol in $solutions; do
                 outfile=$sol-$k.out
@@ -203,7 +203,7 @@ del_prev() {
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
 
-solutions='Maple-zz Maple-zzclear Maple-endIdx'
+solutions='Maple Maple-ours Maple-endIdx'
 
 del_prev
 run_jobs 10:00

@@ -416,6 +416,7 @@ private:
 		
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
+		cout<<"verifying"<<verify<<endl;
 		for(ui i = 0;verify&&i < best_solution_size;i ++) {
 			if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" Invalid ";
 		}
