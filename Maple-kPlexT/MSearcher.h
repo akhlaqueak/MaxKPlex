@@ -424,7 +424,7 @@ private:
 
 	bool is_kplex(ui R_end) {
 		for(ui i = 0;i < R_end;i ++) if(degree[SR[i]] + K < R_end) return false;
-		cout<<R_end<<": "
+		cout<<R_end<<": ";
 		for(ui i = 0;i < R_end;i ++) cout<<degree[SR[i]] + K <<" ";
 		return true;
 	}
