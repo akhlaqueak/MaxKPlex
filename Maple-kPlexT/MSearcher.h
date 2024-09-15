@@ -562,7 +562,7 @@ if(PART_BRANCH){
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 		*/
 
-		R_end = getBranchings2(S_end, R_end, level);
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -1042,41 +1042,41 @@ else{
 			ui *candidates = S2;
 			// ui *nonneighbors = LPI;
 			ui candidates_n = 0;
-			for(ui i = S_end;i < R_end;i ++) {
-				ui u = SR[i];
-				if(R_end - degree[u] > K) continue;
-				if(R_end-degree[u]<=2) {
-					candidates[candidates_n ++] = u; 
-					continue;
-				}
-
-				char *t_matrix = matrix + u*n;
-				ui nn = 0;
-				bool OK=false;
-				ui nonksat=0;
-				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
-					nonneighbors[nn++]=SR[j];
-					if(nn>2&&nonksat) break;
-					if(R_end - degree[SR[j]] > K) 
-						nonksat++;
-				}
-				if(!nonksat) OK=true;
-				// else if (R_end==degree_in_S[u])
-				// 	OK = (nonksat==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
-				if(OK) candidates[candidates_n ++] = u;
-			}
 			// for(ui i = S_end;i < R_end;i ++) {
 			// 	ui u = SR[i];
 			// 	if(R_end - degree[u] > K) continue;
+			// 	if(R_end-degree[u]<=2) {
+			// 		candidates[candidates_n ++] = u; 
+			// 		continue;
+			// 	}
 
 			// 	char *t_matrix = matrix + u*n;
-			// 	bool OK = true;
-			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
-			// 		OK = false;
-			// 		break;
+			// 	ui nn = 0;
+			// 	bool OK=false;
+			// 	ui nonksat=0;
+			// 	for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]){
+			// 		nonneighbors[nn++]=SR[j];
+			// 		if(nn>2&&nonksat) break;
+			// 		if(R_end - degree[SR[j]] > K) 
+			// 			nonksat++;
 			// 	}
+			// 	if(!nonksat) OK=true;
+			// 	// else if (R_end==degree_in_S[u])
+			// 	// 	OK = (nonksat==1) or (nn==2 and !matrix[nonneighbors[0]*n+nonneighbors[1]]);
 			// 	if(OK) candidates[candidates_n ++] = u;
 			// }
+			for(ui i = S_end;i < R_end;i ++) {
+				ui u = SR[i];
+				if(R_end - degree[u] > K) continue;
+
+				char *t_matrix = matrix + u*n;
+				bool OK = true;
+				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
+					OK = false;
+					break;
+				}
+				if(OK) candidates[candidates_n ++] = u;
+			}
 			if(!candidates_n) break;
 
 			while(candidates_n) {
