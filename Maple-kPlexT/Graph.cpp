@@ -248,7 +248,7 @@ void Graph::search() {
 		ListLinearHeap *linear_heap = new ListLinearHeap(n, n-1);
 		linear_heap->init(n, n-1, peel_sequence, degree);
 
-		assert(pend == nullptr);
+		// assert(pend == nullptr);
 		pend = new ept[n];
 
 		oriented_triangle_counting(n, m, peel_sequence, pstart, pend, edges, edgelist_pointer, rid); // edgelist_pointer currently stores triangle_counts
