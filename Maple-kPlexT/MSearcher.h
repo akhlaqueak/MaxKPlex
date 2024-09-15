@@ -639,7 +639,10 @@ else{
 
 		{
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(ctcp_enabled) t_old_removed_edges_n=removed_edges_n;
+			if(ctcp_enabled) {
+				Qe.clear();
+				t_old_removed_edges_n=removed_edges_n;
+			}
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 		}
@@ -649,7 +652,10 @@ else{
 			while(!Qv.empty()) Qv.pop();
 			Qv.push(u);
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			if(ctcp_enabled) t_old_removed_edges_n=removed_edges_n;
+			if(ctcp_enabled) {
+				Qe.clear();
+				t_old_removed_edges_n=removed_edges_n;
+			}
 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
