@@ -11,7 +11,7 @@ double cfactor=1;
 // #define REDUCTIONS
 // #define SEESAW
 #define S2RULE
-#define PARBOUND
+// #define PARBOUND
 
 
 // #define PART_BRANCH (K<10&&sparse)
