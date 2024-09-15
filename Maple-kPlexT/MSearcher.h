@@ -389,7 +389,7 @@ private:
 		
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
-		cout<<"verifying"<<verify<<endl;
+
 		for(ui i = 0;verify&&i < best_solution_size;i ++) {
 			if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" Invalid ";
 		}
@@ -564,7 +564,7 @@ if(PART_BRANCH){
 		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
 		*/
 
-		R_end = getBranchings2(S_end, R_end, level);
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
