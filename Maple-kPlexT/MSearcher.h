@@ -9,14 +9,14 @@ Timer thresh;
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
-// #define SEESAW
+#define SEESAW
 #define S2RULE
 // #define PARBOUND
 
 
-// #define BRANCH_COND (K<10&&sparse)
-// #define INNER_CTCP_COND !BRANCH_COND
-#define BRANCH_COND (true)
+// #define PART_BRANCH (K<10&&sparse)
+// #define INNER_CTCP_COND !PART_BRANCH
+#define PART_BRANCH (true)
 #define INNER_CTCP_COND K>10
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
@@ -554,7 +554,7 @@ private:
 #endif
 
 
-if(BRANCH_COND){
+if(PART_BRANCH){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
