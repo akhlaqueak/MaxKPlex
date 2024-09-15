@@ -355,55 +355,28 @@ private:
 		if(!Qv.empty()) printf("!!! Something wrong. Qv must be empty in initialization\n");
 
 // #ifdef _SECOND_ORDER_PRUNING_
-	if(ctcp_enabled) {for(ui i = 0;i < R_end;i ++) {
-		ui neighbors_n = 0;
-		char *t_matrix = matrix + SR[i]*n;
-		for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
-		for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
-			++ cn[neighbors[j]*n + neighbors[k]];
-			++ cn[neighbors[k]*n + neighbors[j]];
+	if(ctcp_enabled) {
+		for(ui i = 0;i < R_end;i ++) {
+			ui neighbors_n = 0;
+			char *t_matrix = matrix + SR[i]*n;
+			for(ui j = 0;j < R_end;j ++) if(t_matrix[SR[j]]) neighbors[neighbors_n ++] = SR[j];
+			for(ui j = 0;j < neighbors_n;j ++) for(ui k = j+1;k < neighbors_n;k ++) {
+				++ cn[neighbors[j]*n + neighbors[k]];
+				++ cn[neighbors[k]*n + neighbors[j]];
+			}
 		}
-	}
 
-	while(!Qe.empty()) Qe.pop();
-	for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
-		if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
-			Qe.push(std::make_pair(SR[i], SR[j]));
+		while(!Qe.empty()) Qe.pop();
+		for(ui i = 0;i < R_end;i ++) for(ui j = i+1;j < R_end;j ++) {
+			if(matrix[SR[i]*n + SR[j]]&&upper_bound_based_prune(0, SR[i], SR[j])) {
+				Qe.push(std::make_pair(SR[i], SR[j]));
+			}
 		}
+	removed_edges_n = 0;
 	}
-	removed_edges_n = 0;}
 // #endif
 
 		if(!remove_vertices_and_edges_with_prune(0, R_end, 0)) R_end = 0;
-		#ifdef REDUCTIONS
-		reductions.tick();
-		for (ui i = 0; i < R_end; i++)
-        {
-            ui neighbors_n = 0, u = SR[i];
-            // we are looking for common neighbors only in first hop neighbors
-            if (u == 0 or u >= sz1h)
-                continue;
-            char *t_matrix = matrix + SR[i] * n;
-            for (ui j = 0; j < R_end; j++)
-                if (t_matrix[SR[j]])
-                    neighbors[neighbors_n++] = SR[j];
-            degree[u]=neighbors_n;
-            for (ui j = 0; j < neighbors_n; j++)
-            {
-                ui v = neighbors[j];
-                for (ui k = j + 1; k < neighbors_n; k++)
-                {
-                    ui w = neighbors[k];
-                    // if (!matrix[v * n + w] or (u < v and v < w))
-                    {
-                        ++cnC[v * n + w];
-                        ++cnC[w * n + v];
-                    }
-                }
-            }
-        }
-		reductions.tock();
-		#endif
 	}
 
 	void store_solution(ui size, bool verify) {
@@ -556,7 +529,7 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3&&seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -613,7 +586,11 @@ if(BRANCH_COND){
 			else
 			if(found_larger) continue;
 
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = removed_edges_n;
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(ctcp_enabled){
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n = removed_edges_n;
+			}
 			/*
 			ui u=addList[begIdx];
 			for(ui i=begIdx+1; i<endIdx;i++) {Qv.push(addList[i]); level_id[addList[i]]=level;}
