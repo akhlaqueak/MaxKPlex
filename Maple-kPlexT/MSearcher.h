@@ -1930,7 +1930,7 @@ else{
     			return cursor + (best_solution_size - UB);
     		}
     	}
-		cursor+=(best_solution_size-UB);
+		// cursor+=(best_solution_size-UB);
 		if(cursor>R_end)cursor=R_end;
     	return cursor;
     }
