@@ -556,10 +556,10 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		// if (seesawUB(S_end, R_end)<=best_solution_size) {
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if (seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
@@ -613,7 +613,7 @@ if(BRANCH_COND){
 			else
 			if(found_larger) continue;
 
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = removed_edges_n;
 			/*
 			ui u=addList[begIdx];
 			for(ui i=begIdx+1; i<endIdx;i++) {Qv.push(addList[i]); level_id[addList[i]]=level;}
@@ -638,7 +638,7 @@ else{
 		ui u = addList[-- endIdx];
 
 		{
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = removed_edges_n;
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, begIdx, endIdx);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 		}
@@ -647,7 +647,7 @@ else{
 		{
 			while(!Qv.empty()) Qv.pop();
 			Qv.push(u);
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = removed_edges_n;
 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
