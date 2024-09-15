@@ -11,7 +11,7 @@ double cfactor=1;
 // #define REDUCTIONS
 // #define SEESAW
 #define S2RULE
-// #define PARBOUND
+#define PARBOUND
 
 
 // #define PART_BRANCH (K<10&&sparse)
@@ -517,6 +517,7 @@ private:
 		#ifdef PARBOUND
 		if(bound(S_end, R_end)>=R_end){
 		// if(CSIZE > beta*3  and bound(S_end, R_end)>=R_end){
+			cout<<"returning..."<<endl;
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
