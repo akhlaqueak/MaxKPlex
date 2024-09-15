@@ -527,7 +527,7 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE > beta*3  && seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -1138,7 +1138,7 @@ else{
 		for(ui i = 0;i < S_end;i ++) assert(degree_in_S[SR[i]] + K >= S_end);
 #endif
 
-		// while(!Qv.empty()) Qv.pop();
+		while(!Qv.empty()) Qv.pop();
 		// reduction rules based on the fact that each vertex can have at most k-1 nonneighbors
 		for(ui i = 0;i < nonneighbors_n;i ++) {
 			ui v = nonneighbors[i];
