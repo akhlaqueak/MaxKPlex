@@ -510,11 +510,11 @@ private:
 #endif
 
 		// greedily add vertices to S
-		// if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-		// 	//printf("here2\n");
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -556,10 +556,10 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if (seesawUB(S_end, R_end)<=best_solution_size) {
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
