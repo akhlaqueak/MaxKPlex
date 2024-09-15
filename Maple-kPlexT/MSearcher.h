@@ -1919,15 +1919,15 @@ else{
     			if(j != cursor + count) swap_pos(j, cursor+count);
     			++ count;
     		}
-    		// ui t_ub = min(count, vp[i].first);
-    		ui t_ub = count;
-    		if(vp[i].first < t_ub) t_ub = vp[i].first;
+    		ui t_ub = min(count, vp[i].first);
+    		// ui t_ub = count;
+    		// if(vp[i].first < t_ub) t_ub = vp[i].first;
     		if(UB + t_ub <= best_solution_size) {
     			UB += t_ub;
     			cursor += count;
     		}
     		else {
-    			return cursor + (best_solution_size - UB);
+    			return cursor ;
     		}
     	}
 		cursor+=(best_solution_size-UB);
