@@ -9,7 +9,7 @@ Timer thresh;
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
-#define SEESAW
+// #define SEESAW
 #define S2RULE
 // #define PARBOUND
 
