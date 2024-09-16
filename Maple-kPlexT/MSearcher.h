@@ -527,10 +527,10 @@ private:
 		seesaw.tick();
 		// ui comp = S_end*S_end * CSIZE;
 		// if (comp < 1000 and seesawUB(S_end, R_end)<=best_solution_size) {
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
-			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-			return ;
-		}
+		// if (seesawUB(S_end, R_end)<=best_solution_size) {
+		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+		// 	return ;
+		// }
 		seesaw.tock();
 		#endif
 #ifndef NDEBUG
@@ -1745,7 +1745,6 @@ else{
 	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-		seesaw.tick();
         while (R_end>S_end)
         {
             
@@ -1758,7 +1757,6 @@ else{
 
             {
                 for (ui v : ISc)
-                    // std::swap(SR[v], SR[--R_end]);
                     swap_pos(v, --R_end);
                 UB += ubc;
             }
@@ -1766,13 +1764,11 @@ else{
             {
 
                 for (ui v : PIMax)
-                    // std::swap(SR[v], SR[--R_end]);
                     swap_pos(v, --R_end);
                 UB += ubp;
             }
 
         }
-		seesaw.tock();
         return UB;
     }
 
