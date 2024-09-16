@@ -10,7 +10,7 @@ double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 // #define REDUCTIONS
 #define SEESAW
-#define S2RULE
+// #define S2RULE
 // #define PARBOUND
 
 
