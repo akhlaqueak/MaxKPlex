@@ -66,6 +66,7 @@ private:
     ui *psz;
 
 	std::vector<std::pair<ui,ui> > vp;
+	std::vector<std::pair<ui,ui> > vp2;
 	std::vector<ui> non_adj;
 	std::vector<ui> addList; ui addListSz=0;
 	bool sparse;
@@ -1035,7 +1036,7 @@ else{
 				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
-				bound(S_end, R_end, ISc);
+				ub=bound(S_end, R_end, ISc);
 				if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
@@ -1886,21 +1887,22 @@ else{
         return ub;
     }
 	ui bound(ui S_end, ui R_end, auto& R) {
-    	vp.clear();
-    	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+    	vp2.clear();
+		vp2.reserve(S_end);
+    	for(ui i = 0;i < S_end;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
-    	sort(vp.begin(), vp.end());
+    	sort(vp2.begin(), vp2.end());
     	ui UB = S_end+1, cursor = 0;
-    	for(ui i = 0;i < (ui)vp.size(); i++) {
-    		ui u = vp[i].second;
-    		if(vp[i].first == 0) continue;// boundary vertex
+    	for(ui i = 0;i < (ui)vp2.size(); i++) {
+    		ui u = vp2[i].second;
+    		if(vp2[i].first == 0) continue;// boundary vertex
     		ui count = 0;
     		char *t_matrix = matrix + u*n;
     		for(ui j = cursor;j < R.size();j ++) if(!t_matrix[R[j]]) {
     			if(j != cursor + count) swap(R[j], R[cursor+count]);
     			++ count;
     		}
-    		ui t_ub = min(count, vp[i].first);
+    		ui t_ub = min(count, vp2[i].first);
     		// ui t_ub = count;
     		// if(vp[i].first < t_ub) t_ub = vp[i].first;
     		UB += t_ub;
