@@ -1037,7 +1037,7 @@ else{
 			}
 			if(ub>best_solution_size){
 				ub=bound(S_end, R_end, ISc);
-				if(ub<=best_solution_size) cout<<"reduced... ";
+				// if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
@@ -1912,7 +1912,6 @@ else{
     			return UB;
     	}
 		UB+=R.size()-cursor;
-		cout<<UB<<" ";
 		return UB;
     }
 	ui bound(ui S_end, ui R_end) {
