@@ -8,7 +8,7 @@ Timer thresh;
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
-#define S2RULE
+// #define S2RULE
 
 
 // one of the following bounds should be used... 
