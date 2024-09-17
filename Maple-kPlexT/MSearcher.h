@@ -8,16 +8,18 @@ Timer thresh;
 
 double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
-// #define REDUCTIONS
+#define S2RULE
+
+
 #define SEESAW
-// #define S2RULE
 // #define PARBOUND
+#define COLORBOUND
 
 
-#define PART_BRANCH (K<10&&sparse)
-#define INNER_CTCP_COND !PART_BRANCH
-// #define PART_BRANCH (false)
-// #define INNER_CTCP_COND false
+// #define PART_BRANCH (K<10&&sparse)
+// #define INNER_CTCP_COND !PART_BRANCH
+#define PART_BRANCH (false)
+#define INNER_CTCP_COND false
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -32,7 +34,6 @@ private:
 	MBitSet bmp;
 	bool ctcp_enabled=false;
 
-	ui *cnC;
 	ui* peelOrder;
 	ui sz1h;
 	bool found_larger=false;
@@ -76,7 +77,7 @@ public:
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
-		cnC=nullptr;
+
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = nullptr;
 		removed_edges_n = 0;
@@ -107,10 +108,7 @@ public:
 		}
 #endif
 
-		if(cnC != NULL) {
-			delete[] cnC;
-			cnC = NULL;
-		}
+
 		if(degree != NULL) {
 			delete[] degree;
 			degree = NULL;
@@ -161,7 +159,6 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 		cn = new ui[matrix_size];
 #endif
-		cnC = new ui[matrix_size];
 
 		degree = new ui[n];
 		degree_in_S = new ui[n];
@@ -186,15 +183,12 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
-		// cout<<"allocating... "<<matrix_size<<endl;
-			delete[] cnC; cnC = new ui[matrix_size];
 			delete[] LPI; LPI = new ui[matrix_size];
 		}
 
 #ifdef _SECOND_ORDER_PRUNING_
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
 #endif
-		memset(cnC, 0, sizeof(ui)*((long long)n)*n);
 		memset(matrix, 0, sizeof(char)*((long long)n)*n);
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
@@ -1158,39 +1152,6 @@ else{
 			}
 		}
 
-		// reduction rules based on Theorem 9, 10, 11
-		#ifdef REDUCTIONS
-		for(ui j = S_end;j < R_end;j ++)  {
-			ui v = SR[j];
-			if(level_id[v] == level) continue; // v is already pruned... 
-			bool rem=false;
-		    if (u < sz1h and v < sz1h)
-            {
-                // Theorem 11
-                // here u and v are first-hop neighbors, and u is just added to P, that causes some vertices in C to be kicked out
-                rem = (matrix[u * n + v] and cnC[u * n + v] + 3 * K < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * (K - 1) < best_solution_size);
-            }
-            else if ((u < sz1h and v >= sz1h) or (v < sz1h and u >= sz1h))
-            {
-                // Theorem 10
-                // v is a two-hop neighbor thta can't co-exist with u, that causes some vertices in C to be kicked out
-                rem = (matrix[u * n + v] and cnC[u * n + v] + 2 * K + 2 * max((int)K - 2, 0) < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + max((int)K - 2, 0) + max((int)K - 2, 1) < best_solution_size) ;
-            }
-            else
-            {
-                // Theorem 9
-                // u and v both are two hop neighbors
-                rem = (matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 2, 0) < best_solution_size) or
-                       (!matrix[u * n + v] and cnC[u * n + v] + K + 2 * max((int)K - 3, 0) < best_solution_size); 
-            }
-			if(rem) {
-				level_id[v] = level;
-				Qv.push(v);
-			}
-		}
-		#endif
 #ifndef NDEBUG
 		for(ui i = 0;i < S_end;i ++) if(degree_in_S[SR[i]]+K == S_end) {
 			char *t_matrix = matrix + SR[i]*n;
@@ -1740,15 +1701,24 @@ else{
 		printf("\n");
 	}
 
-
+	ui colorUB(ui S_end, ui R_end)
+    {
+        ui UB = S_end;
+        while (R_end>S_end)
+        {
+			double ubc = tryColor(S_end, R_end);
+			for (ui v : ISc)
+				swap_pos(v, --R_end);
+			UB += ubc;
+        }
+        return UB;
+    }
 
 	ui seesawUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
         while (R_end>S_end)
         {
-            
-            // double ubp = 0;
             double ubp = tryPartition(S_end, R_end);
 			double ubc = tryColor(S_end, R_end);
             if (ubp == 0 or
