@@ -12,7 +12,7 @@ double cfactor=1;
 
 
 // one of the following bounds should be used... 
-#define SEESAW
+// #define SEESAW
 // #define PARBOUND
 // #define COLORBOUND
 
