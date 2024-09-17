@@ -18,7 +18,7 @@ double cfactor=1;
 
 // #define PART_BRANCH (K<10&&sparse)
 // #define INNER_CTCP_COND !PART_BRANCH
-#define PART_BRANCH (false)
+#define PART_BRANCH (true)
 #define INNER_CTCP_COND false
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
