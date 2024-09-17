@@ -19,7 +19,7 @@ double cfactor=1;
 #define PART_BRANCH (K<=5&&sparse)
 // #define INNER_CTCP_COND !PART_BRANCH
 // #define PART_BRANCH (false)
-#define INNER_CTCP_COND false
+#define INNER_CTCP_COND true
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
