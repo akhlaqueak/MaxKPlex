@@ -10,16 +10,17 @@ double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 #define S2RULE
 
+
 // one of the following bounds should be used... 
 #define SEESAW
 // #define PARBOUND
-#define COLORBOUND
+// #define COLORBOUND
 
 
 #define PART_BRANCH (K<=5&&sparse)
 // #define INNER_CTCP_COND !PART_BRANCH
 // #define PART_BRANCH (false)
-#define INNER_CTCP_COND true
+#define INNER_CTCP_COND false
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
 Timer seesaw, reductions, branchings;
@@ -27,7 +28,6 @@ Timer seesaw, reductions, branchings;
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
-
 	char *matrix;
 	long long matrix_size;
 	vector<ui> PI, PIMax, ISc;
