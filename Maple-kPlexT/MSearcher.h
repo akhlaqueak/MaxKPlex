@@ -12,7 +12,7 @@ double cfactor=1;
 
 
 // one of the following bounds should be used... 
-// #define SEESAW
+#define SEESAW
 // #define PARBOUND
 // #define COLORBOUND
 
@@ -519,8 +519,8 @@ private:
 
 
 		#ifdef SEESAW
-		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
-		if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
+		// if (seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
