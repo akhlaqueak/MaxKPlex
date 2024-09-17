@@ -1016,6 +1016,7 @@ else{
 			ui t_support = total_support - vp[idx].second;
 			char *t_matrix = matrix + v*n;
 			ui j = 0, v_support = K-1-S_end+degree_in_S[v], ub = S_end+1;
+			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
 				if(j >= vp.size()||ub > best_solution_size||ub + vp.size() - j <= best_solution_size) break;
@@ -1031,6 +1032,11 @@ else{
 					++ ub;
 				}
 				++ j;
+				ISc.push_back(u);
+			}
+			if(ub>best_solution_size){
+				ub=bound(S_end, R_end, ISc);
+				if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
@@ -1879,35 +1885,34 @@ else{
         }
         return ub;
     }
-	ui bound(ui S_end, ui R_end) {
+	ui bound(ui S_end, ui R_end, auto& R) {
     	vp.clear();
     	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp.begin(), vp.end());
-    	ui UB = S_end, cursor = S_end;
+    	ui UB = S_end+1, cursor = 0;
     	for(ui i = 0;i < (ui)vp.size(); i++) {
     		ui u = vp[i].second;
     		if(vp[i].first == 0) continue;// boundary vertex
     		ui count = 0;
     		char *t_matrix = matrix + u*n;
-    		for(ui j = cursor;j < R_end;j ++) if(!t_matrix[SR[j]]) {
-    			if(j != cursor + count) swap_pos(j, cursor+count);
+    		for(ui j = cursor;j < R.size();j ++) if(!t_matrix[R[j]]) {
+    			if(j != cursor + count) swap(R[j], R[cursor+count]);
     			++ count;
     		}
     		ui t_ub = min(count, vp[i].first);
     		// ui t_ub = count;
     		// if(vp[i].first < t_ub) t_ub = vp[i].first;
-    		if(UB + t_ub <= best_solution_size) {
-    			UB += t_ub;
+    		UB += t_ub;
+    		if(UB <= best_solution_size) {
     			cursor += count;
     		}
     		else {
-    			return cursor + (best_solution_size - UB);
+    			return UB;
     		}
     	}
-		cursor+=(best_solution_size-UB);
-		if(cursor>R_end)cursor=R_end;
-    	return cursor;
+		UB+=R.size()-cursor;
+		return UB;
     }
 
 	void branch(ui &begIdx, ui &endIdx, ui S_end, ui R_end){

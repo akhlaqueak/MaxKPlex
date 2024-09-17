@@ -92,6 +92,83 @@ get_results() {
     cat $result
 }
 
+get_results2() {
+    result=results.out
+    rm $result
+    echo -en "," >>$result
+    sn=($solutions)
+    for k in $krange; do
+        for sol in $solutions; do
+            if [[ $sol == $sn ]]; then
+                echo -en "k=$k," >>$result
+            else
+                echo -en "," >>$result
+            fi
+        done
+        echo -en "|," >>$result
+    done
+
+    echo -en "\ndatasets," >>$result
+    
+
+    for k in $krange; do
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+        echo -en "|," >>$result
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "${fn%.*}," >>$result
+        for k in $krange; do
+
+            line=()
+            for sol in $solutions; do
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    line+=('9999999999')
+                else
+                    op=($op)
+                    line+=(${op[-3]})
+                fi
+            done
+            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
+            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
+            echo ${line[@]}
+            for i in "${line[@]}"; do
+                if [ $i == '9999999999' ]; then
+                    echo -en 'x,' >>$result
+                elif [ $i == $m ]; then
+                    echo $i | bc -l | xargs printf "*%.1f," >>$result
+                elif [ $i == $secm ]; then
+                    echo $i | bc -l | xargs printf "^%.1f," >>$result
+                else
+                    echo $i | bc -l | xargs printf "%.1f," >>$result
+                fi
+            done
+            a=${line[0]}
+            b=${line[1]}
+            if [ $a == '9999999999' -a  $b == '9999999999' ]; then
+                    echo -en 'x,' >>$result
+            elif [ $a == '9999999999' ]; then
+                echo -en '+inf,' >>$result
+            elif [ $b == '9999999999' ]; then
+                echo -en '-inf,' >>$result
+            elif [ $a -gt $a ]; then
+                echo "$a/$b" | bc -l | xargs printf "+%.1f," >>$result
+            else
+                echo "$a/$b" | bc -l | xargs printf "-%.1f," >>$result
+            fi
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+
 get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
     result=kpsize.out
