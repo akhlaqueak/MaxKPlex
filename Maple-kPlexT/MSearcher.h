@@ -1035,7 +1035,7 @@ else{
 				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
-				// ub=bound(S_end, R_end, ISc);
+				bound(S_end, R_end, ISc);
 				if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
@@ -1904,14 +1904,13 @@ else{
     		// ui t_ub = count;
     		// if(vp[i].first < t_ub) t_ub = vp[i].first;
     		UB += t_ub;
-    		if(UB <= best_solution_size) {
+    		if(UB <= best_solution_size) 
     			cursor += count;
-    		}
-    		else {
+    		else 
     			return UB;
-    		}
     	}
 		UB+=R.size()-cursor;
+		cout<<UB<<" ";
 		return UB;
     }
 	ui bound(ui S_end, ui R_end) {
