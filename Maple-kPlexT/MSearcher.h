@@ -10,7 +10,7 @@ double cfactor=1;
 #define _SECOND_ORDER_PRUNING_
 #define S2RULE
 
-
+// one of the following bounds should be used... 
 #define SEESAW
 // #define PARBOUND
 #define COLORBOUND
@@ -508,6 +508,7 @@ private:
 		ui beta = best_solution_size - S_end;
 		
 		
+		seesaw.tick();
 		#ifdef PARBOUND
 		if(bound(S_end, R_end)>=R_end){
 			cout<<"Returning"<<endl;
@@ -518,14 +519,23 @@ private:
 
 
 		#ifdef SEESAW
-		seesaw.tick();
 		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
 		if (seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		seesaw.tock();
+
 		#endif
+
+		#ifdef COLORBOUND
+		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
+		if (colorUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		#endif
+		seesaw.tock();
+
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
