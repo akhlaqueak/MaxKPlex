@@ -1036,7 +1036,7 @@ else{
 				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
-				ub=bound(S_end, R_end, ISc);
+				ub=bound(S_end, R_end, v, ISc);
 				// if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
@@ -1886,13 +1886,17 @@ else{
         }
         return ub;
     }
-	ui bound(ui S_end, ui R_end, auto& R) {
+	ui bound(ui S_end, ui R_end, ui u, auto& R) {
+		char *t_matrix=matrix+u*n;
+		for(ui i=0;i<S_end;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]++;
+		S_end++;
     	vp2.clear();
 		vp2.reserve(S_end);
-    	for(ui i = 0;i < S_end;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+    	for(ui i = 0;i < S_end-1;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+		for(ui i=0;i<S_end-1;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]--;
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp2.begin(), vp2.end());
-    	ui UB = S_end+1, cursor = 0;
+    	ui UB = S_end, cursor = 0;
     	for(ui i = 0;i < (ui)vp2.size(); i++) {
     		ui u = vp2[i].second;
     		if(vp2[i].first == 0) continue;// boundary vertex
