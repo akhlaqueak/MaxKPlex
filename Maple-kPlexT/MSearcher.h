@@ -1896,7 +1896,7 @@ else{
 		for(ui i=0;i<S_end-1;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]--;
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp2.begin(), vp2.end());
-    	ui UB = S_end, cursor = 0;
+    	ui UB = S_end+1, cursor = 0;
     	for(ui i = 0;i < (ui)vp2.size(); i++) {
     		ui u = vp2[i].second;
     		if(vp2[i].first == 0) continue;// boundary vertex
@@ -1906,10 +1906,8 @@ else{
     			if(j != cursor + count) swap(R[j], R[cursor+count]);
     			++ count;
     		}
-    		ui t_ub = min(count, vp2[i].first);
-    		// ui t_ub = count;
-    		// if(vp[i].first < t_ub) t_ub = vp[i].first;
-    		UB += t_ub;
+    		UB += min(count, vp2[i].first);
+    		
     		if(UB <= best_solution_size) 
     			cursor += count;
     		else 
