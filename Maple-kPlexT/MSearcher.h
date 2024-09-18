@@ -1913,8 +1913,7 @@ else{
     		else 
     			return UB;
     	}
-		if(R.size()>cursor)UB+=(R.size()-cursor);
-		else cout<<"error";
+		UB+=(R.size()-cursor);
 		return UB;
     }
 	ui bound(ui S_end, ui R_end) {

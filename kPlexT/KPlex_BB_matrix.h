@@ -36,6 +36,10 @@ private:
 	ui *level_id;
 	ui max_level;
 
+	std::vector<ui> ISc;
+	std::vector<std::pair<ui,ui> > vp2;
+
+
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
 
@@ -666,6 +670,7 @@ private:
 			ui t_support = total_support - vp[idx].second;
 			char *t_matrix = matrix + v*n;
 			ui j = 0, v_support = K-1-S_end+degree_in_S[v], ub = S_end+1;
+			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
 				if(j >= vp.size()||ub > best_solution_size||ub + vp.size() - j <= best_solution_size) break;
@@ -674,13 +679,18 @@ private:
 				if(t_matrix[u]) {
 					t_support -= nn;
 					++ ub;
+					ISc.push_back(u);
 				}
 				else if(v_support > 0) {
 					-- v_support;
 					t_support -= nn;
 					++ ub;
+					ISc.push_back(u);
 				}
 				++ j;
+			}
+			if(ub > best_solution_size) {
+				ub=bound(S_end, R_end, v, ISc);
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
@@ -689,7 +699,39 @@ private:
 			else ids[new_n++] = ids[i];
 		}
 	}
-
+	    ui support(ui S_end, ui u)
+    {
+        return K - (S_end - degree_in_S[u]);
+    }
+	ui bound(ui S_end, ui R_end, ui u, auto& R) {
+		S_end;
+		char *t_matrix=matrix+u*n;
+    	vp2.clear();
+		vp2.reserve(S_end);
+    	for(ui i = 0;i < S_end;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+		for(ui i=0;i<S_end;i++)if(!t_matrix[SR[i]])vp2[i].first--;	
+		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
+    	sort(vp2.begin(), vp2.end());
+    	ui UB = S_end+1, cursor = 0;
+    	for(ui i = 0;i < (ui)vp2.size(); i++) {
+    		ui u = vp2[i].second;
+    		if(vp2[i].first == 0) continue;// boundary vertex
+    		ui count = 0;
+    		char *t_matrix = matrix + u*n;
+    		for(ui j = cursor;j < R.size();j ++) if(!t_matrix[R[j]]) {
+    			if(j != cursor + count) swap(R[j], R[cursor+count]);
+    			++ count;
+    		}
+    		UB += min(count, vp2[i].first);
+    		
+    		if(UB <= best_solution_size) 
+    			cursor += count;
+    		else 
+    			return UB;
+    	}
+		UB+=(R.size()-cursor);
+		return UB;
+    }
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
