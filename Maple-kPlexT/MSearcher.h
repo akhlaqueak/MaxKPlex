@@ -1913,7 +1913,7 @@ else{
     		else 
     			return UB;
     	}
-		UB+=(R.size()-cursor);
+		UB+=(R.size()-cursor+1);
 		return UB;
     }
 	ui bound(ui S_end, ui R_end) {
