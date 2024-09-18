@@ -1913,7 +1913,7 @@ else{
     		else 
     			return UB;
     	}
-		if(R.size()>curso)UB+=(R.size()-cursor);
+		if(R.size()>cursor)UB+=(R.size()-cursor);
 		else cout<<"error";
 		return UB;
     }
