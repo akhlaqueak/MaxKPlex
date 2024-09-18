@@ -17,9 +17,9 @@ double cfactor=1;
 // #define COLORBOUND
 
 
-#define PART_BRANCH (K<=5&&sparse)
+// #define PART_BRANCH (K<=5&&sparse)
 // #define INNER_CTCP_COND !PART_BRANCH
-// #define PART_BRANCH (false)
+#define PART_BRANCH (false)
 #define INNER_CTCP_COND false
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
@@ -623,19 +623,15 @@ else{
 
         // the second branch exclude u from G	
 		{
-			// while(!Qv.empty()) Qv.pop();
-			// Qv.push(u);
+			while(!Qv.empty()) Qv.pop();
+			Qv.push(u);
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			// if(ctcp_enabled) {
-			// 	while(!Qe.empty())Qe.pop();
-			// 	t_old_removed_edges_n=removed_edges_n;
-			// }
-		bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
-		if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
-		// if(succeed) succeed = remove_vertices_and_edges_with_prune(S_end, R_end, level);
-
+			if(ctcp_enabled) {
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n=removed_edges_n;
+			}
 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-			if(succeed&&remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, 0, 0);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
