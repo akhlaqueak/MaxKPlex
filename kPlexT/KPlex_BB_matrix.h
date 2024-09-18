@@ -703,7 +703,7 @@ private:
     {
         return K - (S_end - degree_in_S[u]);
     }
-	ui bound(ui S_end, ui R_end, ui u, auto& R) {
+	ui bound(ui S_end, ui R_end, ui u, std::vector<ui>& R) {
 		S_end;
 		char *t_matrix=matrix+u*n;
     	vp2.clear();
@@ -719,10 +719,10 @@ private:
     		ui count = 0;
     		char *t_matrix = matrix + u*n;
     		for(ui j = cursor;j < R.size();j ++) if(!t_matrix[R[j]]) {
-    			if(j != cursor + count) swap(R[j], R[cursor+count]);
+    			if(j != cursor + count) std::swap(R[j], R[cursor+count]);
     			++ count;
     		}
-    		UB += min(count, vp2[i].first);
+    		UB += std::min(count, vp2[i].first);
     		
     		if(UB <= best_solution_size) 
     			cursor += count;
