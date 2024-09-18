@@ -1016,7 +1016,7 @@ else{
 			ui idx = ids[i], v = vp[ids[i]].first;
 			ui t_support = total_support - vp[idx].second;
 			char *t_matrix = matrix + v*n;
-			ui j = 0, v_support = K-1-S_end+degree_in_S[v], ub = S_end+1;
+			ui j = 0, v_support = K-1+degree_in_S[v]-S_end, ub = S_end+1;
 			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
