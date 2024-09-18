@@ -281,12 +281,12 @@ del_prev() {
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
 
-solutions='Maple-Default Maple-dis-S2Rule Maple-dis-S2Rule-seesaw Maple-dis-seesaw'
+solutions='Maple-Ours-S2part'
 
 del_prev
 run_jobs 30:00
 
-
+solutions='Maple-Default Maple-Ours-S2part'
 
 datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
 get_results
