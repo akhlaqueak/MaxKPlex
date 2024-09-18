@@ -1036,7 +1036,7 @@ else{
 				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
-				// ub=bound(S_end, R_end, v, ISc);
+				ub=bound(S_end, R_end, v, ISc);
 				// if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
@@ -1887,9 +1887,9 @@ else{
         return ub;
     }
 	ui bound(ui S_end, ui R_end, ui u, auto& R) {
-		char *t_matrix=matrix+u*n;
-		for(ui i=0;i<S_end;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]++;
 		S_end++;
+		char *t_matrix=matrix+u*n;
+		for(ui i=0;i<S_end-1;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]++;
     	vp2.clear();
 		vp2.reserve(S_end);
     	for(ui i = 0;i < S_end-1;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
