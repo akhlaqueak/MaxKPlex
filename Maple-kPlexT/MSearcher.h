@@ -1026,14 +1026,15 @@ else{
 				if(t_matrix[u]) {
 					t_support -= nn;
 					++ ub;
+				ISc.push_back(u);
 				}
 				else if(v_support > 0) {
 					-- v_support;
 					t_support -= nn;
 					++ ub;
+				ISc.push_back(u);
 				}
 				++ j;
-				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
 				ub=bound(S_end, R_end, v, ISc);
