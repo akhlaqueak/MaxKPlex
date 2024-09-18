@@ -1887,13 +1887,13 @@ else{
         return ub;
     }
 	ui bound(ui S_end, ui R_end, ui u, auto& R) {
-		S_end++;
+		S_end;
 		char *t_matrix=matrix+u*n;
-		for(ui i=0;i<S_end-1;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]++;
+		for(ui i=0;i<S_end;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]++;
     	vp2.clear();
 		vp2.reserve(S_end);
-    	for(ui i = 0;i < S_end-1;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
-		for(ui i=0;i<S_end-1;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]--;
+    	for(ui i = 0;i < S_end;i ++) vp2.push_back(std::make_pair(support(S_end+1, SR[i]), SR[i]));
+		for(ui i=0;i<S_end;i++)if(t_matrix[SR[i]])degree_in_S[SR[i]]--;
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp2.begin(), vp2.end());
     	ui UB = S_end+1, cursor = 0;
