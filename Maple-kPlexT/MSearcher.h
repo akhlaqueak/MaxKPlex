@@ -624,7 +624,7 @@ else{
         // the second branch exclude u from G	
 		{
 			while(!Qv.empty()){
-			ui v=Qv.pop();
+			ui v=Qv.front(); Qv.pop();
 			level_id[v]=n;
 			} 
 			Qv.push(u);
