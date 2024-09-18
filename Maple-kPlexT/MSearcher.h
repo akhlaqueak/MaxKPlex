@@ -385,9 +385,9 @@ private:
 		best_solution_size = size;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
 
-		for(ui i = 0;verify&&i < best_solution_size;i ++) {
-			if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" Invalid ";
-		}
+		// for(ui i = 0;verify&&i < best_solution_size;i ++) {
+		// 	if(degree_in_S[SR[i]]+K<best_solution_size) cout<<degree_in_S[SR[i]]<<" Invalid ";
+		// }
 	}
 
 	bool is_kplex(ui R_end) {
@@ -396,7 +396,6 @@ private:
 	}
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level, ui begIdx=0, ui endIdx=0) {
-		if(thresh.elapsed()/1e6>=threshold) return;
 		if(S_end > best_solution_size) store_solution(S_end, true);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end, false);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
@@ -593,10 +592,6 @@ if(PART_BRANCH){
 				while(!Qe.empty())Qe.pop();
 				t_old_removed_edges_n = removed_edges_n;
 			}
-			/*
-			ui u=addList[begIdx];
-			for(ui i=begIdx+1; i<endIdx;i++) {Qv.push(addList[i]); level_id[addList[i]]=level;}
-			*/
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
