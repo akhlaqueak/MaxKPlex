@@ -7,7 +7,7 @@ double threshold=1e9;
 Timer thresh;
 
 double cfactor=1;
-#define _SECOND_ORDER_PRUNING_
+// #define _SECOND_ORDER_PRUNING_
 #define S2RULE
 
 
@@ -37,7 +37,7 @@ private:
 	ui* peelOrder;
 	ui sz1h;
 	bool found_larger=false;
-#ifdef _SECOND_ORDER_PRUNING_
+#ifndef _SECOND_ORDER_PRUNING_
 	ui *cn;
 	std::queue<std::pair<ui,ui> > Qe;
 	std::vector<std::pair<ui, ui> > removed_edges;
