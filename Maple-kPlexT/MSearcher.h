@@ -623,7 +623,10 @@ else{
 
         // the second branch exclude u from G	
 		{
-			while(!Qv.empty()) Qv.pop();
+			while(!Qv.empty()){
+			ui v=Qv.pop();
+			level_id[v]=n;
+			} 
 			Qv.push(u);
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 			if(ctcp_enabled) {
@@ -1388,7 +1391,7 @@ else{
 
 		for(;R_end < old_R_end;R_end ++) { // insert u back into R
 			ui u = SR[R_end];
-			// assert(level_id[u] == level);
+			assert(level_id[u] == level);
 			assert(SR_rid[u] == R_end);
 			level_id[u] = n;
 
