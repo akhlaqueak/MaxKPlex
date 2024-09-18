@@ -1036,7 +1036,7 @@ else{
 				ISc.push_back(u);
 			}
 			if(ub>best_solution_size){
-				ub=bound(S_end, R_end, v, ISc);
+				// ub=bound(S_end, R_end, v, ISc);
 				// if(ub<=best_solution_size) cout<<"reduced... ";
 			}
 			if(ub <= best_solution_size) {
