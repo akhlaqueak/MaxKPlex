@@ -1038,7 +1038,7 @@ else{
 			}
 			if(ub>best_solution_size){
 				ub=bound(S_end, R_end, v, ISc);
-				// if(ub<=best_solution_size) cout<<"r ";
+				if(ub<=best_solution_size) cout<<"r ";
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
