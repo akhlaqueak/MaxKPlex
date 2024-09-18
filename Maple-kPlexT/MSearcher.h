@@ -1037,7 +1037,7 @@ else{
 				++ j;
 			}
 			if(ub>best_solution_size){
-				// ub=bound(S_end, R_end, v, ISc);
+				ub=bound(S_end, R_end, v, ISc);
 				// if(ub<=best_solution_size) cout<<"r ";
 			}
 			if(ub <= best_solution_size) {
@@ -1913,7 +1913,8 @@ else{
     		else 
     			return UB;
     	}
-		UB+=(R.size()-cursor);
+		if(R.size()>curso)UB+=(R.size()-cursor);
+		else cout<<"error";
 		return UB;
     }
 	ui bound(ui S_end, ui R_end) {
