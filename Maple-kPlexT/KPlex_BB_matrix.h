@@ -1382,8 +1382,6 @@ else{ // pivot based branching
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
 			B.push_back(SR[i]);
 
-		
-
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(B.begin(),B.end(),comp);
 	}

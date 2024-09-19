@@ -28,7 +28,7 @@ public:
 		toc+=chrono::duration_cast<chrono::nanoseconds>(TIME_NOW - tic).count();
 	}
 	double ticktock(){
-		return toc/(1000'000'000.0);
+		return toc/1e9;
 	}
 private:
 	std::chrono::steady_clock::time_point m_start, tic;
