@@ -484,6 +484,7 @@ private:
 			return ;
 		}
 		bounding.tick();
+		ui beta = best_solution_size - S_end;
 		#ifdef PART_BOUND
 		if(bound(S_end, R_end)>=R_end){
 			cout<<"Returning"<<endl;
