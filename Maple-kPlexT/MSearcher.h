@@ -1629,6 +1629,65 @@ else{
 	bool collect_removable_vertices_and_edges(ui S_end, ui R_end, ui level) {
 		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_solution_size) return false;
 
+#ifdef _SECOND_ORDER_PRUNING_
+		for(ui i = 0;i < S_end;i ++) for(ui j = i+1;j < S_end;j ++) {
+			if(upper_bound_based_prune(S_end, SR[i], SR[j])) return false;
+		}
+#endif
+
+		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level){
+			ui v = SR[i];
+			if(S_end - degree_in_S[v] >= K||degree[v] + K <= best_solution_size) {
+				level_id[v] = level;
+				Qv.push(v);
+				continue;
+			}
+			char *t_matrix = matrix + v*n;
+			for(ui j = 0;j < S_end;j ++) {
+#ifdef _SECOND_ORDER_PRUNING_
+				if((S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])||upper_bound_based_prune(S_end, v, SR[j]))
+#else
+				if(S_end - degree_in_S[SR[j]] == K&&!t_matrix[SR[j]])
+#endif
+				{
+					level_id[v] = level;
+					Qv.push(v);
+					break;
+				}
+			}
+		}
+
+#ifdef _SECOND_ORDER_PRUNING_
+		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level) {
+			for(ui j = i+1;j < R_end;j ++) if(level_id[SR[j]] > level&&matrix[SR[i]*n + SR[j]]) {
+				if(upper_bound_based_prune(S_end, SR[i], SR[j])) Qe.push(std::make_pair(SR[i], SR[j]));
+			}
+		}
+#endif
+
+		return true;
+	}
+
+#ifdef _SECOND_ORDER_PRUNING_
+	bool upper_bound_based_prune(ui S_end, ui u, ui v) {
+		// ui ub = S_end + 2*K - (S_end - degree_in_S[u]) - (S_end - degree_in_S[v]) + cn[u*n + v];
+		ui ub = 2*K + degree_in_S[u] - S_end + degree_in_S[v] + cn[u*n + v];
+		if(SR_rid[u] >= S_end) {
+			-- ub; // S_end ++
+			if(matrix[u*n+v]) ++ ub; // degree_in_S[v] ++
+		}
+		if(SR_rid[v] >= S_end) {
+			-- ub;
+			if(matrix[v*n+u]) ++ ub;
+		}
+		return ub <= best_solution_size;
+	}
+#endif
+
+
+	bool collect_removable_vertices_and_edges_mod(ui S_end, ui R_end, ui level) {
+		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_solution_size) return false;
+
 // #ifdef _SECOND_ORDER_PRUNING_
 		if(ctcp_enabled){
 		for(ui i = 0;i < S_end;i ++) for(ui j = i+1;j < S_end;j ++) {
