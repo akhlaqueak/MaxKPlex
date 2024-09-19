@@ -1278,7 +1278,7 @@ private:
 			support(S_end, v) == 1||
 			support(S_end, 0) == 1)
 			){ 
-				B[top++]=v;
+				B[Btop++]=v;
 				return;
 			}
 			if (degree[v] < minnei)
@@ -1290,7 +1290,7 @@ private:
 
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
-			B[top++]=SR[i];
+			B[Btop++]=SR[i];
 
 		
 
