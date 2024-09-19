@@ -1,5 +1,6 @@
 #include "Graph.h"
-#include "MSearcher.h"
+// #include "MSearcher.h"
+#include "KPlex_BB_matrix.h"
 #include "CTPrune.h"
 #define K_THRESH 10
 using namespace std;
@@ -346,8 +347,7 @@ void Graph::search() {
 					// Qv_n=0;
 					// if(kplex.size() != pre_size && kplex.size()> 2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 				}
-				while(false);
-				// while(kplex.size()!=pre_size);
+				while(kplex.size()!=pre_size);
 			}
 			else {
 				extract_graph(n, m, degree, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
@@ -367,7 +367,6 @@ void Graph::search() {
 				// cout<<"searching: "<<u<<" -> ids_n "<<ids_n<<" density: "<<density<<endl;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
-
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
