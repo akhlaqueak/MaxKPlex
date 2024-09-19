@@ -13,7 +13,7 @@
 
 
 // Upper bounding switches... 
-#define SEESAW
+// #define SEESAW
 // #define COLORBOUND
 // #define PART_BOUND
 
@@ -707,7 +707,7 @@ else{ // pivot based branching
 			else ids[new_n++] = ids[i];
 		}
 	}
-	    ui support(ui S_end, ui u)
+	ui support(ui S_end, ui u)
     {
         return K - (S_end - degree_in_S[u]);
     }
