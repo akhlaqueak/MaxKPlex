@@ -597,7 +597,7 @@ void Graph::search_dense() {
 		// printf("*** Search time: %s \n", Utility::integer_to_string(tt.elapsed()).c_str());
 		// printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 
-		if(kplex.size() > old_size) {
+		if(kplex.size() > kplex.size()) {
 			for(ui i = 0;i < kplex.size();i ++) {
 				kplex[i] = out_mapping[kplex[i]];
 			}
