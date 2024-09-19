@@ -503,11 +503,6 @@ if(PART_BRANCH){
 
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
-		/*
-		ui branches=getBranchings(S_end, R_end, level);
-		ui endIdx=addList.size();
-		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
-		*/
 
 		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
@@ -672,7 +667,7 @@ else{ // pivot based branching
 				++ j;
 			}
 			if(ub > best_solution_size) {
-				// ub=bound(S_end, R_end, v, ISc);
+				ub=bound(S_end, R_end, v, ISc);
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
