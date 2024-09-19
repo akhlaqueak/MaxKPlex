@@ -1268,9 +1268,6 @@ private:
 	}
 
 	void branch(ui S_end, ui R_end){
-		auto insertItem=[&](ui v){
-				B[Btop++] = v;
-			};
 		Btop = 0;
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
@@ -1281,7 +1278,7 @@ private:
 			support(S_end, v) == 1||
 			support(S_end, 0) == 1)
 			){ 
-				insertItem(v);
+				B[top++]=v;
 				return;
 			}
 			if (degree[v] < minnei)
@@ -1293,7 +1290,8 @@ private:
 
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
-			insertItem(SR[i]);
+			B[top++]=SR[i];
+
 		
 
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
