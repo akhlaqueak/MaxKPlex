@@ -481,7 +481,33 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		bounding.tick();
+		#ifdef PARBOUND
+		if(bound(S_end, R_end)>=R_end){
+			cout<<"Returning"<<endl;
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		#endif
 
+
+		#ifdef SEESAW
+		if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
+		// if (seesawUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+
+		#endif
+
+		#ifdef COLORBOUND
+		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
+		if (colorUB(S_end, R_end)<=best_solution_size) {
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+		#endif
+		bounding.tock();
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -1489,7 +1515,201 @@ else{ // pivot based branching
 		// }
         return cend;
     }
+	ui colorUB(ui S_end, ui R_end)
+    {
+        ui UB = S_end;
+        while (R_end>S_end)
+        {
+			double ubc = tryColor(S_end, R_end);
+			for (ui v : ISc)
+				swap_pos(v, --R_end);
+			UB += ubc;
+        }
+        return UB;
+    }
 
+	ui seesawUB(ui S_end, ui R_end)
+    {
+        ui UB = S_end;
+        while (R_end>S_end)
+        {
+            double ubp = tryPartition(S_end, R_end);
+			double ubc = tryColor(S_end, R_end);
+            if (ubp == 0 or
+               ( ISc.size() / ubc > PIMax.size() / ubp) or
+                ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
+
+            {
+                for (ui v : ISc)
+                    swap_pos(v, --R_end);
+                UB += ubc;
+            }
+            else
+            {
+
+                for (ui v : PIMax)
+                    swap_pos(v, --R_end);
+                UB += ubp;
+            }
+
+        }
+        return UB;
+    }
+
+    void createIS(ui S_end, ui R_end)
+    {
+        ISc.clear();
+        for (ui i = S_end; i < R_end; i++)
+        {
+            bool flag = true;
+            for (ui j : ISc)
+                if (is_neigh(i, j))
+                {
+                    flag = false;
+                    break;
+                }
+            if (flag)
+                ISc.push_back(i);
+        }
+    }
+
+    ui TISUB(ui S_end)
+    {
+        ui maxsup = 0;
+        for (ui i = 0; i < ISc.size(); i++)
+        {
+            for (ui j = i + 1; j < ISc.size(); j++)
+            {
+                if (support(S_end, SR[ISc[j]]) > support(S_end, SR[ISc[i]]))
+                    std::swap(ISc[i], ISc[j]);
+            }
+            // not using <= condition because i is starting from 0...
+            if (support(S_end, SR[ISc[i]]) > i)
+                maxsup++;
+            else
+                break;
+        }
+        return maxsup;
+    }
+    ui tryColor(ui S_end, ui R_end)
+    {
+        createIS(S_end, R_end);
+        ui ub = TISUB(S_end);
+        ui vlc = 0;
+        // collect loose vertices i.e. v \in ISc | support(v) > ub
+        for (ui i = 0; i < ISc.size(); i++)
+        {
+            if (support(S_end, SR[ISc[i]]) > ub)
+            {
+                std::swap(ISc[i], ISc[vlc]);
+                vlc++;
+            }
+        }
+        // ISc[0... vlc) we have loose vertices
+
+        // Lookup inIS(&lookup, &ISc, true);
+        bmp.setup(ISc, n);
+        for (ui i = S_end; vlc < ub and i < R_end; i++)
+        {
+            if (bmp.test(i)) // this loop running for C\ISc
+                continue;
+            ui vc = 0;
+            for (ui j = vlc; j < ISc.size(); j++) // this loop runs in ISc\LC
+            {
+                if (is_neigh(i, ISc[j]))
+                {
+                    std::swap(ISc[vlc + vc], ISc[j]);
+                    vc++;
+                }
+            }
+            if (vlc + vc + 1 <= ub)
+            {
+                vlc += vc;
+                ISc.push_back(i);
+                std::swap(ISc.back(), ISc[vlc++]);
+                bmp.set(i);
+            }
+        }
+
+        for (ui i = S_end; i < R_end; i++)
+        {
+            if (bmp.test(i) or support(S_end, SR[i]) >= ub) // this loop running for C\ISc
+                continue;
+            ui nv = 0;
+            for (ui j: ISc)
+            {
+                if (is_neigh(i, j))
+                    nv++;
+            }
+
+            if (nv + support(S_end, SR[i]) <= ub )
+            {
+                ISc.push_back(i);
+                bmp.set(i);
+            }
+        }
+        return ub;
+    }
+	bool is_neigh(ui i, ui j){
+		return matrix[SR[i]*n+SR[j]];
+	}
+	
+	ui tryPartition(ui S_end, ui R_end)
+    {
+        double maxdise = 0;
+        ui ub = 0;
+		PIMax.clear();
+        for (ui i = 0; i < S_end; i++)
+        {
+            if (support(S_end, SR[i]) == 0)
+                continue;
+			PI.clear();
+            for (ui j = S_end; j < R_end; j++)
+            {
+                if (!is_neigh(i, j))
+                    PI.push_back(j);
+            }
+			if(PI.empty()) continue;
+            ui cost = min(support(S_end, SR[i]), (ui)PI.size());
+            double dise = (double) PI.size() / (double) cost;
+            if (dise > maxdise or (dise == maxdise and PI.size() > PIMax.size()))
+            {
+                maxdise = dise, ub = cost;
+                std::swap(PI, PIMax);
+            }
+        }
+        return ub;
+    }
+		ui bound(ui S_end, ui R_end) {
+    	vp.clear();
+    	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
+		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
+    	sort(vp.begin(), vp.end());
+    	ui UB = S_end, cursor = S_end;
+    	for(ui i = 0;i < (ui)vp.size(); i++) {
+    		ui u = vp[i].second;
+    		if(vp[i].first == 0) continue;// boundary vertex
+    		ui count = 0;
+    		char *t_matrix = matrix + u*n;
+    		for(ui j = cursor;j < R_end;j ++) if(!t_matrix[SR[j]]) {
+    			if(j != cursor + count) swap_pos(j, cursor+count);
+    			++ count;
+    		}
+    		ui t_ub = min(count, vp[i].first);
+    		// ui t_ub = count;
+    		// if(vp[i].first < t_ub) t_ub = vp[i].first;
+    		if(UB + t_ub <= best_solution_size) {
+    			UB += t_ub;
+    			cursor += count;
+    		}
+    		else {
+    			return cursor + (best_solution_size - UB);
+    		}
+    	}
+		cursor+=(best_solution_size-UB);
+		if(cursor>R_end)cursor=R_end;
+    	return cursor;
+    }
 	void print_array(const char *str, const ui *array, ui idx_start, ui idx_end, ui l) {
 		for(ui i = 0;i < l;i ++) printf(" ");
 		printf("%s:", str);
