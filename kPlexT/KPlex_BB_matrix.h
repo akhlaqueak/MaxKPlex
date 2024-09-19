@@ -134,6 +134,7 @@ public:
 		nonneighbors = new ui[n];
 		S2 = new ui[n];
 		level_id = new ui[n];
+		B.resize(n);
 	}
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
@@ -1267,12 +1268,9 @@ private:
 	}
 
 	void branch(ui S_end, ui R_end){
-		auto insertItem=[&](ui v){if(B.size() == Btop) {
-					B.push_back(v);
-					++ Btop;
-				}
-				else B[Btop++] = v;
-				};
+		auto insertItem=[&](ui v){
+				B[Btop++] = v;
+			};
 		Btop = 0;
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
