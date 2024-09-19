@@ -17,9 +17,9 @@ double cfactor=1;
 // #define COLORBOUND
 
 
-// #define PART_BRANCH (K<=5&&sparse)
+#define PART_BRANCH (K<=5&&sparse)
 // #define INNER_CTCP_COND !PART_BRANCH
-#define PART_BRANCH (false)
+// #define PART_BRANCH (false)
 #define INNER_CTCP_COND false
 // #define B_BRANCHINGS
 // #define BINARY_BRANCHINGS
@@ -37,12 +37,11 @@ private:
 	ui* peelOrder;
 	ui sz1h;
 	bool found_larger=false;
-#ifndef _SECOND_ORDER_PRUNING_
+
 	ui *cn;
 	std::queue<std::pair<ui,ui> > Qe;
 	std::vector<std::pair<ui, ui> > removed_edges;
 	long long removed_edges_n;
-#endif
 
 	ui *degree;
 	ui *degree_in_S;
@@ -1244,7 +1243,7 @@ else{
 					-- degree[w];
 					if(degree[w] + K <= best_solution_size) {
 						if(i < S_end) terminate = true; // UB1
-						else if(level_id[w] > level) { // RR3
+						else if(level_id[w] ==n) { // RR3
 							level_id[w] = level;
 							Qv.push(w);
 						}
