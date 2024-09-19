@@ -1380,7 +1380,7 @@ else{ // pivot based branching
 
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
-			B.push_back([i]);
+			B.push_back(SR[i]);
 
 		
 
