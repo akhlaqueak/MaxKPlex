@@ -13,7 +13,9 @@
 
 
 // Upper bounding switches... 
-
+#define SEESAW
+// #define COLORBOUND
+// #define PART_BOUND
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
@@ -482,7 +484,7 @@ private:
 			return ;
 		}
 		bounding.tick();
-		#ifdef PARBOUND
+		#ifdef PART_BOUND
 		if(bound(S_end, R_end)>=R_end){
 			cout<<"Returning"<<endl;
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
