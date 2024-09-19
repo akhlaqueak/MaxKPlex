@@ -1042,7 +1042,7 @@ else{
 			ui idx = ids[i], v = vp[ids[i]].first;
 			ui t_support = total_support - vp[idx].second;
 			char *t_matrix = matrix + v*n;
-			ui j = 0, v_support = K-1+degree_in_S[v]-S_end, ub = S_end+1;
+			ui j = 0, v_support = K-1-S_end+degree_in_S[v], ub = S_end+1;
 			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
@@ -1062,9 +1062,8 @@ else{
 				}
 				++ j;
 			}
-			if(ub>best_solution_size){
+			if(ub > best_solution_size) {
 				// ub=bound(S_end, R_end, v, ISc);
-				// if(ub<=best_solution_size) cout<<"r ";
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
@@ -1073,7 +1072,6 @@ else{
 			else ids[new_n++] = ids[i];
 		}
 	}
-
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
