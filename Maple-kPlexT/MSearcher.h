@@ -29,13 +29,6 @@ private:
 	ui n;
 	char *matrix;
 	long long matrix_size;
-	vector<ui> PI, PIMax, ISc;
-	MBitSet bmp;
-	bool ctcp_enabled=false;
-
-	ui* peelOrder;
-	ui sz1h;
-	bool found_larger=false;
 
 	ui *cn;
 	std::queue<std::pair<ui,ui> > Qe;
@@ -60,15 +53,21 @@ private:
 	// std::queue<ui> Qc;
 	ui *level_id;
 	ui max_level;
-    ui *LPI;
-    ui *psz;
 
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<std::pair<ui,ui> > vp2;
 	std::vector<ui> non_adj;
 	std::vector<ui> addList; ui addListSz=0;
+    
+	ui *LPI;
+    ui *psz;
 	bool sparse;
-
+	vector<ui> PI, PIMax, ISc;
+	ui* peelOrder;
+	MBitSet bmp;
+	ui sz1h;
+	bool found_larger=false;
+	bool ctcp_enabled=false;
 public:
 	KPLEX_BB_MATRIX() {
 		// addList.resize(5000);addListSz=5000;
@@ -261,15 +260,15 @@ private:
 
 		allocateMemory(n);
 
-		if(((long long)n)*n > matrix_size) {
-			do {
-				matrix_size *= 2;
-			} while(((long long)n)*n > matrix_size);
-			delete[] matrix; matrix = new char[matrix_size];
-#ifdef _SECOND_ORDER_PRUNING_
-			delete[] cn; cn = new ui[matrix_size];
-#endif
-		}
+// 		if(((long long)n)*n > matrix_size) {
+// 			do {
+// 				matrix_size *= 2;
+// 			} while(((long long)n)*n > matrix_size);
+// 			delete[] matrix; matrix = new char[matrix_size];
+// #ifdef _SECOND_ORDER_PRUNING_
+// 			delete[] cn; cn = new ui[matrix_size];
+// #endif
+// 		}
 
 		fread(degree, sizeof(ui), n, f);
 		fclose(f);

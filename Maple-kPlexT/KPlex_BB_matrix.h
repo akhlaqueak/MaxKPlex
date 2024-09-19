@@ -4,7 +4,16 @@
 #include "Utility.h"
 #include "Timer.h"
 // #define _SECOND_ORDER_PRUNING_
+
+// pruning switches
 #define S2Prune
+
+// if PART_BRANCH is not defined, then pivot branch gets executed... 
+#define PART_BRANCH
+
+
+// Upper bounding switches... 
+
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
@@ -37,15 +46,19 @@ private:
 	ui *level_id;
 	ui max_level;
 
-	std::vector<ui> ISc;
-	std::vector<std::pair<ui,ui> > vp2;
-
-
 	std::vector<std::pair<ui,ui> > vp;
 	std::vector<ui> non_adj;
 
-	std::vector<ui> B; ui Btop=0;
 
+	std::vector<std::pair<ui,ui> > vp2;
+	std::vector<ui> B; ui Btop=0;
+	bool sparse;
+	vector<ui> PI, PIMax, ISc, peelOrder, psz;
+	ui* LPI;
+	MBitSet bmp;
+	ui sz1h;
+	bool found_larger=false;
+	bool ctcp_enabled=false;
 public:
 	KPLEX_BB_MATRIX() {
 		n = 0;
@@ -135,6 +148,14 @@ public:
 		S2 = new ui[n];
 		level_id = new ui[n];
 		B.resize(n);
+		LPI = new ui[matrix_size];
+
+		peelOrder.resize(n);
+		psz.resize(n);
+		PI.reserve(n);
+		PIMax.reserve(n);
+		ISc.reserve(n);
+		bmp.init(n);
 	}
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
@@ -144,6 +165,7 @@ public:
 				matrix_size *= 2;
 			} while(((long long)n)*n > matrix_size);
 			delete[] matrix; matrix = new char[matrix_size];
+			delete[] LPI; LPI = new ui[matrix_size];
 #ifdef _SECOND_ORDER_PRUNING_
 			delete[] cn; cn = new ui[matrix_size];
 #endif
@@ -273,6 +295,7 @@ private:
 			if(min_degree > max_core) max_core = min_degree;
 			core[u] = max_core;
 			peel_sequence[i] = u;
+			peelOrder[u] = i;
 			vis[u] = 1;
 
 			if(idx == n&&min_degree + K >= n - i) idx = i;
@@ -476,15 +499,54 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
+if(PART_BRANCH){
 
-{
+// ******************* Adding our branching stuff here... 
+		ui t_R_end=R_end;
+		/*
+		ui branches=getBranchings(S_end, R_end, level);
+		ui endIdx=addList.size();
+		for(ui begIdx=endIdx-branches; begIdx<endIdx;begIdx++){
+		*/
 
+		R_end = getBranchings(S_end, R_end, level);
+		while(R_end<t_R_end){
+		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
+			// move branching vertex back to C
+			ui u = SR[R_end];
+			assert(level_id[u] == level&&SR_rid[u] == R_end);
+			R_end++;
+			level_id[u] = n;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				ui w = SR[i];
+				++ degree[w];
+				++ degree[u];
+				if(i < S_end) ++ degree_in_S[u];
+			}
 
+			if(best_solution_size >= _UB_) return ;
+			if(root_level) found_larger=false;
+			else
+			if(found_larger) continue;
+
+			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			if(ctcp_enabled){
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n = removed_edges_n;
+			}
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
+			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+		}
+
+		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+
+}
+else{ // pivot based branching
 		if(Btop==0 || SR_rid[B[Btop-1]] >= R_end || SR_rid[B[Btop-1]] < S_end)
 			branch(S_end, R_end); 
-
 		ui u = B[-- Btop];
-
 		{
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 // #ifdef _SECOND_ORDER_PRUNING_
@@ -1297,6 +1359,139 @@ private:
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(B.begin(),B.begin()+Btop,comp);
 	}
+    ui getBranchings(ui S_end, ui R_end, ui level)
+    {
+        for (ui i = 0; i < S_end; i++)
+        {
+            ui u = SR[i];
+            psz[i] = 0;
+            if (support(S_end, u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+            // Lookup neig(&lookup, &g.adjList[u]);
+            // bmp.setup(g.adjList[u], g.V);
+			ui* t_LPI = LPI+i*n;
+            for (ui j = S_end; j < R_end; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
+            }
+        }
+        ui beta = best_solution_size - S_end;
+        ui cend = S_end;
+		branchings.tick();
+        while (true)
+        {
+            ui maxpi = -1;
+            double maxdise = 0;
+            for (ui i = 0; i < S_end; i++)
+            {
+                ui u = SR[i];
+                if (psz[i] == 0)
+                    continue;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
+                if (cost <= beta and dise > maxdise)
+                    maxpi = i, maxdise = dise;
+            }
+            if (maxpi != -1)
+            {
+                bmp.reset(n);
+                for (ui i = 0; i < psz[maxpi]; i++)
+                    bmp.set(LPI[maxpi * n + i]);
+                // remove pi* from C
+                for (ui i = cend; i < R_end; i++)
+                {
+                    ui v = SR[i];
+                    if (bmp.test(v))
+                    {
+                        // rather than removing from C, we are changing the positions within C.
+                        // When function completes
+                        // [0...cend) holds all vertices C\B, and [cend, sz) holds the B.
+                        swap_pos(cend++, i);
+                    }
+                }
+                // beta-=cost(pi*)
+                beta -= min(support(S_end, SR[maxpi]), psz[maxpi]);
+                // remove maxpi from every pi
+                for (ui i = 0; i < S_end; i++)
+                {
+                    // Removing pi* from all pi in PI
+                    if (i == maxpi or psz[i]==0)
+                        continue;
+                    ui u = SR[i];
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (!bmp.test(t_LPI[k]))
+                            // if (!bmp.test(PI[u][k]))
+                            // PI[u][j++] = PI[u][k];
+							t_LPI[j++] = t_LPI[k];
+                            // LPI[u * n + j++] = LPI[u * n + k];
+                    // PI[u].resize(j);
+                    psz[i] = j;
+                }
+                // remove maxpi...
+                // PI[maxpi].clear();
+                psz[maxpi] = 0;
+            }
+            else
+                break;
+            if (beta == 0)
+                break;
+        }
+		branchings.tock();
+        if (beta > 0)
+            cend += min(beta, R_end - cend);
+
+            // vertices in [cend, R_end) range are Branching vertices
+			// sort the branching vertices in ascending order of peelOrder, and remove from C
+		/*
+		ui begIdx=addList.size();
+		addList.insert(addList.end(), SR+cend, SR+R_end);
+		ui endIdx = addList.size();
+		std::sort(addList.data()+begIdx,addList.data()+endIdx,[&](int a,int b){return peelOrder[a]>peelOrder[b];});
+		return R_end-cend;
+		*/
+		
+		for(ui i=cend; i<R_end; i++){
+			// get a vertex with highest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] > peelOrder[u])
+					ind = j, u = v;
+			}
+			if(i!=ind)
+				swap_pos(i, ind);
+		}
+			// remove vertex at i location
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		while(R_end > cend){
+			ui u = SR[--R_end];
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+		// assert(R_end==cend);
+		// for(ui i = 0;i < R_end;i ++) {
+		// 	ui d1 = 0, d2 = 0;
+		// 	for(ui j = 0;j < S_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d1;
+		// 	d2 = d1;
+		// 	for(ui j = S_end;j < R_end;j ++) if(matrix[SR[i]*n + SR[j]]) ++ d2;
+		// 	assert(d1 == degree_in_S[SR[i]]);
+		// 	assert(d2 == degree[SR[i]]);
+		// }
+        return cend;
+    }
 
 	void print_array(const char *str, const ui *array, ui idx_start, ui idx_end, ui l) {
 		for(ui i = 0;i < l;i ++) printf(" ");
