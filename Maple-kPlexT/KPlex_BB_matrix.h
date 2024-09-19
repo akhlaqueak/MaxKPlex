@@ -9,7 +9,7 @@
 #define S2Prune
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
-#define PART_BRANCH (false)
+#define PART_BRANCH (true)
 
 
 // Upper bounding switches... 
@@ -535,7 +535,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = getBranchings2(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -1386,6 +1386,36 @@ else{ // pivot based branching
 
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
 		std::sort(B.begin(),B.begin()+Btop,comp);
+	}
+	ui getBranchings2(ui S_end, ui R_end, ui level){
+		ui cend=bound(S_end, R_end);
+		for(ui i=cend; i<R_end; i++){
+			// get a vertex with highest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] > peelOrder[u])
+					ind = j, u = v;
+			}
+			if(i!=ind)
+				swap_pos(i, ind);
+		}
+			// remove vertex at i location
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		while(R_end > cend){
+			ui u = SR[--R_end];
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+
+        return cend;
 	}
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
