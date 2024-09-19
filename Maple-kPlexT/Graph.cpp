@@ -426,12 +426,6 @@ void Graph::search() {
 
 void Graph::search_dense() {
 	Timer t;
-	kplex.resize(2*K-2); //screen out trivial cases
-	ui max_degree=0;
-	for(ui i = 0;i < n;i ++) {
-		if(pstart[i+1]-pstart[i] > max_degree) max_degree = pstart[i+1]-pstart[i];
-	}
-	heuristic_kplex_max_degree(10);
 	ui oldn=n;
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
@@ -446,7 +440,7 @@ void Graph::search_dense() {
 	// delete[] vis;
 	// delete[] degree;
 
-	if(kplex.size() < UB) {
+	if(n>kplex.size()) {
 		ui old_size = kplex.size();
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
