@@ -365,6 +365,7 @@ private:
 		}
 			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 		best_solution_size = size;
+		found_larger = true;
 		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
 		
 		// for(ui i = 0;i < best_solution_size;i ++) {
@@ -1713,7 +1714,7 @@ else{ // pivot based branching
         }
         return ub;
     }
-		ui bound(ui S_end, ui R_end) {
+	ui bound(ui S_end, ui R_end) {
     	vp.clear();
     	for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
@@ -1722,21 +1723,21 @@ else{ // pivot based branching
     	for(ui i = 0;i < (ui)vp.size(); i++) {
     		ui u = vp[i].second;
     		if(vp[i].first == 0) continue;// boundary vertex
-    		ui count = 0;
+    		ui nn = 0;
     		char *t_matrix = matrix + u*n;
     		for(ui j = cursor;j < R_end;j ++) if(!t_matrix[SR[j]]) {
-    			if(j != cursor + count) swap_pos(j, cursor+count);
-    			++ count;
+    			if(j != cursor + nn) swap_pos(j, cursor+nn);
+    			++ nn;
     		}
-    		ui t_ub = min(count, vp[i].first);
-    		// ui t_ub = count;
+    		ui t_ub = min(nn, vp[i].first);
+    		// ui t_ub = nn;
     		// if(vp[i].first < t_ub) t_ub = vp[i].first;
     		if(UB + t_ub <= best_solution_size) {
     			UB += t_ub;
-    			cursor += count;
+    			cursor += nn;
     		}
     		else {
-    			return cursor + (best_solution_size - UB);
+    			return cursor;
     		}
     	}
 		cursor+=(best_solution_size-UB);
