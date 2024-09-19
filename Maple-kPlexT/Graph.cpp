@@ -432,7 +432,7 @@ void Graph::search_dense() {
 	ui *degree = new ui[n];
 	char *vis = new char[n];
 
-	prev_density = 0;
+	ui prev_density = 0;
 	vector<ui> P = kplex;
 	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
