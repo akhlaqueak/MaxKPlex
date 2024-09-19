@@ -9,7 +9,7 @@
 #define S2Prune
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
-#define PART_BRANCH (true)
+#define PART_BRANCH (false)
 
 
 // Upper bounding switches... 
@@ -55,9 +55,9 @@ private:
 
 
 	std::vector<std::pair<ui,ui> > vp2;
-	std::vector<ui> B;
+
 	bool sparse;
-	vector<ui> PI, PIMax, ISc, peelOrder, psz;
+	vector<ui> B, PI, PIMax, ISc, peelOrder, psz;
 	ui* LPI;
 	MBitSet bmp;
 	ui sz1h;
