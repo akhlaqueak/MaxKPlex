@@ -45,6 +45,7 @@ public:
 	void verify_kplex() ;
 
 	void search() ;
+	void search_dense() ;
 
 private:
 	void write_subgraph(ui n, const std::vector<std::pair<ui,ui> > &edge_list) ;
