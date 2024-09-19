@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 // #define _SECOND_ORDER_PRUNING_
-// #define S2Prune
+#define S2Prune
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
