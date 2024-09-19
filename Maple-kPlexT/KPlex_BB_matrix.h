@@ -380,7 +380,7 @@ private:
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
+		// if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;	
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
