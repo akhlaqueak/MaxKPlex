@@ -55,7 +55,7 @@ private:
 
 
 	std::vector<std::pair<ui,ui> > vp2;
-	std::vector<ui> B; ui Btop=0;
+	std::vector<ui> B;
 	bool sparse;
 	vector<ui> PI, PIMax, ISc, peelOrder, psz;
 	ui* LPI;
@@ -151,7 +151,7 @@ public:
 		nonneighbors = new ui[n];
 		S2 = new ui[n];
 		level_id = new ui[n];
-		B.resize(n);
+		B.reserve(n);
 		LPI = new ui[matrix_size];
 
 		peelOrder.resize(n);
@@ -380,7 +380,7 @@ private:
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		// if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;	
+		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;	
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -571,9 +571,10 @@ if(PART_BRANCH){
 
 }
 else{ // pivot based branching
-		if(Btop==0 || SR_rid[B[Btop-1]] >= R_end || SR_rid[B[Btop-1]] < S_end)
+		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
-		ui u = B[-- Btop];
+		ui u = B.back();
+		B.pop_back();
 		{
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 // #ifdef _SECOND_ORDER_PRUNING_
@@ -588,7 +589,7 @@ else{ // pivot based branching
 
         // the second branch exclude u from G	
 		{
-			Btop=0;
+			B.clear();
 			while(!Qv.empty()){
 			ui v=Qv.front(); Qv.pop();
 			level_id[v]=n;
@@ -1357,7 +1358,7 @@ else{ // pivot based branching
 	}
 
 	void branch(ui S_end, ui R_end){
-		Btop = 0;
+		B.clear();
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
 		for(ui i = S_end;i < R_end;i ++) {
@@ -1367,7 +1368,7 @@ else{ // pivot based branching
 			support(S_end, v) == 1||
 			support(S_end, 0) == 1)
 			){ 
-				B[Btop++]=v;
+				B.push_back(v);
 				return;
 			}
 			if (degree[v] < minnei)
@@ -1379,12 +1380,12 @@ else{ // pivot based branching
 
 		t_matrix = matrix + pivot*n;
 		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
-			B[Btop++]=SR[i];
+			B.push_back([i]);
 
 		
 
 		auto comp=[&](int a,int b){return degree[a]>degree[b];};
-		std::sort(B.begin(),B.begin()+Btop,comp);
+		std::sort(B.begin(),B.end(),comp);
 	}
 	ui getBranchings2(ui S_end, ui R_end, ui level){
 		ui cend=bound(S_end, R_end);
