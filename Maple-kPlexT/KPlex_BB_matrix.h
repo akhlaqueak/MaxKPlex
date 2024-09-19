@@ -377,7 +377,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, ui begIdx=0, ui endIdx=0) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true) {
 		if(S_end > best_solution_size) store_solution(S_end);
 		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
 		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;
@@ -554,7 +554,6 @@ if(PART_BRANCH){
 
 			if(best_solution_size >= _UB_) return ;
 			if(root_level) found_larger=false;
-			else
 			if(found_larger) continue;
 
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;

@@ -205,7 +205,7 @@ void Graph::search() {
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 
-	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+	const ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 	// delete heap;
 	// delete[] vis;
