@@ -289,7 +289,8 @@ private:
 				pivot = v;
 			}
 		}
-
+		// pivot is a two-hop qualified neighbor if it is found. else pivot is min degree vertex in C
+		// non-nighbors of pivot are stored in addList
 		t_matrix = matrix + pivot*n;
 		for(ui i = P_end;i < C_end;i ++) if(!t_matrix[PC[i]]) {
 			if(addListSz == endIdx) {
