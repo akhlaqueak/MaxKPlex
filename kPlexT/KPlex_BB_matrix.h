@@ -3,8 +3,8 @@
 
 #include "Utility.h"
 #include "Timer.h"
-#define _SECOND_ORDER_PRUNING_
- 
+// #define _SECOND_ORDER_PRUNING_
+
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
