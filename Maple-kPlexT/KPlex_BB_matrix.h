@@ -697,7 +697,7 @@ else{ // pivot based branching
 				}
 				++ j;
 			}
-			if(ub > best_solution_size && ISc.size()>2*(best_solution_size-S_end)) {
+			if(ub > best_solution_size) {
 				ub=bound(S_end, R_end, v, ISc);
 			}
 			if(ub <= best_solution_size) {

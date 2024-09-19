@@ -432,47 +432,27 @@ void Graph::search_dense() {
 	ui *degree = new ui[n];
 	char *vis = new char[n];
 
-	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
+	prev_density = 0;
+	vector<ui> P = kplex;
+	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
+	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 	// delete heap;
 	// delete[] vis;
 	// delete[] degree;
 
-	if(n>kplex.size()) {
-		ui old_size = kplex.size();
+	if(n>P.size()) {
+
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
 		ui *edgelist_pointer = new ui[m];
 
 		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
-	
-		if(kplex.size()+1 > 2*K) {
-			CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-		}
-		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
-
-		
-
-		if(kplex.size() > old_size) {
-			old_size = kplex.size();
-			for(ui i = 0;i < kplex.size();i ++) {
-				assert(kplex[i] < n);
-				kplex[i] = out_mapping[kplex[i]];
-			}
-
-			if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-			else shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
-		}
-		
 		delete[] core; core = NULL;
 
-		if(n<=kplex.size()){
-			printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1000000.0, 0.0);
-			return;
-		}
 		
 		ui *degree = new ui[n];
 		for(ui i = 0;i < n;i ++) degree[i] = pstart[i+1] - pstart[i];
