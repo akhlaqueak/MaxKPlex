@@ -375,7 +375,7 @@ void Graph::search() {
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
-				best_density = kplex_solver->get_best_density();
+				best_density = kplex_solver->best_density;
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 				m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
