@@ -9,7 +9,7 @@
 #define S2Prune
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
-#define PART_BRANCH (k<=5&&sparse)
+#define PART_BRANCH (K<=5&&sparse)
 
 
 // Upper bounding switches... 
