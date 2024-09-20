@@ -682,7 +682,7 @@ else{ // pivot based branching
 			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
-				if(j >= vp.size()||ub > best_solution_size) break;
+				if(j >= vp.size()) break;
 				ui u = vp[ids[j]].first, nn = vp[ids[j]].second;
 				if(t_support < nn) break;
 				if(t_matrix[u]) {
