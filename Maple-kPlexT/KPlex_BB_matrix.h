@@ -64,9 +64,9 @@ private:
 	bool found_larger=false;
 	bool ctcp_enabled=false;
 	bool dense_search, forward_sol;
-	ui best_density;
 public:
-	KPLEX_BB_MATRIX(bool dense=false) {
+	ui best_density;
+	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
@@ -87,7 +87,8 @@ public:
 		SR = SR_rid = nullptr;
 		level_id = nullptr;
 		max_level = 0;
-		dense_search=dense;
+		best_density=0;
+		dense_search=_ds;
 	}
 
 	~KPLEX_BB_MATRIX() {
@@ -376,8 +377,8 @@ private:
 				density+=degree_in_S[SR[i]];
 		}
 		forward_sol = false;
+		printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 
-			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 		if(dense_search){
 			if(density>best_density){
 				kplex.clear();
@@ -389,6 +390,7 @@ private:
 			best_solution_size = size;
 			found_larger = true;
 			for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
+			best_density = density;
 		}
 		// for(ui i = 0;i < best_solution_size;i ++) {
 		// 	if(degree_in_S[SR[i]]+K<best_solution_size) std::cout<<degree_in_S[SR[i]]+K<<" ";
