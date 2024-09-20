@@ -525,6 +525,7 @@ void Graph::search_dense() {
 		for(ui i = 0;i < n&&m&&best_density<max_density;i ++) {
 			ui u, key;
 			linear_heap->pop_min(u, key);
+			cout<<"Current size: "<<kplex.size()<<endl;
 			// if(key != 0) printf("u = %u, key = %u\n", u, key);
 			if(key < kplex.size()+1-K) {
 				if(degree[u] != 0) { // degree[u] == 0 means u is deleted. it could be the case that degree[u] == 0, but key[u] > 0, as key[u] is not fully updated in linear_heap
