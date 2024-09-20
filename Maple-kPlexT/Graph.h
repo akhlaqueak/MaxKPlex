@@ -35,7 +35,7 @@ private:
 	char *s_deleted;
 
 public:
-	ui best_density;
+	ui best_n_edges;
 	Graph(const char *_dir, const int _K) ;
 	~Graph() ;
 

@@ -375,7 +375,7 @@ void Graph::search() {
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
-				best_density = kplex_solver->best_density;
+				best_n_edges = kplex_solver->best_n_edges;
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 				m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
@@ -436,7 +436,7 @@ void Graph::search_dense() {
 
 
 	vector<ui> dense_kplex = kplex;
-	ui max_density = dense_kplex.size()*(dense_kplex.size()-1);
+	ui max_n_edges = dense_kplex.size()*(dense_kplex.size()-1);
 	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
@@ -446,7 +446,7 @@ void Graph::search_dense() {
 	// delete[] vis;
 	// delete[] degree;
 
-	if(n>dense_kplex.size()&&best_density<max_density) {
+	if(n>dense_kplex.size()&&best_n_edges<max_n_edges) {
 
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
@@ -491,7 +491,7 @@ void Graph::search_dense() {
 		ui Qv_n = 0;
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX(true);// true means solving for dense search
 		kplex_solver->allocateMemory(n);
-		kplex_solver->best_density = best_density;
+		kplex_solver->best_n_edges = best_n_edges;
 
 		if(kplex.size() > 2*K-2 ) {
 			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
@@ -522,7 +522,7 @@ void Graph::search_dense() {
 		double min_density_prune = 1, min_density_search = 1, total_density_prune = 0, total_density_search = 0;
 		ui last_m=0;
 
-		for(ui i = 0;i < n&&m&&best_density<max_density;i ++) {
+		for(ui i = 0;i < n&&m&&best_n_edges<max_n_edges;i ++) {
 			ui u, key;
 			linear_heap->pop_min(u, key);
 			// if(key != 0) printf("u = %u, key = %u\n", u, key);
@@ -584,10 +584,10 @@ void Graph::search_dense() {
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
 				if(kplex.size()>presize){
-					cout<<"best density "<<kplex_solver->best_density<<endl;
-					if(kplex_solver->best_density>best_density) {
-						best_density = kplex_solver->best_density;
-						cout<<"A denser kplex found with no. of edges: "<<best_density;
+					cout<<"best density "<<kplex_solver->best_n_edges<<endl;
+					if(kplex_solver->best_n_edges>best_n_edges) {
+						best_n_edges = kplex_solver->best_n_edges;
+						cout<<"A denser kplex found with no. of edges: "<<best_n_edges;
 						dense_kplex.clear();
 						for(ui j = 0;j < kplex.size();j ++) dense_kplex.push_back(ids[kplex[j]]);
 					} 
@@ -624,7 +624,7 @@ void Graph::search_dense() {
 	delete[] core;
 	delete[] peel_sequence;
 
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f density: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, best_density);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f density: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, best_n_edges);
 
 	// printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
