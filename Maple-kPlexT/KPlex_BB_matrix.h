@@ -63,8 +63,10 @@ private:
 	ui sz1h;
 	bool found_larger=false;
 	bool ctcp_enabled=false;
+	bool dense_search, forward_sol;
+	ui best_density;
 public:
-	KPLEX_BB_MATRIX() {
+	KPLEX_BB_MATRIX(bool dense=false) {
 		n = 0;
 		matrix = nullptr;
 		matrix_size = 0;
@@ -85,6 +87,7 @@ public:
 		SR = SR_rid = nullptr;
 		level_id = nullptr;
 		max_level = 0;
+		dense_search=dense;
 	}
 
 	~KPLEX_BB_MATRIX() {
@@ -359,15 +362,34 @@ private:
 	}
 
 	void store_solution(ui size) {
+
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
+		ui density = 0;
+		for(ui i = 0;i < size;i ++) 
+		{
+			if(forward_sol)
+				density+=degree[SR[i]];
+			else
+				density+=degree_in_S[SR[i]];
+		}
+		forward_sol = false;
+
 			printf("!!! BB_Search found a larger kplex of size: %u\n", size);
-		best_solution_size = size;
-		found_larger = true;
-		for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
-		
+		if(dense_search){
+			if(density>best_density){
+				kplex.clear();
+				best_density = density;
+				for(ui i = 0;i < size;i ++) kplex.push_back(SR[i]);
+			}
+		}
+		else{
+			best_solution_size = size;
+			found_larger = true;
+			for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
+		}
 		// for(ui i = 0;i < best_solution_size;i ++) {
 		// 	if(degree_in_S[SR[i]]+K<best_solution_size) std::cout<<degree_in_S[SR[i]]+K<<" ";
 		// }
@@ -375,6 +397,7 @@ private:
 
 	bool is_kplex(ui R_end) {
 		for(ui i = 0;i < R_end;i ++) if(degree[SR[i]] + K < R_end) return false;
+		forward_sol = true;
 		return true;
 	}
 

@@ -427,14 +427,14 @@ void Graph::search() {
 
 void Graph::search_dense() {
 	Timer t;
-	ui oldn=n;
+	read(); // read the graph again... 
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
 	ui *degree = new ui[n];
 	char *vis = new char[n];
 
 	ui prev_density = 0;
-	vector<ui> P = kplex;
+	vector<ui> dense_kplex = kplex;
 	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
@@ -444,7 +444,7 @@ void Graph::search_dense() {
 	// delete[] vis;
 	// delete[] degree;
 
-	if(n>P.size()) {
+	if(n>dense_kplex.size()) {
 
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
@@ -585,6 +585,8 @@ void Graph::search_dense() {
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
 				for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+				dense_kplex=kplex;
+				kplex.pop_back();
 				m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 			}
 			else if(kplex.size()>2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
@@ -598,11 +600,7 @@ void Graph::search_dense() {
 		// printf("*** Search time: %s \n", Utility::integer_to_string(tt.elapsed()).c_str());
 		// printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 
-		if(kplex.size() > kplex.size()) {
-			for(ui i = 0;i < kplex.size();i ++) {
-				kplex[i] = out_mapping[kplex[i]];
-			}
-		}
+
 
 		delete kplex_solver;
 		delete linear_heap;
