@@ -682,7 +682,7 @@ else{ // pivot based branching
 			ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
-				if(j >= vp.size()) break;
+				if(j >= vp.size()||ub > best_solution_size||ub + vp.size() - j <= best_solution_size) break;
 				ui u = vp[ids[j]].first, nn = vp[ids[j]].second;
 				if(t_support < nn) break;
 				if(t_matrix[u]) {
@@ -698,10 +698,10 @@ else{ // pivot based branching
 				}
 				++ j;
 			}
-			if(ub > best_solution_size) {
-				ub=bound(S_end, R_end, v, ISc);
-				if(flag and ub<=best_solution_size) cout<<ub<<" "<<best_solution_size<<endl;
-			}
+			// if(ub > best_solution_size) {
+			// 	ub=bound(S_end, R_end, v, ISc);
+			// 	if(flag and ub<=best_solution_size) cout<<ub<<" "<<best_solution_size<<endl;
+			// }
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
 				Qv.push(v);
