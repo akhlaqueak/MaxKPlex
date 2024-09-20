@@ -378,7 +378,7 @@ private:
 				density+=degree_in_S[SR[i]];
 		}
 		forward_sol = false;
-		printf("!!! BB_Search found a larger kplex of size: %u, density: %u \n", size, dense_search);
+		printf("!!! BB_Search found a larger kplex of size: %u, density: %u \n", size, density);
 
 		if(dense_search&&density>best_density){
 			best_density = density;
