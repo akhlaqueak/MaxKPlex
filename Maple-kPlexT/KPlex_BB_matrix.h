@@ -575,20 +575,23 @@ else{ // pivot based branching
 			branch(S_end, R_end); 
 		ui u = B.back();
 		B.pop_back();
-		{
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+		
+
+		// First branch moves u to S
+		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 // #ifdef _SECOND_ORDER_PRUNING_
 // 			if(ctcp_enabled) {
 // 				while(!Qe.empty())Qe.pop();
 // 				t_old_removed_edges_n=removed_edges_n;
 // 			}
 // #endif
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-			restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		}
+		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+		
 
         // the second branch exclude u from G	
+		// This version of 2nd branch restores u through restore_SR function
 // 		{
+			// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 // 			B.clear();
 // 			while(!Qv.empty()){
 // 			ui v=Qv.front(); Qv.pop();
@@ -612,8 +615,9 @@ else{ // pivot based branching
 
 
         // the second branch exclude u from G	
+		// This version of 2nd branch restores u through remove_u function
 		{
-			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+			restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
 			while(!Qv.empty()){
 			ui v=Qv.front(); Qv.pop();
 			level_id[v]=n;
@@ -628,9 +632,7 @@ else{ // pivot based branching
 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
 			bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 			if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
-
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-			// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 }
