@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
 		Graph *graph = new Graph(filename, k);
 		graph->read();
 		graph->search();
-		std::cout<<"Now searching for dense kplex, current no. of edges: "<<graph->best_density<<endl;
 		graph->search_dense();
 		graph->write();
 		// delete graph; // there are some bugs in releasing memory

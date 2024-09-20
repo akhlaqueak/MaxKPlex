@@ -427,6 +427,8 @@ void Graph::search() {
 
 
 void Graph::search_dense() {
+	std::cout<<"Now searching for dense kplex, current no. of edges: "<<best_n_edges<<endl;
+
 	Timer t;
 	read(); // read the graph again... 
 	ui *peel_sequence = new ui[n];
