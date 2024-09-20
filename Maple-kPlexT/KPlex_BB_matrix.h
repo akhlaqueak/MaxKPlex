@@ -212,6 +212,7 @@ public:
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
 		if(dense_search&&best_n_edges>n_edges){
+			cout<<"denser found: "<<best_n_edges<<endl;
 			kplex.clear();
 			for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
 		}
