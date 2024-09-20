@@ -699,7 +699,8 @@ else{ // pivot based branching
 				++ j;
 			}
 			if(ub > best_solution_size) {
-				// ub=bound(S_end, R_end, v, ISc);
+				ub=bound(S_end, R_end, v, ISc);
+				if(flag and ub<=best_solution_size) cout<<ub<<" "<<best_solution_size<<endl;
 			}
 			if(ub <= best_solution_size) {
 				level_id[v] = level;
