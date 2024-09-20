@@ -28,6 +28,6 @@ int main(int argc, char *argv[]) {
 		graph->write();
 		// delete graph; // there are some bugs in releasing memory
 	}
-	printf("[usage]: exe file k [dense]\n");
+	else printf("[usage]: exe file k [dense]\n");
 	printf("-----------------------------------------------------------------------------------------\n\n");
 }

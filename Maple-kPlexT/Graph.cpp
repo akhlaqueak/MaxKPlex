@@ -584,6 +584,7 @@ void Graph::search_dense() {
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
 				if(kplex.size()>presize){
+					cout<<"best density "<<kplex_solver->best_density<<end;
 					if(kplex_solver->best_density>best_density) {
 						best_density = kplex_solver->best_density;
 						cout<<"A denser kplex found with no. of edges: "<<best_density;
