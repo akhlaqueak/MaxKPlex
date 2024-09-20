@@ -207,10 +207,11 @@ public:
 			return ;
 		}
 		best_solution_size = kplex.size();
+		ui density = best_density;
 		ui R_end;
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
-		if(best_solution_size > kplex.size()) {
+		if(best_solution_size > kplex.size()||best_density>density) {
 			kplex.clear();
 			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
 		}
@@ -379,12 +380,9 @@ private:
 		forward_sol = false;
 		printf("!!! BB_Search found a larger kplex of size: %u\n", size);
 
-		if(dense_search){
-			if(density>best_density){
-				kplex.clear();
-				best_density = density;
-				for(ui i = 0;i < size;i ++) kplex.push_back(SR[i]);
-			}
+		if(dense_search&&density>best_density){
+			best_density = density;
+			for(ui i = 0;i < size;i ++) best_solution[i] = SR[i];
 		}
 		else{
 			best_solution_size = size;
