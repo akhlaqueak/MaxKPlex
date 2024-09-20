@@ -438,10 +438,10 @@ void Graph::search_dense() {
 
 	vector<ui> dense_kplex = kplex;
 	ui max_n_edges = dense_kplex.size()*(dense_kplex.size()-1);
-	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
-	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
+	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 
 	// delete heap;
 	// delete[] vis;
