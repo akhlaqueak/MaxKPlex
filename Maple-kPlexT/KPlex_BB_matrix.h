@@ -718,8 +718,7 @@ else{ // pivot based branching
     	vp2.clear();
 		vp2.reserve(S_end);
     	for(ui i = 0;i < S_end;i ++) vp2.push_back(std::make_pair(support(S_end, SR[i]), SR[i]));
-		for(ui i=0;i<S_end;i++)if(!t_matrix[SR[i]])vp2[i].first--;	
-		for(ui i=0;i<S_end;i++)if(vp2[i].first>10)cout<<vp2[i].first<<" ";	
+		// for(ui i=0;i<S_end;i++)if(!t_matrix[SR[i]])vp2[i].first--;	
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp2.begin(), vp2.end());
     	ui UB = S_end+1, cursor = 0;
