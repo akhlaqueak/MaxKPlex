@@ -429,6 +429,7 @@ void Graph::search() {
 void Graph::search_dense() {
 	std::cout<<"Now searching for dense kplex, current no. of edges: "<<best_n_edges<<endl;
 	Timer t;
+	dense_search=true;
 	read(); // read the graph again... 
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
@@ -440,7 +441,7 @@ void Graph::search_dense() {
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
-	if(dense_kplex.size()==kplex.size())kplex.pop_back();
+
 	// delete heap;
 	// delete[] vis;
 	// delete[] degree;
@@ -543,35 +544,16 @@ void Graph::search_dense() {
 			// cout<<u<<endl;
 
 			bool check=false;
-			// if(last_m<0.8*m) {
-			if(true){
-				ui pre_size;
-				do{
-					pre_size=kplex.size();
-					extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
-					if(ids_n) {
-						double density = (double(vp.size()*2))/ids_n/(ids_n-1);
-						total_density_prune += density; ++ prune_cnt;
-						if(density < min_density_prune) min_density_prune = density;
-						if(ids_n > max_n_prune) max_n_prune = ids_n;
-						// cout<<"Density"<<density<<" ";
-					}
-					if(K<K_THRESH &&ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
-					
-					// Qv_n=0;
-					// if(kplex.size() != pre_size && kplex.size()> 2*K-2) m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-				}
-				while(kplex.size()!=pre_size);
-			}
-			else {
-				extract_graph(n, m, degree, ids, ids_n, rid, vp, exists, pstart, pend, edges, deleted, edgelist_pointer);
+
+			extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+			if(ids_n) {
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
 				if(density < min_density_prune) min_density_prune = density;
 				if(ids_n > max_n_prune) max_n_prune = ids_n;
-				mflag=true;
+				// cout<<"Density"<<density<<" ";
 			}
-			last_m=vp.size()*2;
+			if(K<K_THRESH &&ids_n > kplex.size()&&vp.size()*2 < m) subgraph_prune(ids, ids_n, vp, rid, Qv, Qe, exists);
 
 			if(ids_n > kplex.size()) {
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
@@ -1042,7 +1024,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 
 		if(output) printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size-idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
 
-		if(new_size - idx > kplex.size()) {
+		if(!dense_search && new_size - idx > kplex.size()) {
 			kplex.clear();
 			for(ui i = idx;i < new_size;i ++) kplex.pb(peel_sequence[queue_n + i]);
 			if(!output) printf("Find a k-plex of size: %u\n", new_size - idx);

@@ -33,7 +33,7 @@ private:
 	ui *s_edge_list;
 	ui *s_active_edgelist;
 	char *s_deleted;
-
+	bool dense_search=false;
 public:
 	ui best_n_edges;
 	Graph(const char *_dir, const int _K) ;
