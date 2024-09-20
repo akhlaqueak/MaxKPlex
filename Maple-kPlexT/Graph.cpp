@@ -434,15 +434,13 @@ void Graph::search_dense() {
 	ui *core = new ui[n];
 	ui *degree = new ui[n];
 	char *vis = new char[n];
-	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
-
-
 	vector<ui> dense_kplex = kplex;
+	kplex.pop_back();// removing one item from kplex, so that degen can get |P|-k core 
 	ui max_n_edges = dense_kplex.size()*(dense_kplex.size()-1);
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
-
+	if(dense_kplex.size()==kplex.size())kplex.pop_back();
 	// delete heap;
 	// delete[] vis;
 	// delete[] degree;
@@ -990,7 +988,7 @@ void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 
 // degeneracy-based k-plex
 // return an upper bound of the maximum k-plex size
-ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *degree, char *vis, ListLinearHeap *heap, bool dense_search) {
+ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *degree, char *vis, ListLinearHeap *heap, bool output) {
 	Timer t;
 
 	ui threshold = (kplex.size()+1 > K? kplex.size()+1-K: 0);
@@ -1042,12 +1040,12 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			}
 		}
 
-		if(!dense_search) printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size-idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
+		if(output) printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size-idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
 
-		if(!dense_search && new_size - idx > kplex.size()) {
+		if(new_size - idx > kplex.size()) {
 			kplex.clear();
 			for(ui i = idx;i < new_size;i ++) kplex.pb(peel_sequence[queue_n + i]);
-			printf("Find a k-plex of size: %u\n", new_size - idx);
+			if(!output) printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
 	return UB;
