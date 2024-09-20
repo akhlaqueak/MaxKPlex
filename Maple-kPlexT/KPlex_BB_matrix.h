@@ -6,7 +6,7 @@
 // #define _SECOND_ORDER_PRUNING_
 
 // pruning switches
-#define S2Prune
+#define S2RULE
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (K<=5&&sparse)
@@ -423,7 +423,7 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-#ifdef S2Prune
+#ifdef S2RULE
 		ui S2_n = 0;
 		for(ui i = 0;i < S_end;i ++) if(R_end - degree[SR[i]] > K) S2[S2_n++] = SR[i];
 
@@ -535,7 +535,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = getBranchings2(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
