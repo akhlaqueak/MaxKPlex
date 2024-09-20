@@ -586,10 +586,9 @@ void Graph::search_dense() {
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
 				if(kplex.size()>presize){
-					cout<<"best density "<<kplex_solver->best_n_edges<<endl;
 					if(kplex_solver->best_n_edges>best_n_edges) {
 						best_n_edges = kplex_solver->best_n_edges;
-						cout<<"A denser kplex found with no. of edges: "<<best_n_edges;
+						cout<<"A denser kplex found with #edges: "<<best_n_edges<<endl;
 						dense_kplex.clear();
 						for(ui j = 0;j < kplex.size();j ++) dense_kplex.push_back(ids[kplex[j]]);
 					} 
@@ -626,7 +625,7 @@ void Graph::search_dense() {
 	delete[] core;
 	delete[] peel_sequence;
 
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f density: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, best_n_edges);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f #edges: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, best_n_edges);
 
 	// printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
