@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 		int k = atoi(argv[2]);
 		Graph *graph = new Graph(filename, k);
 		graph->read();
-		// graph->search();
+		graph->search();
 		graph->search_dense();
 		graph->write();
 		// delete graph; // there are some bugs in releasing memory
