@@ -14,11 +14,20 @@ int main(int argc, char *argv[]) {
 		Graph *graph = new Graph(filename, k);
 		graph->read();
 		graph->search();
+		graph->write();
+		// delete graph; // there are some bugs in releasing memory
+	}
+	else if (argc == 4) {
+		strncpy(filename, argv[1], LEN_LIMIT);
+		int k = atoi(argv[2]);
+		Graph *graph = new Graph(filename, k);
+		graph->read();
+		graph->search();
 		std::cout<<"Now searching for dense kplex, current no. of edges: "<<graph->best_density<<endl;
 		graph->search_dense();
 		graph->write();
 		// delete graph; // there are some bugs in releasing memory
 	}
-	else printf("[usage]: exe file k\n");
+	printf("[usage]: exe file k [dense]\n");
 	printf("-----------------------------------------------------------------------------------------\n\n");
 }
