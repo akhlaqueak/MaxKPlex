@@ -385,9 +385,11 @@ private:
 		forward_sol = false;
 		printf("!!! BB_Search found a larger kplex of size: %u, n_edges: %u \n", size, n_edges);
 
-		if(dense_search&&n_edges>best_n_edges){
+		if(dense_search){
+			if(n_edges>best_n_edges){
 			best_n_edges = n_edges;
 			for(ui i = 0;i < size;i ++) best_solution[i] = SR[i];
+			}
 		}
 		else{
 			best_solution_size = size;
