@@ -535,7 +535,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings2(S_end, R_end, level);
+		R_end = getBranchings(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -629,7 +629,6 @@ else{ // pivot based branching
 				t_old_removed_edges_n=removed_edges_n;
 			}
 #endif
-			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
 			bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 			if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
