@@ -371,7 +371,7 @@ void Graph::search() {
 				// cout<<"searching: "<<u<<" -> ids_n "<<ids_n<<" density: "<<density<<endl;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
-				if(pre_size<kplex.size())cout<<"A larger kplex found at: "<<u<<endl;
+				// if(pre_size<kplex.size())cout<<"A larger kplex found at: "<<u<<endl;
 			}
 			Qv[0] = u; Qv_n = 1;
 			if(kplex.size() != pre_size && kplex.size()> 2*K-2) {
