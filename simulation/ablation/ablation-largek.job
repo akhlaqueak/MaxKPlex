@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
 #SBATCH --partition=medium             ### Cheaha Partition
-#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --time=12:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
 #SBATCH --mail-type=END
@@ -26,7 +26,7 @@ run_jobs() {
             done
         done
     done
-    wait
+    # wait
 }
 get_results() {
     result=results.out
@@ -43,7 +43,8 @@ get_results() {
         done
         echo -en "|," >>$result
     done
-    echo -en "\n datasets," >>$result
+
+    echo -en "\ndatasets," >>$result
     
 
     for k in $krange; do
@@ -84,6 +85,83 @@ get_results() {
                     echo $i | bc -l | xargs printf "%.1f," >>$result
                 fi
             done
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+
+get_results2() {
+    result=results.out
+    rm $result
+    echo -en "," >>$result
+    sn=($solutions)
+    for k in $krange; do
+        for sol in $solutions; do
+            if [[ $sol == $sn ]]; then
+                echo -en "k=$k," >>$result
+            else
+                echo -en "," >>$result
+            fi
+        done
+        echo -en "|," >>$result
+    done
+
+    echo -en "\ndatasets," >>$result
+    
+
+    for k in $krange; do
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+        echo -en "|," >>$result
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "${fn%.*}," >>$result
+        for k in $krange; do
+
+            line=()
+            for sol in $solutions; do
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    line+=('9999999999')
+                else
+                    op=($op)
+                    line+=(${op[-3]})
+                fi
+            done
+            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
+            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
+            echo ${line[@]}
+            for i in "${line[@]}"; do
+                if [ $i == '9999999999' ]; then
+                    echo -en 'x,' >>$result
+                elif [ $i == $m ]; then
+                    echo $i | bc -l | xargs printf "*%.1f," >>$result
+                elif [ $i == $secm ]; then
+                    echo $i | bc -l | xargs printf "^%.1f," >>$result
+                else
+                    echo $i | bc -l | xargs printf "%.1f," >>$result
+                fi
+            done
+            a=${line[0]}
+            b=${line[1]}
+            if [ $a == '9999999999' -a  $b == '9999999999' ]; then
+                    echo -en 'x,' >>$result
+            elif [ $a == '9999999999' ]; then
+                echo -en '+inf,' >>$result
+            elif [ $b == '9999999999' ]; then
+                echo -en '-inf,' >>$result
+            elif [ $a -gt $a ]; then
+                echo "$a/$b" | bc -l | xargs printf "+%.1f," >>$result
+            else
+                echo "$a/$b" | bc -l | xargs printf "-%.1f," >>$result
+            fi
             echo -en "|," >>$result
         done
         echo >>$result
@@ -149,7 +227,7 @@ get_kpsize() {
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn,|," >>$result
+        echo -en "$fn," >>$result
         for k in $krange; do
             for sol in $solutions; do
                 outfile=$sol-$k.out
@@ -200,16 +278,25 @@ del_prev() {
         done
     done
 }
-krange='2 3 4 5 6 7 8 9 10 15 20'
-datasets=$(ls ~/graphs/test25/*.bin)
-
-solutions='Ours Ours-part-bound'
-
+krange='2 3 4 5 7 10 15 20'
+solutions='Maple-Ours'
 del_prev
-run_jobs 30:00
 
+datasets=$(ls ~/graphs/network_repo/*.bin)
+run_jobs 01:00:00
+
+datasets=$(ls ~/graphs/dimacs10/*.bin)
+run_jobs 01:00:00
+
+datasets=$(ls ~/graphs/dimacs/*.bin)
+run_jobs 01:00:00
+
+wait
+
+# solutions='Maple kPlexT kPlexT-S2Part'
 
 datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
+
 get_results
 get_kpsize
 # get_cost
