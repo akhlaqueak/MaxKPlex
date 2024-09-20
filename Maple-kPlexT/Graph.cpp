@@ -580,18 +580,21 @@ void Graph::search_dense() {
 				total_density_search += density; ++ search_cnt;
 				if(density < min_density_search) min_density_search = density;
 				if(ids_n > max_n_search) max_n_search = ids_n;
+				ui presize=kplex.size();
 				// cout<<"searching: "<<u<<" -> ids_n "<<ids_n<<" density: "<<density<<endl;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
+				if(kplex.size()>presize){
+					if(kplex_solver->best_density>best_density) {
+						best_density = kplex_solver->best_density;
+						cout<<"A denser kplex found with no. of edges: "<<best_density;
+						dense_kplex.clear();
+						for(ui j = 0;j < kplex.size();j ++) dense_kplex.push_back(ids[kplex[j]]);
+					} 
+					kplex.pop_back();
+				}
 			}
 			Qv[0] = u; Qv_n = 1;
-			if(kplex_solver->best_density>best_density) {
-				best_density = kplex_solver->best_density;
-				cout<<"A denser kplex found with no. of edges: "<<best_density;
-				dense_kplex.clear();
-				for(ui j = 0;j < kplex.size();j ++) dense_kplex.push_back(ids[kplex[j]]);
-				kplex.pop_back();
-			} 
 			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, false, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
 		}
 
