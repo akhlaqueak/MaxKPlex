@@ -1,7 +1,7 @@
 #include "Graph.h"
 double threshold=1e9;
 Timer thresh, branchings, bounding;
-bool flag;
+
 // #include "MSearcher.h"
 #include "KPlex_BB_matrix.h"
 #include "CTPrune.h"
@@ -370,8 +370,6 @@ void Graph::search() {
 				if(ids_n > max_n_search) max_n_search = ids_n;
 				// cout<<"searching: "<<u<<" -> ids_n "<<ids_n<<" density: "<<density<<endl;
 				kplex_solver->load_graph(ids_n, vp);
-				if(u==1247) flag=true;
-				else flag=false;
 				kplex_solver->kPlex(K, UB, kplex, true);
 				if(pre_size<kplex.size())cout<<"A larger kplex found at: "<<u<<endl;
 			}
