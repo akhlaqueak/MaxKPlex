@@ -5,6 +5,7 @@ Timer thresh, branchings, bounding;
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
 #include "CTPrune.h"
+#include <omp.h>
 using namespace std;
 
 Graph::Graph(const char *_dir, const int _K) {
@@ -301,18 +302,18 @@ void Graph::kPlex_exact(int mode) {
 				else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 			}
 
-			Timer tt;
+				ui *peel_sequence_rid = core;
+				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
+				memset(vis, 0, sizeof(char)*n);
+				if(pend == nullptr) pend = new ept[n+1];
+				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 
-			KPLEX_BB *kplex_solver = new KPLEX_BB();
-			kplex_solver->allocateMemory(n);
+#pragma omp parallel
 			{
+				Timer tt;
 				vector<ui> ids;
 				vector<pair<ui,ui> > vp;
 
-				ui *peel_sequence_rid = core;
-				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
-
-				memset(vis, 0, sizeof(char)*n);
 
 				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 				kplex_solver_m->allocateMemory(n);
@@ -320,12 +321,7 @@ void Graph::kPlex_exact(int mode) {
 				ui search_cnt = 0;
 				double min_density = 1, total_density = 0;
 
-				if(pend == nullptr) pend = new ept[n+1];
-				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
-				ui sz1h = 0;
-				ui UB_t;
-
-
+#pragma omp for schedule(dynamic)
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
 					UB_t = kplex.size()+1;
@@ -355,27 +351,9 @@ void Graph::kPlex_exact(int mode) {
 
 				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
+				printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 			}
 
-#ifndef NDEBUG
-			if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) {
-				printf("!!! Found a maximum kplex less than 2*k-2, now verifying!\n");
-				kplex_solver->load_graph(n, pstart, pstart+1, edges);
-				if(2*K-2 < UB) UB = 2*K-2;
-				kplex_solver->kPlex(K, UB, kplex, false);
-				if(kplex.size() > 2*K-2) printf("!!! WA in kPlex_exact!\n");
-			}
-#endif
-			delete kplex_solver;
-
-			if(kplex.size() > old_size) {
-				for(ui i = 0;i < kplex.size();i ++) {
-					assert(kplex[i] < n);
-					kplex[i] = out_mapping[kplex[i]];
-				}
-			}
-
-			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 		}
 
 		delete[] out_mapping;
