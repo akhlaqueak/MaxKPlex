@@ -309,6 +309,7 @@ void Graph::kPlex_exact(int mode) {
 				memset(vis, 0, sizeof(char)*n);
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
+				best_solution_size = kplex.size();
 
 #pragma omp parallel
 			{
@@ -326,7 +327,6 @@ void Graph::kPlex_exact(int mode) {
 
 				ui search_cnt = 0;
 				double min_density = 1, total_density = 0;
-				best_solution_size = kplex.size();
 
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
