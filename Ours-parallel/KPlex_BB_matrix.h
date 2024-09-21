@@ -63,7 +63,7 @@ private:
 	ui sz1h;
 	bool found_larger=false;
 	bool ctcp_enabled=false;
-	bool dense_search, forward_sol;
+	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
 	KPLEX_BB_MATRIX(bool _ds=false) {
