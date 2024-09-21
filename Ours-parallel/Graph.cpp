@@ -316,9 +316,9 @@ void Graph::kPlex_exact(int mode) {
 				Timer tt;
 				vector<ui> ids, kplex_local=kplex;
 				vector<pair<ui,ui> > vp;
-				char* exists[n];// = new char[n];
-				ui* degree[n]; //= new ui[n];
-				ui* rid[n];// = new ui[n];
+				thread_local char* exists = new char[n];
+				thread_local ui* degree = new ui[n];
+				thread_local ui* rid = new ui[n];
 
 				std::fill(exists, exists+n, 0);
 				// std::fill(degree, degree+n, 0);
