@@ -325,7 +325,7 @@ void Graph::kPlex_exact(int mode) {
 
 				std::fill(exists, exists+n, 0);
 				n=0;
-				degree[0]=i;
+				degree[0]=omp_get_thread_num();;
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
 				cout<<degree[0]<<endl;
