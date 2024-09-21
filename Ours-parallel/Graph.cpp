@@ -304,7 +304,7 @@ void Graph::kPlex_exact(int mode) {
 			}
 
 				ui *peel_sequence_rid = core;
-				best_solution=new ui[n];
+
 				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
 				memset(vis, 0, sizeof(char)*n);
 				if(pend == nullptr) pend = new ept[n+1];
@@ -326,7 +326,7 @@ void Graph::kPlex_exact(int mode) {
 
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
-					if(best_solution_size >= UB) break;
+					if(best_solution_size >= UB) continue;
 					ui u = peel_sequence[i];
 
 					if(pend[u]-pstart[u]+K <= best_solution_size||n-i < best_solution_size) continue;

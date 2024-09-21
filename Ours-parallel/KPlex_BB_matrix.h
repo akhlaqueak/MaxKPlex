@@ -315,7 +315,7 @@ private:
 
 			for(ui j = 0;j < n;j ++) if(!vis[j]&&matrix[u*n + j]) -- degree[j];
 		}
-		#pragma omp atomic
+		// #pragma omp atomic
 		{
 			if(!dense_search&&(n - idx > best_solution_size)) {
 				best_solution_size = n - idx;
@@ -371,7 +371,7 @@ private:
 	}
 
 	void store_solution(ui size) {
-#pragma omp atomic
+// #pragma omp atomic
 {
 
 		if(size <= best_solution_size) {
