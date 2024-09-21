@@ -971,8 +971,8 @@ else{ // pivot based branching
 					--degree_in_H[w];
 					H_neigh[H_neigh_n++] = w;
 					if(degree_in_H[w] - 2*K <= best_solution_size) {
-						if(i < S_end) terminate = true; // UB1
-						else 
+						// if(i < S_end) terminate = true; // UB1
+						// else 
 						if(level_id[w] > level) { // RR3
 							level_id[w] = level;
 							Qv.push(w);
