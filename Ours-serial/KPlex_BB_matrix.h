@@ -354,7 +354,7 @@ private:
 			degree_in_H[u] = 0;
 			for(ui j = 1;j < R_end;j ++) 
 				if(matrix[SR[j]]){
-					if(matrix[u*n+SR[j]]) ++ degree[u];
+					if(matrix[u*n+SR[j]]) ++ degree_in_H[u];
 				}
 				else break;
 		}
