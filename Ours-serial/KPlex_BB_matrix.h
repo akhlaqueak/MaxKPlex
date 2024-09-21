@@ -965,6 +965,7 @@ else{ // pivot based branching
 				}
 				ui* H_neigh = nonneighbors;
 				ui H_neigh_n = 0;
+				cout<<"H; "<<H<<" ";
 				for(ui i = 1;i < H;i ++) if(t_matrix[SR[i]]) {
 					ui w=SR[i];
 					--degree_in_H[w];
