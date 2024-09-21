@@ -316,7 +316,7 @@ void Graph::kPlex_exact(int mode) {
 				vector<ui> ids, kplex_local=kplex;
 				vector<pair<ui,ui> > vp;
 				char* exists = new char[n];
-				std::fill(exists.begin(), exists.end(), 0);
+				std::fill(exists, exists+n, 0);
 				ui* degree = new ui[n];
 				ui* rid = new ui[n];
 
