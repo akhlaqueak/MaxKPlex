@@ -314,7 +314,6 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				best_solution_size = kplex.size();
-				cout<<best_solution_size<<" betst size";
 
 #pragma omp parallel
 			{
@@ -330,13 +329,13 @@ void Graph::kPlex_exact(int mode) {
 				std::fill(exists, exists+n, 0);
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
+				cout<<best_solution_size<<" betst size";
 
 				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 				kplex_solver_m->allocateMemory(n);
 
 				ui search_cnt = 0;
 				double min_density = 1, total_density = 0;
-				n=5;
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
 					if(best_solution_size >= UB) continue;
