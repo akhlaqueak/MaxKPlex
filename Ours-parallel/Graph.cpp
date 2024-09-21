@@ -2,7 +2,7 @@
 double threshold=1e9;
 Timer thresh, branchings, bounding;
 
-#include "KPlex_BB_matrix2.h"
+#include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
 #include "CTPrune.h"
 using namespace std;
