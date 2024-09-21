@@ -314,6 +314,7 @@ void Graph::kPlex_exact(int mode) {
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				best_solution_size = kplex.size();
+				cout<<best_solution_size<<" betst size";
 
 #pragma omp parallel
 			{
