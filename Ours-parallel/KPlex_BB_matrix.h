@@ -766,11 +766,14 @@ else{ // pivot based branching
 		while(true) {
 			ui *candidates = S2;
 			ui candidates_n = 0;
+			ui skip;
+			if(dense_search) skip = 1;
+			else skip = 2;
 			for(ui i = S_end;i < R_end;i ++) {
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
-				if(degree[u]>=R_end-2) {candidates[candidates_n ++] = u; continue;}
+				if(degree[u]>=R_end-skip) {candidates[candidates_n ++] = u; continue;}
 
 				char *t_matrix = matrix + u*n;
 				bool OK = true;
