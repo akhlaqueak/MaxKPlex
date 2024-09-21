@@ -321,8 +321,8 @@ void Graph::kPlex_exact(int mode) {
 				ui* rid = new ui[n];
 
 				std::fill(exists, exists+n, 0);
-				std::fill(degree, degree+n, 0);
-				std::fill(rid, rid+n, 0);
+				// std::fill(degree, degree+n, 0);
+				// std::fill(rid, rid+n, 0);
 
 				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 				kplex_solver_m->allocateMemory(n);
@@ -339,7 +339,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+					if(false) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
