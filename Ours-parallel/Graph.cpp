@@ -484,7 +484,7 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 			if(rid[v] < ids.size()&&rid[edges[j]] < ids.size())
 			vp.push_back(make_pair(rid[v], rid[edges[j]]));
 			else
-			cout<<rid[v]<<" "<<ids.size()<<endl;
+			cout<<"Error : "<<rid[v]<<" "<<ids.size()<<endl;
 		}
 	}
 	for(ui i = 0;i < ids.size();i ++) exists[ids[i]] = 0;
