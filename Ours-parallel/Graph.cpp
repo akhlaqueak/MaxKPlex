@@ -261,8 +261,7 @@ void Graph::kPlex_exact(int mode) {
 		return ;
 	}
 	if(K >= n) {
-	printf(">>%s trivial solution... \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
-	printf("\tMaxKPlex_Size: %lu t_Total: %f additional: %f\n", kplex.size(), t.elapsed()/1000000.0, 0.0);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
 	return ;
 	}
 
@@ -358,7 +357,7 @@ void Graph::kPlex_exact(int mode) {
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
 					printf("solving %u \n", i);
-					printf(" total_elapased: %llu iteration: %u u: %u \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f\n", tt.elapsed(), i, u, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
+					printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
 				}
 				delete kplex_solver_m;
 
@@ -397,7 +396,8 @@ void Graph::kPlex_exact(int mode) {
 	delete[] vis;
 	delete[] degree;
 	printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
-	printf("\tMaxKPlex_Size: %lu t_Total: %f additional: %f\n", kplex.size(), t.elapsed()/1000000.0, 0.0);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
+
 
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
 }
@@ -1330,12 +1330,12 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	if(!c_option->is_set()) {
-		printf("!!! The argument -c is not provided, using c=1!!!\n");
-		cfactor = 1;
-	}
-	else
-		cfactor = c_option->value();
+	// if(!c_option->is_set()) {
+	// 	printf("!!! The argument -c is not provided, using c=1!!!\n");
+	// 	cfactor = 1;
+	// }
+	// else
+	// 	cfactor = c_option->value();
 
 	Graph *graph = new Graph(graph_option->value().c_str(), k_option->value());
 	if(binary_input) graph->read_graph_binary();
