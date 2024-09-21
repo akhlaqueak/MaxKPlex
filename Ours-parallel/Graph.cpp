@@ -324,16 +324,12 @@ void Graph::kPlex_exact(int mode) {
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 				ui sz1h = 0;
 				ui UB_t;
-// #define FORWARD
-#ifdef FORWARD
-				for(ui i = 0;i < n&&kplex.size() < UB;i ++) {
-					ui u = peel_sequence[i];
-					UB_t = UB;
-#else
+
+
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
 					UB_t = kplex.size()+1;
-#endif
+
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
 					fflush(stdout);

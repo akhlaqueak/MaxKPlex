@@ -34,6 +34,8 @@ private:
 
 	ui *degree;
 	ui *degree_in_S;
+	ui *degree_in_H;
+	ui H;
 
 	ui K;
 	ui *best_solution;
@@ -77,7 +79,7 @@ public:
 #endif
 
 		degree = degree_in_S = nullptr;
-
+		degree_in_H = nullptr;
 		best_solution = nullptr;
 		K = best_solution_size = _UB_ = 0;
 
@@ -109,6 +111,10 @@ public:
 		if(degree_in_S != NULL) {
 			delete[] degree_in_S;
 			degree_in_S = NULL;
+		}
+		if(degree_in_H != NULL) {
+			delete[] degree_in_H;
+			degree_in_H = NULL;
 		}
 		if(best_solution != NULL) {
 			delete[] best_solution;
@@ -148,6 +154,7 @@ public:
 
 		degree = new ui[n];
 		degree_in_S = new ui[n];
+		degree_in_H = new ui[n];
 		best_solution = new ui[n];
 		SR = new ui[n];
 		SR_rid = new ui[n];
@@ -338,7 +345,19 @@ private:
 			degree[u] = degree_in_S[u] = 0;
 			for(ui j = 0;j < R_end;j ++) if(matrix[u*n + SR[j]]) ++ degree[u];
 		}
-
+		// first hop neighbors are from 1 to H
+		H=0;
+		for(ui i = 1;i < R_end;i ++) {
+			ui u=SR[i];
+			if(matrix[SR[i]]) H=i+1;
+			else break;
+			degree_in_H[u] = 0;
+			for(ui j = 1;j < R_end;j ++) 
+				if(matrix[SR[j]]){
+					if(matrix[u*n+SR[j]]) ++ degree[u];
+				}
+				else break;
+		}
 		memset(level_id, 0, sizeof(ui)*n);
 		for(ui i = 0;i < R_end;i ++) level_id[SR[i]] = n;
 
@@ -944,9 +963,25 @@ else{ // pivot based branching
 						}
 					}
 				}
+				ui* H_neigh = nonneighbors;
+				ui H_neigh_n = 0;
+				for(ui i = 1;i < H;i ++) if(t_matrix[SR[i]]) {
+					ui w=SR[i];
+					--degree_in_H[w];
+					H_neigh[H_neigh_n++] = w;
+					if(degree_in_H[w] + 2*K <= best_solution_size) {
+						if(i < S_end) terminate = true; // UB1
+						else 
+						if(level_id[w] > level) { // RR3
+							level_id[w] = level;
+							Qv.push(w);
+						}
+					}
+				}
 				// UB1
 				if(terminate) {
 					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
+					for(ui i = 0;i < H_neigh_n;i ++) ++ degree_in_H[H_neigh[i]];
 					level_id[u] = n;
 					++ R_end;
 					return false;
@@ -1085,12 +1120,17 @@ else{ // pivot based branching
 			ui neighbors_n = 0;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
+			degree_in_H[u]=0;
 			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
 				ui w = SR[i];
 				neighbors[neighbors_n ++] = w;
 				++ degree[w];
 				++ degree[u];
 				if(i < S_end) ++ degree_in_S[u];
+				if(u<H&&w<H){
+					++ degree_in_H[w];
+					++ degree_in_H[u];
+				}
 			}
 #ifdef _SECOND_ORDER_PRUNING_
 			for(ui i = 0;i < neighbors_n;i ++) {
