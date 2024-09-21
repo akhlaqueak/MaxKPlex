@@ -327,7 +327,7 @@ void Graph::kPlex_exact(int mode) {
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
 				cout<<exists<<" "<<degree<<" "<<rid<<endl;
-				return;
+
 				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 				kplex_solver_m->allocateMemory(n);
 
