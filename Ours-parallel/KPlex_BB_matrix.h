@@ -36,8 +36,7 @@ private:
 	ui *degree_in_S;
 
 	ui K;
-	ui *best_solution;
-	ui best_solution_size;
+	// ui best_solution_size;
 	ui _UB_;
 
 	ui *neighbors;
@@ -206,19 +205,19 @@ public:
 			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
 			return ;
 		}
-		best_solution_size = kplex.size();
+
 		ui n_edges = best_n_edges;
 		ui R_end;
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
-		if(dense_search&&best_n_edges>n_edges){
-			kplex.clear();
-			for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
-		}
-		if(best_solution_size > kplex.size()) {
-			kplex.clear();
-			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
-		}
+		// if(dense_search&&best_n_edges>n_edges){
+		// 	kplex.clear();
+		// 	for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
+		// }
+		// if(best_solution_size > kplex.size()) {
+		// 	kplex.clear();
+		// 	for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
+		// }
 	}
 
 	int main(int argc, char *argv[]) {
@@ -315,10 +314,13 @@ private:
 
 			for(ui j = 0;j < n;j ++) if(!vis[j]&&matrix[u*n + j]) -- degree[j];
 		}
-		if(!dense_search&&(n - idx > best_solution_size)) {
-			best_solution_size = n - idx;
-			for(ui i = idx;i < n;i ++) best_solution[i-idx] = peel_sequence[i];
-			printf("Degen find a solution of size %u\n", best_solution_size);
+		#pragma omp atomic
+		{
+			if(!dense_search&&(n - idx > best_solution_size)) {
+				best_solution_size = n - idx;
+				for(ui i = idx;i < n;i ++) best_solution[i-idx] = peel_sequence[i];
+				printf("Degen find a solution of size %u\n", best_solution_size);
+			}
 		}
 
 		R_end = 0;
@@ -368,6 +370,8 @@ private:
 	}
 
 	void store_solution(ui size) {
+#pragma omp atomic
+{
 
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
@@ -399,6 +403,7 @@ private:
 		// for(ui i = 0;i < best_solution_size;i ++) {
 		// 	if(degree_in_S[SR[i]]+K<best_solution_size) std::cout<<degree_in_S[SR[i]]+K<<" ";
 		// }
+}
 	}
 
 	bool is_kplex(ui R_end) {

@@ -1,7 +1,8 @@
 #include "Graph.h"
 double threshold=1e9;
 Timer thresh, branchings, bounding;
-ui pre_best_solution_size;
+ui best_solution_size;
+ui *best_solution;
 
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
@@ -304,6 +305,7 @@ void Graph::kPlex_exact(int mode) {
 			}
 
 				ui *peel_sequence_rid = core;
+				best_solution=new ui[n];
 				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
 				memset(vis, 0, sizeof(char)*n);
 				if(pend == nullptr) pend = new ept[n+1];
@@ -323,8 +325,9 @@ void Graph::kPlex_exact(int mode) {
 				double min_density = 1, total_density = 0;
 
 #pragma omp for schedule(dynamic)
-				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
-					ui u = peel_sequence[i-1];
+				for(ui i = 0;i < n;i ++) {
+					if(kplex.size() >= UB) break;
+					ui u = peel_sequence[i];
 
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
