@@ -285,7 +285,7 @@ datasets=$(ls ~/graphs/test25/*.bin)
 solutions='Maple-forward kPlexT-backward'
 
 del_prev
-run_jobs 10:00
+run_jobs 01:00:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
 datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
