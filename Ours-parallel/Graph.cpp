@@ -1300,8 +1300,8 @@ char filename[LEN_LIMIT];
 		int k = atoi(argv[2]);
 		Graph *graph = new Graph(filename, k);
 		graph->read_graph_binary();
-		graph->kPlex_exact(mode);
-		if(output) graph->output_one_kplex();
+		graph->kPlex_exact(false);
+		graph->output_one_kplex();
 		delete graph;
 		// delete graph; // there are some bugs in releasing memory
 	}
@@ -1310,9 +1310,9 @@ char filename[LEN_LIMIT];
 		int k = atoi(argv[2]);
 		Graph *graph = new Graph(filename, k);
 		graph->read_graph_binary();
-		graph->kPlex_exact(mode);
+		graph->kPlex_exact(false);
 		// graph->kPlex_dense();
-		if(output) graph->output_one_kplex();
+		graph->output_one_kplex();
 		delete graph;
 	}
 	else printf("[usage]: exe file k [dense]\n");
