@@ -339,7 +339,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(false) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
@@ -462,14 +462,16 @@ ui Graph::extract_subgraph_with_prune(ui u, ui degree_threshold, ui triangle_thr
 	ui new_size = 1;
 	for(ui i = 1;i < old_size;i ++) {
 		if(exists[ids[i]] == 3) exists[ids[i]] = 0;
-		else ids[new_size++] = ids[i];
+		else ids.push_back([i]);
+		// else ids[new_size++] = ids[i];
 	}
 	assert(new_size + Q_n == old_size);
 	for(ui i = old_size;i < ids.size();i ++) {
 		if(degree[ids[i]] < cn_threshold) exists[ids[i]] = 0;
-		else ids[new_size++] = ids[i];
+		else ids.push_back([i]);
+		// else ids[new_size++] = ids[i];
 	}
-	ids.resize(new_size);
+	// ids.resize(new_size);
 
 	for(ui i = 0;i < ids.size();i ++) rid[ids[i]] = i;
 	for(ui i = 0;i < ids.size();i ++) {
