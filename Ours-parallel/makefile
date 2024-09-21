@@ -1,10 +1,8 @@
-# ********     Author: Lijun Chang    ******
-# ******** Email: ljchang@outlook.com ******
-#
-CC=g++ -O3
-CFLAGS=-c -I. -std=c++20
-
-all: kPlexT
-
-kPlexT: 
-	${CC} Graph.cpp -o kPlexTBs
+all : 
+	g++ -flto -Ofast -DNDEBUG -march=native -o Maple main.cpp Graph.cpp -w
+clean:
+	rm -rf Maple
+debug:
+	g++ -g -DNDEBUG -o Maple main.cpp Graph.cpp
+prof:
+	g++ -pg -DNDEBUG -march=native -o Maple-pg main.cpp Graph.cpp -w
