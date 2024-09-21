@@ -316,6 +316,7 @@ void Graph::kPlex_exact(int mode) {
 				vector<ui> ids, kplex_local=kplex;
 				vector<pair<ui,ui> > vp;
 				char* exists = new char[n];
+				ui* degree = new ui[n];
 
 
 				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
