@@ -304,12 +304,15 @@ void Graph::kPlex_exact(int mode) {
 				else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 			}
 
-				ui *peel_sequence_rid = core;
 
+
+				ui *peel_sequence_rid = core;
 				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
+
+				memset(vis, 0, sizeof(char)*n);
+
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
-				ui *p_rid=rid;
 				best_solution_size = kplex.size();
 
 #pragma omp parallel
@@ -332,7 +335,7 @@ void Graph::kPlex_exact(int mode) {
 
 				ui search_cnt = 0;
 				double min_density = 1, total_density = 0;
-
+				n=5;
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
 					if(best_solution_size >= UB) continue;
@@ -342,7 +345,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, p_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
