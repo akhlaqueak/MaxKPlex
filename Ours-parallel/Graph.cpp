@@ -323,7 +323,7 @@ void Graph::kPlex_exact(int mode) {
 				ui* degree = new ui[n];
 				ui* rid = new ui[n];
 
-				std::fill(exists, exists+n, 0);
+				std::fill(exists, exists+n, 0);n=0;
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
 				cout<<exists<<" "<<degree<<" "<<rid<<endl;
