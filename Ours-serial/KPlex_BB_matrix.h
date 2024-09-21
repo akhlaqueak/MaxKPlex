@@ -349,7 +349,7 @@ private:
 		H=0;
 		for(ui i = 1;i < R_end;i ++) {
 			ui u=SR[i];
-			if(matrix[SR[i]]) H=i+1;
+			if(matrix[u]) H=i+1;
 			else break;
 			degree_in_H[u] = 0;
 			for(ui j = 1;j < R_end;j ++) 
@@ -970,7 +970,7 @@ else{ // pivot based branching
 					ui w=SR[i];
 					--degree_in_H[w];
 					H_neigh[H_neigh_n++] = w;
-					if(degree_in_H[w] - 2*K <= best_solution_size) {
+					if(degree_in_H[w] <= best_solution_size-2*K) {
 						if(i < S_end) terminate = true; // UB1
 						else 
 						if(level_id[w] > level) { // RR3
