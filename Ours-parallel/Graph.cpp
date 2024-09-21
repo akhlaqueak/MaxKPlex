@@ -343,7 +343,7 @@ void Graph::kPlex_exact(int mode) {
 					fflush(stdout);
 
 					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree.data(), ids, rid.data(), vp, exists.data(), pstart, pend, edges);
-					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
+					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid.data(), vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
 
