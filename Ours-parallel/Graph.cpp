@@ -1,6 +1,7 @@
 #include "Graph.h"
 double threshold=1e9;
 Timer thresh, branchings, bounding;
+ui pre_best_solution_size;
 
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
@@ -324,14 +325,13 @@ void Graph::kPlex_exact(int mode) {
 #pragma omp for schedule(dynamic)
 				for(ui i = n;i > 0&&kplex.size() < UB;i --) {
 					ui u = peel_sequence[i-1];
-					UB_t = kplex.size()+1;
 
 					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
 
 					fflush(stdout);
 
-					if(kplex.size() >= 2*K-1) sz1h = extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
-					else sz1h = extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
+					if(kplex.size() >= 2*K-1) extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
+					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= kplex.size()) continue;
 
