@@ -395,7 +395,6 @@ void Graph::kPlex_exact(int mode) {
 	delete[] peel_sequence;
 	delete[] vis;
 	delete[] degree;
-	printf(">>%s \tn: %lu \tm: %lu \tt_seesaw: %f \tt_2_hop_reduction: %f \tt_branchings %f", dir.substr(dir.find_last_of("/")+1).c_str(), nn, mm, seesaw.ticktock(), reductions.ticktock(), branchings.ticktock());
 	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
 
 
