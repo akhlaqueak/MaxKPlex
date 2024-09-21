@@ -2,7 +2,6 @@
 double threshold=1e9;
 Timer thresh, branchings, bounding;
 ui best_solution_size;
-ui *best_solution;
 
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
@@ -314,7 +313,7 @@ void Graph::kPlex_exact(int mode) {
 #pragma omp parallel
 			{
 				Timer tt;
-				vector<ui> ids;
+				vector<ui> ids, kplex_local=kplex;
 				vector<pair<ui,ui> > vp;
 
 
@@ -323,31 +322,32 @@ void Graph::kPlex_exact(int mode) {
 
 				ui search_cnt = 0;
 				double min_density = 1, total_density = 0;
+				best_solution_size = kplex.size();
 
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
-					if(kplex.size() >= UB) break;
+					if(best_solution_size >= UB) break;
 					ui u = peel_sequence[i];
 
-					if(pend[u]-pstart[u]+K <= kplex.size()||n-i < kplex.size()) continue;
+					if(pend[u]-pstart[u]+K <= best_solution_size||n-i < best_solution_size) continue;
 
 					fflush(stdout);
 
-					if(kplex.size() >= 2*K-1) extract_subgraph_with_prune(u, kplex.size()+1-K, kplex.size()+1-2*K, kplex.size()+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
+					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, vis, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
-					if(ids.empty()||ids.size() <= kplex.size()) continue;
+					if(ids.empty()||ids.size() <= best_solution_size) continue;
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
 					total_density += density;
 					if(density < min_density) min_density = density;
-					ui t_old_size = kplex.size();
+					ui t_old_size = kplex_local.size();
 						kplex_solver_m->load_graph(ids.size(), vp);
-						kplex_solver_m->kPlex(K, UB, kplex, true);
+						kplex_solver_m->kPlex(K, UB, kplex_local, true);
 					// cout<<"search completed"<<endl;
-					if(kplex.size() > t_old_size) {
-						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
+					if(kplex_local.size() > t_old_size) {
+						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
 					}
 				}
 				delete kplex_solver_m;

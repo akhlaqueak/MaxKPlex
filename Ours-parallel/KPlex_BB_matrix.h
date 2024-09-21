@@ -34,6 +34,7 @@ private:
 
 	ui *degree;
 	ui *degree_in_S;
+	ui *best_solution;
 
 	ui K;
 	// ui best_solution_size;
@@ -210,14 +211,14 @@ public:
 		ui R_end;
 		initialization(R_end, must_include_0);
 		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
-		// if(dense_search&&best_n_edges>n_edges){
-		// 	kplex.clear();
-		// 	for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
-		// }
-		// if(best_solution_size > kplex.size()) {
-		// 	kplex.clear();
-		// 	for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
-		// }
+		if(dense_search&&best_n_edges>n_edges){
+			kplex.clear();
+			for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
+		}
+		if(best_solution_size > kplex.size()) {
+			kplex.clear();
+			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
+		}
 	}
 
 	int main(int argc, char *argv[]) {
