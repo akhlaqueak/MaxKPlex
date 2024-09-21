@@ -965,12 +965,12 @@ else{ // pivot based branching
 				}
 				ui* H_neigh = nonneighbors;
 				ui H_neigh_n = 0;
-				cout<<"H; "<<H<<" ,"<<n<<":";
+
 				for(ui i = 1;i < H;i ++) if(t_matrix[SR[i]]) {
 					ui w=SR[i];
 					--degree_in_H[w];
 					H_neigh[H_neigh_n++] = w;
-					if(degree_in_H[w] + 2*K <= best_solution_size) {
+					if(degree_in_H[w] - 2*K <= best_solution_size) {
 						if(i < S_end) terminate = true; // UB1
 						else 
 						if(level_id[w] > level) { // RR3
