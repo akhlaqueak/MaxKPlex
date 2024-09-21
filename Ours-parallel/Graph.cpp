@@ -315,9 +315,9 @@ void Graph::kPlex_exact(int mode) {
 #pragma omp parallel
 			{
 				Timer tt;
-				vector<ui> ids, kplex_local=kplex, degree(n), rid(n);
-				vector<pair<ui,ui> > vp;
-				vector<char> exists(n);
+				thread_local vector<ui> ids, kplex_local=kplex, degree(n), rid(n);
+				thread_local vector<pair<ui,ui> > vp;
+				thread_local vector<char> exists(n);
 
 				// thread_local char* exists = new char[n];
 				// thread_local ui* degree = new ui[n];
@@ -327,7 +327,7 @@ void Graph::kPlex_exact(int mode) {
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
 
-				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
+				thread_local KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 				kplex_solver_m->allocateMemory(n);
 
 				ui search_cnt = 0;
