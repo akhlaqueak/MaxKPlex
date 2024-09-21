@@ -966,13 +966,13 @@ else{ // pivot based branching
 				ui* H_neigh = nonneighbors;
 				ui H_neigh_n = 0;
 
-				for(ui i = 1;i < H;i ++) if(t_matrix[SR[i]]) {
+				for(ui i = 1;u<H&&i < H;i ++) if(t_matrix[SR[i]]) {
 					ui w=SR[i];
 					--degree_in_H[w];
 					H_neigh[H_neigh_n++] = w;
 					if(degree_in_H[w] - 2*K <= best_solution_size) {
-						// if(i < S_end) terminate = true; // UB1
-						// else 
+						if(i < S_end) terminate = true; // UB1
+						else 
 						if(level_id[w] > level) { // RR3
 							level_id[w] = level;
 							Qv.push(w);
@@ -982,7 +982,7 @@ else{ // pivot based branching
 				// UB1
 				if(terminate) {
 					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
-					// for(ui i = 0;i < H_neigh_n;i ++) ++ degree_in_H[H_neigh[i]];
+					for(ui i = 0;i < H_neigh_n;i ++) ++ degree_in_H[H_neigh[i]];
 					level_id[u] = n;
 					++ R_end;
 					return false;
