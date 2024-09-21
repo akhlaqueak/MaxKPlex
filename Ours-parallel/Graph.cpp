@@ -356,8 +356,6 @@ void Graph::kPlex_exact(int mode) {
 						printf("Larger kplex found at %u", u);
 						for(ui j = 0;j < kplex.size();j ++) kplex[j] = ids[kplex[j]];
 					}
-					printf("solving %u \n", i);
-					printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
 				}
 				delete kplex_solver_m;
 
