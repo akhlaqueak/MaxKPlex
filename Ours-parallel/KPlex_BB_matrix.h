@@ -56,7 +56,7 @@ private:
 
 	// std::vector<std::pair<ui,ui> > vp2;
 
-	bool sparse;
+	bool sparse=true;
 	vector<ui> B, PI, PIMax, ISc, peelOrder, psz;
 	ui* LPI;
 	MBitSet bmp;
@@ -183,6 +183,7 @@ public:
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
 #endif
 		memset(matrix, 0, sizeof(char)*((long long)n)*n);
+		sparse = 2.0*vp.size()/n/(n-1);
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
 			assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
