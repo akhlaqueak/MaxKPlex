@@ -982,7 +982,7 @@ else{ // pivot based branching
 				// UB1
 				if(terminate) {
 					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
-					for(ui i = 0;i < H_neigh_n;i ++) ++ degree_in_H[H_neigh[i]];
+					// for(ui i = 0;i < H_neigh_n;i ++) ++ degree_in_H[H_neigh[i]];
 					level_id[u] = n;
 					++ R_end;
 					return false;
