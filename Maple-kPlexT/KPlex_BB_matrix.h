@@ -770,6 +770,8 @@ else{ // pivot based branching
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
+				if(degree[u]>=R_end-2) {candidates[candidates_n ++] = u; continue;}
+
 				char *t_matrix = matrix + u*n;
 				bool OK = true;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {

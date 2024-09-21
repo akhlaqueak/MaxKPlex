@@ -1027,7 +1027,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		if(!dense_search && new_size - idx > kplex.size()) {
 			kplex.clear();
 			for(ui i = idx;i < new_size;i ++) kplex.pb(peel_sequence[queue_n + i]);
-			if(!output) printf("Find a k-plex of size: %u\n", new_size - idx);
+			if(output) printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
 	return UB;
