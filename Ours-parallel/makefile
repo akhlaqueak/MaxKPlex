@@ -1,8 +1,8 @@
 all : 
-	g++ -flto -Ofast -DNDEBUG -march=native -o Maple main.cpp Graph.cpp -w
+	g++ -flto -Ofast -DNDEBUG -march=native -o Maple Graph.cpp -w
 clean:
 	rm -rf Maple
 debug:
-	g++ -g -DNDEBUG -o Maple main.cpp Graph.cpp
+	g++ -g -DNDEBUG -o Maple Graph.cpp
 prof:
-	g++ -pg -DNDEBUG -march=native -o Maple-pg main.cpp Graph.cpp -w
+	g++ -pg -DNDEBUG -march=native -o Maple-pg Graph.cpp -w
