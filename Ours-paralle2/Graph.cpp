@@ -281,10 +281,10 @@ void Graph::search() {
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
 		kplex_solver->allocateMemory(n);
 
-		if(kplex.size() > 2*K-2 ) {
-			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
-		}
+		// if(kplex.size() > 2*K-2 ) {
+		// 	m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+		// 	printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
+		// }
 
 		Timer tt;
 
@@ -545,7 +545,7 @@ void Graph::search_dense() {
 
 			bool check=false;
 
-			extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, deleted, edgelist_pointer);
+			extract_subgraph_and_prune(u, ids, ids_n, rid, vp, Qe, t_degree, exists, pend, peel_sequence, edgelist_pointer);
 			if(ids_n) {
 				double density = (double(vp.size()*2))/ids_n/(ids_n-1);
 				total_density_prune += density; ++ prune_cnt;
