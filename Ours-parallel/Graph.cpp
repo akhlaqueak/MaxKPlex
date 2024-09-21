@@ -9,9 +9,6 @@ ui best_solution_size;
 #include <omp.h>
 using namespace std;
 
-				thread_local char* exists1 = new char[n];
-				thread_local ui* degree1 = new ui[n];
-				thread_local ui* rid1 = new ui[n];
 
 Graph::Graph(const char *_dir, const int _K) {
 	dir = string(_dir);
@@ -318,11 +315,15 @@ void Graph::kPlex_exact(int mode) {
 #pragma omp parallel
 			{
 				Timer tt;
-				vector<ui> ids, kplex_local=kplex;
+				vector<ui> ids, kplex_local=kplex, degree(n), rid(n);
 				vector<pair<ui,ui> > vp;
+				vector<char> exists(n);
 
+				// thread_local char* exists = new char[n];
+				// thread_local ui* degree = new ui[n];
+				// thread_local ui* rid = new ui[n];
 
-				std::fill(exists1, exists1+n, 0);
+				// std::fill(exists, exists+n, 0);
 				// std::fill(degree, degree+n, 0);
 				// std::fill(rid, rid+n, 0);
 
@@ -341,7 +342,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree1, ids, rid1, vp, exists1, pstart, pend, edges);
+					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree.data(), ids, rid.data(), vp, exists.data(), pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
