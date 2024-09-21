@@ -188,6 +188,8 @@ public:
 		for(ui i = 0;i < vp.size();i ++) {
 			assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
 			ui a = vp[i].first, b = vp[i].second;
+			if(a>=n) cout<<a<<","<<n" ";
+			if(b>=n) cout<<b<<","<<n" ";
 			degree[a] ++;
 			degree[b] ++;
 			if(matrix[a*n+b]) printf("Duplicate edge in KPLEX_BB_matrix.load_graph()\n");
