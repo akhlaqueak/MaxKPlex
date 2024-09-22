@@ -392,7 +392,7 @@ void Graph::kPlex_exact(int mode) {
 	delete[] peel_sequence;
 	delete[] vis;
 	delete[] degree;
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), best_solution_size.load(), t.elapsed()/1e6, bounding.ticktock());
 
 
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
