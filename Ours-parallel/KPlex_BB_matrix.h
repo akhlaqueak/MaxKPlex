@@ -240,7 +240,7 @@ public:
 		Timer t;
 		initialization(R_end, false);
 		if(R_end) BB_search(0, R_end, 1, 0);
-		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size, Utility::integer_to_string(t.elapsed()).c_str());
+		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size.load(), Utility::integer_to_string(t.elapsed()).c_str());
 		return 0;
 	}
 
