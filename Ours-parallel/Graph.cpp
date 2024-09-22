@@ -360,9 +360,9 @@ void Graph::kPlex_exact(int mode) {
 						kplex_solver_m->load_graph(ids.size(), vp);
 						kplex_solver_m->kPlex(K, UB, kplex_local, true);
 					// cout<<"search completed"<<endl;
-					if(kplex_local.size() > t_old_size) {
-						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
-					}
+					// if(kplex_local.size() > t_old_size) {
+					// 	for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
+					// }
 				}
 				// delete kplex_solver_m;
 
