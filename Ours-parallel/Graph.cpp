@@ -345,7 +345,7 @@ void Graph::kPlex_exact(int mode) {
 
 					fflush(stdout);
 
-					if(false) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+					if(best_solution_size >= 2*K-1) extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, vis, pstart, pend, edges);
 
 					if(ids.empty()||ids.size() <= best_solution_size) continue;
@@ -362,7 +362,7 @@ void Graph::kPlex_exact(int mode) {
 						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
 					}
 				}
-				delete kplex_solver_m;
+				// delete kplex_solver_m;
 
 				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
