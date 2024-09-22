@@ -1,7 +1,7 @@
 #include "Graph.h"
 double threshold=1e9;
 Timer thresh, branchings, bounding;
-ui best_solution_size;
+atomic<ui> best_solution_size(0);
 
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
@@ -313,8 +313,8 @@ void Graph::kPlex_exact(int mode) {
 
 				if(pend == nullptr) pend = new ept[n+1];
 				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
-				best_solution_size = kplex.size();
-				cout<<"Best solution size: "<<best_solution_size<<endl;
+				best_solution_size.store(kplex.size());
+				cout<<"Best solution size: "<<best_solution_size.load()<<endl;
 
 #pragma omp parallel
 			{
@@ -339,18 +339,19 @@ void Graph::kPlex_exact(int mode) {
 				double min_density = 1, total_density = 0;
 #pragma omp for schedule(dynamic)
 				for(ui i = 0;i < n;i ++) {
-					if(best_solution_size >= UB) continue;
+					ui best_sz = best_solution_size.load();
+					if(best_sz >= UB) continue;
 					ui u = peel_sequence[i];
 
-					if(pend[u]-pstart[u]+K <= best_solution_size||n-i < best_solution_size) continue;
+					if(pend[u]-pstart[u]+K <= best_sz||n-i < best_sz) continue;
 
 					fflush(stdout);
 
-					if(best_solution_size >= 2*K-1) 
-					extract_subgraph_with_prune(u, best_solution_size+1-K, best_solution_size+1-2*K, best_solution_size+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+					if(best_sz >= 2*K-1) 
+					extract_subgraph_with_prune(u, best_sz+1-K, best_sz+1-2*K, best_sz+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
 					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, exists, pstart, pend, edges);
 
-					if(ids.empty()||ids.size() <= best_solution_size) continue;
+					if(ids.empty()||ids.size() <= best_sz) continue;
 
 					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
 					++ search_cnt;
@@ -359,12 +360,12 @@ void Graph::kPlex_exact(int mode) {
 					ui t_old_size = kplex_local.size();
 						kplex_solver_m->load_graph(ids.size(), vp);
 						kplex_solver_m->kPlex(K, UB, kplex_local, true);
-					// cout<<"search completed"<<endl;
+
 					// if(kplex_local.size() > t_old_size) {
 					// 	for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
 					// }
 				}
-				// delete kplex_solver_m;
+				delete kplex_solver_m;
 
 				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);

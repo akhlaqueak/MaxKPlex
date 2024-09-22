@@ -37,7 +37,7 @@ private:
 	ui *best_solution;
 
 	ui K;
-	// ui best_solution_size;
+	ui solution_size;
 	ui _UB_;
 
 	ui *neighbors;
@@ -211,14 +211,14 @@ public:
 		ui n_edges = best_n_edges;
 		ui R_end;
 		initialization(R_end, must_include_0);
-		if(R_end&&best_solution_size < _UB_) BB_search(0, R_end, 1, must_include_0);
+		if(R_end&&best_solution_size.load() < _UB_) BB_search(0, R_end, 1, must_include_0);
 		if(dense_search&&best_n_edges>n_edges){
 			kplex.clear();
-			for(int i = 0;i < best_solution_size+1;i ++) kplex.push_back(best_solution[i]);
+			for(int i = 0;i < solution_size+1;i ++) kplex.push_back(best_solution[i]);
 		}
-		if(best_solution_size > kplex.size()) {
+		if(solution_size > kplex.size()) {
 			kplex.clear();
-			for(int i = 0;i < best_solution_size;i ++) kplex.push_back(best_solution[i]);
+			for(int i = 0;i < solution_size;i ++) kplex.push_back(best_solution[i]);
 		}
 	}
 
@@ -234,7 +234,7 @@ public:
 			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
 			return 0;
 		}
-		best_solution_size = 1;
+		best_solution_size.load(1);
 		_UB_ = n;
 		ui R_end;
 		Timer t;
@@ -318,11 +318,12 @@ private:
 		}
 		#pragma omp critical
 		{
-			if(!dense_search&&(n - idx > best_solution_size)) {
+			if(!dense_search&&(n - idx > best_solution_size.load())) {
 				cout<<"best size"<<best_solution_size<<endl;
-				best_solution_size = n - idx;
+				best_solution_size.store(n - idx);
+				solution_size=n-idx;
 				for(ui i = idx;i < n;i ++) best_solution[i-idx] = peel_sequence[i];
-				printf("Degen find a solution of size %u\n", best_solution_size);
+				printf("Degen find a solution of size %u\n", solution_size);
 			}
 		}
 
@@ -374,12 +375,11 @@ private:
 
 	void store_solution(ui size) {
 
-		if(size <= best_solution_size) {
+		if(size <= best_solution_size.load()) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
-#pragma omp critical
-{
+
 		ui n_edges = 0;
 		for(ui i = 0;i < size;i ++) 
 		{
@@ -398,15 +398,13 @@ private:
 			}
 		}
 		else{
-			best_solution_size = size;
+			best_solution_size.store(size);
+			solution_size = size;
 			found_larger = true;
-			for(ui i = 0;i < best_solution_size;i ++) best_solution[i] = SR[i];
+			for(ui i = 0;i < size;i ++) best_solution[i] = SR[i];
 			best_n_edges = n_edges;
 		}
-		// for(ui i = 0;i < best_solution_size;i ++) {
-		// 	if(degree_in_S[SR[i]]+K<best_solution_size) std::cout<<degree_in_S[SR[i]]+K<<" ";
-		// }
-}
+
 	}
 
 	bool is_kplex(ui R_end) {
@@ -416,9 +414,10 @@ private:
 	}
 
 	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true) {
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) return ;	
+		ui best_sz = best_solution_size.load();
+		if(S_end > best_sz) store_solution(S_end);
+		if(R_end > best_sz&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end <= best_sz+1 || best_sz >= _UB_) return ;	
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -515,16 +514,16 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-
-		if(S_end > best_solution_size) store_solution(S_end);
-		if(R_end > best_solution_size&&is_kplex(R_end)) store_solution(R_end);
-		if(R_end <= best_solution_size+1 || best_solution_size >= _UB_) {
+		best_sz = best_solution_size.load();
+		if(S_end > best_sz) store_solution(S_end);
+		if(R_end > best_sz&&is_kplex(R_end)) store_solution(R_end);
+		if(R_end <= best_sz+1 || best_sz >= _UB_) {
 			//printf("here3\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
 		bounding.tick();
-		ui beta = best_solution_size - S_end;
+		ui beta = best_sz - S_end;
 		#ifdef PART_BOUND
 		if(bound(S_end, R_end)>=R_end){
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
@@ -534,8 +533,8 @@ private:
 
 
 		#ifdef SEESAW
-		if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
-		// if (seesawUB(S_end, R_end)<=best_solution_size) {
+		if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_sz) {
+		// if (seesawUB(S_end, R_end)<=best_sz) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -543,8 +542,8 @@ private:
 		#endif
 
 		#ifdef COLORBOUND
-		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
-		if (colorUB(S_end, R_end)<=best_solution_size) {
+		// if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_sz) {
+		if (colorUB(S_end, R_end)<=best_sz) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -589,7 +588,7 @@ if(PART_BRANCH){
 				if(i < S_end) ++ degree_in_S[u];
 			}
 
-			if(best_solution_size >= _UB_) return ;
+			if(best_solution_size.load() >= _UB_) return ;
 			if(root_level) found_larger=false;
 			if(found_larger) continue;
 
@@ -667,7 +666,7 @@ else{ // pivot based branching
 			}
 #endif
 			bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
-			if(succeed&&best_solution_size > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
+			if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
@@ -703,6 +702,7 @@ else{ // pivot based branching
 
 		ui new_n = 0;
 		while(!Qv.empty()) Qv.pop();
+		ui best_sz = best_solution_size.load();
 		for(ui i = 0;i < vp.size();i ++) {
 			ui idx = ids[i], v = vp[ids[i]].first;
 			ui t_support = total_support - vp[idx].second;
@@ -711,27 +711,24 @@ else{ // pivot based branching
 			// ISc.clear();
 			while(true) {
 				if(j == new_n) j = i+1;
-				if(j >= vp.size()||ub > best_solution_size||ub + vp.size() - j <= best_solution_size) break;
+				if(j >= vp.size()||ub > best_sz||ub + vp.size() - j <= best_sz) break;
 				ui u = vp[ids[j]].first, nn = vp[ids[j]].second;
 				if(t_support < nn) break;
 				if(t_matrix[u]) {
 					t_support -= nn;
 					++ ub;
-					// ISc.push_back(u);
+
 				}
 				else if(v_support > 0) {
 					-- v_support;
 					t_support -= nn;
 					++ ub;
-					// ISc.push_back(u);
+
 				}
 				++ j;
 			}
-			// if(ub > best_solution_size) {
-			// 	ub=bound(S_end, R_end, v, ISc);
-			// 	if(flag and ub<=best_solution_size) cout<<ub<<" "<<best_solution_size<<endl;
-			// }
-			if(ub <= best_solution_size) {
+
+			if(ub <= best_sz) {
 				level_id[v] = level;
 				Qv.push(v);
 			}
@@ -925,6 +922,7 @@ else{ // pivot based branching
 	}
 
 	bool remove_vertices_and_edges_with_prune(ui S_end, ui &R_end, ui level) {
+		ui best_sz = best_solution_size.load();
 #ifdef _SECOND_ORDER_PRUNING_
 		while(!Qv.empty()||!Qe.empty()) {
 #else
@@ -944,7 +942,7 @@ else{ // pivot based branching
 					ui w = SR[i];
 					neighbors[neighbors_n++] = w;
 					-- degree[w];
-					if(degree[w] + K <= best_solution_size) {
+					if(degree[w] + K <= best_sz) {
 						if(i < S_end) terminate = true; // UB1
 						else if(level_id[w] > level) { // RR3
 							level_id[w] = level;
@@ -1244,12 +1242,13 @@ else{ // pivot based branching
 		bool terminate = false;
 		ui neighbors_n = 0;
 		char *t_matrix = matrix + u*n;
+		ui best_sz=best_solution_size.load();
 		for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) neighbors[neighbors_n ++] = SR[i];
 		for(ui i = 0;i < neighbors_n;i ++) {
 			ui v = neighbors[i];
 			-- degree_in_S[v];
 			-- degree[v];
-			if(degree[v] + K <= best_solution_size) {
+			if(degree[v] + K <= best_sz) {
 				if(SR_rid[v] < S_end) terminate = true;
 				else {
 					assert(level_id[v] > level);
@@ -1285,7 +1284,8 @@ else{ // pivot based branching
 	}
 
 	bool collect_removable_vertices_and_edges(ui S_end, ui R_end, ui level) {
-		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_solution_size) return false;
+		ui best_sz=best_solution_size.load();
+		for(ui i = 0;i < S_end;i ++) if(degree[SR[i]] + K <= best_sz) return false;
 
 #ifdef _SECOND_ORDER_PRUNING_
 		for(ui i = 0;i < S_end;i ++) for(ui j = i+1;j < S_end;j ++) {
@@ -1295,7 +1295,7 @@ else{ // pivot based branching
 
 		for(ui i = S_end;i < R_end;i ++) if(level_id[SR[i]] > level){
 			ui v = SR[i];
-			if(S_end - degree_in_S[v] >= K||degree[v] + K <= best_solution_size) {
+			if(S_end - degree_in_S[v] >= K||degree[v] + K <= best_sz) {
 				level_id[v] = level;
 				Qv.push(v);
 				continue;
@@ -1338,7 +1338,7 @@ else{ // pivot based branching
 			-- ub;
 			if(matrix[v*n+u]) ++ ub;
 		}
-		return ub <= best_solution_size;
+		return ub <= best_solution_size.load();
 	}
 #endif
 
@@ -1396,10 +1396,11 @@ else{ // pivot based branching
 		B.clear();
 		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
 		char *t_matrix = matrix + 0*n;
+		ui best_sz=best_solution_size.load();
 		for(ui i = S_end;i < R_end;i ++) {
 			ui v = SR[i];
 			if(!t_matrix[v] && //HOP2 first
-			(degree[v]+K<=best_solution_size+1||
+			(degree[v]+K<=best_sz+1||
 			support(S_end, v) == 1||
 			support(S_end, 0) == 1)
 			){ 
@@ -1470,7 +1471,7 @@ else{ // pivot based branching
                     t_LPI[psz[i]++] = v;
             }
         }
-        ui beta = best_solution_size - S_end;
+        ui beta = best_solution_size.load() - S_end;
         ui cend = S_end;
 		branchings.tick();
         while (true)
@@ -1754,6 +1755,7 @@ else{ // pivot based branching
 		// for(ui i = 0;i < S_end;i ++) vp.push_back(std::make_pair(-(degree_in_S[SR[i]]-neiInP[SR[i]]), SR[i]));
     	sort(vp.begin(), vp.end());
     	ui UB = S_end, cursor = S_end;
+		ui best_sz=best_solution_size.load();
     	for(ui i = 0;i < (ui)vp.size(); i++) {
     		ui u = vp[i].second;
     		if(vp[i].first == 0) continue;// boundary vertex
@@ -1766,15 +1768,15 @@ else{ // pivot based branching
     		ui t_ub = min(nn, vp[i].first);
     		// ui t_ub = nn;
     		// if(vp[i].first < t_ub) t_ub = vp[i].first;
-    		if(UB + t_ub <= best_solution_size) {
+    		if(UB + t_ub <= best_sz) {
     			UB += t_ub;
     			cursor += nn;
     		}
     		else {
-    			return cursor+(best_solution_size-UB);
+    			return cursor+(best_sz-UB);
     		}
     	}
-		cursor+=(best_solution_size-UB);
+		cursor+=(best_sz-UB);
 		if(cursor>R_end)cursor=R_end;
     	return cursor;
     }
