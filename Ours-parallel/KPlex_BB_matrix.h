@@ -79,7 +79,7 @@ public:
 		degree = degree_in_S = nullptr;
 
 		best_solution = nullptr;
-		K = best_solution_size = _UB_ = 0;
+		K = _UB_ = 0;
 
 		neighbors = nonneighbors = nullptr;
 		S2 = nullptr;
