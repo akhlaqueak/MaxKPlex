@@ -310,7 +310,12 @@ namespace CTPrune {
 	}
 
 	// reduce the graph to its maximal subgraph with minimum degree at least degree_threshold and minimum edge triangle count at least triangle_threshold
-	void core_truss_copruning(ui &n, ept &m, ui degree_threshold, ui triangle_threshold, ui *peel_sequence, ui *out_mapping, ui *rid, ept *pstart, ui *edges, ui *degree, bool output) {
+	void 
+	
+	
+	
+	
+	core_truss_copruning(ui &n, ept &m, ui degree_threshold, ui triangle_threshold, ui *peel_sequence, ui *out_mapping, ui *rid, ept *pstart, ui *edges, ui *degree, bool output) {
 		if(triangle_threshold == 0) {
 			printf("!!! Triangle_threshold is 0\n");
 			return ;
