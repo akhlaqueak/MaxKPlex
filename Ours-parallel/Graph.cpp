@@ -362,9 +362,16 @@ void Graph::kPlex_exact(int mode) {
 						kplex_solver_m->load_graph(ids.size(), vp);
 						kplex_solver_m->kPlex(K, UB, kplex_local, true);
 
-					// if(kplex_local.size() > t_old_size) {
-					// 	for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
-					// }
+					if(kplex_local.size() > t_old_size) {
+						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
+					}
+
+	#pragma omp critical
+					{
+						if (kplex_local.size() > kplex.size()) {
+							kplex=kplex_local;
+						}
+					}
 				}
 				delete kplex_solver_m;
 
