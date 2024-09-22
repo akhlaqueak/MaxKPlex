@@ -370,8 +370,7 @@ void Graph::kPlex_exact(int mode) {
 					{
 						if (kplex_local.size() > kplex.size()) 
 						{
-							cout<<"new size"<<kplex_local.size()<<endl;
-							kplex.resize(kplex_local.size());
+							kplex=kplex_local;
 						}
 					}
 				}
