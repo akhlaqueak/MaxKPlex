@@ -186,15 +186,11 @@ public:
 		sparse = 2.0*vp.size()/n/(n-1);
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
-			if(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n){}
-			else{
-			cout<<"Error... ";
-			cout<<vp[i].first<<" "<<vp[i].second<<" "<<n<<" "<<endl;
-			} 
+			assert(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n);
 			ui a = vp[i].first, b = vp[i].second;
 			degree[a] ++;
 			degree[b] ++;
-			// if(matrix[a*n+b]) printf("Duplicate edge in KPLEX_BB_matrix.load_graph()\n");
+			if(matrix[a*n+b]) printf("Duplicate edge in KPLEX_BB_matrix.load_graph()\n");
 			matrix[a*n + b] = matrix[b*n + a] = 1;
 		}
 
