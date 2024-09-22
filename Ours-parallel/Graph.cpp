@@ -369,7 +369,7 @@ void Graph::kPlex_exact(int mode) {
 	#pragma omp critical
 					{
 						if (kplex_local.size() > kplex.size()) {
-							kplex=kplex_local;
+							// kplex=kplex_local;
 						}
 					}
 				}
