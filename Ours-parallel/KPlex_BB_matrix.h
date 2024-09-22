@@ -372,13 +372,13 @@ private:
 	}
 
 	void store_solution(ui size) {
-#pragma omp critical
-{
 
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
 		}
+#pragma omp critical
+{
 		ui n_edges = 0;
 		for(ui i = 0;i < size;i ++) 
 		{
