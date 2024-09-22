@@ -189,7 +189,7 @@ public:
 			if(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n){}
 			else{
 			cout<<"Error... ";
-			cout<<vp[i].first<<" "<<vp[i].second<<n<<" "<<endl;
+			cout<<vp[i].first<<" "<<vp[i].second<<" "<<n<<" "<<endl;
 			} 
 			ui a = vp[i].first, b = vp[i].second;
 			degree[a] ++;
