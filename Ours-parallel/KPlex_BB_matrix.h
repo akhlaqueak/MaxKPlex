@@ -211,6 +211,7 @@ public:
 		ui n_edges = best_n_edges;
 		ui R_end;
 		initialization(R_end, must_include_0);
+		solution_size=kplex.size();
 		if(R_end&&best_solution_size.load() < _UB_) BB_search(0, R_end, 1, must_include_0);
 		if(dense_search&&best_n_edges>n_edges){
 			kplex.clear();
