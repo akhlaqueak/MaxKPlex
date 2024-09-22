@@ -234,7 +234,7 @@ public:
 			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
 			return 0;
 		}
-		best_solution_size.load(1);
+		best_solution_size.store(1);
 		_UB_ = n;
 		ui R_end;
 		Timer t;
