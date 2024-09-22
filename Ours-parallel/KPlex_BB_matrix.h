@@ -319,6 +319,7 @@ private:
 		#pragma omp critical
 		{
 			if(!dense_search&&(n - idx > best_solution_size)) {
+				cout<<"best size"<<best_solution_size<<endl;
 				best_solution_size = n - idx;
 				for(ui i = idx;i < n;i ++) best_solution[i-idx] = peel_sequence[i];
 				printf("Degen find a solution of size %u\n", best_solution_size);
