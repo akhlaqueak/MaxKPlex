@@ -190,7 +190,7 @@ public:
 			ui a = vp[i].first, b = vp[i].second;
 			degree[a] ++;
 			degree[b] ++;
-			// if(matrix[a*n+b]) printf("Duplicate edge in KPLEX_BB_matrix.load_graph()\n");
+			if(matrix[a*n+b]) printf("Duplicate edge in KPLEX_BB_matrix.load_graph()\n");
 			matrix[a*n + b] = matrix[b*n + a] = 1;
 		}
 
