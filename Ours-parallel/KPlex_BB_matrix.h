@@ -187,7 +187,10 @@ public:
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
 			if(vp[i].first >= 0&&vp[i].first < n&&vp[i].second >= 0&&vp[i].second < n){}
-			else cout<<"Error... ";
+			else{
+			cout<<"Error... ";
+			cout<<vp[i].first<<" "<<vp[i].second<<endl;
+			} 
 			ui a = vp[i].first, b = vp[i].second;
 			degree[a] ++;
 			degree[b] ++;
