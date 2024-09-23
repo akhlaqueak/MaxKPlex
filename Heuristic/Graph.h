@@ -18,6 +18,7 @@ private:
 	ui *edges; //adjacent ids of edges
 
 	std::vector<ui> kplex;
+	ui Max_degree, max_core;
 
 	ui *s_degree;
 	ept *s_pstart;

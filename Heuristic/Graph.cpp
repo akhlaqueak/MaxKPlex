@@ -236,8 +236,8 @@ void Graph::search() {
 			}
 		}
 
-		// if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-		// else shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+		if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+		else shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 	
 		delete[] core; core = NULL;
 
@@ -281,10 +281,10 @@ void Graph::search() {
 		KPLEX_BB_MATRIX *kplex_solver = new KPLEX_BB_MATRIX();
 		kplex_solver->allocateMemory(n);
 
-		if(kplex.size() > 2*K-2 ) {
-			m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
-			printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
-		}
+		// if(kplex.size() > 2*K-2 ) {
+		// 	m -= 2*peeling(n, linear_heap, Qv, Qv_n, kplex.size()+1-K, Qe, true, kplex.size()+1-2*K, tri_cnt, active_edgelist, active_edgelist_n, edge_list, edgelist_pointer, deleted, degree, pstart, pend, edges, exists);
+		// 	printf("*** After core-truss co-pruning: n = %s, m = %s, density = %.4lf\n", Utility::integer_to_string(n-Qv_n).c_str(), Utility::integer_to_string(m/2).c_str(), double(m)/(n-Qv_n)/(n-Qv_n-1));
+		// }
 
 		Timer tt;
 
@@ -881,6 +881,7 @@ void Graph::heuristic_kplex_max_degree(ui processed_threshold) {
 		next[i] = head[degree[i]];
 		head[degree[i]] = i;
 	}
+	Max_degree=max_degree;
 
 	for(ui processed_vertices = 0;max_degree + K >= kplex.size()&&processed_vertices < processed_threshold;processed_vertices ++) {
 		ui u = n;
@@ -1000,7 +1001,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 
 	if(new_size != 0) {
 		heap->init(new_size, new_size-1, peel_sequence+queue_n, degree);
-		ui max_core = 0;
+		max_core = 0;
 		ui idx = n;
 		UB = 0;
 		for(ui i = 0;i < new_size;i ++) {
@@ -1022,6 +1023,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			}
 		}
 
+		if(output) printf("*** n: %u, m: %u, max_degree: %u, max_core: %u, Time: %s (microseconds)\n", n, m, Max_degree, max_core, Utility::integer_to_string(t.elapsed()).c_str());
 		if(output) printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size-idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
 
 		if(!dense_search && new_size - idx > kplex.size()) {
@@ -1030,6 +1032,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			if(output) printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
+	
 	return UB;
 }
 
