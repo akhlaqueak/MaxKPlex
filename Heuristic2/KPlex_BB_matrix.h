@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "Timer.h"
 // #define _SECOND_ORDER_PRUNING_
-
+using namespace std;
 // pruning switches
 #define S2RULE
 
