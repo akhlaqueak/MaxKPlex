@@ -60,7 +60,7 @@ private:
 	bool sparse;
 	vector<ui> B, PI, PIMax, ISc, peelOrder, psz;
 	ui* LPI;
-	MBitSet bmp;
+
 	ui sz1h;
 	bool found_larger=false;
 	bool ctcp_enabled=false;
@@ -165,7 +165,7 @@ public:
 		PI.reserve(n);
 		PIMax.reserve(n);
 		ISc.reserve(n);
-		bmp.init(n);
+
 	}
 
 	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
