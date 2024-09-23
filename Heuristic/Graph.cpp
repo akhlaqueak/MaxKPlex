@@ -1023,7 +1023,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			}
 		}
 
-		if(output) printf(">>%s %u %u %u %u\n", dir.substr(dir.find_last_of("/")+1).c_str(), n, m/2, Max_degree, max_core);
+		if(output) printf("%s %u %u %u %u\n", dir.substr(dir.find_last_of("/")+1).c_str(), n, m/2, Max_degree, max_core);
 
 		if(!dense_search && new_size - idx > kplex.size()) {
 			kplex.clear();
