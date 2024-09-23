@@ -601,7 +601,9 @@ private:
 				for(;j<S_end;j++){
 					if(support(S_end, SR[j])==0&&!matrix[u*n+SR[j]]) break;
 				}
-				if(j==S_end)flag=true, break;
+				if(j==S_end){
+					flag=true; break;
+				}
 			}
 			if(flag) {
 				if(!move_u_to_S_with_prune(u, S_end, R_end, level)) return false;
