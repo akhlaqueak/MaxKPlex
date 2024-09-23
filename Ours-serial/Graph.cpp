@@ -226,7 +226,7 @@ void Graph::search() {
 		}
 		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
 
-		
+		kplex.resize(49);
 
 		if(kplex.size() > old_size) {
 			old_size = kplex.size();
