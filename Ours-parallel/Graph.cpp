@@ -289,9 +289,7 @@ void Graph::kPlex_exact(int mode) {
 		core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
 		if(mode == 0) {
-			if(kplex.size()+1 > 2*K) {
-				CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-			}
+
 			ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
 			if(kplex.size() > old_size) {
@@ -300,10 +298,10 @@ void Graph::kPlex_exact(int mode) {
 					assert(kplex[i] < n);
 					kplex[i] = out_mapping[kplex[i]];
 				}
-
-				if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-				else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 			}
+
+			if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+			else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
 
 
