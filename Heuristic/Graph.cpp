@@ -207,7 +207,7 @@ void Graph::search() {
 	ListLinearHeap *heap = new ListLinearHeap(n, n-1);
 
 	const ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
-
+	return;
 	// delete heap;
 	// delete[] vis;
 	// delete[] degree;
@@ -1023,8 +1023,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			}
 		}
 
-		if(output) printf("*** n: %u, m: %u, max_degree: %u, max_core: %u, Time: %s (microseconds)\n", n, m, Max_degree, max_core, Utility::integer_to_string(t.elapsed()).c_str());
-		if(output) printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size-idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
+		if(output) printf(">>%s n: %u, m: %u, max_degree: %u, max_core: %u\n", dir.substr(dir.find_last_of("/")+1).c_str(), n, m, Max_degree, max_core);
 
 		if(!dense_search && new_size - idx > kplex.size()) {
 			kplex.clear();
