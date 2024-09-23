@@ -599,7 +599,7 @@ private:
 				ui j=0;
 				if(support(S_end, u)>=1)
 				for(;j<S_end;j++){
-					if(support(SR[j])==0&&!matrix[u*n+SR[j]]) break;
+					if(support(S_end, SR[j])==0&&!matrix[u*n+SR[j]]) break;
 				}
 				if(j==S_end)flag=true, break;
 			}
