@@ -246,7 +246,7 @@ public:
 		ui R_end;
 		initialization(R_end, must_include_0);
 		solution_size=kplex.size();
-		if(R_end&&best_solution_size.load() < _UB_) BB_search(0, R_end, 1, must_include_0);
+		if(R_end&&best_solution_size.load() < _UB_) BB_search(0, R_end, 1, must_include_0, false, TIME_NOW);
 		if(dense_search&&best_n_edges>n_edges){
 			kplex.clear();
 			for(int i = 0;i < solution_size+1;i ++) kplex.push_back(best_solution[i]);
