@@ -358,7 +358,10 @@ void Graph::kPlex_exact(int mode) {
 					if(density < min_density) min_density = density;
 					ui t_old_size = kplex_local.size();
 						kplex_solver_m->load_graph(ids.size(), vp);
+#pragma omp taskgroup
+{
 						kplex_solver_m->kPlex(K, UB, kplex_local, true);
+}
 
 					if(kplex_local.size() > t_old_size) {
 						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
