@@ -638,12 +638,7 @@ if(PART_BRANCH){
 					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					swap(matrix, t_matrix);
 					delete td;
-					while(!Qv.empty()) {
-						ui u = Qv.front(); Qv.pop();
-						assert(level_id[u] == level);
-						assert(SR_rid[u] < R_end);
-						level_id[u] = n;
-					}
+					while(!Qv.empty()) Qv.pop();
 				}			
 			}
 			else{
