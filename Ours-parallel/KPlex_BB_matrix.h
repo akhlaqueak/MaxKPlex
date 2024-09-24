@@ -35,8 +35,9 @@ class ThreadData{
 	vector<ui> B;
 	ui* level_id;
 	public:
-	ThreadData(KPLEX_BB_MATRIX *src, ui _R_end): B(src->B){
+	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B){
 		R_end = _R_end;
+		for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
@@ -628,7 +629,7 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				ThreadData *td=new ThreadData(this, R_end);
+				ThreadData *td=new ThreadData(this, S_end, R_end);
 				char* t_matrix = matrix;
 				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
 				{
