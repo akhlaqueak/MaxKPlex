@@ -35,41 +35,44 @@ class ThreadData{
 	vector<ui> B;
 	ui* level_id;
 	ui* matrix;
+	char* matrix;
+	char** kpmatrix;
 	public:
-	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end): B(kp->B){
+	ThreadData(KPLEX_BB_MATRIX *src, ui _R_end): B(src->B){
 		R_end = _R_end;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
-		matrix=kp->matrix;
+		matrix=src->matrix;
 
-		copy(kp->SR, kp->SR+R_end, SR);
+		copy(src->SR, src->SR+R_end, SR);
 		for(ui i=0;i<R_end;i++){
-			degree_in_S[i]=kp->degree_in_S[SR[i]];
-			degree[i]=kp->degree[SR[i]];
-			level_id[i]=kp->level_id[SR[i]];
+			degree_in_S[i]=src->degree_in_S[SR[i]];
+			degree[i]=src->degree[SR[i]];
+			level_id[i]=src->level_id[SR[i]];
 		}
 	}
 
-	void loadData(KPLEX_BB_MATRIX *kp){
-		copy(SR, SR+R_end, kp->SR);
+	void loadData(KPLEX_BB_MATRIX *dst){
+		copy(SR, SR+R_end, dst->SR);
 		for(ui i=0;i<R_end;i++){
-			kp->SR_rid[SR[i]]=i;
-			kp->degree_in_S[SR[i]]=degree_in_S[i];
-			kp->degree[SR[i]]=degree[i];
-			kp->level_id[SR[i]]=level_id[i];
+			dst->SR_rid[SR[i]]=i;
+			dst->degree_in_S[SR[i]]=degree_in_S[i];
+			dst->degree[SR[i]]=degree[i];
+			dst->level_id[SR[i]]=level_id[i];
 		}
-		kp->B=B;
-		swap(matrix, kp->matrix);
+		dst->B=B;
+		kpmatrix=&(dst->matrix);
+		swap(matrix, dst->matrix);
 	}
 
 	~ThreadData(){
-		delete SR[];
-		delete degree[];
-		delete degree_in_S[];
-		delete level_id[];
-		swap(matrix, kp->matrix);
+		delete [] SR;
+		delete [] degree;
+		delete [] degree_in_S;
+		delete [] level_id;
+		*kpmatrix = matrix;
 	}
 };
 	ui n;
