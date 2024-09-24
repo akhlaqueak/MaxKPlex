@@ -11,7 +11,7 @@ using namespace std::chrono;
 #define TIME_OVER(ST) (chrono::duration_cast<chrono::milliseconds>(TIME_NOW - ST).count()>THRESH)
 
 // pruning switches
-// #define S2RULE
+#define S2RULE
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (K<=5&&sparse)
@@ -277,27 +277,6 @@ public:
 		}
 	}
 
-	int main(int argc, char *argv[]) {
-		if(argc < 3) {
-			printf("Usage: [1]exe [2]dir [3]k\n");
-			return 0;
-		}
-		readGraph_binary(argv[1]);
-		printf("Finish reading graph\n");
-		K = atoi(argv[2]);
-		if(K == 1) {
-			printf("For the special case of computing maximum clique, please invoke SOTA maximum clique solver!\n");
-			return 0;
-		}
-		best_solution_size.store(1);
-		_UB_ = n;
-		ui R_end;
-		Timer t;
-		initialization(R_end, false);
-		// if(R_end) BB_search(0, R_end, 1, 0);
-		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size.load(), Utility::integer_to_string(t.elapsed()).c_str());
-		return 0;
-	}
 
 private:
 	void readGraph_binary(char* dir) {
