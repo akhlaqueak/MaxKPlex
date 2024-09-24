@@ -139,7 +139,7 @@ public:
 		dense_search=_ds;
 	}
 
-	KPLEX_BB_MATRIX() {
+	~KPLEX_BB_MATRIX() {
 		if(matrix != NULL) {
 			delete[] matrix;
 			matrix = NULL;
