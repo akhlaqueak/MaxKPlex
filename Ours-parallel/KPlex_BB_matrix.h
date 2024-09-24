@@ -276,7 +276,7 @@ public:
 		ui R_end;
 		Timer t;
 		initialization(R_end, false);
-		if(R_end) BB_search(0, R_end, 1, 0);
+		// if(R_end) BB_search(0, R_end, 1, 0);
 		printf("Maximum %u-plex size: %u, time excluding reading: %s (micro seconds)\n", K, best_solution_size.load(), Utility::integer_to_string(t.elapsed()).c_str());
 		return 0;
 	}
@@ -450,7 +450,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, std::__1::chrono::steady_clock::time_point st=TIME_NOW) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, auto st=TIME_NOW) {
 		ui best_sz = best_solution_size.load();
 		if(S_end > best_sz) store_solution(S_end);
 		if(R_end > best_sz&&is_kplex(R_end)) store_solution(R_end);
@@ -657,7 +657,7 @@ if(PART_BRANCH){
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 }
-else{ // pivot based branching
+/*else{ // pivot based branching
 		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
 		ui u = B.back();
@@ -721,7 +721,7 @@ else{ // pivot based branching
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-}
+}*/
 
 	}
 
