@@ -27,6 +27,7 @@ using namespace std::chrono;
 class KPLEX_BB_MATRIX {
 private:
 class ThreadData{
+
 	ui* SR;
 	ui* degree_in_S;
 	ui* degree;
@@ -52,6 +53,7 @@ class ThreadData{
 			kp->degree_in_S[SR[i]]=degree_in_S[i];
 			kp->degree[SR[i]]=degree[i];
 		}
+
 	}
 };
 	ui n;
@@ -448,7 +450,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, auto st=TIME_NOW) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, std::__1::chrono::steady_clock::time_point st=TIME_NOW) {
 		ui best_sz = best_solution_size.load();
 		if(S_end > best_sz) store_solution(S_end);
 		if(R_end > best_sz&&is_kplex(R_end)) store_solution(R_end);
