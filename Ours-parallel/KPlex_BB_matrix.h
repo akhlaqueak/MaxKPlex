@@ -32,9 +32,10 @@ class ThreadData{
 	ui* degree_in_S;
 	ui* degree;
 	ui R_end;
+	vector<ui> B;
 
 	public:
-	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end){
+	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end): B(kp->B){
 		R_end = _R_end;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
@@ -53,7 +54,7 @@ class ThreadData{
 			kp->degree_in_S[SR[i]]=degree_in_S[i];
 			kp->degree[SR[i]]=degree[i];
 		}
-
+		kp->B=B;
 	}
 };
 	ui n;
@@ -657,7 +658,7 @@ if(PART_BRANCH){
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
 }
-/*else{ // pivot based branching
+else{ // pivot based branching
 		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
 		ui u = B.back();
@@ -666,43 +667,14 @@ if(PART_BRANCH){
 
 		// First branch moves u to S
 		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// #ifdef _SECOND_ORDER_PRUNING_
-// 			if(ctcp_enabled) {
-// 				while(!Qe.empty())Qe.pop();
-// 				t_old_removed_edges_n=removed_edges_n;
-// 			}
-// #endif
+#ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled) {
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n=removed_edges_n;
+			}
+#endif
 		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-		
-
-        // the second branch exclude u from G	
-		// This version of 2nd branch restores u through restore_SR function
-// 		{
-			// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 			B.clear();
-// 			while(!Qv.empty()){
-// 			ui v=Qv.front(); Qv.pop();
-// 			level_id[v]=n;
-// 			} 
-// 			Qv.push(u);
-// 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// // #ifdef _SECOND_ORDER_PRUNING_
-// // 			if(ctcp_enabled) {
-// // 				while(!Qe.empty())Qe.pop();
-// // 				t_old_removed_edges_n=removed_edges_n;
-// // 			}
-// // #endif
-// 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-// 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-// 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 		}
-
-
-		
-
-
-        // the second branch exclude u from G	
-		// This version of 2nd branch restores u through remove_u function
+    // the second branch exclude u from G	
 		{
 			restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
 			while(!Qv.empty()){
@@ -721,7 +693,7 @@ if(PART_BRANCH){
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-}*/
+}
 
 	}
 
