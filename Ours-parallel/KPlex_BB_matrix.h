@@ -34,7 +34,6 @@ class ThreadData{
 	ui R_end;
 	vector<ui> B;
 	ui* level_id;
-	ui* matrix;
 	char* matrix;
 	char** kpmatrix;
 	public:
