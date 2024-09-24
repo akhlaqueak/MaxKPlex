@@ -635,6 +635,7 @@ if(PART_BRANCH){
 				{
 					swap(matrix, t_matrix);
 					td->loadData(this);
+					for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
@@ -701,7 +702,7 @@ else{ // pivot based branching
 				for(ui j = 0;j < S2_n;j ++) if(!t_matrix[S2[j]]) ++ nn;
 			}
 			else nn = S_end - degree_in_S[SR[i]];
-			if(degree_in_S[SR[i]]>S_end) cout<<S_end<<" "<<degree_in_S[SR[i]]<<endl;
+			// if(degree_in_S[SR[i]]>S_end) cout<<S_end<<" "<<degree_in_S[SR[i]]<<endl;
 			if(nn > max_nn) max_nn = nn;
 			vp[i-S_end].first = SR[i];
 			vp[i-S_end].second = nn;
