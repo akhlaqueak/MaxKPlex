@@ -43,8 +43,7 @@ class ThreadData{
 		}
 	}
 
-	void loadData(){
-		_R_end=R_end;
+	void loadData(KPLEX_BB_MATRIX *kp){
 		for(ui i=0;i<R_end;i++){
 			kp->SR[i]=SR[i];
 			kp->SR_rid[SR[i]]=i;
@@ -638,7 +637,7 @@ if(PART_BRANCH){
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					// ThreadData *temp = new ThreadData();
-					td->loadData();
+					td->loadData(this);
 					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					// temp->loadData();
 					// delete temp; 
