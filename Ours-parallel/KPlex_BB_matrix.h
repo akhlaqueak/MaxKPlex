@@ -67,10 +67,10 @@ class ThreadData{
 	}
 
 	~ThreadData(){
-		// delete [] SR;
-		// delete [] degree;
-		// delete [] degree_in_S;
-		// delete [] level_id;
+		delete [] SR;
+		delete [] degree;
+		delete [] degree_in_S;
+		delete [] level_id;
 		*kpmatrix = matrix;
 	}
 };
@@ -709,6 +709,7 @@ else{ // pivot based branching
 			vp[i-S_end].second = nn;
 		}
 		ui *cnt = neighbors;
+		cout<<max_nn<<" ";
 		for(ui i = 0;i <= max_nn;i ++) cnt[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
