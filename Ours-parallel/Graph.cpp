@@ -374,7 +374,7 @@ void Graph::kPlex_exact(int mode) {
 					}
 				}
 			}
-			delete kplex_solver_m;
+			// delete kplex_solver_m;
 
 			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
