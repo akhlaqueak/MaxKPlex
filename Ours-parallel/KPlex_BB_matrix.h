@@ -41,22 +41,21 @@ class ThreadData{
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
-
-		copy(src->SR, src->SR+R_end, SR);
 		for(ui i=0;i<R_end;i++){
-			degree_in_S[i]=src->degree_in_S[SR[i]];
-			degree[i]=src->degree[SR[i]];
-			level_id[i]=src->level_id[SR[i]];
+			ui u = SR[i] = src->SR[i];
+			degree_in_S[i]=src->degree_in_S[u];
+			degree[i]=src->degree[u];
+			level_id[i]=src->level_id[u];
 		}
 	}
 
 	void loadData(KPLEX_BB_MATRIX *dst){
-		copy(SR, SR+R_end, dst->SR);
 		for(ui i=0;i<R_end;i++){
-			dst->SR_rid[SR[i]]=i;
-			dst->degree_in_S[SR[i]]=degree_in_S[i];
-			dst->degree[SR[i]]=degree[i];
-			dst->level_id[SR[i]]=level_id[i];
+			ui u = dst->SR[i] = SR[i];
+			dst->SR_rid[u]=i;
+			dst->degree_in_S[u]=degree_in_S[i];
+			dst->degree[u]=degree[i];
+			dst->level_id[u]=level_id[i];
 		}
 		dst->B=B;
 	}
@@ -634,8 +633,8 @@ if(PART_BRANCH){
 				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
 				{
 					swap(matrix, t_matrix);
-					for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
 					td->loadData(this);
+					for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
