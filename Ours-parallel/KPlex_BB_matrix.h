@@ -33,26 +33,29 @@ class ThreadData{
 	ui* degree;
 	ui R_end;
 	vector<ui> B;
-
+	ui* level_id;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end): B(kp->B){
 		R_end = _R_end;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
+		level_id=new ui[R_end];
 		copy(kp->SR, kp->SR+R_end, SR);
 		for(ui i=0;i<R_end;i++){
 			degree_in_S[i]=kp->degree_in_S[SR[i]];
 			degree[i]=kp->degree[SR[i]];
+			level_id[i]=kp->level_id[SR[i]];
 		}
 	}
 
 	void loadData(KPLEX_BB_MATRIX *kp){
+		copy(SR, SR+R_end, kp->SR);
 		for(ui i=0;i<R_end;i++){
-			kp->SR[i]=SR[i];
 			kp->SR_rid[SR[i]]=i;
 			kp->degree_in_S[SR[i]]=degree_in_S[i];
 			kp->degree[SR[i]]=degree[i];
+			kp->level_id[SR[i]]=level_id[i];
 		}
 		kp->B=B;
 	}
