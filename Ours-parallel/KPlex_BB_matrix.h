@@ -704,7 +704,7 @@ else{ // pivot based branching
 			vp[i-S_end].second = nn;
 		}
 		ui *cnt = neighbors;
-		if(max_nn>10) cout<<"Error"<<max_nn<<" ";
+		if(cnt==nullptr) cout<<"Error!";
 		for(ui i = 0;i <= max_nn;i ++) cnt[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
