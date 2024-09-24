@@ -700,12 +700,13 @@ else{ // pivot based branching
 				for(ui j = 0;j < S2_n;j ++) if(!t_matrix[S2[j]]) ++ nn;
 			}
 			else nn = S_end - degree_in_S[SR[i]];
+			if(degree_in_S[SR[i]]>S_end) cout<<S_end<<" "<<degree_in_S[SR[i]]<<endl;
 			if(nn > max_nn) max_nn = nn;
 			vp[i-S_end].first = SR[i];
 			vp[i-S_end].second = nn;
 		}
 		ui *cnt = neighbors;
-		cout<<max_nn<<" "<<endl;
+
 		for(ui i = 0;i <= max_nn;i ++)  cnt[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
