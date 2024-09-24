@@ -170,18 +170,18 @@ public:
 			delete[] SR_rid;
 			SR_rid = NULL;
 		}
-		if(neighbors != NULL) {
-			delete[] neighbors;
-			neighbors = NULL;
-		}
-		if(nonneighbors != NULL) {
-			delete[] nonneighbors;
-			nonneighbors = NULL;
-		}
-		if(level_id != NULL) {
-			delete[] level_id;
-			level_id = NULL;
-		}
+		// if(neighbors != NULL) {
+		// 	delete[] neighbors;
+		// 	neighbors = NULL;
+		// }
+		// if(nonneighbors != NULL) {
+		// 	delete[] nonneighbors;
+		// 	nonneighbors = NULL;
+		// }
+		// if(level_id != NULL) {
+		// 	delete[] level_id;
+		// 	level_id = NULL;
+		// }
 	}
 
 	void allocateMemory(ui n) {
