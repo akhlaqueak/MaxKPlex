@@ -657,7 +657,7 @@ if(PART_BRANCH){
 
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 
-}
+}/*
 else{ // pivot based branching
 		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
@@ -693,7 +693,7 @@ else{ // pivot based branching
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-}
+}*/
 
 	}
 
