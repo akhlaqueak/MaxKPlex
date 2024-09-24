@@ -709,7 +709,6 @@ else{ // pivot based branching
 			vp[i-S_end].second = nn;
 		}
 		ui *cnt = neighbors;
-		cout<<max_nn<<" ";
 		for(ui i = 0;i <= max_nn;i ++) cnt[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
@@ -756,10 +755,7 @@ else{ // pivot based branching
 			else ids[new_n++] = ids[i];
 		}
 	}
-	void clearSR(){
-		for(ui i=0;i<n;i++)
-			SR_rid[i]=n;
-	}
+
 	ui support(ui S_end, ui u)
     {
         return K - (S_end - degree_in_S[u]);
