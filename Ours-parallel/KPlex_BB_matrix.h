@@ -34,6 +34,7 @@ class ThreadData{
 	ui R_end;
 	vector<ui> B;
 	ui* level_id;
+	ui* matrix;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end): B(kp->B){
 		R_end = _R_end;
@@ -41,6 +42,8 @@ class ThreadData{
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
+		matrix=kp->matrix;
+
 		copy(kp->SR, kp->SR+R_end, SR);
 		for(ui i=0;i<R_end;i++){
 			degree_in_S[i]=kp->degree_in_S[SR[i]];
@@ -58,6 +61,15 @@ class ThreadData{
 			kp->level_id[SR[i]]=level_id[i];
 		}
 		kp->B=B;
+		swap(matrix, kp->matrix);
+	}
+
+	~ThreadData(){
+		delete SR[];
+		delete degree[];
+		delete degree_in_S[];
+		delete level_id[];
+		swap(matrix, kp->matrix);
 	}
 };
 	ui n;
