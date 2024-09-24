@@ -704,6 +704,8 @@ else{ // pivot based branching
 			vp[i-S_end].second = nn;
 		}
 		ui *cnt = neighbors;
+		if(omp_get_thread_num())
+		cout<<n<<"-"<<maxnn<<" ";
 		for(ui i = 0;i <= max_nn;i ++) cnt[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
