@@ -38,7 +38,7 @@ class ThreadData{
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B){
 		cout<<omp_get_thread_num()<<" | "<<SR<<endl;
 		R_end = _R_end;
-		for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
+		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
