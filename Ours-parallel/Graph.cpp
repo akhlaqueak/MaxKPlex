@@ -330,7 +330,7 @@ void Graph::kPlex_exact(int mode) {
 			// std::fill(rid, rid+n, 0);
 
 
-			KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
+			thread_local KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
 			kplex_solver_m->allocateMemory(n);
 
 			ui search_cnt = 0;
