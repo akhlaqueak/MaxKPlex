@@ -3,6 +3,8 @@
 
 #include "Utility.h"
 #include "Timer.h"
+#include<chrono>
+using namespace std::chrono;
 // #define _SECOND_ORDER_PRUNING_
 #define THRESH 10
 #define TIME_NOW chrono::steady_clock::now()
