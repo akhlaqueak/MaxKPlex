@@ -200,7 +200,7 @@ public:
 		SR = new ui[n];
 		SR_rid = new ui[n];
 		neighbors = new ui[n];
-		cout<<neighbors<<endl;
+
 		nonneighbors = new ui[n];
 		S2 = new ui[n];
 		level_id = new ui[n];
@@ -706,7 +706,7 @@ else{ // pivot based branching
 		}
 		ui *cnt = neighbors;
 
-		for(ui i = 0;i <= max_nn;i ++) {cout<<i;  cnt[i] = 0;}
+		for(ui i = 0;i <= max_nn;i ++) {cout<<i<<" ";  cnt[i] = 0;}
 		for(ui i = 0;i < vp.size();i ++) ++ cnt[vp[i].second];
 		for(ui i = 0;i < max_nn;i ++) cnt[i+1] += cnt[i];
 		for(ui i = max_nn;i > 0;i --) cnt[i] = cnt[i-1];
