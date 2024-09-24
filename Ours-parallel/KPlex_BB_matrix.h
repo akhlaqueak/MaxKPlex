@@ -36,7 +36,7 @@ class ThreadData{
 	ui* level_id;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B){
-		cout<<src->SR<<endl;
+
 		R_end = _R_end;
 		for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
 		SR=new ui[R_end];
@@ -44,7 +44,8 @@ class ThreadData{
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
 		for(ui i=0;i<R_end;i++){
-			ui u = SR[i] = src->SR[i];
+			ui u = src->SR[i];
+			SR[i] = u;
 			degree_in_S[i]=src->degree_in_S[u];
 			degree[i]=src->degree[u];
 			level_id[i]=src->level_id[u];
@@ -52,9 +53,10 @@ class ThreadData{
 	}
 
 	void loadData(KPLEX_BB_MATRIX *dst){
-		cout<<dst->SR<<endl;
+
 		for(ui i=0;i<R_end;i++){
-			ui u = dst->SR[i] = SR[i];
+			ui u = SR[i];
+			dst->SR[i] = u;
 			dst->SR_rid[u]=i;
 			dst->degree_in_S[u]=degree_in_S[i];
 			dst->degree[u]=degree[i];
