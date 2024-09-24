@@ -631,18 +631,17 @@ if(PART_BRANCH){
 			// if(false){
 				ThreadData *td=new ThreadData(this, S_end, R_end);
 				char* t_matrix = matrix;
-				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
-				{
-					swap(matrix, t_matrix);
-					td->loadData(this);
-					for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
-
-					// ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-					// if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
-					// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-					swap(matrix, t_matrix);
-					delete td;
-				}			
+				// #pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
+				// {
+				// 	swap(matrix, t_matrix);
+				// 	td->loadData(this);
+				// 	for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
+				// 	// ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+				// 	// if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+				// 	// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+				// 	swap(matrix, t_matrix);
+				// 	delete td;
+				// }			
 			}
 			else{
 				ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
@@ -650,10 +649,9 @@ if(PART_BRANCH){
 				restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);				
 			}
 		}
-
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-
-}/*
+}
+/*
 else{ // pivot based branching
 		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
