@@ -640,7 +640,6 @@ if(PART_BRANCH){
 					restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 					swap(matrix, t_matrix);
 					delete td;
-					while(!Qv.empty()) Qv.pop();
 				}			
 			}
 			else{
