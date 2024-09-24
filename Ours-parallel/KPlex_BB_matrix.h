@@ -67,10 +67,10 @@ class ThreadData{
 	}
 
 	~ThreadData(){
-		delete [] SR;
-		delete [] degree;
-		delete [] degree_in_S;
-		delete [] level_id;
+		// delete [] SR;
+		// delete [] degree;
+		// delete [] degree_in_S;
+		// delete [] level_id;
 		*kpmatrix = matrix;
 	}
 };
