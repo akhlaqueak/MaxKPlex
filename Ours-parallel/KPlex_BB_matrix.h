@@ -83,7 +83,7 @@ class ThreadData{
 	std::vector<std::pair<ui, ui> > removed_edges;
 	long long removed_edges_n;
 #endif
-
+public:
 	ui *degree;
 	ui *degree_in_S;
 	ui *best_solution;
