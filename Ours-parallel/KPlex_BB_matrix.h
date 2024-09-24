@@ -34,8 +34,6 @@ class ThreadData{
 	ui R_end;
 	vector<ui> B;
 	ui* level_id;
-	char* matrix;
-	char** kpmatrix;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui _R_end): B(src->B){
 		R_end = _R_end;
@@ -43,7 +41,6 @@ class ThreadData{
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
-		matrix=src->matrix;
 
 		copy(src->SR, src->SR+R_end, SR);
 		for(ui i=0;i<R_end;i++){
@@ -62,8 +59,6 @@ class ThreadData{
 			dst->level_id[SR[i]]=level_id[i];
 		}
 		dst->B=B;
-		kpmatrix=&(dst->matrix);
-		swap(matrix, dst->matrix);
 	}
 
 	~ThreadData(){
@@ -71,7 +66,6 @@ class ThreadData{
 		delete [] degree;
 		delete [] degree_in_S;
 		delete [] level_id;
-		*kpmatrix = matrix;
 	}
 };
 	ui n;
@@ -636,13 +630,13 @@ if(PART_BRANCH){
 			if(TIME_OVER(st)){
 			// if(false){
 				ThreadData *td=new ThreadData(this, R_end);
-				#pragma omp task firstprivate(td, u, S_end, R_end, level)
+				char* t_matrix = matrix;
+				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
 				{
-					// ThreadData *temp = new ThreadData();
+					swap(matrix, t_matrix);
 					td->loadData(this);
 					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
-					// temp->loadData();
-					// delete temp; 
+					swap(matrix, t_matrix);
 					delete td;
 				}			
 			}

@@ -288,102 +288,98 @@ void Graph::kPlex_exact(int mode) {
 
 		core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
-		if(mode == 0) {
 
-			ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
+		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, true);
 
-			if(kplex.size() > old_size) {
-				old_size = kplex.size();
-				for(ui i = 0;i < kplex.size();i ++) {
-					assert(kplex[i] < n);
-					kplex[i] = out_mapping[kplex[i]];
-				}
+		if(kplex.size() > old_size) {
+			old_size = kplex.size();
+			for(ui i = 0;i < kplex.size();i ++) {
+				assert(kplex[i] < n);
+				kplex[i] = out_mapping[kplex[i]];
 			}
-
-			if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
-			else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
-
-
-
-				ui *peel_sequence_rid = core;
-				for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
-
-				memset(vis, 0, sizeof(char)*n);
-
-				if(pend == nullptr) pend = new ept[n+1];
-				reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
-				best_solution_size.store(kplex.size());
-				cout<<"Best solution size: "<<best_solution_size.load()<<endl;
-
-#pragma omp parallel
-			{
-				Timer tt;
-				vector<ui> ids, kplex_local=kplex;
-				vector<pair<ui,ui> > vp;
-
-
-				char* exists = new char[n];
-				ui* degree = new ui[n];
-				ui* rid = new ui[n];
-
-				std::fill(exists, exists+n, 0);
-				// std::fill(degree, degree+n, 0);
-				// std::fill(rid, rid+n, 0);
-
-
-				KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
-				kplex_solver_m->allocateMemory(n);
-
-				ui search_cnt = 0;
-				double min_density = 1, total_density = 0;
-#pragma omp for schedule(dynamic)
-				for(ui i = 0;i < n;i ++) {
-					ui best_sz = best_solution_size.load();
-					if(best_sz >= UB) continue;
-					ui u = peel_sequence[i];
-
-					if(pend[u]-pstart[u]+K <= best_sz||n-i < best_sz) continue;
-
-					fflush(stdout);
-
-					if(best_sz >= 2*K-1) 
-					extract_subgraph_with_prune(u, best_sz+1-K, best_sz+1-2*K, best_sz+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
-					else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, exists, pstart, pend, edges);
-
-					if(ids.empty()||ids.size() <= best_sz) continue;
-
-					double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
-					++ search_cnt;
-					total_density += density;
-					if(density < min_density) min_density = density;
-					ui t_old_size = kplex_local.size();
-#pragma omp taskgroup
-{
-						kplex_solver_m->load_graph(ids.size(), vp);
-						kplex_solver_m->kPlex(K, UB, kplex_local, true);
-}
-
-					if(kplex_local.size() > t_old_size) {
-						for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
-					}
-
-	#pragma omp critical
-					{
-						if (kplex_local.size() > kplex.size()) 
-						{
-							kplex=kplex_local;
-						}
-					}
-				}
-				delete kplex_solver_m;
-
-				if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
-				else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
-				printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
-			}
-
 		}
 
+		if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
+		else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
+
+
+
+			ui *peel_sequence_rid = core;
+			for(ui i= 0;i < n;i ++) peel_sequence_rid[peel_sequence[i]] = i;
+
+			memset(vis, 0, sizeof(char)*n);
+
+			if(pend == nullptr) pend = new ept[n+1];
+			reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
+			best_solution_size.store(kplex.size());
+			cout<<"Best solution size: "<<best_solution_size.load()<<endl;
+
+#pragma omp parallel
+		{
+			Timer tt;
+			vector<ui> ids, kplex_local=kplex;
+			vector<pair<ui,ui> > vp;
+
+
+			char* exists = new char[n];
+			ui* degree = new ui[n];
+			ui* rid = new ui[n];
+
+			std::fill(exists, exists+n, 0);
+			// std::fill(degree, degree+n, 0);
+			// std::fill(rid, rid+n, 0);
+
+
+			KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
+			kplex_solver_m->allocateMemory(n);
+
+			ui search_cnt = 0;
+			double min_density = 1, total_density = 0;
+#pragma omp for schedule(dynamic)
+			for(ui i = 0;i < n;i ++) {
+				ui best_sz = best_solution_size.load();
+				if(best_sz >= UB) continue;
+				ui u = peel_sequence[i];
+
+				if(pend[u]-pstart[u]+K <= best_sz||n-i < best_sz) continue;
+
+				fflush(stdout);
+
+				if(best_sz >= 2*K-1) 
+				extract_subgraph_with_prune(u, best_sz+1-K, best_sz+1-2*K, best_sz+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
+				else extract_subgraph_wo_prune(u, peel_sequence_rid, ids, rid, vp, exists, pstart, pend, edges);
+
+				if(ids.empty()||ids.size() <= best_sz) continue;
+
+				double density = vp.size()*2/(double)ids.size()/(ids.size()-1);
+				++ search_cnt;
+				total_density += density;
+				if(density < min_density) min_density = density;
+				ui t_old_size = kplex_local.size();
+				#pragma omp taskgroup
+				{
+					kplex_solver_m->load_graph(ids.size(), vp);
+					kplex_solver_m->kPlex(K, UB, kplex_local, true);
+				}
+
+				if(kplex_local.size() > t_old_size) {
+					for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
+				}
+
+#pragma omp critical
+				{
+					if (kplex_local.size() > kplex.size()) 
+					{
+						kplex=kplex_local;
+					}
+				}
+			}
+			delete kplex_solver_m;
+
+			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
+			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
+			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
+		}
 		delete[] out_mapping;
 		delete[] rid;
 	}
