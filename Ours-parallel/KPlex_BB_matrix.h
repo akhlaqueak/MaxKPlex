@@ -4,6 +4,9 @@
 #include "Utility.h"
 #include "Timer.h"
 // #define _SECOND_ORDER_PRUNING_
+#define THRESH 10
+#define TIME_NOW chrono::steady_clock::now()
+#define TIME_OVER(ST) (chrono::duration_cast<chrono::milliseconds>(TIME_NOW - ST).count()>THRESH)
 
 // pruning switches
 #define S2RULE
@@ -18,8 +21,38 @@
 // #define PART_BOUND
 
 #define CSIZE (R_end-S_end)
+
 class KPLEX_BB_MATRIX {
 private:
+class ThreadData{
+	ui* SR;
+	ui* degree_in_S;
+	ui* degree;
+	ui R_end;
+
+	public:
+	ThreadData(KPLEX_BB_MATRIX *kp, ui _R_end){
+		R_end = _R_end;
+		SR=new ui[R_end];
+		degree_in_S=new ui[R_end];
+		degree=new ui[R_end];
+		copy(kp->SR, kp->SR+R_end, SR);
+		for(ui i=0;i<R_end;i++){
+			degree_in_S[i]=kp->degree_in_S[SR[i]];
+			degree[i]=kp->degree[SR[i]];
+		}
+	}
+
+	void loadData(){
+		_R_end=R_end;
+		for(ui i=0;i<R_end;i++){
+			kp->SR[i]=SR[i];
+			kp->SR_rid[SR[i]]=i;
+			kp->degree_in_S[SR[i]]=degree_in_S[i];
+			kp->degree[SR[i]]=degree[i];
+		}
+	}
+};
 	ui n;
 
 	char *matrix;
@@ -414,7 +447,7 @@ private:
 		return true;
 	}
 
-	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true) {
+	void BB_search(ui S_end, ui R_end, ui level, bool choose_zero, bool root_level=true, auto st=TIME_NOW) {
 		ui best_sz = best_solution_size.load();
 		if(S_end > best_sz) store_solution(S_end);
 		if(R_end > best_sz&&is_kplex(R_end)) store_solution(R_end);
@@ -600,7 +633,21 @@ if(PART_BRANCH){
 // 				t_old_removed_edges_n=removed_edges_n;
 // 			}
 // #endif
-			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
+			if(TIME_OVER(st)){
+				ThreadData *td=new ThreadData(this, R_end);
+				#pragma omp task firstprivate(td, u, S_end, R_end, level)
+				{
+					// ThreadData *temp = new ThreadData();
+					td->loadData();
+					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+					// temp->loadData();
+					// delete temp; 
+					delete td;
+				}			
+			}
+			else{
+				if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, st);
+			}
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
 
@@ -735,6 +782,10 @@ else{ // pivot based branching
 			}
 			else ids[new_n++] = ids[i];
 		}
+	}
+	void clearSR(){
+		for(ui i=0;i<n;i++)
+			SR_rid[i]=n;
 	}
 	ui support(ui S_end, ui u)
     {
