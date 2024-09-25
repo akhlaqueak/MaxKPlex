@@ -69,7 +69,7 @@ public:
 public:
 	ui best_n_edges;
 	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
-	: B(src.B), n(src.n), ISc(src.ISc),
+	: B(src.B), n(src.n),
 	peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
 	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
 	sparse(src.sparse), dense_search(src.dense_search)
@@ -101,7 +101,7 @@ public:
 		// copy(src.level_id, src.level_id+n, level_id);
 		
 		bmp.init(n);
-		LPI=new ui[matrix_size];
+		// LPI=new ui[matrix_size];
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
