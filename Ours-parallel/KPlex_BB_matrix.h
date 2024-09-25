@@ -38,8 +38,10 @@ class ThreadData{
 	ui *neighbors;
 	ui *nonneighbors;
 	ui *S2;
+	std::queue<ui> Qv;
+
 	public:
-	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp){
+	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp), Qv(src->Qv){
 
 		R_end = src->n;
 		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
@@ -74,6 +76,7 @@ class ThreadData{
 		}
 		dst->B=B;
 		dst->vp = vp;
+		dst->Qv=Qv;
 	}
 
 	~ThreadData(){
