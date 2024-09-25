@@ -140,9 +140,13 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src): B(src.B), 
-	vp(src.vp), Qv(src.Qv), n(src.n), PI(src.PI), PIMax(src.PIMax), ISc(src.ISc),
-	peelOrder(src.peelOrder), psz(src.psz), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K){
+	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src): B(src.B), 
+	// vp(src.vp), Qv(src.Qv), n(src.n), PI(src.PI), PIMax(src.PIMax), ISc(src.ISc),
+	// peelOrder(src.peelOrder), psz(src.psz), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
+	// _UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol){
+
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src){
+		*this=src;
 		SR=new ui[n];
 		SR_rid=new ui[n];
 		degree_in_S=new ui[n];
