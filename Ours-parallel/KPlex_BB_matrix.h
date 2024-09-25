@@ -26,7 +26,6 @@ using namespace std::chrono;
 
 class KPLEX_BB_MATRIX {
 private:
-class ThreadData{
 
 	ui* SR;
 	ui* degree_in_S;
