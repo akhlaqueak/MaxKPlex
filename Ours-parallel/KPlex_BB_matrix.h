@@ -143,7 +143,7 @@ public:
 	vp(src.vp), Qv(src.Qv), n(src.n), PI(src.PI), PIMax(src.PIMax), ISc(src.ISc),
 	peelOrder(src.peelOrder), psz(src.psz), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
 	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
-	sparse(src.sparse), dense_search(src.dense_search), forward_sol(src.forward_sol){
+	sparse(src.sparse), dense_search(src.dense_search){
 
 	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src){
 	// 	*this=src;
