@@ -34,8 +34,9 @@ class ThreadData{
 	ui R_end;
 	vector<ui> B;
 	ui* level_id;
+	vector<vector<ui>> vp;
 	public:
-	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B){
+	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp){
 
 		R_end = src->n;
 		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
@@ -63,6 +64,7 @@ class ThreadData{
 			dst->level_id[u]=level_id[i];
 		}
 		dst->B=B;
+		dst->vp = vp;
 	}
 
 	~ThreadData(){
@@ -103,9 +105,6 @@ public:
 	ui max_level;
 
 	std::vector<std::pair<ui,ui> > vp;
-	std::vector<ui> non_adj;
-
-
 	// std::vector<std::pair<ui,ui> > vp2;
 
 	bool sparse=true;
