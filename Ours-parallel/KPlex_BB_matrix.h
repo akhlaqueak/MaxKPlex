@@ -31,24 +31,25 @@ class ThreadData{
 	ui* SR;
 	ui* degree_in_S;
 	ui* degree;
-	ui R_end;
-	vector<ui> B;
 	ui* level_id;
-	vector<std::pair<ui,ui>> vp;
 	ui *neighbors;
 	ui *nonneighbors;
 	ui *S2;
-	std::queue<ui> Qv;
 	char* matrix;
 	ui n;
+	ui R_end;
+	std::queue<ui> Qv;
+	vector<ui> B, PI, PIMax, ISc, peelOrder, psz;
+	vector<std::pair<ui,ui>> vp;
 
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), 
-	vp(src->vp), Qv(src->Qv), n(src->n), 
+	vp(src->vp), Qv(src->Qv), n(src->n), PI(src->PI), PIMax(src->PIMax), ISc(src->ISc),
+	peelOrder(src->peelOrder), psz(src->psz),
 	matrix(src->matrix){
 
-		R_end = src->n;
-		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
+		R_end = n;
+		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Error1"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
@@ -83,6 +84,8 @@ class ThreadData{
 		dst->Qv=Qv;
 		dst->n = n;
 		dst->matrix = matrix;
+		dst->PI=PI; dst->PIMax=PIMax; dst->ISc=ISc;
+		dst->peelOrder=peelOrder;dst->psz=psz;
 	}
 
 	~ThreadData(){
