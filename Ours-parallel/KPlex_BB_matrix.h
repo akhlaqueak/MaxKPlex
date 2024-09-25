@@ -754,7 +754,8 @@ else{ // pivot based branching
 			while(true) {
 				if(j == new_n) j = i+1;
 				if(j >= vp.size()||ub > best_sz||ub + vp.size() - j <= best_sz) break;
-				ui u = vp[ids[j]].first, nn = vp[ids[j]].second;
+				ui u = vp[ids[j]].first;
+				ui nn = vp[ids[j]].second;
 				if(t_support < nn) break;
 				if(t_matrix[u]) {
 					t_support -= nn;
