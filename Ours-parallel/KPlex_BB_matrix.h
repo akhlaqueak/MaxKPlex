@@ -11,7 +11,7 @@ using namespace std::chrono;
 #define TIME_OVER(ST) (chrono::duration_cast<chrono::milliseconds>(TIME_NOW - ST).count()>THRESH)
 
 // pruning switches
-// #define S2RULE
+#define S2RULE
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (K<=5&&sparse)
@@ -35,6 +35,9 @@ class ThreadData{
 	vector<ui> B;
 	ui* level_id;
 	vector<std::pair<ui,ui>> vp;
+	ui *neighbors;
+	ui *nonneighbors;
+	ui *S2;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp){
 
@@ -44,6 +47,9 @@ class ThreadData{
 		degree_in_S=new ui[R_end];
 		degree=new ui[R_end];
 		level_id=new ui[R_end];
+		neighbors = new ui[R_end];
+		nonneighbors = new ui[R_end];
+		S2 = new ui[R_end];
 		for(ui i=0;i<R_end;i++){
 			ui u = src->SR[i];
 			SR[i] = u;
@@ -62,6 +68,9 @@ class ThreadData{
 			dst->degree_in_S[u]=degree_in_S[i];
 			dst->degree[u]=degree[i];
 			dst->level_id[u]=level_id[i];
+			dst->neighbors[i] = neighbors[i];
+			dst->nonneighbors[i] = nonneighbors[i];
+			dst->S2[i] = S2[i];
 		}
 		dst->B=B;
 		dst->vp = vp;
