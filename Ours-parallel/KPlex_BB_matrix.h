@@ -158,6 +158,7 @@ public:
 		copy(src.SR, src.SR+n, SR);
 		copy(src.SR_rid, src.SR_rid+n, SR_rid);
 		copy(src.degree, src.degree+n, degree);
+		copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
 		copy(src.level_id, src.level_id+n, level_id);
 		copy(src.neighbors, src.neighbors+n, neighbors);
 		copy(src.nonneighbors, src.nonneighbors+n, nonneighbors);
@@ -922,7 +923,7 @@ else{ // pivot based branching
 			ui v = nonneighbors[i];
 			if(SR_rid[v] >= S_end) {
 				if(level_id[v] == level) continue;
-				if(S_end - degree_in_S[v] >= 5||S_end - degree_in_S[u] == 5) {
+				if(S_end - degree_in_S[v] >= K||S_end - degree_in_S[u] == K) {
 					level_id[v] = level;
 					Qv.push(v);
 				}
