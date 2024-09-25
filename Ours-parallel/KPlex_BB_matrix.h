@@ -43,60 +43,7 @@ class ThreadData{
 	vector<std::pair<ui,ui>> vp;
 
 	public:
-	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), 
-	vp(src->vp), Qv(src->Qv), n(src->n), PI(src->PI), PIMax(src->PIMax), ISc(src->ISc),
-	peelOrder(src->peelOrder), psz(src->psz),
-	matrix(src->matrix){
 
-		R_end = n;
-		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Error1"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
-		SR=new ui[R_end];
-		degree_in_S=new ui[R_end];
-		degree=new ui[R_end];
-		level_id=new ui[R_end];
-		neighbors = new ui[R_end];
-		nonneighbors = new ui[R_end];
-		S2 = new ui[R_end];
-		for(ui i=0;i<R_end;i++){
-			SR[i] = src->SR[i];
-			degree_in_S[i]=src->degree_in_S[i];
-			degree[i]=src->degree[i];
-			level_id[i]=src->level_id[i];
-			neighbors[i]=src->neighbors[i];
-			nonneighbors[i]=src->nonneighbors[i];
-			S2[i]=src->S2[i];
-		}
-	}
-
-	void loadData(KPLEX_BB_MATRIX *dst, ui S_end){
-
-		for(ui i=0;i<R_end;i++){
-			dst->SR[i] = SR[i];
-			dst->SR_rid[i]=i;
-			dst->degree_in_S[i]=degree_in_S[i];
-			dst->degree[i]=degree[i];
-			dst->level_id[i]=level_id[i];
-			dst->neighbors[i] = neighbors[i];
-			dst->nonneighbors[i] = nonneighbors[i];
-			dst->S2[i] = S2[i];
-		}
-		dst->B=B;
-		dst->vp = vp;
-		dst->Qv=Qv;
-		dst->n = n;
-		dst->matrix = matrix;
-		dst->PI=PI; dst->PIMax=PIMax; dst->ISc=ISc;
-		dst->peelOrder=peelOrder;dst->psz=psz;
-		for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
-	}
-
-	~ThreadData(){
-		delete [] SR;
-		delete [] degree;
-		delete [] degree_in_S;
-		delete [] level_id;
-	}
-};
 	ui n;
 
 	char *matrix;
@@ -171,7 +118,7 @@ public:
 		// copy(src.level_id, src.level_id+n, level_id);
 		
 		bmp.init(n);
-		LPI=new ui[matrix_size];
+		// LPI=new ui[matrix_size];
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
@@ -658,7 +605,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = getBranchings2(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
