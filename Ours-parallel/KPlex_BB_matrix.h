@@ -39,9 +39,10 @@ class ThreadData{
 	ui *nonneighbors;
 	ui *S2;
 	std::queue<ui> Qv;
+	ui n;
 
 	public:
-	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp), Qv(src->Qv){
+	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp), Qv(src->Qv), n(src->n){
 
 		R_end = src->n;
 		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
@@ -77,6 +78,7 @@ class ThreadData{
 		dst->B=B;
 		dst->vp = vp;
 		dst->Qv=Qv;
+		dst->n = n;
 	}
 
 	~ThreadData(){
@@ -114,7 +116,7 @@ public:
 	ui *SR_rid; // reverse ID for SR
 	std::queue<ui> Qv;
 	ui *level_id;
-	ui max_level;
+
 
 	std::vector<std::pair<ui,ui> > vp;
 	// std::vector<std::pair<ui,ui> > vp2;
@@ -149,7 +151,6 @@ public:
 
 		SR = SR_rid = nullptr;
 		level_id = nullptr;
-		max_level = 0;
 		best_n_edges=0;
 		dense_search=_ds;
 	}
