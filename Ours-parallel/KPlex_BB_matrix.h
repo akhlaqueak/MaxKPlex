@@ -34,7 +34,7 @@ class ThreadData{
 	ui R_end;
 	vector<ui> B;
 	ui* level_id;
-	vector<vector<ui>> vp;
+	vector<std::pair<ui,ui>> vp;
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), vp(src->vp){
 
