@@ -27,7 +27,7 @@ using namespace std::chrono;
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
-
+	vector<ui> ids;
 	char *matrix;
 	long long matrix_size;
 
@@ -203,8 +203,9 @@ public:
 		bmp.init(n);
 	}
 
-	void load_graph(ui _n, const std::vector<std::pair<ui,ui> > &vp) {
-		n = _n;
+	void load_graph(std::vector<ui> _ids, const std::vector<std::pair<ui,ui> > &vp) {
+		ids = _ids;
+		n = ids.size();
 		if(((long long)n)*n > matrix_size) {
 			do {
 				matrix_size *= 2;
@@ -392,6 +393,8 @@ private:
 
 	void store_solution(ui size) {
 
+#pragma omp critical
+{
 		if(size <= best_solution_size.load()) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
@@ -407,7 +410,6 @@ private:
 		}
 		forward_sol = false;
 		printf("!!! BB_Search found a kplex of size: %u, n_edges: %u \n", size, n_edges);
-
 		if(dense_search){
 			if(n_edges>best_n_edges){
 			best_n_edges = n_edges;
@@ -418,9 +420,11 @@ private:
 			best_solution_size.store(size);
 			solution_size = size;
 			found_larger = true;
-			for(ui i = 0;i < size;i ++) best_solution[i] = SR[i];
+			kplex.clear();
+			for(ui i = 0;i < size;i ++) kplex.push_back(ids[SR[i]]);
 			best_n_edges = n_edges;
 		}
+}
 
 	}
 

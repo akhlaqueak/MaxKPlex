@@ -4,6 +4,7 @@
 double threshold=1e9;
 Timer thresh, branchings, bounding;
 std::atomic<ui> best_solution_size(0);
+std::vector<ui> kplex;
 
 #include "KPlex_BB_matrix.h"
 #include "KPlex_BB.h"
@@ -298,7 +299,7 @@ void Graph::kPlex_exact(int mode) {
 				kplex[i] = out_mapping[kplex[i]];
 			}
 		}
-
+		ui presize=kplex.size();
 		if(kplex.size()+1 > 2*K) CTPrune::core_truss_copruning(n, m, kplex.size()+1-K, kplex.size()+1-2*K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 		else core_shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 
@@ -356,23 +357,12 @@ void Graph::kPlex_exact(int mode) {
 				total_density += density;
 				if(density < min_density) min_density = density;
 				ui t_old_size = kplex_local.size();
-					kplex_solver_m->load_graph(ids.size(), vp);
+					kplex_solver_m->load_graph(ids, vp);
 				#pragma omp taskgroup
 				{
 					kplex_solver_m->kPlex(K, UB, kplex_local, true);
 				}
 
-				if(kplex_local.size() > t_old_size) {
-					for(ui j = 0;j < kplex_local.size();j ++) kplex_local[j] = ids[kplex_local[j]];
-				}
-
-#pragma omp critical
-				{
-					if (kplex_local.size() > kplex.size()) 
-					{
-						kplex=kplex_local;
-					}
-				}
 			}
 			// delete kplex_solver_m;
 
@@ -380,6 +370,7 @@ void Graph::kPlex_exact(int mode) {
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 		}
+		if(kplex.size()>presize) for(ui i=0;i<kplex.size();i++)kplex[i]=out_mapping[kplex[i]];
 		delete[] out_mapping;
 		delete[] rid;
 	}

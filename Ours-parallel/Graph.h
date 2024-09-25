@@ -18,7 +18,6 @@ private:
 	ui *edges; //adjacent ids of edges
 	ui *edgelist_pointer;
 
-	std::vector<ui> kplex;
 
 public:
 	Graph(const char *_dir, const int _K) ;
