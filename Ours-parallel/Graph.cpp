@@ -317,6 +317,7 @@ void Graph::kPlex_exact(int mode) {
 			thread_local Timer tt;
 #pragma omp parallel
 		{
+			tt.restart();
 			vector<ui> ids, kplex_local=kplex;
 			vector<pair<ui,ui> > vp;
 
