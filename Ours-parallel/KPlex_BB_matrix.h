@@ -665,7 +665,7 @@ if(PART_BRANCH){
 					// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 					// temp->loadData(this, S_end);
 					delete td;
-					delete temp;
+					// delete temp;
 				}			
 			}
 			else{
