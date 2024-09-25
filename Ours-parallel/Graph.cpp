@@ -369,7 +369,7 @@ void Graph::kPlex_exact(int mode) {
 			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
-	        #pragma omp parallel reduction(>:tt.elapsed())
+	        #pragma omp parallel reduction(max:tt.elapsed())
 			 search_time=tt.elapsed();
 		}
 		if(kplex.size()>presize) for(ui i=0;i<kplex.size();i++)kplex[i]=out_mapping[kplex[i]];
