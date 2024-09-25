@@ -37,7 +37,7 @@ class ThreadData{
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B){
 
-		R_end = _R_end;
+		R_end = src->n;
 		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
 		SR=new ui[R_end];
 		degree_in_S=new ui[R_end];
@@ -637,8 +637,8 @@ if(PART_BRANCH){
 				char* t_matrix = matrix;
 				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
 				{
-					swap(matrix, t_matrix);
 					ThreadData *temp=new ThreadData(this, S_end, R_end);
+					swap(matrix, t_matrix);
 					td->loadData(this);
 					// for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
@@ -647,6 +647,7 @@ if(PART_BRANCH){
 					swap(matrix, t_matrix);
 					temp->loadData(this);
 					delete td;
+					delete temp;
 				}			
 			}
 			else{
