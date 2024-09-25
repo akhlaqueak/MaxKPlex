@@ -330,9 +330,8 @@ void Graph::kPlex_exact(int mode) {
 			// std::fill(rid, rid+n, 0);
 
 
-			KPLEX_BB_MATRIX kplex_solver_m;// = new KPLEX_BB_MATRIX();
-			// KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
-			kplex_solver_m.allocateMemory(n);
+			KPLEX_BB_MATRIX *kplex_solver_m = new KPLEX_BB_MATRIX();
+			kplex_solver_m->allocateMemory(n);
 
 			ui search_cnt = 0;
 			double min_density = 1, total_density = 0;
@@ -345,7 +344,7 @@ void Graph::kPlex_exact(int mode) {
 				if(pend[u]-pstart[u]+K <= best_sz||n-i < best_sz) continue;
 
 				fflush(stdout);
-				cout<<omp_get_thread_num()<<" ^ "<<kplex_solver_m.SR<<endl;
+				cout<<omp_get_thread_num()<<" ^ "<<kplex_solver_m->SR<<endl;
 				
 				if(best_sz >= 2*K-1) 
 				extract_subgraph_with_prune(u, best_sz+1-K, best_sz+1-2*K, best_sz+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
@@ -358,10 +357,10 @@ void Graph::kPlex_exact(int mode) {
 				total_density += density;
 				if(density < min_density) min_density = density;
 				ui t_old_size = kplex_local.size();
-					kplex_solver_m.load_graph(ids.size(), vp);
+					kplex_solver_m->load_graph(ids.size(), vp);
 				#pragma omp taskgroup
 				{
-					kplex_solver_m.kPlex(K, UB, kplex_local, true);
+					kplex_solver_m->kPlex(K, UB, kplex_local, true);
 				}
 
 				if(kplex_local.size() > t_old_size) {
