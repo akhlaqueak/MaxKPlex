@@ -68,14 +68,15 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src): B(src.B), 
-	n(src.n), ISc(src.ISc),
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
+	: B(src.B), n(src.n), ISc(src.ISc),
 	peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
 	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
-	sparse(src.sparse), dense_search(src.dense_search){
+	sparse(src.sparse), dense_search(src.dense_search)
 
-	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end){
+	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
 	// 	*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
+	{
 		SR=new ui[n];
 		SR_rid=new ui[n];
 		degree_in_S=new ui[n];
