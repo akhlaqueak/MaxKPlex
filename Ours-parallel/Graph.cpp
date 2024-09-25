@@ -314,9 +314,9 @@ void Graph::kPlex_exact(int mode) {
 			reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 			best_solution_size.store(kplex.size());
 			cout<<"Best solution size: "<<best_solution_size.load()<<endl;
+			thread_local Timer tt;
 #pragma omp parallel
 		{
-			Timer tt;
 			vector<ui> ids, kplex_local=kplex;
 			vector<pair<ui,ui> > vp;
 
@@ -368,7 +368,7 @@ void Graph::kPlex_exact(int mode) {
 			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
-			ui st = tt.elapsed();
+
 	        #pragma omp parallel reduction(max : search_time)
 			{
 			 search_time=tt.elapsed();
