@@ -397,8 +397,8 @@ private:
 {
 		if(size <= best_solution_size.load()) {
 			printf("!!! the solution to store is no larger than the current best solution!");
-			return ;
 		}
+		else{
 
 		ui n_edges = 0;
 		for(ui i = 0;i < size;i ++) 
@@ -423,6 +423,7 @@ private:
 			kplex.clear();
 			for(ui i = 0;i < size;i ++) kplex.push_back(ids[SR[i]]);
 			best_n_edges = n_edges;
+		}
 		}
 }
 
