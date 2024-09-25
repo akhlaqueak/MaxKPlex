@@ -94,9 +94,10 @@ public:
 	{
 		// todo doing double free, see what causing it and fix
 
-		if (buf != nullptr)
+		if (buf != nullptr){
 			// delete[] buf;
 			buf = nullptr;
+		}
 	}
 	void reset()
 	{

@@ -140,6 +140,27 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src): B(src->B), 
+	vp(src->vp), Qv(src->Qv), n(src->n), PI(src->PI), PIMax(src->PIMax), ISc(src->ISc),
+	peelOrder(src->peelOrder), psz(src->psz), matrix(src->matrix), matrix_size(src->matrix_size){
+		SR=new ui[n];
+		SR_rid=new ui[n];
+		degree_in_S=new ui[n];
+		degree=new ui[n];
+		level_id=new ui[n];
+		neighbors = new ui[n];
+		nonneighbors = new ui[n];
+		S2 = new ui[n];
+		copy(src->SR, src->SR+n, SR);
+		copy(src->SR_rid, src->SR_rid+n, SR_rid);
+		copy(src->degree, src->degree+n, degree);
+		copy(src->level_id, src->level_id+n, level_id);
+		copy(src->neighbors, src->neighbors+n, neighbors);
+		copy(src->nonneighbors, src->nonneighbors+n, nonneighbors);
+		copy(src->S2, src->S2+n, S2);
+		bmp.init(n);
+		LPI=new ui[matrix_size];
+	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
 		matrix = nullptr;
@@ -654,18 +675,11 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				ThreadData *td=new ThreadData(this, S_end, R_end);
+				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
-					// ThreadData *temp=new ThreadData(this, S_end, R_end);
-					td->loadData(this, S_end);
-					// for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
-					// ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-					// if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
-					// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-					// temp->loadData(this, S_end);
+					td->BB_search(S_end, R_end, level, false, false, TIME_NOW);
 					delete td;
-					// delete temp;
 				}			
 			}
 			else{
