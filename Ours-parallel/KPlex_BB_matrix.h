@@ -635,6 +635,7 @@ if(PART_BRANCH){
 			// if(false){
 				ThreadData *td=new ThreadData(this, S_end, R_end);
 				char* t_matrix = matrix;
+				#pragma omp barrier
 				#pragma omp task firstprivate(td, u, S_end, R_end, level, t_matrix)
 				{
 					ThreadData *temp=new ThreadData(this, S_end, R_end);
