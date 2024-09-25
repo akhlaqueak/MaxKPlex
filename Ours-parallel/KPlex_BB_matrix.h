@@ -8,7 +8,7 @@ using namespace std::chrono;
 // #define _SECOND_ORDER_PRUNING_
 #define THRESH 100
 #define TIME_NOW chrono::steady_clock::now()
-#define TIME_OVER(ST) (chrono::duration_cast<chrono::nanoseconds>(TIME_NOW - ST).count()>THRESH)
+#define TIME_OVER(ST) (chrono::duration_cast<chrono::microseconds>(TIME_NOW - ST).count()>THRESH)
 
 // pruning switches
 #define S2RULE
@@ -101,7 +101,7 @@ public:
 		// copy(src.level_id, src.level_id+n, level_id);
 		
 		bmp.init(n);
-
+		LPI=new ui[matrix_size];
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
