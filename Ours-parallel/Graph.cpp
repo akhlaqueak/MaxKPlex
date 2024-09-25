@@ -314,10 +314,11 @@ void Graph::kPlex_exact(int mode) {
 			reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 			best_solution_size.store(kplex.size());
 			cout<<"Best solution size: "<<best_solution_size.load()<<endl;
-			thread_local Timer tt;
+			thread_local ts_time=0;
 #pragma omp parallel
 		{
 
+			thread_local Timer tt;
 			vector<ui> ids, kplex_local=kplex;
 			vector<pair<ui,ui> > vp;
 
@@ -362,17 +363,17 @@ void Graph::kPlex_exact(int mode) {
 				{
 					kplex_solver_m->kPlex(K, UB, kplex_local, true);
 				}
-
 			}
 			// delete kplex_solver_m;
 
+			ts_time = tt.elapsed();
 			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 		}
 	        #pragma omp parallel reduction(max : search_time)
 			{
-			 search_time=tt.elapsed();
+			 search_time=ts_time;
 			}
 		if(kplex.size()>presize) for(ui i=0;i<kplex.size();i++)kplex[i]=out_mapping[kplex[i]];
 		delete[] out_mapping;
