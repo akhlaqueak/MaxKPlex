@@ -192,10 +192,10 @@ public:
 	}
 
 	~KPLEX_BB_MATRIX() {
-		if(matrix != NULL) {
-			delete[] matrix;
-			matrix = NULL;
-		}
+		// if(matrix != NULL) {
+		// 	delete[] matrix;
+		// 	matrix = NULL;
+		// }
 #ifdef _SECOND_ORDER_PRUNING_
 		if(cn != NULL) {
 			delete[] cn;
