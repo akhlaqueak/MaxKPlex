@@ -68,7 +68,7 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src)
 	: B(src.B), n(src.n),
 	peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
 	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
@@ -86,7 +86,7 @@ public:
 		nonneighbors = new ui[n];
 		best_solution = new ui[n];
 		S2 = new ui[n];
-		copy(src.SR, src.SR+R_end, SR);
+		copy(src.SR, src.SR+n, SR);
 
 		// for(ui i=0;i<R_end;i++){
 		// 	ui u=SR[i];
@@ -622,7 +622,7 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
+				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
@@ -637,9 +637,8 @@ if(PART_BRANCH){
 				restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);				
 			}
 		}
-		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 }
-/*
+
 else{ // pivot based branching
 		if(B.empty() || SR_rid[B.back()] >= R_end || SR_rid[B.back()] < S_end)
 			branch(S_end, R_end); 
@@ -647,14 +646,33 @@ else{ // pivot based branching
 		B.pop_back();
 		
 
-		// First branch moves u to S
+if(TIME_OVER(st)){
+		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+		B.clear();
+		#pragma omp task firstprivate(td, u, S_end, R_end, level)
+			// First branch moves u to S
 		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-#ifdef _SECOND_ORDER_PRUNING_
-			if(ctcp_enabled) {
-				while(!Qe.empty())Qe.pop();
-				t_old_removed_edges_n=removed_edges_n;
-			}
-#endif
+
+		if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false);
+	// the second branch exclude u from G	
+		{
+			td->restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
+			while(!td->Qv.empty()){
+				td->Qv.pop();
+				td->level_id[td->Qv.front()]=td->n;
+			} 
+			td->B.clear();
+			bool succeed = td->remove_u_from_S_with_prune(S_end, R_end, level);
+			if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = td->collect_removable_vertices_and_edges(S_end, R_end, level);
+			if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false);
+		}
+		delete td;
+}
+else{
+
+				// First branch moves u to S
+		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+
 		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
     // the second branch exclude u from G	
 		{
@@ -664,19 +682,14 @@ else{ // pivot based branching
 			level_id[v]=n;
 			} 
 			B.clear();
-#ifdef _SECOND_ORDER_PRUNING_
-			if(ctcp_enabled) {
-				while(!Qe.empty())Qe.pop();
-				t_old_removed_edges_n=removed_edges_n;
-			}
-#endif
+
 			bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 			if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		}
+}
+}
 		restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-}*/
-
 	}
 
 	void collect_removable_vertices_based_on_total_edges(ui S2_n, ui S_end, ui R_end, ui level) {
