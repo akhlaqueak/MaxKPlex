@@ -11,7 +11,7 @@ using namespace std::chrono;
 #define TIME_OVER(ST) (chrono::duration_cast<chrono::milliseconds>(TIME_NOW - ST).count()>THRESH)
 
 // pruning switches
-#define S2RULE
+// #define S2RULE
 
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (K<=5&&sparse)
