@@ -45,7 +45,7 @@ class ThreadData{
 	public:
 	ThreadData(KPLEX_BB_MATRIX *src, ui S_end, ui _R_end): B(src->B), 
 	vp(src->vp), Qv(src->Qv), n(src->n), 
-	matrix(src->matrx){
+	matrix(src->matrix){
 
 		R_end = src->n;
 		// for(ui i=0;i<R_end; i++)if(src->degree_in_S[src->SR[i]]>S_end) cout<<"Brror"<<src->degree_in_S[src->SR[i]]<<" "<<S_end<<endl;
