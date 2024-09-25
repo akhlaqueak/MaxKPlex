@@ -369,7 +369,7 @@ void Graph::kPlex_exact(int mode) {
 			ts_time = tt.elapsed();
 			if(search_cnt == 0) printf("search_cnt: 0, ave_density: 1, min_density: 1\n");
 			else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
-			printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
+			// printf("*** Search time: %s\n", Utility::integer_to_string(tt.elapsed()).c_str());
 		}
 	        #pragma omp parallel reduction(max : search_time)
 			{
@@ -385,7 +385,7 @@ void Graph::kPlex_exact(int mode) {
 	delete[] peel_sequence;
 	delete[] vis;
 	delete[] degree;
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_search: %u\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, search_time);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_search: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, search_time/1e6);
 
 
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
