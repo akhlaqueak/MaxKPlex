@@ -281,7 +281,7 @@ void Graph::kPlex_exact(int mode) {
 
 	ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 	assert(kplex.size() >= K);
-
+	ui search_time=0;
 	if(kplex.size() < UB) {
 		ui old_size = kplex.size();
 		ui *out_mapping = new ui[n];
@@ -314,7 +314,6 @@ void Graph::kPlex_exact(int mode) {
 			reorganize_adjacency_lists(n, peel_sequence, rid, pstart, pend, edges);
 			best_solution_size.store(kplex.size());
 			cout<<"Best solution size: "<<best_solution_size.load()<<endl;
-			ui search_time=0;
 #pragma omp parallel
 		{
 			Timer tt;
