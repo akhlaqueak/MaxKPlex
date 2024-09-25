@@ -26,23 +26,6 @@ using namespace std::chrono;
 
 class KPLEX_BB_MATRIX {
 private:
-
-	ui* SR;
-	ui* degree_in_S;
-	ui* degree;
-	ui* level_id;
-	ui *neighbors;
-	ui *nonneighbors;
-	ui *S2;
-	char* matrix;
-	ui n;
-	ui R_end;
-	std::queue<ui> Qv;
-	vector<ui> B, PI, PIMax, ISc, peelOrder, psz;
-	vector<std::pair<ui,ui>> vp;
-
-	public:
-
 	ui n;
 
 	char *matrix;
@@ -117,7 +100,7 @@ public:
 		// copy(src.level_id, src.level_id+n, level_id);
 		
 		bmp.init(n);
-		// LPI=new ui[matrix_size];
+
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
