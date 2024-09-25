@@ -255,10 +255,6 @@ public:
 			kplex.clear();
 			for(int i = 0;i < solution_size+1;i ++) kplex.push_back(best_solution[i]);
 		}
-		if(solution_size > kplex.size()) {
-			kplex.clear();
-			for(int i = 0;i < solution_size;i ++) kplex.push_back(best_solution[i]);
-		}
 	}
 
 
@@ -337,10 +333,10 @@ private:
 		#pragma omp critical
 		{
 			if(!dense_search&&(n - idx > best_solution_size.load())) {
-				cout<<"best size"<<best_solution_size<<endl;
 				best_solution_size.store(n - idx);
 				solution_size=n-idx;
-				for(ui i = idx;i < n;i ++) best_solution[i-idx] = peel_sequence[i];
+				kplex.clear();
+				for(ui i = idx;i < n;i ++) kplex.push_back (peel_sequence[i]);
 				printf("Degen find a solution of size %u\n", solution_size);
 			}
 		}
