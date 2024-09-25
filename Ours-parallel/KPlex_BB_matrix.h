@@ -58,23 +58,25 @@ class ThreadData{
 		nonneighbors = new ui[R_end];
 		S2 = new ui[R_end];
 		for(ui i=0;i<R_end;i++){
-			ui u = src->SR[i];
-			SR[i] = u;
-			degree_in_S[i]=src->degree_in_S[u];
-			degree[i]=src->degree[u];
-			level_id[i]=src->level_id[u];
+			SR[i] = src->SR[i];
+			degree_in_S[i]=src->degree_in_S[i];
+			degree[i]=src->degree[i];
+			level_id[i]=src->level_id[i];
+			neighbors[i]=src->neighbors[i];
+			nonneighbors[i]=src->nonneighbors[i];
+			S2[i]=src->S2[i];
+
 		}
 	}
 
 	void loadData(KPLEX_BB_MATRIX *dst){
 
 		for(ui i=0;i<R_end;i++){
-			ui u = SR[i];
-			dst->SR[i] = u;
-			dst->SR_rid[u]=i;
-			dst->degree_in_S[u]=degree_in_S[i];
-			dst->degree[u]=degree[i];
-			dst->level_id[u]=level_id[i];
+			dst->SR[i] = SR[i];
+			dst->SR_rid[i]=i;
+			dst->degree_in_S[i]=degree_in_S[i];
+			dst->degree[i]=degree[i];
+			dst->level_id[i]=level_id[i];
 			dst->neighbors[i] = neighbors[i];
 			dst->nonneighbors[i] = nonneighbors[i];
 			dst->S2[i] = S2[i];
@@ -658,10 +660,10 @@ if(PART_BRANCH){
 					ThreadData *temp=new ThreadData(this, S_end, R_end);
 					td->loadData(this);
 					for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
-					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
-					restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
-					temp->loadData(this);
+					// ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
+					// if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+					// restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
+					// temp->loadData(this);
 					delete td;
 					delete temp;
 				}			
