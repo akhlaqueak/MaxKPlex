@@ -158,17 +158,17 @@ public:
 		S2 = new ui[n];
 		copy(src.SR, src.SR+R_end, SR);
 
-		// for(ui i=0;i<R_end;i++){
-		// 	ui u=SR[i];
-		// 	SR_rid[u]=i;
-		// 	degree[u]=src.degree[u];
-		// 	degree_in_S[u]=src.degree_in_S[u];
-		// 	level_id[u]=src.level_id[u];
-		// }
-		copy(src.SR_rid, src.SR_rid+n, SR_rid);
-		copy(src.degree, src.degree+n, degree);
-		copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
-		copy(src.level_id, src.level_id+n, level_id);
+		for(ui i=0;i<R_end;i++){
+			ui u=SR[i];
+			SR_rid[u]=i;
+			degree[u]=src.degree[u];
+			degree_in_S[u]=src.degree_in_S[u];
+			level_id[u]=src.level_id[u];
+		}
+		// copy(src.SR_rid, src.SR_rid+n, SR_rid);
+		// copy(src.degree, src.degree+n, degree);
+		// copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
+		// copy(src.level_id, src.level_id+n, level_id);
 		
 		bmp.init(n);
 		LPI=new ui[matrix_size];
