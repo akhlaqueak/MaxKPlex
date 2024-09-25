@@ -922,7 +922,7 @@ else{ // pivot based branching
 			ui v = nonneighbors[i];
 			if(SR_rid[v] >= S_end) {
 				if(level_id[v] == level) continue;
-				if(S_end - degree_in_S[v] >= K||S_end - degree_in_S[u] == K) {
+				if(S_end - degree_in_S[v] >= 5||S_end - degree_in_S[u] == 5) {
 					level_id[v] = level;
 					Qv.push(v);
 				}
