@@ -145,8 +145,8 @@ public:
 	// _UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
 	// sparse(src.sparse), dense_search(src.dense_search){
 
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src){
-		*this=src;
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end){
+		*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
 		SR=new ui[n];
 		SR_rid=new ui[n];
 		degree_in_S=new ui[n];
@@ -156,14 +156,21 @@ public:
 		nonneighbors = new ui[n];
 		best_solution = new ui[n];
 		S2 = new ui[n];
-		copy(src.SR, src.SR+n, SR);
-		copy(src.SR_rid, src.SR_rid+n, SR_rid);
-		copy(src.degree, src.degree+n, degree);
-		copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
-		copy(src.level_id, src.level_id+n, level_id);
-		copy(src.neighbors, src.neighbors+n, neighbors);
-		copy(src.nonneighbors, src.nonneighbors+n, nonneighbors);
-		copy(src.S2, src.S2+n, S2);
+		copy(src.SR, src.SR+R_end, SR);
+		for(ui i=0;i<R_end;i++){
+			ui u=SR[i];
+			SR_rid[u]=i;
+			degree[u]=src.degree[u];
+			degree_in_S[u]=src.degree_in_S[u];
+			level_id[u]=src.level_id[u];
+		}
+		// copy(src.SR_rid, src.SR_rid+n, SR_rid);
+		// copy(src.degree, src.degree+n, degree);
+		// copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
+		// copy(src.level_id, src.level_id+n, level_id);
+		// copy(src.neighbors, src.neighbors+n, neighbors);
+		// copy(src.nonneighbors, src.nonneighbors+n, nonneighbors);
+		// copy(src.S2, src.S2+n, S2);
 		bmp.init(n);
 		LPI=new ui[matrix_size];
 	}
@@ -681,7 +688,7 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
