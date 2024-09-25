@@ -6,7 +6,7 @@
 #include<chrono>
 using namespace std::chrono;
 // #define _SECOND_ORDER_PRUNING_
-#define THRESH 100
+#define THRESH 10
 #define TIME_NOW chrono::steady_clock::now()
 #define TIME_OVER(ST) (chrono::duration_cast<chrono::milliseconds>(TIME_NOW - ST).count()>THRESH)
 
@@ -65,7 +65,6 @@ class ThreadData{
 			neighbors[i]=src->neighbors[i];
 			nonneighbors[i]=src->nonneighbors[i];
 			S2[i]=src->S2[i];
-
 		}
 	}
 
