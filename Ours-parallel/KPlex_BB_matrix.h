@@ -657,7 +657,7 @@ if(PART_BRANCH){
 				ThreadData *td=new ThreadData(this, S_end, R_end);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
-					ThreadData *temp=new ThreadData(this, S_end, R_end);
+					// ThreadData *temp=new ThreadData(this, S_end, R_end);
 					td->loadData(this, S_end);
 					// for(ui i=0;i<R_end; i++)if(degree_in_S[SR[i]]>S_end) cout<<"Error"<<degree_in_S[SR[i]]<<" "<<S_end<<endl;
 					// ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
