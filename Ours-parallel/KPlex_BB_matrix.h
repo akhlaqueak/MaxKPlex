@@ -653,7 +653,7 @@ if(TIME_OVER(st)){
 			// First branch moves u to S
 		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 
-		if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false);
+		if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, TIME_NOW);
 	// the second branch exclude u from G	
 		{
 			td->restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
@@ -664,7 +664,7 @@ if(TIME_OVER(st)){
 			td->B.clear();
 			bool succeed = td->remove_u_from_S_with_prune(S_end, R_end, level);
 			if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = td->collect_removable_vertices_and_edges(S_end, R_end, level);
-			if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false);
+			if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, TIME_NOW);
 		}
 		delete td;
 }
@@ -673,7 +673,7 @@ else{
 				// First branch moves u to S
 		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 
-		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, st);
     // the second branch exclude u from G	
 		{
 			restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
@@ -685,7 +685,7 @@ else{
 
 			bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
 			if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
-			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
+			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, st);
 		}
 }
 }
