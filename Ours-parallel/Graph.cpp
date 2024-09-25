@@ -344,7 +344,6 @@ void Graph::kPlex_exact(int mode) {
 				if(pend[u]-pstart[u]+K <= best_sz||n-i < best_sz) continue;
 
 				fflush(stdout);
-				cout<<omp_get_thread_num()<<" ^ "<<kplex_solver_m->SR<<endl;
 				
 				if(best_sz >= 2*K-1) 
 				extract_subgraph_with_prune(u, best_sz+1-K, best_sz+1-2*K, best_sz+3-2*K, peel_sequence_rid, degree, ids, rid, vp, exists, pstart, pend, edges);
