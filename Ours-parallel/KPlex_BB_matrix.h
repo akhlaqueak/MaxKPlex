@@ -98,7 +98,7 @@ public:
 		copy(src.degree_in_S, src.degree_in_S+n, degree_in_S);
 		copy(src.level_id, src.level_id+n, level_id);
 		
-		bmp.init(n);
+		// bmp.init(n);
 		// LPI=new ui[matrix_size];
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
