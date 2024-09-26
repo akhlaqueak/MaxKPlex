@@ -40,7 +40,6 @@ private:
 public:
 	ui *degree;
 	ui *degree_in_S;
-	ui *best_solution;
 
 	ui K;
 	ui solution_size;
@@ -84,7 +83,6 @@ public:
 		level_id=new ui[n];
 		neighbors = new ui[n];
 		nonneighbors = new ui[n];
-		best_solution = new ui[n];
 		S2 = new ui[n];
 		copy(src.SR, src.SR+n, SR);
 
@@ -115,7 +113,6 @@ public:
 
 		degree = degree_in_S = nullptr;
 
-		best_solution = nullptr;
 		K = _UB_ = 0;
 
 		neighbors = nonneighbors = nullptr;
@@ -146,9 +143,9 @@ public:
 			delete[] degree_in_S;
 			degree_in_S = NULL;
 		}
-		if(best_solution != NULL) {
-			delete[] best_solution;
-			best_solution = NULL;
+		if(S2 != NULL) {
+			delete[] S2;
+			S2 = NULL;
 		}
 		if(SR != NULL) {
 			delete[] SR;
@@ -184,7 +181,7 @@ public:
 
 		degree = new ui[n];
 		degree_in_S = new ui[n];
-		best_solution = new ui[n];
+
 		SR = new ui[n];
 		SR_rid = new ui[n];
 		neighbors = new ui[n];
@@ -251,10 +248,6 @@ public:
 		initialization(R_end, must_include_0);
 		solution_size=kplex.size();
 		if(R_end&&best_solution_size.load() < _UB_) BB_search(0, R_end, 1, must_include_0, true, TIME_NOW);
-		if(dense_search&&best_n_edges>n_edges){
-			kplex.clear();
-			for(int i = 0;i < solution_size+1;i ++) kplex.push_back(best_solution[i]);
-		}
 	}
 
 
@@ -409,7 +402,7 @@ private:
 		if(dense_search){
 			if(n_edges>best_n_edges){
 			best_n_edges = n_edges;
-			for(ui i = 0;i < size;i ++) best_solution[i] = SR[i];
+			for(ui i = 0;i < size;i ++)kplex.push_back(ids[SR[i]]);
 			}
 		}
 		else{
