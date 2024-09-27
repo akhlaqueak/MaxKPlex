@@ -14,16 +14,14 @@
 run_jobs() {
     # for kplex in $solutions; do
     for fn in $datasets; do
-        for sol in $solutions; do
-            for k in $krange; do
-                outfile=$sol-$k.out
-                # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                if [[ $sol =~ "Ours" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
-                    ./$sol --nodes=1 --ntasks=1 -c $threads --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out-$threads &
-                else
-                    ./$sol --nodes=1 --ntasks=1 -c $threads --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out-$threads &
-                fi
-            done
+        for k in $krange; do
+            outfile=$sol-$k.out
+            # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
+            if [[ $sol =~ "Ours" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
+                srun --nodes=1 --ntasks=1 -c $th --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out-$th &
+            else
+                srun --nodes=1 --ntasks=1 -c $th --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out-$th &
+            fi
         done
     done
     wait
@@ -32,10 +30,10 @@ get_results() {
     result=results.out
     rm $result
     echo -en "," >>$result
-    sn=($solutions)
+    sn=($threads)
     for k in $krange; do
-        for sol in $solutions; do
-            if [[ $sol == $sn ]]; then
+        for th in $threads; do
+            if [[ $th == $sn ]]; then
                 echo -en "k=$k," >>$result
             else
                 echo -en "," >>$result
@@ -48,8 +46,8 @@ get_results() {
     
 
     for k in $krange; do
-        for sol in $solutions; do
-            echo -en "${sol#*-}," >>$result
+        for th in $threads; do
+            echo -en "$th," >>$result
         done
         echo -en "|," >>$result
     done
@@ -61,8 +59,8 @@ get_results() {
         for k in $krange; do
 
             line=()
-            for sol in $solutions; do
-                outfile=$sol-$k.out
+            for th in $threads; do
+                outfile=$sol-$k.out-$th
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     line+=('9999999999')
@@ -180,8 +178,8 @@ get_kpsize() {
 
     for k in $krange; do
         echo -en "**k=$k**," >>$result
-        for sol in $solutions; do
-            echo -en "${sol#*-}," >>$result
+        for th in $threads; do
+            echo -en "$th," >>$result
         done
     done
 
@@ -190,8 +188,8 @@ get_kpsize() {
     for fn in $datasets; do
         echo -en "$fn,|," >>$result
         for k in $krange; do
-            for sol in $solutions; do
-                outfile=$sol-$k.out
+            for th in $threads; do
+                outfile=$th-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     echo -en 'x,' >>$result
@@ -281,10 +279,11 @@ del_prev() {
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
 del_prev
-solutions='Ours-parallel'
+sol='Ours-parallel'
+threads='1 2 4 8 16 32'
 
-for threads in 1 2 4 8 16 32; do
-    export OMP_NUM_THREADS=$threads
+for th in $threads; do
+    export OMP_NUM_THREADS=$th
     run_jobs 00:10:00
 done
 
@@ -293,7 +292,7 @@ datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
 
 # get_results
 # get_kpsize
-# # get_cost
+# get_cost
 
 
 
