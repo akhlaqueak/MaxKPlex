@@ -1447,7 +1447,51 @@ else{ // pivot based branching
 
         return cend;
 	}
+    ui S_branching(ui S_end, ui R_end, ui level)
+    {
 
+        ui cend = R_end;
+        ui beta = best_solution_size - S_end;
+        while (beta>0)
+        {
+			ui ub = tryPartition(S_end, R_end);
+			if(ub<=beta){
+				for(ui u: ISp){
+					swap_pos(SR_rid[u], --cend);
+				}
+				beta-=ub;
+			}
+			else break;
+		}
+
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
+
+		
+		for(ui i=S_end; i<cend; i++){
+			// get a vertex with lowest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] < peelOrder[u])
+					ind = j, u = v;
+			}
+			if(i!=ind){
+				swap_pos(i, ind);
+				swap_pos(i, --R_end);
+			}
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+        return R_end;
+    }
     ui R_branching(ui S_end, ui R_end, ui level)
     {
 
@@ -1455,7 +1499,7 @@ else{ // pivot based branching
         ui beta = best_solution_size - S_end;
         while (beta>0)
         {
-			ui ub = tryColor(S_end, R_end);
+			ui ub = tryColor(S_end, cend);
 			if(ub<=beta){
 				for(ui u: ISc){
 					swap_pos(SR_rid[u], --cend);
