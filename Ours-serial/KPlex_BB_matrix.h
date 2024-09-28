@@ -8,8 +8,11 @@
 // pruning switches
 #define S2RULE
 
+// SR_BRANCHING can take values S_Branching, R_Branching, SR_Branching
+#define SR_BRANCHING S_Branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
-#define PART_BRANCH (K<=5&&sparse)
+#define PART_BRANCH (true)
+// #define PART_BRANCH (K<=5&&sparse)
 
 
 // Upper bounding switches... 
@@ -567,7 +570,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = SR_branching(S_end, R_end, level);
+		R_end = SR_BRANCHING(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
