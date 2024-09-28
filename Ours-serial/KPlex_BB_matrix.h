@@ -184,6 +184,7 @@ public:
 #ifdef _SECOND_ORDER_PRUNING_
 		memset(cn, 0, sizeof(ui)*((long long)n)*n);
 #endif
+		sparse=2.0*vp.size()/n/(n-1)>0.9;
 		memset(matrix, 0, sizeof(char)*((long long)n)*n);
 		for(ui i = 0; i < n; i++) degree[i] = 0;
 		for(ui i = 0;i < vp.size();i ++) {
