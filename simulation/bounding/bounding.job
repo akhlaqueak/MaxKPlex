@@ -278,7 +278,7 @@ del_prev() {
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/test25/*.bin)
-del_prev
+# del_prev
 sol='Ours-parallel'
 threads='1 2 4 8 16 32'
 
@@ -290,7 +290,7 @@ done
 # solutions='Maple kPlexT kPlexT-S2Part'
 datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
 
-# get_results
+get_results
 # get_kpsize
 # get_cost
 

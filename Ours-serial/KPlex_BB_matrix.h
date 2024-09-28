@@ -566,7 +566,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = color_branching(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -1446,6 +1446,58 @@ else{ // pivot based branching
 
         return cend;
 	}
+
+    ui color_branching(ui S_end, ui R_end, ui level)
+    {
+
+        ui cend = S_end;
+        ui beta = best_solution_size - S_end;
+        while (beta>0)
+        {
+			ui ub = tryColor(cend, R_end);
+			if(ub<=beta){
+				for(ui u: ISc){
+					swap_pos(SR_rid[u], cend++);
+				}
+				beta-=ub;
+			}
+			else break;
+		}
+
+        if (beta > 0)
+            cend += min(beta, R_end - cend);
+
+		
+		for(ui i=cend; i<R_end; i++){
+			// get a vertex with highest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < R_end; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] > peelOrder[u])
+					ind = j, u = v;
+			}
+			if(i!=ind)
+				swap_pos(i, ind);
+		}
+			// remove vertex at i location
+			// assert(level_id[u] == level&&SR_rid[u] == R_end);
+		while(R_end > cend){
+			ui u = SR[--R_end];
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+        return R_end;
+    }
+
+
+
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
