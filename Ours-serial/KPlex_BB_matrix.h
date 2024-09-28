@@ -1463,7 +1463,7 @@ else{ // pivot based branching
 			}
 			else break;
 		}
-        while (beta>0||ub==0);
+        while (beta>0&&ub!=0);
 
         if (beta > 0)
             cend -= min(beta, cend-S_end);
