@@ -567,7 +567,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = R_branching(S_end, R_end, level);
+		R_end = S_branching(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -1452,17 +1452,18 @@ else{ // pivot based branching
 
         ui cend = R_end;
         ui beta = best_solution_size - S_end;
-        while (beta>0)
-        {
-			ui ub = tryPartition(S_end, R_end);
+		ui ub=0;
+        do {
+			ub = tryPartition(S_end, cend);
 			if(ub<=beta){
-				for(ui u: ISp){
+				for(ui u: PIMax){
 					swap_pos(SR_rid[u], --cend);
 				}
 				beta-=ub;
 			}
 			else break;
 		}
+        while (beta>0||ub==0);
 
         if (beta > 0)
             cend -= min(beta, cend-S_end);
