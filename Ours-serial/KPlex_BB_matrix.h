@@ -1715,7 +1715,7 @@ else{ // pivot based branching
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
         {
-            if (support(SS_end, SR[ISc[i]]) > ub)
+            if (support(S_end, SR[ISc[i]]) > ub)
             {
                 std::swap(ISc[i], ISc[vlc]);
                 vlc++;
