@@ -1455,7 +1455,7 @@ else{ // pivot based branching
         ui beta = best_solution_size - S_end;
         while (beta>0)
         {
-			ui ub = tryColor(cend, R_end);
+			ui ub = tryColor(cend, R_end, S_end);
 			if(ub<=beta){
 				for(ui u: ISc){
 					swap_pos(SR_rid[u], cend++);
@@ -1708,10 +1708,11 @@ else{ // pivot based branching
         }
         return maxsup;
     }
-    ui tryColor(ui S_end, ui R_end)
-    {
+    ui tryColor(ui S_end, ui R_end, ui SS_end=0)
+    {	
+		if (SS_end==0) SS_end=S_end;
         createIS(S_end, R_end);
-        ui ub = TISUB(S_end);
+        ui ub = TISUB(SS_end);
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
