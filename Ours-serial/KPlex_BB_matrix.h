@@ -1476,12 +1476,13 @@ else{ // pivot based branching
             }
 		}
         while (beta>0&&cend>S_end);
-
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
 		
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
 			ui u = SR[i], ind = i;
-			for (ui j = i + 1; j < R_end; j++)
+			for (ui j = i + 1; j < cend; j++)
 			{
 				ui v = SR[j];
 				if (peelOrder[v] < peelOrder[u])
