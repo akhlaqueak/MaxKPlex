@@ -1569,10 +1569,10 @@ else{ // pivot based branching
 				if (peelOrder[v] < peelOrder[u])
 					ind = j, u = v;
 			}
-			if(i!=ind){
-				swap_pos(i, ind);
-				swap_pos(i, --R_end);
-			}
+
+			swap_pos(i, ind);
+			swap_pos(i, --R_end);
+
 			level_id[u] = level;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
