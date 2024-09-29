@@ -1809,7 +1809,7 @@ else{ // pivot based branching
     {	
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
-		return ub;
+		// return ub;
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
