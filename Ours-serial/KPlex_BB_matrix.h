@@ -1466,18 +1466,18 @@ else{ // pivot based branching
                 ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
-				ub = ubc;
+				if(ubc<=beta)beta-=ubc;
+				else break;
                 for (ui v : ISc)
                     swap_pos(v, --cend);
             }
             else
             {
-				ub=ubp;
+				if(ubp<=beta)beta-=ubp;
+				else break;
                 for (ui v : PIMax)
                     swap_pos(v, --cend);
             }
-			if(ub<=beta)beta-=ub;
-			else break;
 		}
         while (beta>0&&cend>S_end);
         if (beta > 0)
