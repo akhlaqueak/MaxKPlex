@@ -1511,8 +1511,8 @@ else{ // pivot based branching
         do {
 			ub = tryPartition(S_end, cend);
 			if(ub<=beta){
-				for(ui u: PIMax){
-					swap_pos(SR_rid[u], --cend);
+				for(ui i: PIMax){
+					swap_pos(i, --cend);
 				}
 				beta-=ub;
 			}
@@ -1557,8 +1557,8 @@ else{ // pivot based branching
         {
 			ui ub = tryColor(S_end, cend);
 			if(ub<=beta){
-				for(ui u: ISc){
-					swap_pos(SR_rid[u], --cend);
+				for(ui i: ISc){
+					swap_pos(i, --cend);
 				}
 				beta-=ub;
 			}
