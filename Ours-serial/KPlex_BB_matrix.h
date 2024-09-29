@@ -1561,7 +1561,7 @@ else{ // pivot based branching
 		}
         if (beta > 0)
             cend -= min(beta, cend-S_end);
-					
+
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
 			ui u = SR[i], ind = i;
@@ -1804,6 +1804,7 @@ else{ // pivot based branching
     {	
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
+		return ub;
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
