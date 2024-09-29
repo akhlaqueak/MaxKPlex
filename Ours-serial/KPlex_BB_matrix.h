@@ -570,7 +570,7 @@ if(PART_BRANCH){
 // ******************* Adding our branching stuff here... 
 		ui t_R_end=R_end;
 
-		R_end = getBranchings(S_end, R_end, level);
+		R_end = SR_BRANCHING(S_end, R_end, level);
 		while(R_end<t_R_end){
 		// branching vertices are now in R_end to t_R_end, and they are already sorted in peelOrder
 			// move branching vertex back to C
@@ -1487,10 +1487,10 @@ else{ // pivot based branching
 				if (peelOrder[v] < peelOrder[u])
 					ind = j, u = v;
 			}
-			if(i!=ind){
-				swap_pos(i, ind);
-				swap_pos(i, --R_end);
-			}
+
+			swap_pos(i, ind);
+			swap_pos(i, --R_end);
+
 			level_id[u] = level;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
@@ -1530,10 +1530,9 @@ else{ // pivot based branching
 				if (peelOrder[v] < peelOrder[u])
 					ind = j, u = v;
 			}
-			if(i!=ind){
-				swap_pos(i, ind);
-				swap_pos(i, --R_end);
-			}
+			swap_pos(i, ind);
+			swap_pos(i, --R_end);
+			
 			level_id[u] = level;
 			char *t_matrix = matrix + u*n;
 			degree[u] = degree_in_S[u] = 0;
