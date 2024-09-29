@@ -1457,8 +1457,13 @@ else{ // pivot based branching
         ui cend = R_end;
         ui beta = best_solution_size - S_end;
 		ui ub=0;
+		bool flag=true;
         do {
-            double ubp = tryPartition(S_end, cend);
+            double ubp;
+			if(flag){
+				ubp = tryPartition(S_end, cend);
+				if (ubp==0) flag=false;
+			}
 			double ubc = tryColor(S_end, cend);
 
             if (ubp == 0 or
