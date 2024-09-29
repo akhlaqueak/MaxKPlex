@@ -1460,23 +1460,28 @@ else{ // pivot based branching
         do {
             double ubp = tryPartition(S_end, cend);
 			double ubc = tryColor(S_end, cend);
+
             if (ubp == 0 or
                ( ISc.size() / ubc > PIMax.size() / ubp) or
                 ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
+				ub = ubc;
                 for (ui v : ISc)
                     swap_pos(v, --cend);
             }
             else
             {
-
+				ub=ubp;
                 for (ui v : PIMax)
                     swap_pos(v, --cend);
             }
+			if(ub<=beta)beta-=ub;
+			else break;
 		}
         while (beta>0&&cend>S_end);
-
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
 		
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
