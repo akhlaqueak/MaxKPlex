@@ -9,7 +9,7 @@
 #define S2RULE
 
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
-#define SR_BRANCHING SR_branching
+#define SR_BRANCHING R_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
 // #define PART_BRANCH (true)
 #define PART_BRANCH (K<=5&&sparse)
@@ -1809,7 +1809,7 @@ else{ // pivot based branching
     {	
         createIS(S_end, R_end);
         ui ub = TISUB(S_end);
-		// return ub;
+		return ub;
         ui vlc = 0;
         // collect loose vertices i.e. v \in ISc | support(v) > ub
         for (ui i = 0; i < ISc.size(); i++)
