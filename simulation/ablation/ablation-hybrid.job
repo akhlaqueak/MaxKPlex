@@ -279,7 +279,7 @@ del_prev() {
     done
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
-datasets=$(ls ~/graphs/test25/*.bin)
+datasets=$(ls ~/graphs/kPEX/*.bin)
 
 
 solutions='Ours-S_br Ours-R_br Ours-SR_br' 
@@ -287,7 +287,7 @@ del_prev
 run_jobs 00:30:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
-datasets=$(ls ~/graphs/test25/*.bin | xargs -n 1 basename)
+datasets=$(ls ~/graphs/kPEX/*.bin | xargs -n 1 basename)
 
 get_results
 get_kpsize
