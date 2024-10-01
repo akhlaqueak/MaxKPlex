@@ -67,14 +67,14 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src)
-	: B(src.B), n(src.n),
-	peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
-	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
-	sparse(src.sparse), dense_search(src.dense_search), ids(src.ids)
+	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src)
+	// : B(src.B), n(src.n),
+	// peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
+	// _UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
+	// sparse(src.sparse), dense_search(src.dense_search), ids(src.ids)
 
-	// KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
-	// 	*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
+		*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
 	{
 		SR=new ui[n];
 		SR_rid=new ui[n];
@@ -611,7 +611,7 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
@@ -636,7 +636,8 @@ else{ // pivot based branching
 		
 
 if(TIME_OVER(st)){
-		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
+		// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 		B.clear();
 		#pragma omp task firstprivate(td, u, S_end, R_end, level)
 		{

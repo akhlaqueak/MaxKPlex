@@ -57,7 +57,6 @@ class MaxKPlex
 
     std::vector<ui> must_include_vertices;
     ui *peelOrder;
-    ui R_end;
     ui *LPI;
 
 public:
