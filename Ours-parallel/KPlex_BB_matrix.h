@@ -74,8 +74,10 @@ public:
 	// sparse(src.sparse), dense_search(src.dense_search), ids(src.ids)
 
 	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
-		*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
 	{
+		*this=src; // all variables are copied here, then pointers are separtely copied afterwards... 
+		
+		
 		SR=new ui[n];
 		SR_rid=new ui[n];
 		degree_in_S=new ui[n];
