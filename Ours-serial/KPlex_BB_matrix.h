@@ -1734,7 +1734,7 @@ else{ // pivot based branching
 	ui colorUB(ui S_end, ui R_end)
     {
         ui UB = S_end;
-        while (R_end>S_end)
+        while (R_end>S_end&&UB<=best_solution_size)
         {
 			double ubc = tryColor(S_end, R_end);
 			for (ui v : ISc)
