@@ -1607,8 +1607,6 @@ else{ // pivot based branching
             if (support(S_end, u) == 0)
                 continue;
             // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
-            // Lookup neig(&lookup, &g.adjList[u]);
-            // bmp.setup(g.adjList[u], g.V);
 			ui* t_LPI = LPI+i*n;
             for (ui j = S_end; j < R_end; j++)
             {
@@ -1650,16 +1648,15 @@ else{ // pivot based branching
             {
                 // remove pi* from C
                 bmp.reset(n);
+				ui* t_LPI = LPI+maxpi*n;
                 for (ui i = 0; i < psz[maxpi]; i++)
                 {
-                    ui v = LPI[i];
+                    ui v = t_LPI[i];
                     swap_pos(SR_rid[v], --cend);
-                    bmp.set(LPI[maxpi * n + i]);
+                    bmp.set(v);
                 }
                 // beta-=cost(pi*)
-                ui ubp=min(support(S_end, SR[maxpi]), psz[maxpi]);
-				if(ubp<=beta)
-				beta-=ubp;
+                beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
 
                 // remove maxpi from every pi
                 psz[maxpi] = 0;
@@ -1680,7 +1677,6 @@ else{ // pivot based branching
         if (beta > 0)
             cend -= min(beta, cend-S_end);
 
-		cout<<S_end<<"-"<<cend<<"-"<<R_end<<" ";
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
 			ui u = SR[i], ind = i;
