@@ -283,7 +283,7 @@ datasets=$(ls ~/graphs/temp/*.bin)
 
 
 solutions='Ours Maple kPlexT DiseMKP kPlexS KpLeX' 
-del_prev
+# del_prev
 run_jobs 01:00:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
