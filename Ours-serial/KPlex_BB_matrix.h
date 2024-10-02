@@ -1642,6 +1642,14 @@ else{ // pivot based branching
 				beta-=ubc;
 				for(ui i: ISc)
 					swap_pos(i, --cend);
+				for (ui i = 0; i < S_end; i++)
+                {
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+                    psz[i] = j;
+                }
 			}
 
             else
