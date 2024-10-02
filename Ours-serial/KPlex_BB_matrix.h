@@ -1623,8 +1623,8 @@ else{ // pivot based branching
 
         while (S_end<cend)
         {
-			ui ubc = tryColor(S_end, cend);
-			double coldise=ISc.size()/ubc;
+			// ui ubc = tryColor(S_end, cend);
+			// double coldise=ISc.size()/ubc;
 
             ui maxpi = -1;
             double maxdise = 0;
@@ -1674,8 +1674,6 @@ else{ // pivot based branching
                         if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
                     psz[i] = j;
                 }
-                // remove maxpi...
-                // PI[maxpi].clear();
                 psz[maxpi] = 0;
             }
             
