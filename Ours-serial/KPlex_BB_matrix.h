@@ -9,7 +9,7 @@
 #define S2RULE
 
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
-#define SR_BRANCHING SR_branching
+#define SR_BRANCHING SR_branching_backup
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (true)
 // #define PART_BRANCH (K<=5&&sparse)
@@ -1621,8 +1621,6 @@ else{ // pivot based branching
 
         while (S_end<cend)
         {
-			double ubc = tryColor(S_end, cend);
-			double coldise=ISc.size()/ubc;
 
             ui maxpi = -1;
             double maxdise = 0;
@@ -1637,6 +1635,8 @@ else{ // pivot based branching
                     maxpi = i, maxdise = dise;
             }
 
+			double ubc = tryColor(S_end, cend);
+			double coldise=ISc.size()/ubc;
 			if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
 				if(ubc<=beta)
 				beta-=ubc;
@@ -1655,14 +1655,12 @@ else{ // pivot based branching
             else
             {
                 // remove pi* from C
-                // bmp.reset(n);
 				ui* t_LPI = LPI+maxpi*n;
                 for (ui i = 0; i < psz[maxpi]; i++)
                 {
 					// removing from C
                     ui v = t_LPI[i];
                     swap_pos(SR_rid[v], --cend);
-                    // bmp.set(v);
                 }
                 // beta-=cost(pi*)
                 beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
@@ -1674,7 +1672,6 @@ else{ // pivot based branching
                     ui j = 0;
 					ui* t_LPI = LPI+i*n;
                     for (ui k = 0; k < psz[i]; k++)
-                        // if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
                         if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
                     psz[i] = j;
                 }
