@@ -1623,7 +1623,7 @@ else{ // pivot based branching
 
         while (S_end<cend)
         {
-			ui ubc = tryColor(S_end, R_end);
+			ui ubc = tryColor(S_end, cend);
 			double dise_color=ISc.size()/ubc;
 
             ui maxpi = -1;
