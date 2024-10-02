@@ -1675,7 +1675,7 @@ else{ // pivot based branching
         return move_candidates_to_end(S_end, cend, R_end);
     }
 
-	ui move_candidates_to_end(S_end, cend, R_end){
+	ui move_candidates_to_end(ui S_end, ui cend, ui R_end){
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
 			ui u = SR[i], ind = i;
