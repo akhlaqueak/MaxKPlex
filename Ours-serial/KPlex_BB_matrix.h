@@ -1624,7 +1624,7 @@ else{ // pivot based branching
         while (S_end<cend)
         {
 			ui ubc = tryColor(S_end, cend);
-			double dise_color=ISc.size()/ubc;
+			double coldise=ISc.size()/ubc;
 
             ui maxpi = -1;
             double maxdise = 0;
@@ -1638,8 +1638,8 @@ else{ // pivot based branching
                 if (cost <= beta and dise > maxdise)
                     maxpi = i, maxdise = dise;
             }
-
-			if(maxpi==-1||dise_color>maxdise||(dise_color==maxdise&&ISc.size()>psz[maxpi])){
+			if(maxpi==-1) break;
+			if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
 				beta-=ubc;
 				for(ui i: ISc)
 					swap_pos(i, --cend);
