@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #SBATCH --job-name=test             ### Name of the job
-#SBATCH --ntasks=128                    ### Number of Tasks
+#SBATCH --ntasks=256                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
 #SBATCH --partition=medium             ### Cheaha Partition
-#SBATCH --time=2:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --time=12:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
 #SBATCH --mail-type=END
@@ -282,9 +282,9 @@ krange='2 3 4 5 6 7 8 9 10 15 20'
 datasets=$(ls ~/graphs/kPEX/*.bin)
 
 
-solutions='Ours-S_br Ours-R_br Ours-SR_br' 
+solutions='Ours Maple kPlexT DiseMKP kPlexS KpLeX' 
 del_prev
-run_jobs 00:30:00
+run_jobs 03:00:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
 datasets=$(ls ~/graphs/kPEX/*.bin | xargs -n 1 basename)
