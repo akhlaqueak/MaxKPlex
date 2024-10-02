@@ -1640,7 +1640,8 @@ else{ // pivot based branching
             }
 			if(maxpi==-1) break;
 			// if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
-			// 	beta-=ubc;
+				// if(ubc<=beta)
+				// beta-=ubc;
 			// 	for(ui i: ISc)
 			// 		swap_pos(i, --cend);
 			// }
@@ -1648,19 +1649,19 @@ else{ // pivot based branching
             else
             {
                 // remove pi* from C
+                bmp.reset(n);
                 for (ui i = 0; i < psz[maxpi]; i++)
                 {
                     ui v = LPI[i];
                     swap_pos(SR_rid[v], --cend);
+                    bmp.set(LPI[maxpi * n + i]);
                 }
                 // beta-=cost(pi*)
                 ui ubp=min(support(S_end, SR[maxpi]), psz[maxpi]);
 				if(ubp<=beta)
 				beta-=ubp;
                 // remove maxpi from every pi
-                bmp.reset(n);
-                for (ui i = 0; i < psz[maxpi]; i++)
-                    bmp.set(LPI[maxpi * n + i]);
+
                 for (ui i = 0; i < S_end; i++)
                 {
                     // Removing pi* from all pi in PI
@@ -1670,12 +1671,7 @@ else{ // pivot based branching
                     ui j = 0;
 					ui* t_LPI = LPI+i*n;
                     for (ui k = 0; k < psz[i]; k++)
-                        if (!bmp.test(t_LPI[k]))
-                            // if (!bmp.test(PI[u][k]))
-                            // PI[u][j++] = PI[u][k];
-							t_LPI[j++] = t_LPI[k];
-                            // LPI[u * n + j++] = LPI[u * n + k];
-                    // PI[u].resize(j);
+                        if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
                     psz[i] = j;
                 }
                 // remove maxpi...
