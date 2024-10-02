@@ -1639,11 +1639,11 @@ else{ // pivot based branching
                     maxpi = i, maxdise = dise;
             }
 			if(maxpi==-1) break;
-			if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
-				beta-=ubc;
-				for(ui i: ISc)
-					swap_pos(i, --cend);
-			}
+			// if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
+			// 	beta-=ubc;
+			// 	for(ui i: ISc)
+			// 		swap_pos(i, --cend);
+			// }
 
             else
             {
