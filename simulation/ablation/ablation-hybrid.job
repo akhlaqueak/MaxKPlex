@@ -283,7 +283,7 @@ datasets=$(ls ~/graphs/test/*.bin)
 
 
 solutions='Ours Ours-S_br Ours-R_br Ours-SR_br Ours-R_bound' 
-# del_prev
+del_prev
 run_jobs 00:30:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
