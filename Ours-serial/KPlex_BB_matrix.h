@@ -1662,7 +1662,6 @@ else{ // pivot based branching
                 psz[maxpi] = 0;
                 for (ui i = 0; i < S_end; i++)
                 {
-					if(!psz[i]) continue;
                     ui j = 0;
 					ui* t_LPI = LPI+i*n;
                     for (ui k = 0; k < psz[i]; k++)
