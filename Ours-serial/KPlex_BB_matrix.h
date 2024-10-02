@@ -9,7 +9,7 @@
 #define S2RULE
 
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
-#define SR_BRANCHING SR_branching_backup
+#define SR_BRANCHING S_branching_dise_style
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (true)
 // #define PART_BRANCH (K<=5&&sparse)
@@ -1597,7 +1597,95 @@ else{ // pivot based branching
 		}
         return R_end;
     }
+    ui S_branching_dise_style(ui S_end, ui R_end, ui level)
+    {
+        for (ui i = 0; i < S_end; i++)
+        {
+            ui u = SR[i];
+            psz[i] = 0;
+            if (support(S_end, u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+			ui* t_LPI = LPI+i*n;
+            for (ui j = S_end; j < R_end; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
+            }
+        }
+        ui beta = best_solution_size - S_end;
+        ui cend = R_end;
 
+        while (S_end<cend)
+        {
+            ui maxpi = -1;
+            double maxdise = 0;
+            for (ui i = 0; i < S_end; i++)
+            {
+                ui u = SR[i];
+                if (psz[i] == 0)
+                    continue;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
+                if (cost <= beta and dise > maxdise)
+                    maxpi = i, maxdise = dise;
+            }
+			if(maxpi==-1) break;
+            else
+            {
+                // remove pi* from C
+				ui* t_LPI = LPI+maxpi*n;
+                for (ui i = 0; i < psz[maxpi]; i++)
+                {
+					// removing from C
+                    ui v = t_LPI[i];
+                    swap_pos(SR_rid[v], --cend);
+                }
+                // beta-=cost(pi*)
+                beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
+
+                // remove maxpi from every pi
+                psz[maxpi] = 0;
+                for (ui i = 0; i < S_end; i++)
+                {
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+                    psz[i] = j;
+                }
+            }      
+            if (beta == 0) break;
+        }
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
+
+		for(ui i=S_end; i<cend; i++){
+			// get a vertex with lowest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < cend; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] < peelOrder[u])
+					ind = j, u = v;
+			}
+
+			swap_pos(i, ind);
+			swap_pos(i, --R_end);
+
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+        return R_end;
+    }
     ui SR_branching(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
