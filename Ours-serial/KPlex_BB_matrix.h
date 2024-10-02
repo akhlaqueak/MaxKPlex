@@ -1660,28 +1660,24 @@ else{ // pivot based branching
                 ui ubp=min(support(S_end, SR[maxpi]), psz[maxpi]);
 				if(ubp<=beta)
 				beta-=ubp;
-                // remove maxpi from every pi
 
+                // remove maxpi from every pi
+                psz[maxpi] = 0;
                 for (ui i = 0; i < S_end; i++)
                 {
-                    // Removing pi* from all pi in PI
-                    if (i == maxpi or psz[i]==0)
-                        continue;
-                    ui u = SR[i];
                     ui j = 0;
 					ui* t_LPI = LPI+i*n;
                     for (ui k = 0; k < psz[i]; k++)
                         if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
                     psz[i] = j;
                 }
-                psz[maxpi] = 0;
             }
             
             if (beta == 0)
                 break;
         }
-        // if (beta > 0)
-        //     cend -= min(beta, cend-S_end);
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
 
 		
 		for(ui i=S_end; i<cend; i++){
