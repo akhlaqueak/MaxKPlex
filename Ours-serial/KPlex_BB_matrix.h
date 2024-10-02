@@ -1655,14 +1655,14 @@ else{ // pivot based branching
             else
             {
                 // remove pi* from C
-                bmp.reset(n);
+                // bmp.reset(n);
 				ui* t_LPI = LPI+maxpi*n;
                 for (ui i = 0; i < psz[maxpi]; i++)
                 {
 					// removing from C
                     ui v = t_LPI[i];
                     swap_pos(SR_rid[v], --cend);
-                    bmp.set(v);
+                    // bmp.set(v);
                 }
                 // beta-=cost(pi*)
                 beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
@@ -1674,7 +1674,8 @@ else{ // pivot based branching
                     ui j = 0;
 					ui* t_LPI = LPI+i*n;
                     for (ui k = 0; k < psz[i]; k++)
-                        if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
+                        // if (!bmp.test(t_LPI[k])) t_LPI[j++] = t_LPI[k];
+                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
                     psz[i] = j;
                 }
             }
