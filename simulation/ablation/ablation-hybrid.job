@@ -284,7 +284,7 @@ datasets=$(ls ~/graphs/kPEX/*.bin)
 
 solutions='Ours Maple kPlexT DiseMKP kPlexS KpLeX' 
 del_prev
-run_jobs 03:00:00
+run_jobs 01:00:00
 
 # solutions='Maple kPlexT kPlexT-S2Part'
 datasets=$(ls ~/graphs/kPEX/*.bin | xargs -n 1 basename)
