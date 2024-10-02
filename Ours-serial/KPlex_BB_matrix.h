@@ -1654,7 +1654,9 @@ else{ // pivot based branching
                     swap_pos(SR_rid[v], --cend);
                 }
                 // beta-=cost(pi*)
-                beta -= min(support(S_end, SR[maxpi]), psz[maxpi]);
+                ui ubp=min(support(S_end, SR[maxpi]), psz[maxpi]);
+				if(ubp<=beta)
+				beta-=ubp;
                 // remove maxpi from every pi
                 bmp.reset(n);
                 for (ui i = 0; i < psz[maxpi]; i++)
