@@ -1451,7 +1451,7 @@ else{ // pivot based branching
         return cend;
 	}
 
-	ui SR_branching(ui S_end, ui R_end, ui level)
+	ui SR_branching_backup(ui S_end, ui R_end, ui level)
     {
 
         ui cend = R_end;
@@ -1598,7 +1598,120 @@ else{ // pivot based branching
         return R_end;
     }
 
+    ui SR_branching(ui S_end, ui R_end, ui level)
+    {
+        for (ui i = 0; i < S_end; i++)
+        {
+            ui u = SR[i];
+            psz[i] = 0;
+            if (support(S_end, u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+            // Lookup neig(&lookup, &g.adjList[u]);
+            // bmp.setup(g.adjList[u], g.V);
+			ui* t_LPI = LPI+i*n;
+            for (ui j = S_end; j < R_end; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
+            }
+        }
+        ui beta = best_solution_size - S_end;
+        ui cend = R_end;
 
+        while (S_end<cend)
+        {
+			ui ubc = tryColor(S_end, R_end);
+			double dise_color=ISc.size()/ubc;
+
+            ui maxpi = -1;
+            double maxdise = 0;
+            for (ui i = 0; i < S_end; i++)
+            {
+                ui u = SR[i];
+                if (psz[i] == 0)
+                    continue;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
+                if (cost <= beta and dise > maxdise)
+                    maxpi = i, maxdise = dise;
+            }
+
+			if(maxpi==-1||dise_color>maxdise||(dise_color==maxdise&&ISc.size()>psz[maxpi])){
+				beta-=ubc;
+				for(ui i: ISc)
+					swap_pos(i, --cend);
+			}
+
+            else
+            {
+                // remove pi* from C
+                for (ui i = 0; i < psz[maxpi]; i++)
+                {
+                    ui v = LPI[i];
+                    swap_pos(SR_rid[v], --cend);
+                }
+                // beta-=cost(pi*)
+                beta -= min(support(S_end, SR[maxpi]), psz[maxpi]);
+                // remove maxpi from every pi
+                bmp.reset(n);
+                for (ui i = 0; i < psz[maxpi]; i++)
+                    bmp.set(LPI[maxpi * n + i]);
+                for (ui i = 0; i < S_end; i++)
+                {
+                    // Removing pi* from all pi in PI
+                    if (i == maxpi or psz[i]==0)
+                        continue;
+                    ui u = SR[i];
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (!bmp.test(t_LPI[k]))
+                            // if (!bmp.test(PI[u][k]))
+                            // PI[u][j++] = PI[u][k];
+							t_LPI[j++] = t_LPI[k];
+                            // LPI[u * n + j++] = LPI[u * n + k];
+                    // PI[u].resize(j);
+                    psz[i] = j;
+                }
+                // remove maxpi...
+                // PI[maxpi].clear();
+                psz[maxpi] = 0;
+            }
+            
+            if (beta == 0)
+                break;
+        }
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
+
+		
+		for(ui i=S_end; i<cend; i++){
+			// get a vertex with lowest peelOrder at location i
+			ui u = SR[i], ind = i;
+			for (ui j = i + 1; j < cend; j++)
+			{
+				ui v = SR[j];
+				if (peelOrder[v] < peelOrder[u])
+					ind = j, u = v;
+			}
+
+			swap_pos(i, ind);
+			swap_pos(i, --R_end);
+
+			level_id[u] = level;
+			char *t_matrix = matrix + u*n;
+			degree[u] = degree_in_S[u] = 0;
+			for(ui i = 0;i < R_end;i ++) {
+				ui w = SR[i];
+				// if(level_id[w]==level) continue;
+				if(t_matrix[w]) -- degree[w];
+			}
+		}
+        return R_end;
+    }
 
     ui getBranchings(ui S_end, ui R_end, ui level)
     {
