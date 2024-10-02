@@ -1456,7 +1456,7 @@ else{ // pivot based branching
         while (beta>0&&cend>S_end);
         if (beta > 0)
             cend -= min(beta, cend-S_end);
-		return move_candidates_to_end(S_end, cend, R_end);
+		return move_candidates_to_end(S_end, cend, R_end, level);
     }
     ui R_branching(ui S_end, ui R_end, ui level)
     {
@@ -1478,7 +1478,7 @@ else{ // pivot based branching
         if (beta > 0)
             cend -= min(beta, cend-S_end);
 
-        return move_candidates_to_end(S_end, cend, R_end);
+        return move_candidates_to_end(S_end, cend, R_end, level);
     }
 
     ui S_branching(ui S_end, ui R_end, ui level)
@@ -1545,7 +1545,7 @@ else{ // pivot based branching
         }
         if (beta > 0)
             cend -= min(beta, cend-S_end);
-        return move_candidates_to_end(S_end, cend, R_end);
+        return move_candidates_to_end(S_end, cend, R_end, level);
     }
     ui S_branching_backup(ui S_end, ui R_end, ui level)
     {
@@ -1672,10 +1672,10 @@ else{ // pivot based branching
         }
         if (beta > 0)
             cend -= min(beta, cend-S_end);
-        return move_candidates_to_end(S_end, cend, R_end);
+        return move_candidates_to_end(S_end, cend, R_end, level);
     }
 
-	ui move_candidates_to_end(ui S_end, ui cend, ui R_end){
+	ui move_candidates_to_end(ui S_end, ui cend, ui R_end, ui level){
 		for(ui i=S_end; i<cend; i++){
 			// get a vertex with lowest peelOrder at location i
 			ui u = SR[i], ind = i;
