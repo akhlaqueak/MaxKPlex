@@ -279,10 +279,10 @@ del_prev() {
     done
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
-datasets=$(ls ~/graphs/temp/*.bin)
+datasets=$(ls ~/graphs/test/*.bin)
 
 
-solutions='Ours Maple kPlexT DiseMKP kPlexS KpLeX' 
+solutions='Ours Ours-S_br Ours-R_br Ours-SR_br' 
 # del_prev
 run_jobs 01:00:00
 
