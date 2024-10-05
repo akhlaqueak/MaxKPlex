@@ -81,9 +81,9 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		degree_in_S=new ui[n];
 		degree=new ui[n];
 		level_id=new ui[n];
-		neighbors = new ui[n];
-		nonneighbors = new ui[n];
-		S2 = new ui[n];
+		// neighbors = new ui[n];
+		// nonneighbors = new ui[n];
+		// S2 = new ui[n];
 		copy(src.SR, src.SR+n, SR);
 
 		// for(ui i=0;i<R_end;i++){
@@ -100,6 +100,31 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		
 		// bmp.init(n);
 		// LPI=new ui[matrix_size];
+	}
+	void loadTD(KPLEX_BB_MATRIX* dst){
+		neighbors=dst->neighbors;
+		nonneighbors=dst->nonneighbors;
+		S2=dst->S2;
+		LPI=dst->LPI;
+		PIMax.data()=dst->PIMax.data();
+		psz.data()=dst->psz.data();
+		ISc.data()=dst->ISc.data();
+		PI.data()=dst->PI.data();
+	}
+	void unloadTD(){
+		neighbors=nullptr; 
+		nonneighbors=nullptr;
+		S2=nullptr;
+		LPI=nullptr; 
+		PIMax.data()=nullptr; 
+		psz.data()=nullptr; 
+		ISc.data()=nullptr; 
+		PI.data()=nullptr; 
+		delete []SR;
+		delete []SR_rid;
+		delete []degree_in_S;
+		delete []degree;
+		delete []level_id;
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
@@ -614,10 +639,11 @@ if(PART_BRANCH){
 				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
+					td->loadTD(this);
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 					if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					td->restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-					delete td;
+					td->unloadTD();
 				}			
 			}
 			else{
@@ -643,7 +669,7 @@ if(TIME_OVER(st)){
 		{
 			// First branch moves u to S
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-
+			td->loadTD(this);
 			if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 		// the second branch exclude u from G	
 			{
@@ -657,7 +683,7 @@ if(TIME_OVER(st)){
 				if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = td->collect_removable_vertices_and_edges(S_end, R_end, level);
 				if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 			}
-			delete td;
+			td->unloadTD();
 		}
 }
 else{
