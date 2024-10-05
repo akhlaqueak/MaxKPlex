@@ -92,7 +92,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		// LPI=new ui[matrix_size];
 	}
 	void loadTD(KPLEX_BB_MATRIX* dst){
-		if(dst->neighbors==nullptr) cout<<"Erro";
+
 		neighbors=dst->neighbors;
 		nonneighbors=dst->nonneighbors;
 		S2=dst->S2;
@@ -102,6 +102,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		psz=move(dst->psz);
 		ISc=move(dst->ISc);
 		PI=move(dst->PI);
+		vp=move(dst->vp);
 	}
 	void unloadTD(KPLEX_BB_MATRIX* dst){
 		neighbors=nullptr; 
@@ -113,6 +114,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		dst->psz=move(psz);
 		dst->ISc=move(ISc);
 		dst->PI=move(PI);
+		dst->vp=move(vp);
 		delete []SR;
 		delete []SR_rid;
 		delete []degree_in_S;
