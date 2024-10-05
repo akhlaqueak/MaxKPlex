@@ -106,20 +106,22 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		nonneighbors=dst->nonneighbors;
 		S2=dst->S2;
 		LPI=dst->LPI;
-		PIMax.data()=dst->PIMax.data();
-		psz.data()=dst->psz.data();
-		ISc.data()=dst->ISc.data();
-		PI.data()=dst->PI.data();
+
+		PIMax=move(dst->PIMax);
+		psz=move(dst->psz);
+		ISc=move(dst->ISc);
+		PI=move(dst->PI);
 	}
-	void unloadTD(){
+	void unloadTD(KPLEX_BB_MATRIX* dst){
 		neighbors=nullptr; 
 		nonneighbors=nullptr;
 		S2=nullptr;
 		LPI=nullptr; 
-		PIMax.data()=nullptr; 
-		psz.data()=nullptr; 
-		ISc.data()=nullptr; 
-		PI.data()=nullptr; 
+		
+		dst->PIMax=move(PIMax);
+		dst->psz=move(psz);
+		dst->ISc=move(ISc);
+		dst->PI=move(PI);
 		delete []SR;
 		delete []SR_rid;
 		delete []degree_in_S;
@@ -643,7 +645,7 @@ if(PART_BRANCH){
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
 					if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 					td->restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-					td->unloadTD();
+					td->unloadTD(this);
 				}			
 			}
 			else{
@@ -683,7 +685,7 @@ if(TIME_OVER(st)){
 				if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = td->collect_removable_vertices_and_edges(S_end, R_end, level);
 				if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 			}
-			td->unloadTD();
+			td->unloadTD(this);
 		}
 }
 else{
