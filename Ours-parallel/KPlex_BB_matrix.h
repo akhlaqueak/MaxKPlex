@@ -67,7 +67,7 @@ public:
 	bool dense_search, forward_sol=false;
 public:
 	ui best_n_edges;
-	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src, ui R_end)
+	KPLEX_BB_MATRIX(const KPLEX_BB_MATRIX &src)
 	: B(src.B), n(src.n),
 	peelOrder(src.peelOrder), matrix(src.matrix), matrix_size(src.matrix_size), K(src.K),
 	_UB_(src._UB_), found_larger(src.found_larger), forward_sol(src.forward_sol), 
@@ -92,7 +92,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		// LPI=new ui[matrix_size];
 	}
 	void loadTD(KPLEX_BB_MATRIX* dst){
-
+		cout<<dst->neighbors<<" ";
 		neighbors=dst->neighbors;
 		nonneighbors=dst->nonneighbors;
 		S2=dst->S2;
@@ -631,7 +631,7 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
+				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					td->loadTD(this);
@@ -657,7 +657,7 @@ else{ // pivot based branching
 		
 
 if(TIME_OVER(st)){
-		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this, R_end);
+		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 		// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 		B.clear();
 		#pragma omp task firstprivate(td, u, S_end, R_end, level)
