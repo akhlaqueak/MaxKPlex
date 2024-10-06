@@ -660,7 +660,7 @@ if(PART_BRANCH){
 			if(TIME_OVER(st)){
 			// if(false){
 				// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
-				ThreadData *td = new ThreadData(*this);
+				ThreadData *td = new ThreadData(this);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
 					loadTD(td);
@@ -686,7 +686,7 @@ else{ // pivot based branching
 		
 
 if(TIME_OVER(st)){
-				ThreadData *td = new ThreadData(*this);
+				ThreadData *td = new ThreadData(this);
 		// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 		B.clear();
 		#pragma omp task firstprivate(td, u, S_end, R_end, level)
