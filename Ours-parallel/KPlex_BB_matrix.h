@@ -144,7 +144,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		dense_search=_ds;
 	}
 
-	kKPLEX_BB_MATRIX() {
+	void kKPLEX_BB_MATRIX() {
 		// if(matrix != NULL) {
 		// 	delete[] matrix;
 		// 	matrix = NULL;
