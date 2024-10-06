@@ -28,24 +28,33 @@ using namespace std::chrono;
 class KPLEX_BB_MATRIX {
 	class ThreadData{
 	public:
-		vecui SR, SR_rid, degree, degree_in_S, level_id;
+		ui* SR;
+		ui* SR_rid;
+		ui* degree;
+		ui* degree_in_S;
+		ui* level_id;
 		ui n;
 		ThreadData(KPLEX_BB_MATRIX* kp){
 			n=kp->n;
-			copy(kp->SR, kp->SR+n, SR.begin());
-			copy(kp->SR_rid, kp->SR_rid+n, SR_rid.begin());
-			copy(kp->degree, kp->degree+n, degree.begin());
-			copy(kp->degree_in_S, kp->degree_in_S+n, degree_in_S.begin());
-			copy(kp->level_id, kp->level_id+n, level_id.begin());		
+			SR=new ui[n];
+			SR_rid=new ui[n];
+			degree=new ui[n];
+			degree_in_S=new ui[n];
+			level_id=new ui[n];
+			copy(kp->SR, kp->SR+n, SR);
+			copy(kp->SR_rid, kp->SR_rid+n, SR_rid);
+			copy(kp->degree, kp->degree+n, degree);
+			copy(kp->degree_in_S, kp->degree_in_S+n, degree_in_S);
+			copy(kp->level_id, kp->level_id+n, level_id);		
 		}
 	};
 	void loadTD(ThreadData* td){
 			n=td->n;
-			copy(td->SR.begin(), td->SR.end(), SR);
-			copy(td->SR_rid.begin(), td->SR_rid.end(), SR_rid);
-			copy(td->degree.begin(), td->degree.end(), degree);
-			copy(td->degree_in_S.begin(), td->degree_in_S.end(), degree_in_S);
-			copy(td->level_id.begin(), td->level_id.end(), level_id);	
+			copy(td->SR, td->SR+n, SR);
+			copy(td->SR_rid, td->SR_rid+n, SR_rid);
+			copy(td->degree, td->degree+n, degree);
+			copy(td->degree_in_S, td->degree_in_S+n, degree_in_S);
+			copy(td->level_id, td->level_id+n, level_id);	
 	}
 private:
 	ui n;
