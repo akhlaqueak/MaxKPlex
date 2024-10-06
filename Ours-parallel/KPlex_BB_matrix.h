@@ -105,10 +105,10 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		vp=move(dst->vp);
 	}
 	void unloadTD(KPLEX_BB_MATRIX* dst){
-		neighbors=nullptr; 
-		nonneighbors=nullptr;
-		S2=nullptr;
-		LPI=nullptr; 
+		// neighbors=nullptr; 
+		// nonneighbors=nullptr;
+		// S2=nullptr;
+		// LPI=nullptr; 
 		
 		dst->PIMax=move(PIMax);
 		dst->psz=move(psz);
@@ -144,7 +144,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		dense_search=_ds;
 	}
 
-	void kKPLEX_BB_MATRIX() {
+	~KPLEX_BB_MATRIX() {
 		// if(matrix != NULL) {
 		// 	delete[] matrix;
 		// 	matrix = NULL;
