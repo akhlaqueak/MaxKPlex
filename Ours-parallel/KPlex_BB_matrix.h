@@ -27,9 +27,9 @@ using namespace std::chrono;
 
 class KPLEX_BB_MATRIX {
 	class ThreadData{
+	public:
 		vecui SR, SR_rid, degree, degree_in_S, level_id;
 		ui n;
-	public:
 		ThreadData(KPLEX_BB_MATRIX* kp){
 			n=kp->n;
 			copy(kp->SR, kp->SR+n, SR.begin());
