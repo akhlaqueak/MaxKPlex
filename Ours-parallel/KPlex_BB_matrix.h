@@ -24,7 +24,29 @@ using namespace std::chrono;
 
 #define CSIZE (R_end-S_end)
 
+
 class KPLEX_BB_MATRIX {
+	class ThreadData{
+		vecui SR, SR_rid, degree, degree_in_S, level_id;
+		ui n;
+	public:
+		ThreadData(KPLEX_BB_MATRIX* kp){
+			n=kp->n;
+			copy(kp->SR, kp->SR+n, SR.begin());
+			copy(kp->SR_rid, kp->SR_rid+n, SR_rid.begin());
+			copy(kp->degree, kp->degree+n, degree.begin());
+			copy(kp->degree_in_S, kp->degree_in_S+n, degree_in_S.begin());
+			copy(kp->level_id, kp->level_id+n, level_id.begin());		
+		}
+	};
+	void loadTD(ThreadData* td){
+			n=td->n;
+			copy(td->SR.begin(), td->SR.end(), SR);
+			copy(td->SR_rid.begin(), td->SR_rid.end(), SR_rid);
+			copy(td->degree.begin(), td->degree.end(), degree);
+			copy(td->degree_in_S.begin(), td->degree_in_S.end(), degree_in_S);
+			copy(td->level_id.begin(), td->level_id.end(), level_id);	
+	}
 private:
 	ui n;
 	vector<ui> ids;
@@ -637,14 +659,15 @@ if(PART_BRANCH){
 // #endif
 			if(TIME_OVER(st)){
 			// if(false){
-				KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+				// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+				ThreadData *td = new ThreadData(*this);
 				#pragma omp task firstprivate(td, u, S_end, R_end, level)
 				{
-					td->loadTD(this);
+					loadTD(td);
 					ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-					if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
-					td->restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-					td->unloadTD(this);
+					if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+					restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
+
 				}			
 			}
 			else{
@@ -663,28 +686,27 @@ else{ // pivot based branching
 		
 
 if(TIME_OVER(st)){
-		KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
+				ThreadData *td = new ThreadData(*this);
 		// KPLEX_BB_MATRIX *td = new KPLEX_BB_MATRIX(*this);
 		B.clear();
 		#pragma omp task firstprivate(td, u, S_end, R_end, level)
 		{
 			// First branch moves u to S
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-			td->loadTD(this);
-			if(td->move_u_to_S_with_prune(u, S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+			loadTD(td);
+			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 		// the second branch exclude u from G	
 			{
-				td->restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
-				while(!td->Qv.empty()){
-					td->Qv.pop();
-					td->level_id[td->Qv.front()]=td->n;
+				restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
+				while(!Qv.empty()){
+					Qv.pop();
+					level_id[Qv.front()]=n;
 				} 
-				td->B.clear();
-				bool succeed = td->remove_u_from_S_with_prune(S_end, R_end, level);
-				if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = td->collect_removable_vertices_and_edges(S_end, R_end, level);
-				if(td->remove_vertices_and_edges_with_prune(S_end, R_end, level)) td->BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
+				B.clear();
+				bool succeed = remove_u_from_S_with_prune(S_end, R_end, level);
+				if(succeed&&best_solution_size.load() > pre_best_solution_size) succeed = collect_removable_vertices_and_edges(S_end, R_end, level);
+				if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, TIME_NOW);
 			}
-			td->unloadTD(this);
 		}
 }
 else{
