@@ -81,6 +81,9 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		degree_in_S=new ui[n];
 		degree=new ui[n];
 		level_id=new ui[n];
+		neighbors = new ui[n];
+		nonneighbors = new ui[n];
+		S2 = new ui[n];
 
 		copy(src.SR, src.SR+n, SR);
 		copy(src.SR_rid, src.SR_rid+n, SR_rid);
@@ -93,10 +96,10 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 	}
 	void loadTD(KPLEX_BB_MATRIX* dst){
 		// cout<<dst->neighbors<<" ";
-		neighbors=dst->neighbors;
-		nonneighbors=dst->nonneighbors;
-		S2=dst->S2;
-		LPI=dst->LPI;
+		// neighbors=dst->neighbors;
+		// nonneighbors=dst->nonneighbors;
+		// S2=dst->S2;
+		// LPI=dst->LPI;
 
 		PIMax=move(dst->PIMax);
 		psz=move(dst->psz);
@@ -120,6 +123,9 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		delete []degree_in_S;
 		delete []degree;
 		delete []level_id;
+		delete []neighbors;
+		delete []nonneighbors;
+		delete []S2;
 	}
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
