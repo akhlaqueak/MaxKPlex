@@ -92,7 +92,7 @@ sparse(src.sparse), dense_search(src.dense_search), ids(src.ids){
 		// LPI=new ui[matrix_size];
 	}
 	void loadTD(KPLEX_BB_MATRIX* dst){
-		cout<<dst->neighbors<<" ";
+		// cout<<dst->neighbors<<" ";
 		neighbors=dst->neighbors;
 		nonneighbors=dst->nonneighbors;
 		S2=dst->S2;
