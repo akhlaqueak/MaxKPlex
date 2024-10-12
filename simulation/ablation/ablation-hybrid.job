@@ -279,17 +279,34 @@ del_prev() {
     done
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
-krange='2 3 4 5'
 datasets=$(ls ~/graphs/test/*.bin)
 
 
-solutions='Ours kPlexT Maple DiseMKP' 
+solutions='Ours-S-Br Ours-Pivot-Br' 
 del_prev
 run_jobs 00:30:00
-
-# solutions='Maple kPlexT kPlexT-S2Part'
-datasets=$(ls ~/graphs/test/*.bin | xargs -n 1 basename)
-
+datasets='
+ hamming6-2.bin 
+ johnson8-4-4.bin 
+ keller4.bin 
+ brock200-2.bin 
+ p-hat500-1.bin 
+ socfb-Duke14.bin 
+ ia-wiki-Talk.bin 
+ soc-buzznet.bin 
+ soc-LiveMocha.bin 
+ soc-gowalla.bin 
+ sc-msdoor.bin 
+ soc-youtube.bin 
+ soc-digg.bin 
+ sc-ldoor.bin 
+ soc-youtube-snap.bin 
+ soc-lastfm.bin 
+ soc-pokec.bin 
+ socfb-B-anon.bin 
+ soc-orkut.bin 
+ socfb-A-anon.bin 
+'
 get_results
 get_kpsize
 # get_cost
