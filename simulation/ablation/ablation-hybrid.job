@@ -76,7 +76,7 @@ get_results() {
             echo ${line[@]}
             for i in "${line[@]}"; do
                 if [ $i == '9999999999' ]; then
-                    echo -en 'x,' >>$result
+                    echo -en '×,' >>$result
                 elif [ $i == $m ]; then
                     echo $i | bc -l | xargs printf "*%.1f," >>$result
                 elif [ $i == $secm ]; then
@@ -85,7 +85,7 @@ get_results() {
                     echo $i | bc -l | xargs printf "%.1f," >>$result
                 fi
             done
-            echo -en "|," >>$result
+            # echo -en "|," >>$result
         done
         echo >>$result
     done
@@ -279,10 +279,11 @@ del_prev() {
     done
 }
 krange='2 3 4 5 6 7 8 9 10 15 20'
+krange='2 3 4 5'
 datasets=$(ls ~/graphs/test/*.bin)
 
 
-solutions='Ours Ours-UB' 
+solutions='Ours kPlexT Maple DiseMKP' 
 del_prev
 run_jobs 00:30:00
 
