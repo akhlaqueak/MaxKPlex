@@ -3,7 +3,7 @@
 
 #include "Utility.h"
 #include "Timer.h"
-// #define _SECOND_ORDER_PRUNING_
+#define _SECOND_ORDER_PRUNING_
 
 // pruning switches
 #define S2RULE
@@ -593,12 +593,12 @@ if(PART_BRANCH){
 			if(found_larger) continue;
 
 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// #ifdef _SECOND_ORDER_PRUNING_
-// 			if(ctcp_enabled) {
-// 				while(!Qe.empty())Qe.pop();
-// 				t_old_removed_edges_n=removed_edges_n;
-// 			}
-// #endif
+#ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled) {
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n=removed_edges_n;
+			}
+#endif
 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false);
 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);			
 		}
@@ -615,12 +615,12 @@ else{ // pivot based branching
 
 		// First branch moves u to S
 		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// #ifdef _SECOND_ORDER_PRUNING_
-// 			if(ctcp_enabled) {
-// 				while(!Qe.empty())Qe.pop();
-// 				t_old_removed_edges_n=removed_edges_n;
-// 			}
-// #endif
+#ifdef _SECOND_ORDER_PRUNING_
+			if(ctcp_enabled) {
+				while(!Qe.empty())Qe.pop();
+				t_old_removed_edges_n=removed_edges_n;
+			}
+#endif
 		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
 		
 
