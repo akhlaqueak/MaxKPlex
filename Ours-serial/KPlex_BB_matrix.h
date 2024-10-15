@@ -1589,91 +1589,91 @@ else{ // pivot based branching
 		}
         return R_end;
     }
-    ui SR_branching_backup(ui S_end, ui R_end, ui level)
-    {
-        for (ui i = 0; i < S_end; i++)
-        {
-            ui u = SR[i];
-            psz[i] = 0;
-            if (support(S_end, u) == 0)
-                continue;
-            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
-			ui* t_LPI = LPI+i*n;
-            for (ui j = S_end; j < R_end; j++)
-            {
-                ui v = SR[j];
-                if (!matrix[u * n + v])
-                    // PI[u].push_back(v);
-                    t_LPI[psz[i]++] = v;
-            }
-        }
-        ui beta = best_solution_size - S_end;
-        ui cend = R_end;
+    // ui SR_branching_backup(ui S_end, ui R_end, ui level)
+    // {
+    //     for (ui i = 0; i < S_end; i++)
+    //     {
+    //         ui u = SR[i];
+    //         psz[i] = 0;
+    //         if (support(S_end, u) == 0)
+    //             continue;
+    //         // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+	// 		ui* t_LPI = LPI+i*n;
+    //         for (ui j = S_end; j < R_end; j++)
+    //         {
+    //             ui v = SR[j];
+    //             if (!matrix[u * n + v])
+    //                 // PI[u].push_back(v);
+    //                 t_LPI[psz[i]++] = v;
+    //         }
+    //     }
+    //     ui beta = best_solution_size - S_end;
+    //     ui cend = R_end;
 
-        while (S_end<cend)
-        {
+    //     while (S_end<cend)
+    //     {
 
-            ui maxpi = -1;
-            double maxdise = 0;
-            for (ui i = 0; i < S_end; i++)
-            {
-                ui u = SR[i];
-                if (psz[i] == 0)
-                    continue;
-                double cost = min(support(S_end, u), psz[i]);
-                double dise = psz[i] / cost;
-                if (cost <= beta and dise > maxdise)
-                    maxpi = i, maxdise = dise;
-            }
+    //         ui maxpi = -1;
+    //         double maxdise = 0;
+    //         for (ui i = 0; i < S_end; i++)
+    //         {
+    //             ui u = SR[i];
+    //             if (psz[i] == 0)
+    //                 continue;
+    //             double cost = min(support(S_end, u), psz[i]);
+    //             double dise = psz[i] / cost;
+    //             if (cost <= beta and dise > maxdise)
+    //                 maxpi = i, maxdise = dise;
+    //         }
 
-			double ubc = tryColor(S_end, cend);
-			double coldise=ISc.size()/ubc;
-			if((ubc<=beta)&&(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi]))){j
-				beta-=ubc;
-				for(ui i: ISc)
-					swap_pos(i, --cend);
-				for (ui i = 0; i < S_end; i++)
-                {
-                    ui j = 0;
-					ui* t_LPI = LPI+i*n;
-                    for (ui k = 0; k < psz[i]; k++)
-                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
-                    psz[i] = j;
-                }
-			}
+	// 		double ubc = tryColor(S_end, cend);
+	// 		double coldise=ISc.size()/ubc;
+	// 		if((ubc<=beta)&&(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi]))){j
+	// 			beta-=ubc;
+	// 			for(ui i: ISc)
+	// 				swap_pos(i, --cend);
+	// 			for (ui i = 0; i < S_end; i++)
+    //             {
+    //                 ui j = 0;
+	// 				ui* t_LPI = LPI+i*n;
+    //                 for (ui k = 0; k < psz[i]; k++)
+    //                     if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+    //                 psz[i] = j;
+    //             }
+	// 		}
 
-            else
-            {
-                // remove pi* from C
-				ui* t_LPI = LPI+maxpi*n;
-                for (ui i = 0; i < psz[maxpi]; i++)
-                {
-					// removing from C
-                    ui v = t_LPI[i];
-                    swap_pos(SR_rid[v], --cend);
-                }
-                // beta-=cost(pi*)
-                beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
+    //         else
+    //         {
+    //             // remove pi* from C
+	// 			ui* t_LPI = LPI+maxpi*n;
+    //             for (ui i = 0; i < psz[maxpi]; i++)
+    //             {
+	// 				// removing from C
+    //                 ui v = t_LPI[i];
+    //                 swap_pos(SR_rid[v], --cend);
+    //             }
+    //             // beta-=cost(pi*)
+    //             beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
 
-                // remove maxpi from every pi
-                psz[maxpi] = 0;
-                for (ui i = 0; i < S_end; i++)
-                {
-                    ui j = 0;
-					ui* t_LPI = LPI+i*n;
-                    for (ui k = 0; k < psz[i]; k++)
-                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
-                    psz[i] = j;
-                }
-            }
+    //             // remove maxpi from every pi
+    //             psz[maxpi] = 0;
+    //             for (ui i = 0; i < S_end; i++)
+    //             {
+    //                 ui j = 0;
+	// 				ui* t_LPI = LPI+i*n;
+    //                 for (ui k = 0; k < psz[i]; k++)
+    //                     if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+    //                 psz[i] = j;
+    //             }
+    //         }
             
-            if (beta == 0)
-                break;
-        }
-        if (beta > 0)
-            cend -= min(beta, cend-S_end);
-        return move_candidates_to_end(S_end, cend, R_end, level);
-    }
+    //         if (beta == 0)
+    //             break;
+    //     }
+    //     if (beta > 0)
+    //         cend -= min(beta, cend-S_end);
+    //     return move_candidates_to_end(S_end, cend, R_end, level);
+    // }
 
 	ui move_candidates_to_end(ui S_end, ui cend, ui R_end, ui level){
 		for(ui i=S_end; i<cend; i++){
