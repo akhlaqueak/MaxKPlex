@@ -526,7 +526,7 @@ private:
 		bounding.tick();
 		ui beta = best_solution_size - S_end;
 		#ifdef PART_BOUND
-		if(S_bound(S_bound, R_branching, level)){
+		if(S_bound(S_end, R_end, level)){
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
