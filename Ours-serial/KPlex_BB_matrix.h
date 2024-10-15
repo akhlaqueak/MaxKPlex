@@ -1628,8 +1628,8 @@ else{ // pivot based branching
 
 			double ubc = tryColor(S_end, cend);
 			double coldise=ISc.size()/ubc;
+			if(ubc<=beta)
 			if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
-				if(ubc<=beta)
 				beta-=ubc;
 				for(ui i: ISc)
 					swap_pos(i, --cend);
