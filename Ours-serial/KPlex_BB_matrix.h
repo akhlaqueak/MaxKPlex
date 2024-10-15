@@ -389,7 +389,7 @@ private:
 				n_edges+=degree_in_S[SR[i]];
 		}
 		forward_sol = false;
-		n_mkps++;
+		nmkp++;
 		printf("!!! BB_Search found a kplex of size: %u, n_edges: %u \n", size, n_edges);
 
 		if(dense_search){
