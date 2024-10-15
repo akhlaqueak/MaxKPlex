@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --job-name=TBs-ablation             ### Name of the job
-#SBATCH --ntasks=96                    ### Number of Tasks
+#SBATCH --job-name=test             ### Name of the job
+#SBATCH --ntasks=64                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
 #SBATCH --partition=medium             ### Cheaha Partition
-#SBATCH --time=24:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --time=2:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
 #SBATCH --mail-type=END
@@ -17,9 +17,9 @@ run_jobs() {
         for sol in $solutions; do
             for k in $krange; do
                 outfile=$sol-$k.out
-                echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                if [ $sol == 'Maple' ] || [ $sol == 'KpLeX' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >>$sol-$k.out &
+                # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
+                if [[ $sol =~ "Ours" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
+                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out &
                 else
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
                 fi
@@ -28,26 +28,100 @@ run_jobs() {
     done
     wait
 }
-
 get_results() {
     result=results.out
     rm $result
-    # for k in $krange; do
-    #     echo -en "**** k=$k ****,,," >>$result
-    # done
-    echo -en "datasets," >>$result
+    echo -en "," >>$result
+    sn=($solutions)
+    for k in $krange; do
+        for sol in $solutions; do
+            if [[ $sol == $sn ]]; then
+                echo -en "k=$k," >>$result
+            else
+                echo -en "," >>$result
+            fi
+        done
+        echo -en "|," >>$result
+    done
+
+    echo -en "\ndatasets," >>$result
+    
 
     for k in $krange; do
-        echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
+        echo -en "|," >>$result
     done
 
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn,|," >>$result
+        echo -en "${fn%.*}," >>$result
+        for k in $krange; do
+
+            line=()
+            for sol in $solutions; do
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    line+=('9999999999')
+                else
+                    op=($op)
+                    line+=(${op[-3]})
+                fi
+            done
+            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
+            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
+            echo ${line[@]}
+            for i in "${line[@]}"; do
+                if [ $i == '9999999999' ]; then
+                    echo -en '×,' >>$result
+                elif [ $i == $m ]; then
+                    echo $i | bc -l | xargs printf "*%.1f," >>$result
+                elif [ $i == $secm ]; then
+                    echo $i | bc -l | xargs printf "^%.1f," >>$result
+                else
+                    echo $i | bc -l | xargs printf "%.1f," >>$result
+                fi
+            done
+            # echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+
+get_results2() {
+    result=results.out
+    rm $result
+    echo -en "," >>$result
+    sn=($solutions)
+    for k in $krange; do
+        for sol in $solutions; do
+            if [[ $sol == $sn ]]; then
+                echo -en "k=$k," >>$result
+            else
+                echo -en "," >>$result
+            fi
+        done
+        echo -en "|," >>$result
+    done
+
+    echo -en "\ndatasets," >>$result
+    
+
+    for k in $krange; do
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+        echo -en "|," >>$result
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "${fn%.*}," >>$result
         for k in $krange; do
 
             line=()
@@ -75,6 +149,19 @@ get_results() {
                     echo $i | bc -l | xargs printf "%.1f," >>$result
                 fi
             done
+            a=${line[0]}
+            b=${line[1]}
+            if [ $a == '9999999999' -a  $b == '9999999999' ]; then
+                    echo -en 'x,' >>$result
+            elif [ $a == '9999999999' ]; then
+                echo -en '+inf,' >>$result
+            elif [ $b == '9999999999' ]; then
+                echo -en '-inf,' >>$result
+            elif [ $a -gt $a ]; then
+                echo "$a/$b" | bc -l | xargs printf "+%.1f," >>$result
+            else
+                echo "$a/$b" | bc -l | xargs printf "-%.1f," >>$result
+            fi
             echo -en "|," >>$result
         done
         echo >>$result
@@ -86,29 +173,77 @@ get_kpsize() {
     # solutions='kplex-full kplex-doubt kPlexS Maple'
     result=kpsize.out
     rm $result
+    # for k in $krange; do
+    #     echo -en "**** k=$k ****,,," >>$result
+    # done
+    echo -en "datasets," >>$result
+
     for k in $krange; do
-        echo "================= k=$k =================" >>$result
-        echo -en "datasets," >>$result
+        echo -en "**k=$k**," >>$result
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
         done
-        # done
-        echo >>$result
-        for fn in $datasets; do
-            echo -en "$fn," >>$result
+    done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn,|," >>$result
+        for k in $krange; do
             for sol in $solutions; do
                 outfile=$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
-                    echo -en '-,' >>$result
+                    echo -en 'x,' >>$result
                 else
                     op=($op)
                     echo -en "${op[-5]}," >>$result
                 fi
             done
-            echo >>$result
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+
+
+get_kpsize() {
+    # solutions='kplex-full kplex-doubt kPlexS Maple'
+    result=kpsize.out
+    rm $result
+    # for k in $krange; do
+    #     echo -en "**** k=$k ****,,," >>$result
+    # done
+    echo -en "datasets," >>$result
+
+    for k in $krange; do
+        echo -en "**k=$k**," >>$result
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
         done
     done
+
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn," >>$result
+        for k in $krange; do
+            for sol in $solutions; do
+                outfile=$sol-$k.out
+                op=$(grep $fn $outfile)
+                if [ -z "${op}" ]; then
+                    echo -en 'x,' >>$result
+                else
+                    op=($op)
+                    echo -en "${op[-5]}," >>$result
+                fi
+            done
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
 }
 
 get_cost() {
@@ -143,28 +278,39 @@ del_prev() {
         done
     done
 }
-krange='2 3 4 5'
-datasets=$(ls ~/graphs/ablation/*.bin)
+krange='2 3 4 5 6 7 8 9 10 15 20'
+datasets=$(ls ~/graphs/test/*.bin)
 
-solutions='kp-full kp-dense-no-prune kp-hybrid-branching'
 
+solutions='Ours-dense' 
 del_prev
-run_jobs 00:60:00
-
-
-
-
-sol='Maple kPlexTBs'
-
-for h in $sol; do
-    solutions="$solutions $h"
-done
-# solutions='kPlexTBs kPlexTBs-with-seesaw kPlexTBs-no-reductions kPlexTBs-no-seesaw kPlexTBs-no-branchings'
-# solutions='kPlexTBs-comp-100 kPlexTBs-comp-500 kPlexTBs-comp-1000'
-
-
-datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
-
+run_jobs 00:30:00
+datasets='
+ hamming6-2.bin 
+ johnson8-4-4.bin 
+ keller4.bin 
+ brock200-2.bin 
+ p-hat500-1.bin 
+ socfb-Duke14.bin 
+ ia-wiki-Talk.bin 
+ soc-buzznet.bin 
+ soc-LiveMocha.bin 
+ soc-gowalla.bin 
+ sc-msdoor.bin 
+ soc-youtube.bin 
+ soc-digg.bin 
+ sc-ldoor.bin 
+ soc-youtube-snap.bin 
+ soc-lastfm.bin 
+ soc-pokec.bin 
+ socfb-B-anon.bin 
+ soc-orkut.bin 
+ socfb-A-anon.bin 
+'
 get_results
 get_kpsize
-get_cost
+# get_cost
+
+
+
+
