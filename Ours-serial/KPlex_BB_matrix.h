@@ -24,7 +24,6 @@
 class KPLEX_BB_MATRIX {
 private:
 	ui n;
-
 	char *matrix;
 	long long matrix_size;
 
@@ -70,6 +69,7 @@ private:
 	bool dense_search, forward_sol;
 public:
 	ui best_n_edges;
+	ui nmkp=0;
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
 		matrix = nullptr;
@@ -389,6 +389,7 @@ private:
 				n_edges+=degree_in_S[SR[i]];
 		}
 		forward_sol = false;
+		n_mkps++;
 		printf("!!! BB_Search found a kplex of size: %u, n_edges: %u \n", size, n_edges);
 
 		if(dense_search){

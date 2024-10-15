@@ -424,7 +424,7 @@ void Graph::search() {
 
 
 void Graph::search_dense() {
-	std::cout<<"Now searching for dense kplex, current no. of edges: "<<best_n_edges<<endl;
+
 	Timer t;
 	dense_search=true;
 	read(); // read the graph again... 
@@ -442,6 +442,7 @@ void Graph::search_dense() {
 	// delete heap;
 	// delete[] vis;
 	// delete[] degree;
+	ui init_edges=0;
 
 	if(n>dense_kplex.size()&&best_n_edges<max_n_edges) {
 
@@ -561,6 +562,8 @@ void Graph::search_dense() {
 				// cout<<"searching: "<<u<<" -> ids_n "<<ids_n<<" density: "<<density<<endl;
 				kplex_solver->load_graph(ids_n, vp);
 				kplex_solver->kPlex(K, UB, kplex, true);
+				if(init_edges==0&&best_n_edges>0) init_edges = best_n_edges;
+
 				if(kplex.size()>presize){
 					if(kplex_solver->best_n_edges>best_n_edges) {
 						best_n_edges = kplex_solver->best_n_edges;
@@ -583,6 +586,7 @@ void Graph::search_dense() {
 		// printf(">>%s t_Search: %f", dir.substr(dir.find_last_of("/")).c_str(), tt.elapsed()/1000000.0);
 
 
+	printf(">>%s-dense \tMaxKPlex_Size: %lu t_Total: %f n_mkp: %d initial_edges: %d densest_kplex_edges: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, kplex_solver->nmkp, init_edges, best_n_edges);
 
 		delete kplex_solver;
 		delete linear_heap;
@@ -601,7 +605,6 @@ void Graph::search_dense() {
 	delete[] core;
 	delete[] peel_sequence;
 
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f #edges: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), dense_kplex.size(), t.elapsed()/1e6, best_n_edges);
 
 	// printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());
