@@ -770,7 +770,6 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
-		return true;
 		while(true) {
 			ui *candidates = S2;
 			ui candidates_n = 0;
