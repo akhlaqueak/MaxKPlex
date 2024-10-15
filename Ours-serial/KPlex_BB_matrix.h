@@ -18,7 +18,7 @@
 // Upper bounding switches... 
 // #define SEESAW
 // #define COLORBOUND
-// #define PART_BOUND
+#define PART_BOUND
 
 #define CSIZE (R_end-S_end)
 class KPLEX_BB_MATRIX {
@@ -526,7 +526,7 @@ private:
 		bounding.tick();
 		ui beta = best_solution_size - S_end;
 		#ifdef PART_BOUND
-		if(bound(S_end, R_end)>=R_end){
+		if(S_bound(S_bound, R_branching, level)){
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
@@ -1549,6 +1549,74 @@ else{ // pivot based branching
             cend -= min(beta, cend-S_end);
         return move_candidates_to_end(S_end, cend, R_end, level);
     }
+
+	ui S_bound(ui S_end, ui R_end, ui level)
+    {
+        for (ui i = 0; i < S_end; i++)
+        {
+            ui u = SR[i];
+            psz[i] = 0;
+            if (support(S_end, u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+			ui* t_LPI = LPI+i*n;
+            for (ui j = S_end; j < R_end; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
+            }
+        }
+        ui beta = best_solution_size - S_end;
+        ui cend = R_end;
+
+        while (S_end<cend)
+        {
+            ui maxpi = -1;
+            double maxdise = 0;
+            for (ui i = 0; i < S_end; i++)
+            {
+                ui u = SR[i];
+                if (psz[i] == 0)
+                    continue;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
+                if (cost <= beta and dise > maxdise)
+                    maxpi = i, maxdise = dise;
+            }
+			if(maxpi==-1) break;
+            else
+            {
+                // remove pi* from C
+				ui* t_LPI = LPI+maxpi*n;
+                for (ui i = 0; i < psz[maxpi]; i++)
+                {
+					// removing from C
+                    ui v = t_LPI[i];
+                    swap_pos(SR_rid[v], --cend);
+                }
+                // beta-=cost(pi*)
+                beta-=min(support(S_end, SR[maxpi]), psz[maxpi]);
+
+                // remove maxpi from every pi
+                psz[maxpi] = 0;
+                for (ui i = 0; i < S_end; i++)
+                {
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+                    psz[i] = j;
+                }
+            }      
+            if (beta == 0) break;
+        }
+        if (beta > 0)
+            cend -= min(beta, cend-S_end);
+        return S_end==cend;
+    }
+
     ui S_branching_backup(ui S_end, ui R_end, ui level)
     {
         ui cend = R_end;
