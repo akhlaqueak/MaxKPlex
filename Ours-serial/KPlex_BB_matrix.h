@@ -9,14 +9,14 @@
 #define S2RULE
 
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
-#define SR_BRANCHING S_branching
+// #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
 #define PART_BRANCH (false)
 // #define PART_BRANCH (K<=5&&sparse)
 
 
 // Upper bounding switches... 
-// #define SEESAW
+#define SEESAW
 // #define COLORBOUND
 // #define PART_BOUND
 
@@ -533,7 +533,7 @@ private:
 
 
 		#ifdef SEESAW
-		if (CSIZE>3*beta && seesawUB(S_end, R_end)<=best_solution_size) {
+		if (seesawUB(S_end, R_end)<=best_solution_size) {
 		// if (seesawUB(S_end, R_end)<=best_solution_size) {
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
@@ -1628,8 +1628,7 @@ else{ // pivot based branching
 
 			double ubc = tryColor(S_end, cend);
 			double coldise=ISc.size()/ubc;
-			if(ubc<=beta)
-			if(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi])){
+			if((ubc<=beta)&&(maxpi==-1||coldise>maxdise||(coldise==maxdise&&ISc.size()>psz[maxpi]))){j
 				beta-=ubc;
 				for(ui i: ISc)
 					swap_pos(i, --cend);
