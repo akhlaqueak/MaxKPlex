@@ -19,7 +19,7 @@ run_jobs() {
                 outfile=$sol-$k.out
                 # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
                 if [[ $sol =~ "Ours" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
-                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k >> $sol-$k.out &
+                    srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $fn $k 1 >> $sol-$k.out &
                 else
                     srun --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g $fn -a exact -k $k -c 3 >>$sol-$k.out &
                 fi
