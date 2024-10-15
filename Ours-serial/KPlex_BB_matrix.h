@@ -770,6 +770,7 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
+		return true;
 		while(true) {
 			ui *candidates = S2;
 			ui candidates_n = 0;
@@ -781,7 +782,7 @@ else{ // pivot based branching
 				if(R_end - degree[u] > K) continue;
 
 				if(degree[u]>=R_end-skip) {candidates[candidates_n ++] = u; continue;}
-				continue;
+
 				char *t_matrix = matrix + u*n;
 				bool OK = true;
 				for(ui j = 0;j < R_end;j ++) if(j != i&&!t_matrix[SR[j]]&&R_end - degree[SR[j]] > K) {
