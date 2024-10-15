@@ -16,7 +16,7 @@
 
 
 // Upper bounding switches... 
-#define SEESAW
+// #define SEESAW
 // #define COLORBOUND
 // #define PART_BOUND
 
@@ -780,7 +780,7 @@ else{ // pivot based branching
 				ui u = SR[i];
 				if(R_end - degree[u] > K) continue;
 
-				if(degree[u]>=R_end-skip) {candidates[candidates_n ++] = u; continue;}
+				// if(degree[u]>=R_end-skip) {candidates[candidates_n ++] = u; continue;}
 
 				char *t_matrix = matrix + u*n;
 				bool OK = true;
