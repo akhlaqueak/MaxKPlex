@@ -280,23 +280,23 @@ del_prev() {
 }
 krange='5'
 datasets=$(ls ~/graphs/test/*.bin)
-datasets='
- socfb-Duke14.bin 
- ia-wiki-Talk.bin 
- soc-buzznet.bin 
- soc-LiveMocha.bin 
- soc-gowalla.bin 
- sc-msdoor.bin 
- soc-youtube.bin 
- soc-digg.bin 
- sc-ldoor.bin 
- soc-youtube-snap.bin 
- soc-lastfm.bin 
- soc-pokec.bin 
- socfb-B-anon.bin 
- soc-orkut.bin 
- socfb-A-anon.bin 
-'
+# datasets='
+#  socfb-Duke14.bin 
+#  ia-wiki-Talk.bin 
+#  soc-buzznet.bin 
+#  soc-LiveMocha.bin 
+#  soc-gowalla.bin 
+#  sc-msdoor.bin 
+#  soc-youtube.bin 
+#  soc-digg.bin 
+#  sc-ldoor.bin 
+#  soc-youtube-snap.bin 
+#  soc-lastfm.bin 
+#  soc-pokec.bin 
+#  socfb-B-anon.bin 
+#  soc-orkut.bin 
+#  socfb-A-anon.bin 
+# '
 
 solutions='Ours-dense' 
 del_prev
