@@ -16,9 +16,9 @@
 
 
 // Upper bounding switches... 
-// #define SEESAW
+#define SEESAW
 // #define COLORBOUND
-#define PART_BOUND
+// #define PART_BOUND
 
 #define CSIZE (R_end-S_end)
 class KPLEX_BB_MATRIX {
@@ -69,7 +69,7 @@ private:
 	bool dense_search, forward_sol;
 public:
 	ui best_n_edges;
-	ui nmkp=0;
+	ui nmkp=0, color, part;
 	KPLEX_BB_MATRIX(bool _ds=false) {
 		n = 0;
 		matrix = nullptr;
@@ -492,11 +492,11 @@ private:
 #endif
 
 		// greedily add vertices to S
-		// if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
-		// 	//printf("here2\n");
-		// 	restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
-		// 	return ;
-		// }
+		if(!greedily_add_vertices_to_S(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
@@ -1827,13 +1827,14 @@ else{ // pivot based branching
                 ((ISc.size() / ubc == PIMax.size() / ubp) and (ISc.size() > PIMax.size())))
 
             {
+				color++;
                 for (ui v : ISc)
                     swap_pos(v, --R_end);
                 UB += ubc;
             }
             else
             {
-
+				part++;
                 for (ui v : PIMax)
                     swap_pos(v, --R_end);
                 UB += ubp;

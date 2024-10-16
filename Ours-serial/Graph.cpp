@@ -392,6 +392,7 @@ void Graph::search() {
 				kplex[i] = out_mapping[kplex[i]];
 			}
 		}
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f color: %d part: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, kplex_solver->color, kplex_solver->part);
 
 		delete kplex_solver;
 		delete linear_heap;
@@ -410,7 +411,6 @@ void Graph::search() {
 	delete[] core;
 	delete[] peel_sequence;
 
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f t_Bounding: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock());
 
 	// printf("\tMaxKPlex_Size: %lu t_Total: %f t_Seesaw: %f\n", kplex.size(), t.elapsed()/1000000.0, 0);
 	// printf("\tMaximum kPlex Size: %lu, Total Time: %s (microseconds)\n", kplex.size(), Utility::integer_to_string(t.elapsed()).c_str());

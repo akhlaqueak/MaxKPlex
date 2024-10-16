@@ -63,31 +63,15 @@ get_results() {
             line=()
             for sol in $solutions; do
                 outfile=$sol-$k.out
-                op=$(grep $fn $outfile)
+                op=$(grep $fn-dense $outfile)
                 if [ -z "${op}" ]; then
-                    line+=('9999999999')
-                else
-                    op=($op)
-                    line+=(${op[-3]})
+                    echo 
                 fi
+                op=($op)
+                echo -en "${op[4]} ${op[6]} ${op[8]} ${op[10]}"
             done
-            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
-            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
-            echo ${line[@]}
-            for i in "${line[@]}"; do
-                if [ $i == '9999999999' ]; then
-                    echo -en '×,' >>$result
-                elif [ $i == $m ]; then
-                    echo $i | bc -l | xargs printf "*%.1f," >>$result
-                elif [ $i == $secm ]; then
-                    echo $i | bc -l | xargs printf "^%.1f," >>$result
-                else
-                    echo $i | bc -l | xargs printf "%.1f," >>$result
-                fi
-            done
-            # echo -en "|," >>$result
         done
-        echo >>$result
+        echo >> $result
     done
     cat $result
 }
@@ -303,7 +287,7 @@ del_prev
 run_jobs 00:30:00
 
 wait
-krange='2 3 4 6 7 8 9 10 15 20'
+krange='2 3 4 5 6 7 8 9 10 15 20'
 run_jobs 00:30:00
 
 
@@ -316,6 +300,12 @@ get_results
 get_kpsize
 # get_cost
 
-
-
-
+for ds in $datasets; do
+echo -en $ds
+    for k in $krange; do
+        op=$(grep $ds-dense Ours-dense-$k.out)
+        op=($op)
+        echo -en "${op[4]} ${op[6]} ${op[8]} ${op[10]}"
+    done
+    echo
+done
