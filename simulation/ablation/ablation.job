@@ -301,11 +301,44 @@ get_kpsize
 # get_cost
 
 for ds in $datasets; do
-echo -en $ds
+echo -en "$ds,"
     for k in $krange; do
         op=$(grep $ds-dense Ours-dense-$k.out)
         op=($op)
-        echo -en "${op[4]} ${op[6]} ${op[8]} ${op[10]}"
+        if [ -z "${op}" ]; then
+            echo -en ",,,,"
+        else
+        echo -en "${op[4]},${op[6]},${op[8]},${op[10]},"
+        fi
+    done
+    echo
+done
+
+
+for ds in $datasets; do
+echo -en "$ds,"
+    for k in $krange; do
+        op=$(grep $ds Ours-$k.out)
+        op=($op)
+        if [ -z "${op}" ]; then
+            echo -en ","
+        else
+        echo -en "${op[2]},"
+        fi
+    done
+    echo
+done
+
+for ds in $datasets; do
+echo -en "$ds,"
+    for k in $krange; do
+        op=$(grep $ds Ours-counts-$k.out)
+        op=($op)
+        if [ -z "${op}" ]; then
+            echo -en ",,"
+        else
+        echo -en "${op[6]},${op[8]},"
+        fi
     done
     echo
 done
