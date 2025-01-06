@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-
+// #define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -552,12 +552,13 @@ private:
 		bounding.tock();
 
 		// Adding kpex stuff here... 
-
+		#ifdef ALTRB
 		if(!alt_RB(S_end, R_end, level)) {
 			//printf("here2\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		#endif
 
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
