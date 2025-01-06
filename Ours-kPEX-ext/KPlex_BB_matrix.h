@@ -550,6 +550,15 @@ private:
 		}
 		#endif
 		bounding.tock();
+
+		// Adding kpex stuff here... 
+
+		if(!alt_RB(S_end, R_end, level)) {
+			//printf("here2\n");
+			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
+			return ;
+		}
+
 #ifndef NDEBUG
 		for(ui i = 0;i < R_end;i ++) {
 			ui d1 = 0, d2 = 0;
@@ -770,6 +779,82 @@ else{ // pivot based branching
 	// 	UB+=(R.size()-cursor);
 	// 	return UB;
     // }
+	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
+		ui S_l=0, R_l=S_end;
+		ui u, nnc;
+		while(true){
+			double nnr_max = 1; 
+			for(ui i=S_l;i<S_end; i++){
+				u = SR[i], nnc = 0;
+				char *t_matrix = matrix + u*n;
+				for(ui i = R_l;i < R_end;i ++) if(SR[i] != u) 
+					if(!t_matrix[SR[i]]) nonneighbors[nnc++] = i;
+				double nnr = (double) nnc/support(S_end, u);
+				if (nnr > nnr_max)
+					nnr_max = nnr;
+			}
+			if(nnr_max==1) break;
+			for(ui i=0; i<nnc; i++)
+				swap_pos(nonneighbors[i], R_l++);
+			swap_pos(SR_rid[u], S_l++);
+		}
+		return {S_l, R_l};
+	}
+	enum Partition {left, right};
+	bool alt_reduction_rules(ui S_end, ui &R_end, ui &R_l, ui LB_l, ui LB_r, Partition side, ui level){
+		ui Ra, Rb, R_end_temp=R_end;
+		if(side==left) Ra = S_end, Rb = R_l;
+		else  Ra = R_l, Rb = R_end;
+		while(!Qv.empty()) Qv.pop();
+
+		for(ui i=Ra; i<Rb; i++){
+			ui u = SR[i];
+			char *t_matrix = matrix + u*n;
+			ui neigh_l=degree_in_S[u], neigh_r=degree_in_S[u];
+			for(ui j=S_end; j<R_end_temp; j++){
+				if(t_matrix[SR[j]]) 
+					if(j<R_l) neigh_l++;
+					else neigh_r++;
+			}
+			if(side==left){
+				if(neigh_l<LB_l+S_end-K or neigh_r<LB_r+S_end-K+1){
+					swap_pos(i, R_l);
+					swap_pos(R_l--, --R_end_temp);
+					Rb--;
+					level_id[u]=level;
+					Qv.push(u);
+				}
+			}
+			else{
+				if(neigh_l<LB_l+S_end-K+1 or neigh_r<LB_r+S_end-K){
+					swap_pos(i, --R_end_temp);
+					Rb--;
+					level_id[u]=level;
+					Qv.push(u);
+					// remove u
+				}
+			}
+		}
+		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
+	}
+
+	bool alt_RB(ui &S_end, ui &R_end, ui level){
+		auto SR_left = partition_left_right(S_end, R_end, level);
+		ui S_l=SR_left.first, R_l = SR_left.second;
+		ui UB_l = R_l - S_end, LB_l = 0;
+
+		while(true){
+			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
+			if(UB==UB_l) break;
+			else UB_l=UB;
+			ui LB_r = best_solution_size + 1 - S_end - UB_l;
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
+			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
+			LB_l = best_solution_size + 1 - S_end - UB_r;
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
+		}
+		return true;
+	}
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
 			ui *candidates = S2;
@@ -1549,7 +1634,74 @@ else{ // pivot based branching
             cend -= min(beta, cend-S_end);
         return move_candidates_to_end(S_end, cend, R_end, level);
     }
+	ui compute_UB(ui S_end, ui R_end, ui S_l, ui R_l, Partition side)
+    {
 
+		// when computing for left side 
+		ui Sa, Sb, Ra, Rb;
+		if(side==left) Sa=0, Sb = S_l, Ra = S_end, Rb = R_l;
+		else Sa = S_l, Sb = S_end, Ra = R_l, Rb = R_end;
+
+        for (ui i = Sa; i < Sb; i++)
+        {
+            ui u = SR[i];
+            psz[i] = 0;
+            if (support(S_end, u) == 0)
+                continue;
+            // skipping it, because this is a boundary vertex, and it can't have any non-neighbor candidate
+			ui* t_LPI = LPI+i*n;
+            for (ui j = Ra; j < Rb; j++)
+            {
+                ui v = SR[j];
+                if (!matrix[u * n + v])
+                    // PI[u].push_back(v);
+                    t_LPI[psz[i]++] = v;
+            }
+        }
+
+        ui cend = Rb;
+		ui UB = 0;
+        while (true)
+        {
+            ui maxpi = -1, mincost=0;
+            double maxdise = 0;
+            for (ui i = Sa; i < Sb; i++)
+            {
+                ui u = SR[i];
+                if (psz[i] == 0)
+                    continue;
+                double cost = min(support(S_end, u), psz[i]);
+                double dise = psz[i] / cost;
+                if (dise > maxdise)
+                    maxpi = i, maxdise = dise, mincost=cost;
+            }
+			if(maxpi==-1) break;
+            else
+            {
+                // remove pi* from C
+				UB+=mincost;
+				ui* t_LPI = LPI+maxpi*n;
+                for (ui i = 0; i < psz[maxpi]; i++)
+                {
+					// removing from C
+                    ui v = t_LPI[i];
+                    swap_pos(SR_rid[v], --cend);
+                }
+
+                // remove maxpi from every pi
+                psz[maxpi] = 0;
+                for (ui i = Sa; i < Sb; i++)
+                {
+                    ui j = 0;
+					ui* t_LPI = LPI+i*n;
+                    for (ui k = 0; k < psz[i]; k++)
+                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+                    psz[i] = j;
+                }
+            }      
+        }
+        return UB+cend-Ra;
+    }
 	ui S_bound(ui S_end, ui R_end, ui level)
     {
         for (ui i = 0; i < S_end; i++)
