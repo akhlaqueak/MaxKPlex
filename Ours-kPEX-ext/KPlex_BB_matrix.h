@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -782,22 +782,27 @@ else{ // pivot based branching
     // }
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
 		ui S_l=0, R_l=S_end;
-		ui u, nnc;
+		ui u_s, nnc_s;
+		ui* nn_u_s = neighbors, *nn_u = nonneighbors;
 		while(true){
 			double nnr_max = 1; 
-			for(ui i=S_l;i<S_end; i++){
-				u = SR[i], nnc = 0;
+			for(ui i=0;i<S_end; i++){
+				ui u = SR[i], nnc = 0;
 				char *t_matrix = matrix + u*n;
 				for(ui i = R_l;i < R_end;i ++) if(SR[i] != u) 
-					if(!t_matrix[SR[i]]) nonneighbors[nnc++] = i;
+					if(!t_matrix[SR[i]]) nn_u[nnc++] = i;
 				double nnr = (double) nnc/support(S_end, u);
-				if (nnr > nnr_max)
+				if (nnr > nnr_max){
 					nnr_max = nnr;
+					u_s = u;
+					swap(nn_u, nn_u_s);
+					nnc_s = nnc;
+				}
 			}
 			if(nnr_max==1) break;
-			for(ui i=0; i<nnc; i++)
-				swap_pos(nonneighbors[i], R_l++);
-			swap_pos(SR_rid[u], S_l++);
+			for(ui i=0; i<nnc_s; i++)
+				swap_pos(nn_u_s[i], R_l++);
+			swap_pos(SR_rid[u_s], S_l++);
 		}
 		return {S_l, R_l};
 	}
