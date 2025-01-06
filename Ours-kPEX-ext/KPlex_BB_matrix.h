@@ -825,8 +825,8 @@ else{ // pivot based branching
 			}
 			if(side==left){
 				if(neigh_l<LB_l+S_end-K or neigh_r<LB_r+S_end-K+1){
-					swap_pos(i, R_l);
-					swap_pos(R_l--, --R_end_temp);
+					swap_pos(i, --R_l);
+					swap_pos(R_l, --R_end_temp);
 					Rb--;
 					level_id[u]=level;
 					Qv.push(u);
