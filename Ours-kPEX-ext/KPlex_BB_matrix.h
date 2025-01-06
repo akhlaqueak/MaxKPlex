@@ -783,7 +783,7 @@ else{ // pivot based branching
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
-		ui* nn_u_s = neighbors, *nn_u = nonneighbors;
+		ui *nn_u_s = neighbors, *nn_u = nonneighbors;
 		while(true){
 			double nnr_max = 1; 
 			for(ui i=0;i<S_end; i++){
@@ -854,6 +854,7 @@ else{ // pivot based branching
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
 			if(UB==UB_l) break;
 			else UB_l=UB;
+			cout<<UB_l<<" : "<<UB<<endl;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
