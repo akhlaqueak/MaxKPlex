@@ -852,9 +852,9 @@ else{ // pivot based branching
 
 		while(true){
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
+			cout<<UB_l<<" : "<<UB<<endl;
 			if(UB==UB_l) break;
 			else UB_l=UB;
-			cout<<UB_l<<" : "<<UB<<endl;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
