@@ -784,6 +784,7 @@ else{ // pivot based branching
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
 		ui *nn_u_s = neighbors, *nn_u = nonneighbors;
+		return {S_l, R_l};
 		while(true){
 			double nnr_max = 1; 
 			for(ui i=0;i<S_end; i++){
