@@ -886,18 +886,18 @@ else{ // pivot based branching
 			// RR1 on C_l
 			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
 
-			if(UB_r+UB_l+S_end == best_solution_size+1){
-				// RR2 on C_l
-				if(UB_l==R_l-S_end){
-					store_solution(S_end, R_l, R_end, left);
-					return false;
-				}
-			// RR2 on C_r
-				else if (UB_r==R_end - R_l){
-					for(ui i=R_l; i<R_end; i++)
-					return false;
-				}
-			}
+			// if(UB_r+UB_l+S_end == best_solution_size+1){
+			// 	// RR2 on C_l
+			// 	if(UB_l==R_l-S_end){
+			// 		store_solution(S_end, R_l, R_end, left);
+			// 		return false;
+			// 	}
+			// // RR2 on C_r
+			// 	else if (UB_r==R_end - R_l){
+			// 		for(ui i=R_l; i<R_end; i++)
+			// 		return false;
+			// 	}
+			// }
 
 		}
 		return true;
