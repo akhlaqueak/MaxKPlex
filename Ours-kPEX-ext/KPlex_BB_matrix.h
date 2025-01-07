@@ -1911,6 +1911,8 @@ else{ // pivot based branching
         }
 		ui S_l = 0, R_l = S_end;
 		ui UB = 0;
+		swap_pos(0, S_end-1);
+		return {S_l, R_l};
         while (true)
         {
             ui maxpi = -1, mincost=0;
@@ -1940,7 +1942,6 @@ else{ // pivot based branching
 
                 // remove maxpi from every pi
                 psz[maxpi] = 0;
-				cout<<maxpi<<" -> "<<S_l<<endl;
 				swap_pos(SR_rid[maxpi], S_l++);
                 for (ui i = S_l; i < S_end; i++)
                 {
