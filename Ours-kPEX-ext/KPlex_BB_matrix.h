@@ -874,7 +874,7 @@ else{ // pivot based branching
 		// Saving S, as it should be same location when returning from this function.
 		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
 
-		auto SR_left = partition_left_right(S_end, R_end, level);
+		auto SR_left = partition_left_right(S_end, R_end);
 		bool ret = true;
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
