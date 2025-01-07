@@ -809,7 +809,7 @@ else{ // pivot based branching
 			for(ui i=0; i<nnc_s; i++)
 				swap_pos(SR_rid[nn_u_s[i]], R_l++);
 			cout<<SR_rid[u_s]<<"->"<<S_l<<" ";
-			if(S_l==0 and SR_rid[u_s]!=0) break;
+			// if(S_l==0 and SR_rid[u_s]!=0) break;
 			swap_pos(SR_rid[u_s], S_l++);
 		}
 		// cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
@@ -881,7 +881,13 @@ else{ // pivot based branching
 	}
 
 	bool alt_RB(ui &S_end, ui &R_end, ui level){
+		// Saving S, as it should be same location when returning from this function.
+		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
+
 		auto SR_left = partition_left_right(S_end, R_end, level);
+
+		// restorign S
+		for(ui i=0;i<S_end; i++) SR[i]=S2[i], SR_rid[S2[i]]=i;
 		return true;
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
