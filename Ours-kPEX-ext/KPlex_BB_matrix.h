@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -843,6 +843,31 @@ else{ // pivot based branching
 		}
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
+	
+	void store_solution(ui S_end, ui R_l, ui &R_end, Partition side){
+		if(side==left){
+			for(ui i=R_l; i<R_end; i++){
+				ui u = SR[i];
+				char *t_matrix = matrix + u*n;
+				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
+			}
+			R_end = R_l;
+			if(is_kplex(R_end))
+				store_solution(R_end);
+		}
+		else{
+			// first remove the right set vertices
+			for(ui i=S_end, j=0; i<R_l; i++){
+				ui u = SR[i]; 
+				swap_pos(i, R_end - ++j);
+				char *t_matrix = matrix + u*n;
+				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
+			}
+			R_end -= (R_l-S_end); 
+			if(is_kplex(R_end))
+				store_solution(R_end);	
+		}
+	}
 
 	bool alt_RB(ui &S_end, ui &R_end, ui level){
 		auto SR_left = partition_left_right(S_end, R_end, level);
@@ -854,10 +879,26 @@ else{ // pivot based branching
 			if(UB==UB_l) break;
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
+			// RR1 on C_r
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
+			// RR1 on C_l
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
+
+			if(UB_r+UB_l+S_end == best_solution_size+1){
+				// RR2 on C_l
+				if(UB_l==R_l-S_end){
+					store_solution(S_end, R_l, R_end, left);
+					return false;
+				}
+			// RR2 on C_r
+				else if (UB_r==R_end - R_l){
+					for(ui i=R_l; i<R_end; i++)
+					return false;
+				}
+			}
+
 		}
 		return true;
 	}
