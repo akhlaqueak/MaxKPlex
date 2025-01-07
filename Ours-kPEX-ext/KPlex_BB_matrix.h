@@ -905,9 +905,9 @@ else{ // pivot based branching
 			}
 
 		}
-		// restorign S
+		// restoring S
 		for(ui i=0;i<S_end; i++) SR[i]=S2[i], SR_rid[S2[i]]=i;
-		return true;
+		return ret;
 	}
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {
 		while(true) {
