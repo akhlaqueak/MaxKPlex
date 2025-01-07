@@ -781,6 +781,10 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
+		cout<<S_end<<":"<<R_end<<" => ";
+        for (ui i = 0; i < R_end; i++)
+			cout<<SR[i]<<" ";
+		cout<<endl;
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
 		ui *nn_u_s = neighbors, *nn_u = nonneighbors;
@@ -806,6 +810,10 @@ else{ // pivot based branching
 				swap_pos(nn_u_s[i], R_l++);
 			swap_pos(SR_rid[u_s], S_l++);
 		}
+				cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
+		for (ui i = 0; i < R_end; i++)
+			cout<<SR[i]<<" ";
+		cout<<endl;
 		return {S_l, R_l};
 	}
 	enum Partition {left, right};
@@ -871,7 +879,7 @@ else{ // pivot based branching
 	}
 
 	bool alt_RB(ui &S_end, ui &R_end, ui level){
-		auto SR_left = partition_left_right(S_end, R_end);
+		auto SR_left = partition_left_right(S_end, R_end, level);
 		return true;
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
