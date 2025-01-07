@@ -838,11 +838,10 @@ else{ // pivot based branching
 					Rb--;
 					level_id[u]=level;
 					Qv.push(u);
-					// remove u
 				}
 			}
 		}
-		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
+		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
 
 	bool alt_RB(ui &S_end, ui &R_end, ui level){
@@ -1029,6 +1028,144 @@ else{ // pivot based branching
 				assert(SR[SR_rid[u]] == u);
 				assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end);
 				-- R_end;
+				swap_pos(SR_rid[u], R_end);
+
+				bool terminate = false;
+				ui neighbors_n = 0;
+				char *t_matrix = matrix + u*n;
+				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+					ui w = SR[i];
+					neighbors[neighbors_n++] = w;
+					-- degree[w];
+					if(degree[w] + K <= best_solution_size) {
+						if(i < S_end) terminate = true; // UB1
+						else if(level_id[w] > level) { // RR3
+							level_id[w] = level;
+							Qv.push(w);
+						}
+					}
+				}
+
+				// UB1
+				if(terminate) {
+					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
+					level_id[u] = n;
+					++ R_end;
+					return false;
+				}
+
+#ifdef _SECOND_ORDER_PRUNING_
+				for(ui i = 1;i < neighbors_n;i ++) {
+					ui w = neighbors[i];
+					for(ui j = 0;j < i;j ++) {
+						ui v = neighbors[j];
+						assert(cn[v*n+w]);
+#ifndef NDEBUG
+						ui common_neighbors = 0;
+						for(ui k = S_end;k <= R_end;k ++) if(matrix[SR[k]*n + v]&&matrix[SR[k]*n + w]) ++ common_neighbors;
+						assert(cn[v*n + w] == common_neighbors);
+						assert(cn[w*n + v] == common_neighbors);
+#endif
+						-- cn[v*n + w];
+						-- cn[w*n + v];
+#ifndef NDEBUG
+						common_neighbors = 0;
+						for(ui k = S_end;k < R_end;k ++) if(matrix[SR[k]*n + v]&&matrix[SR[k]*n + w]) ++ common_neighbors;
+						assert(cn[v*n + w] == common_neighbors);
+						assert(cn[w*n + v] == common_neighbors);
+#endif
+
+						if(!upper_bound_based_prune(S_end, v, w)) continue;
+
+						if(SR_rid[w] < S_end) terminate = true; // v, w \in S --- UB2
+						else if(SR_rid[v] >= S_end) { // v, w, \in R --- RR5
+							if(matrix[v*n + w]) Qe.push(std::make_pair(v,w));
+						}
+						else if(level_id[w] > level) { // RR4
+							level_id[w] = level;
+							Qv.push(w);
+						}
+					}
+				}
+				if(terminate) return false;
+#endif
+			}
+
+#ifdef _SECOND_ORDER_PRUNING_
+			if(Qe.empty()) break;
+
+			ui v = Qe.front().first, w =  Qe.front().second; Qe.pop();
+			if(level_id[v] <= level||level_id[w] <= level||!matrix[v*n + w]) continue;
+			assert(SR_rid[v] >= S_end&&SR_rid[v] < R_end&&SR_rid[w] >= S_end&&SR_rid[w] < R_end);
+
+			if(degree[v] + K <= best_solution_size + 1) {
+				level_id[v] = level;
+				Qv.push(v);
+			}
+			if(degree[w] + K <= best_solution_size + 1) {
+				level_id[w] = level;
+				Qv.push(w);
+			}
+			if(!Qv.empty()) continue;
+
+#ifndef NDEBUG
+			//printf("remove edge between %u and %u\n", v, w);
+#endif
+
+			assert(matrix[v*n + w]);
+			matrix[v*n + w] = matrix[w*n + v] = 0;
+			-- degree[v]; -- degree[w];
+
+			if(removed_edges.size() == removed_edges_n) {
+				removed_edges.push_back(std::make_pair(v,w));
+				++ removed_edges_n;
+			}
+			else removed_edges[removed_edges_n ++] = std::make_pair(v,w);
+
+			char *t_matrix = matrix + v*n;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				-- cn[w*n + SR[i]];
+				-- cn[SR[i]*n + w];
+				if(!upper_bound_based_prune(S_end, w, SR[i])) continue;
+				if(i < S_end) {
+					if(level_id[w] > level) {
+						level_id[w] = level;
+						Qv.push(w);
+					}
+				}
+				else if(matrix[w*n + SR[i]]) Qe.push(std::make_pair(w, SR[i]));
+			}
+			t_matrix = matrix + w*n;
+			for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) {
+				-- cn[v*n + SR[i]];
+				-- cn[SR[i]*n + v];
+				if(!upper_bound_based_prune(S_end, v, SR[i])) continue;
+				if(i < S_end) {
+					if(level_id[v] > level) {
+						level_id[v] = level;
+						Qv.push(v);
+					}
+				}
+				else if(matrix[v*n + SR[i]]) Qe.push(std::make_pair(v, SR[i]));
+			}
+#endif
+		}
+
+		return true;
+	}
+
+	bool remove_vertices_and_edges_with_prune_left(ui S_end, ui &R_end, ui &R_l, ui level) {
+#ifdef _SECOND_ORDER_PRUNING_
+		while(!Qv.empty()||!Qe.empty()) {
+#else
+		while(!Qv.empty()) {
+#endif
+			while(!Qv.empty()) {
+				ui u = Qv.front(); Qv.pop(); // remove u
+				assert(SR[SR_rid[u]] == u);
+				assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end);
+				-- R_end;
+				if(SR_rid[u]<R_l) R_l--;
 				swap_pos(SR_rid[u], R_end);
 
 				bool terminate = false;
