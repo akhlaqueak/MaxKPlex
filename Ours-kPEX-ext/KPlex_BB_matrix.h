@@ -809,6 +809,7 @@ else{ // pivot based branching
 			for(ui i=0; i<nnc_s; i++)
 				swap_pos(SR_rid[nn_u_s[i]], R_l++);
 			cout<<SR_rid[u_s]<<"->"<<S_l<<" ";
+			if(S_l==0 and SR_rid[u_s]!=0) break;
 			swap_pos(SR_rid[u_s], S_l++);
 		}
 		// cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
