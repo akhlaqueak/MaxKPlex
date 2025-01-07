@@ -1826,9 +1826,8 @@ else{ // pivot based branching
             cend -= min(beta, cend-S_end);
         return move_candidates_to_end(S_end, cend, R_end, level);
     }
-		ui compute_UB(ui S_end, ui R_end, ui S_l, ui R_l, Partition side)
+	ui compute_UB(ui S_end, ui R_end, ui S_l, ui R_l, Partition side)
     {
-
 		// when computing for left side 
 		ui Sa, Sb, Ra, Rb;
 		if(side==left) Sa=0, Sb = S_l, Ra = S_end, Rb = R_l;
