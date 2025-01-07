@@ -874,30 +874,30 @@ else{ // pivot based branching
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
 
-		while(true){
+		while(false){
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
 			if(UB==UB_l) break;
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			// RR1 on C_r
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
 			// RR1 on C_l
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
 
-			// if(UB_r+UB_l+S_end == best_solution_size+1){
-			// 	// RR2 on C_l
-			// 	if(UB_l==R_l-S_end){
-			// 		store_solution(S_end, R_l, R_end, left);
-			// 		return false;
-			// 	}
-			// // RR2 on C_r
-			// 	else if (UB_r==R_end - R_l){
-			// 		for(ui i=R_l; i<R_end; i++)
-			// 		return false;
-			// 	}
-			// }
+			if(UB_r+UB_l+S_end == best_solution_size+1){
+				// RR2 on C_l
+				if(UB_l==R_l-S_end){
+					store_solution(S_end, R_l, R_end, left);
+					return false;
+				}
+			// RR2 on C_r
+				else if (UB_r==R_end - R_l){
+					for(ui i=R_l; i<R_end; i++)
+					return false;
+				}
+			}
 
 		}
 		return true;
