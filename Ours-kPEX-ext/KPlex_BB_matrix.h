@@ -1935,7 +1935,7 @@ else{ // pivot based branching
                 {
 					// removing from C
                     ui v = t_LPI[i];
-                    swap_pos(SR_rid[v], R_l++);
+                    // swap_pos(SR_rid[v], R_l++);
                 }
 
                 // remove maxpi from every pi
