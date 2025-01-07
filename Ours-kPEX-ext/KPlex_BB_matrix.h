@@ -810,10 +810,10 @@ else{ // pivot based branching
 				swap_pos(nn_u_s[i], R_l++);
 			swap_pos(SR_rid[u_s], S_l++);
 		}
-		// cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
-		// for (ui i = 0; i < R_end; i++)
-		// 	cout<<SR[i]<<" ";
-		// cout<<endl;
+		cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
+		for (ui i = 0; i < R_end; i++)
+			cout<<SR[i]<<" ";
+		cout<<endl;
 		return {S_l, R_l};
 	}
 	enum Partition {left, right};
