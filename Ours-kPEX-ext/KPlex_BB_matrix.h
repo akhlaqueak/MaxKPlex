@@ -1940,7 +1940,7 @@ else{ // pivot based branching
                     ui v = t_LPI[i];
                     swap_pos(SR_rid[v], R_l++);
                 }
-				cout<<psz[maxpi]<<" ";
+				cout<<maxpi<<" ";
                 // remove maxpi from every pi
                 psz[maxpi] = 0;
 				swap_pos(SR_rid[maxpi], S_l++);
