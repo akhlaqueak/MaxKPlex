@@ -781,7 +781,7 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
-		cout<<S_end<<":"<<R_end<<" => ";
+		cout<<S_end<<":"<<R_end<<" => "<<endl;
         for (ui i = 0; i < S_end; i++)
 			cout<<SR[i]<<" ";
 		cout<<endl;
