@@ -781,10 +781,10 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
-		cout<<S_end<<":"<<R_end<<" => "<<endl;
-        for (ui i = S_end; i < R_end; i++)
-			cout<<SR[i]<<" ";
-		cout<<endl;
+		// cout<<S_end<<":"<<R_end<<" => "<<endl;
+        // for (ui i = S_end; i < R_end; i++)
+		// 	cout<<SR[i]<<" ";
+		// cout<<endl;
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
 		ui *nn_u_s = neighbors, *nn_u = nonneighbors;
@@ -811,9 +811,9 @@ else{ // pivot based branching
 			cout<<SR_rid[u_s]<<"->"<<S_l<<" ";
 			swap_pos(SR_rid[u_s], S_l++);
 		}
-		cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
-		for (ui i = S_end; i < R_end; i++)
-			cout<<SR[i]<<" ";
+		// cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
+		// for (ui i = S_end; i < R_end; i++)
+		// 	cout<<SR[i]<<" ";
 		cout<<endl;
 		return {S_l, R_l};
 	}
