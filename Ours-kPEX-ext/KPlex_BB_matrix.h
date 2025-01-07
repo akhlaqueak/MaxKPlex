@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-#define ALTRB
+// #define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -796,7 +796,7 @@ else{ // pivot based branching
 				if (nnr > nnr_max){
 					nnr_max = nnr;
 					u_s = u;
-					swap(nn_u, nn_u_s);
+					std::swap(nn_u, nn_u_s);
 					nnc_s = nnc;
 				}
 			}
@@ -855,9 +855,9 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) return false;
-			// ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
-			// LB_l = best_solution_size + 1 - S_end - UB_r;
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
+			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
+			LB_l = best_solution_size + 1 - S_end - UB_r;
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) return false;
 		}
 		return true;
 	}
@@ -1163,8 +1163,7 @@ else{ // pivot based branching
 				assert(SR[SR_rid[u]] == u);
 				assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end);
 				-- R_end;
-				if(SR_rid[u]<R_l)
-					swap_pos(SR_rid[u], --R_l);
+				if(SR_rid[u]<R_l) swap_pos(SR_rid[u], --R_l);
 				swap_pos(SR_rid[u], R_end);
 
 				bool terminate = false;
