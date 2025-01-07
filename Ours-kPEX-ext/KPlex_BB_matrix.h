@@ -1905,7 +1905,6 @@ else{ // pivot based branching
             {
                 ui v = SR[j];
                 if (!t_matrix[v])
-                    // PI[u].push_back(v);
                     t_LPI[psz[u]++] = v;
             }
         }
@@ -1937,7 +1936,7 @@ else{ // pivot based branching
                     ui v = t_LPI[i];
                     swap_pos(SR_rid[v], R_l++);
                 }
-
+				cout<<psz[maxpi]<<" ";
                 // remove maxpi from every pi
                 psz[maxpi] = 0;
 				swap_pos(SR_rid[maxpi], S_l++);
