@@ -781,10 +781,10 @@ else{ // pivot based branching
 	// 	return UB;
     // }
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
-		// cout<<S_end<<":"<<R_end<<" => ";
-        // for (ui i = 0; i < R_end; i++)
-		// 	cout<<SR[i]<<" ";
-		// cout<<endl;
+		cout<<S_end<<":"<<R_end<<" => ";
+        for (ui i = 0; i < R_end; i++)
+			cout<<SR[i]<<" ";
+		cout<<endl;
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
 		ui *nn_u_s = neighbors, *nn_u = nonneighbors;
