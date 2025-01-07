@@ -1892,6 +1892,7 @@ else{ // pivot based branching
 
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end)
     {
+		cout<<S_end<<":"<<R_end<<" => ";
         for (ui i = 0; i < S_end; i++)
         {
             ui u = SR[i];
