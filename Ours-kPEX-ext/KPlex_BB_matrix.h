@@ -783,7 +783,7 @@ else{ // pivot based branching
 	pair<ui, ui> partition_left_right(ui S_end, ui R_end, ui level){
 		cout<<S_end<<":"<<R_end<<" => "<<endl;
         for (ui i = 0; i < S_end; i++)
-			cout<<SR_rid[i]<<" ";
+			cout<<SR_rid[SR[i]]<<" ";
 		cout<<endl;
 		ui S_l=0, R_l=S_end;
 		ui u_s, nnc_s;
@@ -807,7 +807,7 @@ else{ // pivot based branching
 			}
 			if(nnr_max==1) break;
 			for(ui i=0; i<nnc_s; i++)
-				swap_pos(SR_rid[nn_u_s[i]], R_l++);
+				swap_pos(SR_rid[SR[nn_u_s[i]]], R_l++);
 			cout<<SR_rid[u_s]<<"->"<<S_l<<" ";
 			swap_pos(SR_rid[u_s], S_l++);
 		}
