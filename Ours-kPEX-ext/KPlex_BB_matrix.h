@@ -791,7 +791,7 @@ else{ // pivot based branching
 
 		while(true){
 			double nnr_max = 1; 
-			for(ui i=0;i<S_end; i++){
+			for(ui i=S_l;i<S_end; i++){
 				ui u = SR[i], nnc = 0;
 				char *t_matrix = matrix + u*n;
 				if(support(S_end, u)==0) continue;
