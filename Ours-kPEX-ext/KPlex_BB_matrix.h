@@ -1165,7 +1165,8 @@ else{ // pivot based branching
 				assert(SR[SR_rid[u]] == u);
 				assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end);
 				-- R_end;
-				if(SR_rid[u]<R_l) R_l--;
+				if(SR_rid[u]<R_l)
+					swap_pos(SR_rid[u], --R_l);
 				swap_pos(SR_rid[u], R_end);
 
 				bool terminate = false;
