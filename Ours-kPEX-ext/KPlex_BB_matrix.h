@@ -851,8 +851,6 @@ else{ // pivot based branching
 
 		while(true){
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
-
-			cout<<UB_l<<" : "<<UB<<endl;
 			if(UB==UB_l) break;
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
