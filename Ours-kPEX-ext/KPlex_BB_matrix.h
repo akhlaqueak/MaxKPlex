@@ -796,7 +796,7 @@ else{ // pivot based branching
 				char *t_matrix = matrix + u*n;
 				if(support(S_end, u)==0) continue;
 				for(ui i = R_l;i < R_end;i ++) if(SR[i] != u) 
-					if(!t_matrix[SR[i]]) nn_u[nnc++] = i;
+					if(!t_matrix[SR[i]]) nn_u[nnc++] = SR[i];
 				double nnr = (double) nnc/support(S_end, u);
 				if (nnr > nnr_max){
 					nnr_max = nnr;
@@ -807,7 +807,7 @@ else{ // pivot based branching
 			}
 			if(nnr_max==1) break;
 			for(ui i=0; i<nnc_s; i++)
-				swap_pos(nn_u_s[i], R_l++);
+				swap_pos(SR_rid[nn_u_s[i]], R_l++);
 			swap_pos(SR_rid[u_s], S_l++);
 		}
 		cout<<S_l<<":"<<S_end<<" "<<R_l<<":"<<R_end<<endl;
