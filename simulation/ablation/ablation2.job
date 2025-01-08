@@ -45,20 +45,20 @@ get_results() {
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn,|," >>$result
+        echo -en "$fn," >>$result
         for k in $krange; do
 
             line=()
             outfile=''
             for sol in $solutions; do
 
-                outfile=$SOL-$sol-$k.out
+                outfile=$sol-$k.out
                 op=$(grep $fn $outfile)
                 if [ -z "${op}" ]; then
                     line+=('9999999999')
                 else
                     op=($op)
-                    line+=(${op[-3]})
+                    line+=(${op[-5]})
                 fi
             done
             m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
@@ -144,7 +144,8 @@ del_prev() {
 }
 
 krange='5 7 10 15 20'
-# datasets=$(ls ~/graphs/ablation/*.bin | xargs -n 1 basename)
+
+datasets=$(find ~/graphs/test/*.bin -type f -exec basename {} \; | sed 's/\.[^.]*$//')
 SOL=kPlexTBs-ctcp-backward
 datasets='
 soc-digg.bin
