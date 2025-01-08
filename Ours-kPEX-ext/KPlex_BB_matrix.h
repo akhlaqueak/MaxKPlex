@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -18,7 +18,7 @@
 // Upper bounding switches... 
 // #define SEESAW
 // #define COLORBOUND
-// #define PART_BOUND
+#define PART_BOUND
 
 #define CSIZE (R_end-S_end)
 class KPLEX_BB_MATRIX {
@@ -857,7 +857,7 @@ else{ // pivot based branching
 				store_solution(R_end);
 		}
 		else{
-			// first remove the right set vertices
+			// first remove the left set vertices
 			for(ui i=S_end, j=0; i<R_l; i++){
 				ui u = SR[i]; 
 				swap_pos(i, R_end - ++j);
@@ -895,12 +895,12 @@ else{ // pivot based branching
 				// RR2 on C_l
 				if(UB_l==R_l-S_end){
 					store_solution(S_end, R_l, R_end, left);
-					{ret = false; break;}
+					ret = false; break;
 				}
-			// RR2 on C_r
+				// RR2 on C_r
 				else if (UB_r==R_end - R_l){
-					for(ui i=R_l; i<R_end; i++)
-					{ret = false; break;}
+					store_solution(S_end, R_l, R_end, right);
+					ret = false; break;
 				}
 			}
 
