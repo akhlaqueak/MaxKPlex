@@ -885,24 +885,24 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			// RR1 on C_r
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
 			// RR1 on C_l
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
 
-			if(UB_r+UB_l+S_end == best_solution_size+1){
-				// RR2 on C_l
-				if(UB_l==R_l-S_end){
-					store_solution(S_end, R_l, R_end, left);
-					ret = false; break;
-				}
-				// RR2 on C_r
-				else if (UB_r==R_end - R_l){
-					store_solution(S_end, R_l, R_end, right);
-					ret = false; break;
-				}
-			}
+			// if(UB_r+UB_l+S_end == best_solution_size+1){
+			// 	// RR2 on C_l
+			// 	if(UB_l==R_l-S_end){
+			// 		store_solution(S_end, R_l, R_end, left);
+			// 		ret = false; break;
+			// 	}
+			// 	// RR2 on C_r
+			// 	else if (UB_r==R_end - R_l){
+			// 		store_solution(S_end, R_l, R_end, right);
+			// 		ret = false; break;
+			// 	}
+			// }
 
 		}
 		// restoring S
