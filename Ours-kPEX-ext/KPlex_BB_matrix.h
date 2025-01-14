@@ -874,7 +874,7 @@ else{ // pivot based branching
 		// Saving S, as it should be same location when returning from this function.
 		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
 
-		auto SR_left = partition_left_right(S_end, R_end, level);
+		auto SR_left = partition_left_right(S_end, R_end);
 		bool ret = true;
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
@@ -885,11 +885,11 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			// RR1 on C_r
-			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
+			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
 			// RR1 on C_l
-			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
+			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
 
 			if(UB_r+UB_l+S_end == best_solution_size+1){
 				// RR2 on C_l
