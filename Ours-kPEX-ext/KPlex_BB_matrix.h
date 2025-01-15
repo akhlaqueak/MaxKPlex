@@ -1239,7 +1239,7 @@ else{ // pivot based branching
 					++ R_end;
 					return false;
 				}
-
+				cout<<"**";
 #ifdef _SECOND_ORDER_PRUNING_
 				for(ui i = 1;i < neighbors_n;i ++) {
 					ui w = neighbors[i];
