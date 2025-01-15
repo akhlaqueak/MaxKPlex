@@ -234,7 +234,7 @@ get_kpsize() {
                     echo -en 'x,' >>$result
                 else
                     op=($op)
-                    echo -en "${op[-5]}," >>$result
+                    echo -en "${op[-7]}," >>$result
                 fi
             done
             echo -en "|," >>$result
