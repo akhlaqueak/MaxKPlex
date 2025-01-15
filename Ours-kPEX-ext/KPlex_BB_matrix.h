@@ -885,7 +885,7 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			// RR1 on C_r
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
 			// RR1 on C_l
@@ -1211,7 +1211,7 @@ else{ // pivot based branching
 				assert(SR[SR_rid[u]] == u);
 				assert(SR_rid[u] >= S_end&&SR_rid[u] < R_end);
 				-- R_end;
-				if(SR_rid[u]<R_l) swap_pos(SR_rid[u], --R_l);
+				// if(SR_rid[u]<R_l) swap_pos(SR_rid[u], --R_l);
 				swap_pos(SR_rid[u], R_end);
 
 				bool terminate = false;
