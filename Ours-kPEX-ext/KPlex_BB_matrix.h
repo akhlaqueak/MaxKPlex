@@ -885,11 +885,11 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			// RR1 on C_r
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
-			// ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
-			// LB_l = best_solution_size + 1 - S_end - UB_r;
-			// // RR1 on C_l
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {}
+			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
+			LB_l = best_solution_size + 1 - S_end - UB_r;
+			// RR1 on C_l
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {}
 
 			// if(UB_r+UB_l+S_end == best_solution_size+1){
 			// 	// RR2 on C_l
@@ -1845,7 +1845,6 @@ else{ // pivot based branching
             {
                 ui v = SR[j];
                 if (!matrix[u * n + v])
-                    // PI[u].push_back(v);
                     t_LPI[psz[i]++] = v;
             }
         }
@@ -1867,29 +1866,26 @@ else{ // pivot based branching
                     maxpi = i, maxdise = dise, mincost=cost;
             }
 			if(maxpi==-1) break;
-            else
-            {
-                // remove pi* from C
-				UB+=mincost;
-				ui* t_LPI = LPI+maxpi*n;
-                for (ui i = 0; i < psz[maxpi]; i++)
-                {
-					// removing from C
-                    ui v = t_LPI[i];
-                    swap_pos(SR_rid[v], --cend);
-                }
+			// remove pi* from C
+			UB+=mincost;
+			ui* t_LPI = LPI+maxpi*n;
+			for (ui i = 0; i < psz[maxpi]; i++)
+			{
+				// removing from C
+				ui v = t_LPI[i];
+				swap_pos(SR_rid[v], --cend);
+			}
 
-                // remove maxpi from every pi
-                psz[maxpi] = 0;
-                for (ui i = Sa; i < Sb; i++)
-                {
-                    ui j = 0;
-					ui* t_LPI = LPI+i*n;
-                    for (ui k = 0; k < psz[i]; k++)
-                        if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
-                    psz[i] = j;
-                }
-            }      
+			// remove maxpi from every pi
+			psz[maxpi] = 0;
+			for (ui i = Sa; i < Sb; i++)
+			{
+				ui j = 0;
+				ui* t_LPI = LPI+i*n;
+				for (ui k = 0; k < psz[i]; k++)
+					if (SR_rid[t_LPI[k]]<cend) t_LPI[j++] = t_LPI[k];
+				psz[i] = j;
+			}    
         }
         return UB+cend-Ra;
     }
