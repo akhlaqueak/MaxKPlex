@@ -819,7 +819,7 @@ else{ // pivot based branching
 			ui u = SR[i];
 			char *t_matrix = matrix + u*n;
 			ui neigh_l=degree_in_S[u], neigh_r=degree_in_S[u];
-			for(ui j=S_end; j<R_end_temp; j++){
+			for(ui j=S_end; j<R_end; j++){
 				if(t_matrix[SR[j]]) 
 					if(j<R_l) neigh_l++;
 					else neigh_r++;
