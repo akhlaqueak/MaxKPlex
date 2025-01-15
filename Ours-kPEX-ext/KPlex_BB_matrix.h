@@ -887,8 +887,8 @@ else{ // pivot based branching
 			cout<<LB_l<<":"<<LB_r<<":"<<UB<<"...";
 			// RR1 on C_r
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
-			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
-			LB_l = best_solution_size + 1 - S_end - UB_r;
+			// ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
+			// LB_l = best_solution_size + 1 - S_end - UB_r;
 			// RR1 on C_l
 			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
 
@@ -1222,13 +1222,13 @@ else{ // pivot based branching
 					ui w = SR[i];
 					neighbors[neighbors_n++] = w;
 					-- degree[w];
-					// if(degree[w] + K <= best_solution_size) {
-					// 	if(i < S_end) terminate = true; // UB1
-					// 	else if(level_id[w] > level) { // RR3
-					// 		level_id[w] = level;
-					// 		Qv.push(w);
-					// 	}
-					// }
+					if(degree[w] + K <= best_solution_size) {
+						if(i < S_end) terminate = true; // UB1
+						else if(level_id[w] > level) { // RR3
+							level_id[w] = level;
+							Qv.push(w);
+						}
+					}
 				}
 
 				// UB1
