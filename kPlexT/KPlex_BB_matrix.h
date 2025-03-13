@@ -476,8 +476,8 @@ private:
 		}
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
-
-        // the second branch exclude u from G	
+{
+	        // the second branch exclude u from G	
 		{
 			while(!Qv.empty()){
 			ui v=Qv.front(); Qv.pop();
