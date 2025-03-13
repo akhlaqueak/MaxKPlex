@@ -346,7 +346,8 @@ void Graph::kPlex_exact(int mode) {
 			// 	else printf("search_cnt: %u, ave_density: %.5lf, min_density: %.5lf\n", search_cnt, total_density/search_cnt, min_density);
 			// }
 
-			if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) {
+			// if(n > kplex.size()&&UB > kplex.size()&&kplex.size() < 2*K-2) 
+			{
 				kplex_solver->load_graph(n, pstart, pstart+1, edges);
 				if(2*K-2 < UB) UB = 2*K-2;
 				kplex_solver->kPlex(K, UB, kplex, false);
