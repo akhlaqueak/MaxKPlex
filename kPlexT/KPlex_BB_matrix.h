@@ -477,59 +477,6 @@ private:
 		for(ui i = 0;i < R_end;i ++) assert(level_id[SR[i]] > level);
 #endif
 
-{
-
-
-		if(Btop==0 || SR_rid[B[Btop-1]] >= R_end || SR_rid[B[Btop-1]] < S_end)
-			branch(S_end, R_end); 
-
-		ui u = B[-- Btop];
-
-// 		{
-// 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// // #ifdef _SECOND_ORDER_PRUNING_
-// // 			if(ctcp_enabled) {
-// // 				while(!Qe.empty())Qe.pop();
-// // 				t_old_removed_edges_n=removed_edges_n;
-// // 			}
-// // #endif
-// 			if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-// 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 		}
-
-//         // the second branch exclude u from G	
-// 		{
-// 			Btop=0;
-// 			while(!Qv.empty()){
-// 			ui v=Qv.front(); Qv.pop();
-// 			level_id[v]=n;
-// 			} 
-// 			Qv.push(u);
-// 			ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-// // #ifdef _SECOND_ORDER_PRUNING_
-// // 			if(ctcp_enabled) {
-// // 				while(!Qe.empty())Qe.pop();
-// // 				t_old_removed_edges_n=removed_edges_n;
-// // 			}
-// // #endif
-// 			// if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false, false, endIdx, endIdx);
-// 			if(remove_vertices_and_edges_with_prune(S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-// 			restore_SR_and_edges(S_end, R_end, t_old_S_end, t_old_R_end, level, t_old_removed_edges_n);	
-// 		}
-
-
-		
-		ui pre_best_solution_size = best_solution_size, t_old_S_end = S_end, t_old_R_end = R_end, t_old_removed_edges_n = 0;
-#ifdef _SECOND_ORDER_PRUNING_
-		if(ctcp_enabled) {
-			while(!Qe.empty())Qe.pop();
-			t_old_removed_edges_n=removed_edges_n;
-		}
-#endif
-		if(move_u_to_S_with_prune(u, S_end, R_end, level)) BB_search(S_end, R_end, level+1, false);
-		restore_SR_and_edges(S_end, R_end, S_end, t_old_R_end, level, t_old_removed_edges_n);	
-		Btop=0;
-
         // the second branch exclude u from G	
 		{
 			while(!Qv.empty()){
@@ -1267,36 +1214,6 @@ private:
 		return n;
 	}
 
-	void branch(ui S_end, ui R_end){
-		Btop = 0;
-		ui minnei=0x3f3f3f3f; ui pivot; // should it be 0xffffffff? 
-		char *t_matrix = matrix + 0*n;
-		for(ui i = S_end;i < R_end;i ++) {
-			ui v = SR[i];
-			if(!t_matrix[v] && //HOP2 first
-			(degree[v]+K<=best_solution_size+1||
-			support(S_end, v) == 1||
-			support(S_end, 0) == 1)
-			){ 
-				B[top++]=v;
-				return;
-			}
-			if (degree[v] < minnei)
-			{
-				minnei = degree[v];
-				pivot = v;
-			}
-		}
-
-		t_matrix = matrix + pivot*n;
-		for(ui i = S_end;i < R_end;i ++) if(!t_matrix[SR[i]]) 
-			B[top++]=SR[i];
-
-		
-
-		auto comp=[&](int a,int b){return degree[a]>degree[b];};
-		std::sort(B.begin(),B.begin()+Btop,comp);
-	}
 
 	void print_array(const char *str, const ui *array, ui idx_start, ui idx_end, ui l) {
 		for(ui i = 0;i < l;i ++) printf(" ");
