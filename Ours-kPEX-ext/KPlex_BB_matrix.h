@@ -1240,7 +1240,6 @@ else{ // pivot based branching
 					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
 					level_id[u] = n;
 					++ R_end;
-					return true;
 					return false;
 				}
 
