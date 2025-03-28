@@ -871,8 +871,8 @@ else{ // pivot based branching
 	}
 
 	bool alt_RB(ui S_end, ui &R_end, ui level){
-		return true;
-		// Saving S, as it should be same location when returning from this function.
+
+		// Saving S, as it should be recovered with same location when returning from this function.
 		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
 
 		auto SR_left = partition_left_right(S_end, R_end);
@@ -880,7 +880,7 @@ else{ // pivot based branching
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
 
-		while(true){
+		while(false){
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
 			if(UB==UB_l) break;
 			else UB_l=UB;
