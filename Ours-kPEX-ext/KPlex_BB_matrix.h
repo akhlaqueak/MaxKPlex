@@ -842,6 +842,7 @@ else{ // pivot based branching
 				}
 			}
 		}
+		return true;
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
 	
@@ -888,7 +889,7 @@ else{ // pivot based branching
 			// cout<<S_end<<":"<<R_l<<":"<<R_end<<"...>";
 			// cout<<LB_l<<":"<<LB_r<<":"<<UB<<endl;
 			// RR1 on C_r
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 
 			// ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			// LB_l = best_solution_size + 1 - S_end - UB_r;
