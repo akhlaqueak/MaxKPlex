@@ -250,26 +250,26 @@ del_prev() {
 
 
 datasets='
-brock200-2.bin
-hamming6-2.bin
-ia-wiki-Talk.bin
-johnson8-4-4.bin
-keller4.bin
-p-hat500-1.bin
-sc-ldoor.bin
-sc-msdoor.bin
-soc-buzznet.bin
-soc-digg.bin
-socfb-A-anon.bin
-socfb-B-anon.bin
-socfb-Duke14.bin
-soc-gowalla.bin
-soc-lastfm.bin
-soc-LiveMocha.bin
-soc-orkut.bin
-soc-pokec.bin
-soc-youtube.bin
-soc-youtube-snap.bin
+brock200-2
+hamming6-2
+ia-wiki-Talk
+johnson8-4-4
+keller4
+p-hat500-1
+sc-ldoor
+sc-msdoor
+soc-buzznet
+soc-digg
+socfb-A-anon
+socfb-B-anon
+socfb-Duke14
+soc-gowalla
+soc-lastfm
+soc-LiveMocha
+soc-orkut
+soc-pokec
+soc-youtube
+soc-youtube-snap
 '
 
 solutions='Maple'
