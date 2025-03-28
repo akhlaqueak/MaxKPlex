@@ -247,7 +247,7 @@ del_prev() {
     done
 }
 
-cd /home/akhlaque.ak@gmail.com/MKP-Study/simulation/with-ctcp
+
 
 datasets='
 brock200-2.bin
