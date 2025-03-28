@@ -1230,7 +1230,7 @@ else{ // pivot based branching
 						else 
 						if(level_id[w] > level) { // RR3
 							level_id[w] = level;
-							Qv.push(w);
+							// Qv.push(w);
 						}
 					}
 				}
