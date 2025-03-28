@@ -885,7 +885,7 @@ else{ // pivot based branching
 			else UB_l=UB;
 			ui LB_r = best_solution_size + 1 - S_end - UB_l;
 			cout<<S_end<<":"<<R_l<<":"<<R_end<<"...>";
-			cout<<LB_l<<":"<<LB_r<<":"<<UB<<end;
+			cout<<LB_l<<":"<<LB_r<<":"<<UB<<endl;
 			// RR1 on C_r
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 
