@@ -1205,6 +1205,7 @@ else{ // pivot based branching
 	}
 
 	bool remove_vertices_and_edges_with_prune_left(ui S_end, ui &R_end, ui &R_l, ui level) {
+		return true;
 #ifdef _SECOND_ORDER_PRUNING_
 		while(!Qv.empty()||!Qe.empty()) {
 #else
@@ -1229,8 +1230,8 @@ else{ // pivot based branching
 						if(i < S_end) terminate = true; // UB1
 						else 
 						if(level_id[w] > level) { // RR3
-							// level_id[w] = level;
-							// Qv.push(w);
+							level_id[w] = level;
+							Qv.push(w);
 						}
 					}
 				}
