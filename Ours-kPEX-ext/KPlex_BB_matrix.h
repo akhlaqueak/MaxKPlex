@@ -837,8 +837,8 @@ else{ // pivot based branching
 				if(neigh_l<LB_l+S_end-K+1 or neigh_r<LB_r+S_end-K){
 					swap_pos(i, --R_end_temp);
 					Rb--;
-					// level_id[u]=level;
-					// Qv.push(u);
+					level_id[u]=level;
+					Qv.push(u);
 				}
 			}
 		}
@@ -1917,17 +1917,17 @@ else{ // pivot based branching
 
         while (true)
         {
-            ui maxpi = -1, mincost=0;
+            ui maxpi = -1;
             double maxdise = 1;
             for (ui i = S_l; i < S_end; i++)
             {
                 ui u = SR[i];
                 if (psz[u] == 0)
                     continue;
-                double cost = min(support(S_end, u), psz[u]);
-                double dise = psz[u] / cost;
+                // double cost = min(support(S_end, u), psz[u]);
+                double dise = psz[u] / support(S_end, u);
                 if (dise > maxdise)
-                    maxpi = u, maxdise = dise, mincost=cost;
+                    maxpi = u, maxdise = dise;
             }
 			if(maxdise==1) break;
             else
