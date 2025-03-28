@@ -842,7 +842,6 @@ else{ // pivot based branching
 				}
 			}
 		}
-
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
 	
@@ -1227,7 +1226,7 @@ else{ // pivot based branching
 					neighbors[neighbors_n++] = w;
 					-- degree[w];
 					if(degree[w] + K <= best_solution_size) {
-						// if(i < S_end) terminate = true; // UB1
+						if(i < S_end) terminate = true; // UB1
 						else if(level_id[w] > level) { // RR3
 							level_id[w] = level;
 							Qv.push(w);
