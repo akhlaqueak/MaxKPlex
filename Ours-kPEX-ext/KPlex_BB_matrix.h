@@ -842,7 +842,7 @@ else{ // pivot based branching
 				}
 			}
 		}
-		return true;
+
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
 	
