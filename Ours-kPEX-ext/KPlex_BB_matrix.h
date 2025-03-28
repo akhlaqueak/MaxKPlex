@@ -871,6 +871,7 @@ else{ // pivot based branching
 	}
 
 	bool alt_RB(ui S_end, ui &R_end, ui level){
+		return true;
 		// Saving S, as it should be same location when returning from this function.
 		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
 
