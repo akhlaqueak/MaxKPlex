@@ -1925,8 +1925,8 @@ else{ // pivot based branching
                 if (psz[u] == 0)
                     continue;
                 // double cost = min(support(S_end, u), psz[u]);
-                double dise = psz[u] / min(support(S_end, u), psz[u]);
-                // double dise = psz[u] / support(S_end, u);
+                // double dise = psz[u] / min(support(S_end, u), psz[u]);
+                double dise = psz[u] / support(S_end, u);
                 if (dise > maxdise)
                     maxpi = u, maxdise = dise;
             }
