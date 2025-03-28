@@ -829,16 +829,16 @@ else{ // pivot based branching
 					swap_pos(i, --R_l);
 					swap_pos(R_l, --R_end_temp);
 					Rb--;
-					// level_id[u]=level;
-					// Qv.push(u);
+					level_id[u]=level;
+					Qv.push(u);
 				}
 			}
 			else{
 				if(neigh_l<LB_l+S_end-K+1 or neigh_r<LB_r+S_end-K){
 					swap_pos(i, --R_end_temp);
 					Rb--;
-					level_id[u]=level;
-					Qv.push(u);
+					// level_id[u]=level;
+					// Qv.push(u);
 				}
 			}
 		}
