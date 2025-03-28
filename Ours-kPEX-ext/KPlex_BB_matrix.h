@@ -1226,8 +1226,8 @@ else{ // pivot based branching
 					neighbors[neighbors_n++] = w;
 					-- degree[w];
 					if(degree[w] + K <= best_solution_size) {
-						// if(i < S_end) terminate = true; // UB1
-						// else 
+						if(i < S_end) terminate = true; // UB1
+						else 
 						if(level_id[w] > level) { // RR3
 							level_id[w] = level;
 							Qv.push(w);
@@ -1240,6 +1240,7 @@ else{ // pivot based branching
 					for(ui i = 0;i < neighbors_n;i ++) ++ degree[neighbors[i]];
 					level_id[u] = n;
 					++ R_end;
+					return true;
 					return false;
 				}
 
