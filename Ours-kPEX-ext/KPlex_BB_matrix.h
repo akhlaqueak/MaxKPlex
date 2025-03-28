@@ -880,7 +880,7 @@ else{ // pivot based branching
 		ui S_l=SR_left.first, R_l = SR_left.second;
 		ui UB_l = R_l - S_end, LB_l = 0;
 
-		while(false){
+		while(true){
 			ui UB = compute_UB(S_end, R_end, S_l, R_l, left);
 			if(UB==UB_l) break;
 			else UB_l=UB;
@@ -888,7 +888,7 @@ else{ // pivot based branching
 			// cout<<S_end<<":"<<R_l<<":"<<R_end<<"...>";
 			// cout<<LB_l<<":"<<LB_r<<":"<<UB<<endl;
 			// RR1 on C_r
-			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
+			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, right, level)) {ret = false; break;}
 
 			// ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			// LB_l = best_solution_size + 1 - S_end - UB_r;
