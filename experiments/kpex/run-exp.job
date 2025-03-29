@@ -11,6 +11,7 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 
+cd /home/akhlaque.ak@gmail.com/MaxKPlex/experiments/kpex
 run_jobs() {
     # for kplex in $solutions; do
     for fn in $datasets; do
@@ -93,7 +94,7 @@ run_jobs() {
 
 
     get_kpsize() {
-        result=results.out
+        result=kpsize.out
         rm $result
         echo -en "," >>$result
         WORD_COUNT=$(echo "$solutions" | wc -w)
@@ -123,12 +124,12 @@ run_jobs() {
                 outfile=''
                 for sol in $solutions; do
                     outfile=$fn-$sol-$k.out
-                    op=$(grep ">>" $outfile | head -1)
+                    op=$(grep ">>" $outfile | tail -1)
                     if [ -z "${op}" ]; then
                         line+=('9999999999')
                     else
                         op=($op)
-                        line+=(${op[-5]})
+                        line+=(${op[-7]})
                     fi
                 done
                 m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
@@ -159,7 +160,6 @@ del_prev() {
     done
 }
 
-cd /home/akhlaque.ak@gmail.com/MaxKPlex/experiments/kpex
 
 datasets='
 brock200-2
