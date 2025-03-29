@@ -242,7 +242,8 @@ int main(int argc, char *argv[])
     print_solution();
 
     puts("------------------{whole procedure: kPEX}---------------------");
-    printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+    // printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+    printf(">>%s MaxKPlex_Size:%u t_time: %.4lf null null null null", argv[1], solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
 
     return 0;
 }
