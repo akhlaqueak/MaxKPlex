@@ -147,7 +147,7 @@ run_jobs() {
         done
         cat $result
     }
-    get_results
+    get_kpsize
 
 
 
@@ -159,7 +159,7 @@ del_prev() {
     done
 }
 
-
+cd /home/akhlaque.ak@gmail.com/MaxKPlex/experiments/kpex
 
 datasets='
 brock200-2
