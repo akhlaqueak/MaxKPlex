@@ -854,7 +854,7 @@ else{ // pivot based branching
 				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
 			}
 			R_end = R_l;
-			if(is_kplex(R_end))
+			if(R_end>best_solution_size and is_kplex(R_end))
 				store_solution(R_end);
 		}
 		else{
@@ -866,7 +866,7 @@ else{ // pivot based branching
 				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
 			}
 			R_end -= (R_l-S_end); 
-			if(is_kplex(R_end))
+			if(R_end>best_solution_size and is_kplex(R_end))
 				store_solution(R_end);	
 		}
 	}
