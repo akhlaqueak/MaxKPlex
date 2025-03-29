@@ -52,7 +52,8 @@ void print_heuris_log()
         printf("The heuristic solution is the ground truth!\n");
         print_solution();
         puts("------------------{whole procedure: kPEX}---------------------");
-        printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+        printf("\n>>Heursitic MaxKPlex_Size: %u t_time: %.4lf null null null null\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+        // printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
         exit(0);
     }
 }
@@ -243,7 +244,7 @@ int main(int argc, char *argv[])
 
     puts("------------------{whole procedure: kPEX}---------------------");
     // printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
-    printf("\n>>%s MaxKPlex_Size:%u t_time: %.4lf null null null null\n", argv[1], solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+    printf("\n>>%s MaxKPlex_Size: %u t_time: %.4lf null null null null\n", argv[1], solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
 
     return 0;
 }
