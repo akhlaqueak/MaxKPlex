@@ -523,7 +523,6 @@ private:
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
-		bounding.tick();
 		ui beta = best_solution_size - S_end;
 		#ifdef PART_BOUND
 		if(S_bound(S_end, R_end, level)){
@@ -549,15 +548,16 @@ private:
 			return ;
 		}
 		#endif
-		bounding.tock();
 
 		// Adding kpex stuff here... 
 		#ifdef ALTRB
+		bounding.tick();
 		if(!alt_RB(S_end, R_end, level)) {
 			//printf("here2\n");
 			restore_SR_and_edges(S_end, R_end, old_S_end, old_R_end, level, old_removed_edges_n);
 			return ;
 		}
+		bounding.tock();
 		#endif
 
 #ifndef NDEBUG
