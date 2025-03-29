@@ -85,7 +85,7 @@ public:
         }
 
         // reducing methods from kPlexT
-        reduce_kPlexT(S, C);
+        // reduce_kPlexT(S, C);
 
         // AltRB: bounding & stronger reduction (our novel method)
         int ub = get_UB(S, C);
