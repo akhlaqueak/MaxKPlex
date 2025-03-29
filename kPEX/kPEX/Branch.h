@@ -381,9 +381,9 @@ public:
     inline int get_UB(Set &S, Set &C)
     {
         AltRB_cnt++;
-        // int ub = bound_and_reduce(S, C); // AltRB
-        // if (ub <= lb)
-        //     return ub;
+        int ub = bound_and_reduce(S, C); // AltRB
+        if (ub <= lb)
+            return ub;
         return only_part_UB(S, C); // just bounding without AltRB
     }
 
