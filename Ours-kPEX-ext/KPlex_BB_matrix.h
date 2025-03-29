@@ -825,7 +825,7 @@ else{ // pivot based branching
 					else neigh_r++;
 			}
 			if(side==left){
-				if(neigh_l<LB_l+S_end-K or neigh_r<LB_r+S_end-K+1){
+				if(neigh_l+K<LB_l+S_end or neigh_r+K<LB_r+S_end+1){
 					swap_pos(i, --R_l);
 					swap_pos(R_l, --R_end_temp);
 					Rb--;
@@ -834,7 +834,7 @@ else{ // pivot based branching
 				}
 			}
 			else{
-				if(neigh_l<LB_l+S_end-K+1 or neigh_r<LB_r+S_end-K){
+				if(neigh_l+K<LB_l+S_end+1 or neigh_r+K<LB_r+S_end){
 					swap_pos(i, --R_end_temp);
 					Rb--;
 					level_id[u]=level;
@@ -892,8 +892,8 @@ else{ // pivot based branching
 
 			ui UB_r = compute_UB(S_end, R_end, S_l, R_l, right);
 			LB_l = best_solution_size + 1 - S_end - UB_r;
-			// RR1 on C_l
-			// if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
+			//  RR1 on C_l
+			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
 
 			// if(UB_r+UB_l+S_end == best_solution_size+1){
 			// 	// RR2 on C_l
