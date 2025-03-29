@@ -1891,6 +1891,7 @@ else{ // pivot based branching
 				psz[i] = j;
 			}    
         }
+		assert(cend>=Ra);
         return UB+cend-Ra;
     }
 
