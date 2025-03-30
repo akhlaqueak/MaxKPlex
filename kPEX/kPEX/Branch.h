@@ -435,7 +435,6 @@ public:
 		auto comp=[&](int a,int b){return deg[a]>deg[b];};
         sort(B.begin(), B.end(), comp);
         B.push_back(sel);
-        return sel;
     }
 
 
