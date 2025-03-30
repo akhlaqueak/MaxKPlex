@@ -112,7 +112,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-// #define BIN_BRANCHING 
+#define BIN_BRANCHING 
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
