@@ -434,7 +434,7 @@ public:
                 )
             ) 
             {
-                B.push_back(u); return;
+                // B.push_back(u); return;
             }
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
