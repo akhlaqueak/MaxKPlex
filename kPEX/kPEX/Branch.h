@@ -75,7 +75,7 @@ public:
         // reduction rules
         Timer start_fast_reduce;
         bool S_is_plex, g_is_plex;
-        fast_reduction(S, C, g_is_plex, S_is_plex); // existing techniques
+        // fast_reduction(S, C, g_is_plex, S_is_plex); // existing techniques
         fast_reduce_time += start_fast_reduce.get_time();
 
         if (!S_is_plex)
