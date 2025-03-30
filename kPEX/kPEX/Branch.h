@@ -111,16 +111,18 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-        // pivot = select_pivot_vertex_with_min_degree(C);
-        // if (pivot == -1)
-        //     return;
+#define BIN_BRANCHING 
+#ifdef BIN_BRANCHING
+        pivot = select_pivot_vertex_with_min_degree(C);
+        if (pivot == -1)
+            return;
 
-
+#else
         if(B.empty() or S.test(B.back()) or (not C.test(B.back())))
             select_branching_set(C);
         pivot = B.back();
         B.pop_back();
-        
+#endif   
         generate_sub_branches(S, C, pivot);
     }
 
@@ -422,7 +424,7 @@ public:
         int sel = -1;
         for (int u : C)
         {
-            if (loss_cnt[u] == paramK - 1||deg[u]==lb+1){
+            if (loss_cnt[u] == (paramK - 1)||deg[u]==lb+1){
                 B.push_back(u); return;
             }
             if (sel == -1 || deg[u] < deg[sel])
