@@ -441,11 +441,11 @@ public:
                 sel = u;
         }
 
-        for(int u:C){
-            if(u!=sel and non_A[u][sel])
+        auto bset= C & non_A[sel];
+        for(int u:bset){
                 B.push_back(u);
         }
-        B.push_back(sel);
+        // B.push_back(sel);
 		auto comp=[&](int a,int b){return deg[a]>deg[b];};
         sort(B.begin(), B.end(), comp);
     }
