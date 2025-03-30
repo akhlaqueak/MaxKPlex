@@ -432,7 +432,7 @@ public:
         }
 
         for(int u:C){
-            if(non_A[sel][u])
+            if(u!=sel and non_A[sel][u])
                 B.push_back(u);
         }
 		auto comp=[&](int a,int b){return deg[a]>deg[b];};
