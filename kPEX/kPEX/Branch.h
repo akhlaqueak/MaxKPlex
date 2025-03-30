@@ -111,7 +111,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-#define BIN_BRANCHING 
+// #define BIN_BRANCHING 
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
@@ -861,7 +861,29 @@ public:
      */
     void generate_sub_branches(Set &S, Set &C, int pivot)
     {
-        auto new_S = S, new_C = C;
+        {
+            auto new_S = S, new_C = C;
+            // branch 1: remove pivot
+            new_C.reset(pivot);
+            v_just_add = -1;
+            bnb(new_S, new_C);
+        }
+        {
+            // branch 2: include pivot
+            S.set(pivot);
+            C.reset(pivot);
+            v_just_add = pivot;
+            bnb(S, C);
+        }
+    }
+
+
+        /**
+     * @brief generate two sub-branches: one includes pivot and the other excludes pivot
+     */
+    void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
+    {
+            auto new_S = S, new_C = C;
         {
             // branch 2: include pivot
             S.set(pivot);
@@ -876,6 +898,9 @@ public:
             bnb(new_S, new_C);
         }
     }
+
+
+
     /**
      * @brief reduce P to (cnt-k)-core, namely P need to provide at least cnt vertices
      */
