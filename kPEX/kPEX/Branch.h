@@ -861,19 +861,19 @@ public:
      */
     void generate_sub_branches(Set &S, Set &C, int pivot)
     {
-        {
-            auto new_S = S, new_C = C;
-            // branch 1: remove pivot
-            new_C.reset(pivot);
-            v_just_add = -1;
-            bnb(new_S, new_C);
-        }
+        auto new_S = S, new_C = C;
         {
             // branch 2: include pivot
             S.set(pivot);
             C.reset(pivot);
             v_just_add = pivot;
             bnb(S, C);
+        }
+        {
+            // branch 1: remove pivot
+            new_C.reset(pivot);
+            v_just_add = -1;
+            bnb(new_S, new_C);
         }
     }
     /**
