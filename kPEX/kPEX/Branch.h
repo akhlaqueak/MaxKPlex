@@ -103,11 +103,11 @@ public:
                 return;
             }
         }
-        if (paramK > 5)
-        {
-            // look ahead: if UB(S+u, C-u)<=lb, then remove u; we select the vertex with min ub as pivot
-            lookahead_vertex(S, C);
-        }
+        // if (paramK > 5)
+        // {
+        //     // look ahead: if UB(S+u, C-u)<=lb, then remove u; we select the vertex with min ub as pivot
+        //     lookahead_vertex(S, C);
+        // }
 
         // select pivot to generate 2 branches
         int pivot = -1;
@@ -888,7 +888,7 @@ public:
     void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
     {
         {
-        auto new_S = S, new_C = C;
+            auto new_S = S, new_C = C;
             // branch 2: include pivot
             new_S.set(pivot);
             new_C.reset(pivot);
