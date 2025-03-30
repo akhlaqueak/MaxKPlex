@@ -16,12 +16,14 @@ private:
     Graph_reduced &G_input;
     int lb;
 
+
     // info of the search tree
     int v_just_add;       // the pivot vertex that we just added into S
     vector<int> loss_cnt; // loss_cnt[v] = |S| - |N(v) \cap S|, i.e., non-neighbors of v in S
     vector<int> deg;      // deg[u] = degree of u in S+C
     vector<int> one_loss_non_neighbor_cnt;
     vector<int> que; // queue
+    vector<int> B;
     Set one_loss_vertices_in_C;
     AdjacentMatrix non_A, A; // A is the adjacent matrix, A[u] is the neighbors of u, A[u][v] means u,v are adj; non_A = ~A
     Graph_adjacent *ptr_g;
@@ -112,6 +114,12 @@ public:
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
             return;
+
+
+        // if(B.empty() or S.test(B.top()) or (not C.test(B.top())))
+        //     select_branching_set(C);
+        // pivot = B.top();
+        
         generate_sub_branches(S, C, pivot);
     }
 
@@ -402,6 +410,34 @@ public:
         }
         return sel;
     }
+
+
+    /**
+     * @return the vertex with minimum degree
+     */
+    void select_branching_set(Set &C)
+    {
+        B.clear();
+        int sel = -1;
+        for (int u : C)
+        {
+            if (loss_cnt[u] == paramK - 1||deg[u]==lb+1){
+                B.push_back(u); return;
+            }
+            if (sel == -1 || deg[u] < deg[sel])
+                sel = u;
+        }
+
+        for(int u:C){
+            if(non_A[sel][u])
+                B.push_back(u);
+        }
+		auto comp=[&](int a,int b){return deg[a]>deg[b];};
+        sort(B.begin(), B.end(), comp);
+        B.push_back(sel);
+        return sel;
+    }
+
 
     /**
      * @brief print some logs
@@ -824,18 +860,18 @@ public:
     void generate_sub_branches(Set &S, Set &C, int pivot)
     {
         {
-            auto new_S = S, new_C = C;
-            // branch 1: remove pivot
-            new_C.reset(pivot);
-            v_just_add = -1;
-            bnb(new_S, new_C);
-        }
-        {
             // branch 2: include pivot
             S.set(pivot);
             C.reset(pivot);
             v_just_add = pivot;
             bnb(S, C);
+        }
+        {
+            auto new_S = S, new_C = C;
+            // branch 1: remove pivot
+            new_C.reset(pivot);
+            v_just_add = -1;
+            bnb(new_S, new_C);
         }
     }
     /**
