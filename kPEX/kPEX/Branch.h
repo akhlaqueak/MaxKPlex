@@ -90,11 +90,11 @@ public:
         reduce_kPlexT(S, C);
 
         // AltRB: bounding & stronger reduction (our novel method)
-        // int ub = get_UB(S, C);
-        // if (ub <= lb)
-        // {
-        //     return;
-        // }
+        int ub = get_UB(S, C);
+        if (ub <= lb)
+        {
+            // return;
+        }
 
         if (paramK > 15)
         {
