@@ -126,8 +126,8 @@ public:
         pivot = B.back();
         B.pop_back();
 #endif   
-        // generate_sub_branches_add_first(S, C, pivot);
-        generate_sub_branches(S, C, pivot);
+        generate_sub_branches_add_first(S, C, pivot);
+        // generate_sub_branches(S, C, pivot);
     }
 
     /**
@@ -649,8 +649,8 @@ public:
      */
     void fast_reduction(Set &S, Set &C, bool &g_is_plex, bool &S_is_plex)
     {
-        // if (true) // only if S changed, we can update loss_cnt[]
-        if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
+        if (true) // only if S changed, we can update loss_cnt[]
+        // if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
         {
             compute_loss_cnt(S, C, S_is_plex);
             if (!S_is_plex)
