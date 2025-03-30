@@ -118,8 +118,10 @@ public:
             return;
 
 #else
+        if(C.empty()) return;
         if(B.empty() or S.test(B.back()) or (not C.test(B.back())))
             select_branching_set(C);
+
         pivot = B.back();
         B.pop_back();
 #endif   
@@ -422,6 +424,7 @@ public:
     void select_branching_set(Set &C)
     {
         B.clear();
+        if(C.empty()) return;
         int sel = -1;
         for (int u : C)
         {
