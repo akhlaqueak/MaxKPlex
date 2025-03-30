@@ -111,7 +111,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-#define BIN_BRANCHING 
+// #define BIN_BRANCHING 
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
@@ -123,8 +123,8 @@ public:
         pivot = B.back();
         B.pop_back();
 #endif   
-        generate_sub_branches_add_first(S, C, pivot);
-        // generate_sub_branches(S, C, pivot);
+        // generate_sub_branches_add_first(S, C, pivot);
+        generate_sub_branches(S, C, pivot);
     }
 
     /**
@@ -884,7 +884,7 @@ public:
      */
     void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
     {
-            auto new_S = S, new_C = C;
+        auto new_S = S, new_C = C;
         {
             // branch 2: include pivot
             S.set(pivot);
