@@ -124,7 +124,7 @@ public:
             select_branching_set(C);
 
         pivot = B.back();
-        B.clear();
+        B.pop_back();
         generate_sub_branches_add_first(S, C, pivot);
 #endif   
     }
@@ -903,6 +903,7 @@ public:
             v_just_add = pivot;
             bnb(new_S, new_C);
         
+        B.clear();
         
             // branch 1: remove pivot
             C.reset(pivot);
