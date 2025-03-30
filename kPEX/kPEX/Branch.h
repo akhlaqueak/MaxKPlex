@@ -78,8 +78,8 @@ public:
         fast_reduction(S, C, g_is_plex, S_is_plex); // existing techniques
         fast_reduce_time += start_fast_reduce.get_time();
 
-        if (!S_is_plex)
-            return;
+        // if (!S_is_plex)
+        //     return;
         if (g_is_plex)
         {
             update_lb(S, C);
@@ -93,7 +93,7 @@ public:
         int ub = get_UB(S, C);
         if (ub <= lb)
         {
-            // return;
+            return;
         }
 
         if (paramK > 15)
