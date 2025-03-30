@@ -440,13 +440,13 @@ public:
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
         }
-        if(sel==-1) cout<<"Error";
-        for(int u:C){
-            if(u!=sel and non_A[sel][u])
-                B.push_back(u);
-        }
-		auto comp=[&](int a,int b){return deg[a]>deg[b];};
-        sort(B.begin(), B.end(), comp);
+        // if(sel==-1) cout<<"Error";
+        // for(int u:C){
+        //     if(u!=sel and non_A[sel][u])
+        //         B.push_back(u);
+        // }
+		// auto comp=[&](int a,int b){return deg[a]>deg[b];};
+        // sort(B.begin(), B.end(), comp);
         B.push_back(sel);
     }
 
