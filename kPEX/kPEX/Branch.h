@@ -103,11 +103,11 @@ public:
                 return;
             }
         }
-        // if (paramK > 5)
-        // {
-        //     // look ahead: if UB(S+u, C-u)<=lb, then remove u; we select the vertex with min ub as pivot
-        //     lookahead_vertex(S, C);
-        // }
+        if (paramK > 5)
+        {
+            // look ahead: if UB(S+u, C-u)<=lb, then remove u; we select the vertex with min ub as pivot
+            lookahead_vertex(S, C);
+        }
 
         // select pivot to generate 2 branches
         int pivot = -1;
@@ -424,7 +424,6 @@ public:
     void select_branching_set(Set &C)
     {
         B.clear();
-        if(C.empty()) return;
         int sel = -1;
         for (int u : C)
         {
@@ -887,20 +886,20 @@ public:
      */
     void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
     {
-        {
-            auto new_S = S, new_C = C;
+        
             // branch 2: include pivot
+            auto new_S = S, new_C = C;
             new_S.set(pivot);
             new_C.reset(pivot);
             v_just_add = pivot;
             bnb(new_S, new_C);
-        }
-        {
+        
+        
             // branch 1: remove pivot
             C.reset(pivot);
             v_just_add = -1;
             bnb(S, C);
-        }
+        
     }
 
 
