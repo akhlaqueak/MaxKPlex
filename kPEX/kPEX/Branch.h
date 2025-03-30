@@ -111,14 +111,15 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-        pivot = select_pivot_vertex_with_min_degree(C);
-        if (pivot == -1)
-            return;
+        // pivot = select_pivot_vertex_with_min_degree(C);
+        // if (pivot == -1)
+        //     return;
 
 
-        // if(B.empty() or S.test(B.top()) or (not C.test(B.top())))
-        //     select_branching_set(C);
-        // pivot = B.top();
+        if(B.empty() or S.test(B.top()) or (not C.test(B.top())))
+            select_branching_set(C);
+        pivot = B.top();
+        B.pop_back();
         
         generate_sub_branches(S, C, pivot);
     }
