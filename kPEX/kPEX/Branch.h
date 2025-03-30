@@ -116,9 +116,9 @@ public:
         //     return;
 
 
-        if(B.empty() or S.test(B.top()) or (not C.test(B.top())))
+        if(B.empty() or S.test(B.back()) or (not C.test(B.back())))
             select_branching_set(C);
-        pivot = B.top();
+        pivot = B.back();
         B.pop_back();
         
         generate_sub_branches(S, C, pivot);
