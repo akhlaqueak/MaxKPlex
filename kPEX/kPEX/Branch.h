@@ -396,9 +396,9 @@ public:
     inline int get_UB(Set &S, Set &C)
     {
         AltRB_cnt++;
-        // int ub = bound_and_reduce(S, C); // AltRB
-        // if (ub <= lb)
-        //     return ub;
+        int ub = bound_and_reduce(S, C); // AltRB
+        if (ub <= lb)
+            return ub;
         return only_part_UB(S, C); // just bounding without AltRB
     }
 
@@ -649,8 +649,8 @@ public:
      */
     void fast_reduction(Set &S, Set &C, bool &g_is_plex, bool &S_is_plex)
     {
-        if (true) // only if S changed, we can update loss_cnt[]
-        // if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
+        // if (true) // only if S changed, we can update loss_cnt[]
+        if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
         {
             compute_loss_cnt(S, C, S_is_plex);
             if (!S_is_plex)
