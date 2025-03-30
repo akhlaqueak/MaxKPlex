@@ -441,7 +441,8 @@ public:
                 sel = u;
         }
 
-        auto bset= C & non_A[sel];
+        auto bset= C;
+        bset &= non_A[sel];
         for(int u:bset){
                 B.push_back(u);
         }
