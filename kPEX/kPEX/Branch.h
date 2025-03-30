@@ -125,7 +125,7 @@ public:
 
         pivot = B.back();
         B.pop_back();
-        generate_sub_branches_add_first(S, C, pivot);
+        generate_sub_branches(S, C, pivot);
 #endif   
     }
 
@@ -880,6 +880,7 @@ public:
             v_just_add = -1;
             bnb(new_S, new_C);
         }
+        B.clear();
         {
             // branch 2: include pivot
             S.set(pivot);
