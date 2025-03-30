@@ -442,7 +442,7 @@ public:
         }
 
         for(int u:C){
-            if(u!=sel and A[sel][u])
+            if(u!=sel and non_A[u][sel])
                 B.push_back(u);
         }
         B.push_back(sel);
