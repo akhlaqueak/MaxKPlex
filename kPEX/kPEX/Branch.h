@@ -111,7 +111,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-#define BIN_BRANCHING 
+// #define BIN_BRANCHING 
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
@@ -158,7 +158,6 @@ public:
             int id_u = CTCP_for_g_i(u, vis, vertices_2hops, array_N, edges, lb);
             if (id_u != -1) // this subgraph is not pruned: begin bnb
             {
-                printf("%d=======\n", id_u);
                 subgraph_search_cnt++;
                 vector<int> &inv = array_N;
                 // Graph_adjacent g(vis, vertices_2hops, G_input, inv);
@@ -428,9 +427,9 @@ public:
         int sel = -1;
         for (int u : C)
         {
-            if (loss_cnt[u] == (paramK - 1)||deg[u]+paramK==lb+1){
-                B.push_back(u); return;
-            }
+            // if (loss_cnt[u] == (paramK - 1)||deg[u]+paramK==lb+1){
+            //     B.push_back(u); return;
+            // }
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
         }
