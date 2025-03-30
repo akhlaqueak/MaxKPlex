@@ -123,7 +123,8 @@ public:
         pivot = B.back();
         B.pop_back();
 #endif   
-        generate_sub_branches(S, C, pivot);
+        generate_sub_branches_add_first(S, C, pivot);
+        // generate_sub_branches(S, C, pivot);
     }
 
     /**
