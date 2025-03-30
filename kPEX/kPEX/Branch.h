@@ -117,17 +117,16 @@ public:
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
             return;
-
+        generate_sub_branches(S, C, pivot);
 #else
         if(C.empty()) return;
         if(B.empty() or S.test(B.back()) or (not C.test(B.back())))
             select_branching_set(C);
 
         pivot = B.back();
-        B.pop_back();
-#endif   
+        B.clear();
         generate_sub_branches_add_first(S, C, pivot);
-        // generate_sub_branches(S, C, pivot);
+#endif   
     }
 
     /**
