@@ -112,7 +112,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-#define BIN_BRANCHING 
+// #define BIN_BRANCHING 
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
@@ -431,7 +431,7 @@ public:
             if (non_A[root_u][u] and(
                     loss_cnt[u]+1 == paramK or
                     loss_cnt[root_u]+1==paramK or
-                    deg[u]+paramK==lb+1 
+                    deg[u]+paramK<=lb+1 
                 )
             ) 
             {
@@ -440,7 +440,7 @@ public:
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
         }
-
+        if(sel==-1) cout<<"Error";
         for(int u:C){
             if(u!=sel and non_A[sel][u])
                 B.push_back(u);
