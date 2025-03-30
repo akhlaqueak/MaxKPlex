@@ -11,6 +11,8 @@
 
 class Branch
 {
+    vector<int> B;
+    int root_u;
 private:
     using Set = MyBitset;
     Graph_reduced &G_input;
@@ -23,7 +25,6 @@ private:
     vector<int> deg;      // deg[u] = degree of u in S+C
     vector<int> one_loss_non_neighbor_cnt;
     vector<int> que; // queue
-    vector<int> B;
     Set one_loss_vertices_in_C;
     AdjacentMatrix non_A, A; // A is the adjacent matrix, A[u] is the neighbors of u, A[u][v] means u,v are adj; non_A = ~A
     Graph_adjacent *ptr_g;
@@ -427,9 +428,15 @@ public:
         int sel = -1;
         for (int u : C)
         {
-            // if (loss_cnt[u] == (paramK - 1)||deg[u]+paramK==lb+1){
-            //     B.push_back(u); return;
-            // }
+            if (non_A[root_u][u] and(
+                    loss_cnt[u]+1 == paramK or
+                    loss_cnt[root_u]+1==paramK or
+                    deg[u]+paramK==lb+1 
+                )
+            ) 
+            {
+                B.push_back(u); return;
+            }
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
         }
@@ -482,6 +489,7 @@ public:
     void init_info(int u, Graph_adjacent &g)
     {
         v_just_add = u;
+        root_u = u;
         loss_cnt.clear();
         loss_cnt.resize(g.size());
         deg.clear();
