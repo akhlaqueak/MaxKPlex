@@ -1141,7 +1141,6 @@ public:
             if (beta == 0)
                 break;
         }
-        printf("%u, ", br_C.size());
 
         for (auto u : br_C)
         {
@@ -1151,6 +1150,7 @@ public:
                 C.reset(u);
         }
 
+        printf("%u, ", br_C.size());
         vector<ui> br;
         br.reserve(br_C.size());
         for(auto u: br_C)
