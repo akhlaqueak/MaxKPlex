@@ -133,7 +133,6 @@ public:
 #else
 // partition based branching
         auto br_C = branching_set_part(S, C);
-        printf("%u, ", br_C.size());
         for(int u: br_C){
             S.set(u);
             v_just_add = u;
@@ -1121,6 +1120,7 @@ public:
         ui Pi_u = -1, cost_u, dise_u;
         auto br_C = C;
         ui beta = lb - S.size();
+        printf("%u, ", beta);
 
         while (true)
         {
