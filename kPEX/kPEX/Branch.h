@@ -1141,7 +1141,6 @@ public:
             if (beta == 0)
                 break;
         }
-        printf("%u, ", br_C.size()-beta);
 
         for (auto u : br_C)
         {
@@ -1158,6 +1157,7 @@ public:
             br.push_back(u);
         }
         
+        printf("%u, ", br.size());
         sort(br.begin(), br.end(), [&](ui a, ui b){return peel_seq[a]>peel_seq[b];});
         return br;
     }
