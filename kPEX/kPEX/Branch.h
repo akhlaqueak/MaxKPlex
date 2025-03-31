@@ -1139,7 +1139,7 @@ public:
             if (Pi_u == -1 or cost_u > beta)
                 break;
             for(int u: br_C)
-                if(non_A[Pi_u][u]) br_C.clear(u);
+                if(non_A[Pi_u][u]) br_C.reset(u);
             
             // br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
             beta -= cost_u;
