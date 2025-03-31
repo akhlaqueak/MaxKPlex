@@ -137,7 +137,7 @@ public:
             S.set(u);
             v_just_add = u;
             bnb(S, C);
-            
+
             S.reset(u);
             C.set(u);
         }
@@ -931,6 +931,7 @@ public:
     {
         Set P(sz);
         P.flip();
+        ui seq = 0;
         auto &deg = array_n; // we reuse the array to decrease time cost
         for (int u : P)
             deg[u] = A[u].intersect(P);
@@ -946,7 +947,7 @@ public:
                 if(A[min_u][v])
                     deg[v]--;
             }
-            peel_seq[min_u]=cnt++;
+            peel_seq[min_u]=seq++;
             P.reset(min_u);
         }
     }
@@ -1111,7 +1112,7 @@ public:
     /**
      * @brief partition-based branching set
      */
-    Set branching_set_part(Set &S, Set &C)
+    vector<ui> branching_set_part(Set &S, Set &C)
     {
         Timer part_timer;
         // auto &loss = deg;
@@ -1154,7 +1155,7 @@ public:
         for(auto u: br_C)
             br.push_back(u);
         
-        sort(br.begin(), br.end(), [&](ui a, ui b){return peel_sq[a]>peel_seq[b];});
+        sort(br.begin(), br.end(), [&](ui a, ui b){return peel_seq[a]>peel_seq[b];});
         return br;
     }
     /**
