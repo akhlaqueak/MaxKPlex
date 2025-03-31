@@ -136,7 +136,7 @@ public:
         if(S.size()+C.size()<=lb) return;
 
         auto br_C = branching_set_part(S, C);
-        cout<<S.szie()+C.size()<<" "<<br_C.size()<<".";
+
         for (int u : br_C)
         {
             auto newS = S, newC=C;
