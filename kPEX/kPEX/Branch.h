@@ -1120,7 +1120,6 @@ public:
         ui Pi_u = -1, cost_u, dise_u;
         auto br_C = C;
         ui beta = lb - S.size();
-        printf("%u, ", beta);
 
         while (true)
         {
@@ -1142,6 +1141,7 @@ public:
             if (beta == 0)
                 break;
         }
+        printf("%u, ", br_C.size());
 
         for (auto u : br_C)
         {
