@@ -1158,12 +1158,13 @@ public:
 
         vector<ui> br;
         br.reserve(br_C.size());
+        ui sz = br_C.size();
         for (auto u : br_C)
         {
             C.reset(u);
             br.push_back(u);
         }
-
+        if(br.size()!=sz) cout<<"Eroor";
         sort(br.begin(), br.end(), [&](ui a, ui b)
              {return peel_seq[a] > peel_seq[b]; });
         return br;
