@@ -649,8 +649,8 @@ public:
      */
     void fast_reduction(Set &S, Set &C, bool &g_is_plex, bool &S_is_plex)
     {
-        if (true) // only if S changed, we can update loss_cnt[]
-        // if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
+        // if (true) // only if S changed, we can update loss_cnt[]
+        if (v_just_add != -1) // only if S changed, we can update loss_cnt[]
         {
             compute_loss_cnt(S, C, S_is_plex);
             if (!S_is_plex)
@@ -897,19 +897,19 @@ public:
     void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
     {
         
-            // branch 2: include pivot
-            auto new_S = S, new_C = C;
-            new_S.set(pivot);
-            new_C.reset(pivot);
-            v_just_add = pivot;
-            bnb(new_S, new_C);
-        
+        // branch 2: include pivot
+        auto new_S = S, new_C = C;
+        new_S.set(pivot);
+        new_C.reset(pivot);
+        v_just_add = pivot;
+        bnb(new_S, new_C);
+    
         B.clear();
-        
-            // branch 1: remove pivot
-            C.reset(pivot);
-            v_just_add = -1;
-            bnb(S, C);
+    
+        // branch 1: remove pivot
+        C.reset(pivot);
+        v_just_add = -1;
+        bnb(S, C);
         
     }
 
