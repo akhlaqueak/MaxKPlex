@@ -1124,7 +1124,7 @@ public:
 
         while (true)
         {
-        cout<<br_C.size()<<endl;
+        cout<<beta<<endl;
             ui Pi_u = -1, cost_u, dise_u;
             for (int u : S)
             {
