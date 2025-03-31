@@ -1164,7 +1164,7 @@ public:
         }
 
         sort(br.begin(), br.end(), [&](ui a, ui b)
-             {return deg[a] > deg[b]; });
+             {return deg[a] < deg[b]; });
         return br;
     }
     /**
