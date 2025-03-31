@@ -1129,11 +1129,8 @@ public:
             {
                 if (loss_cnt[u] == paramK)
                     continue; // boundary vertex does not have any non-neigh in C
-                // ui nn_cnt = br_C.intersect(non_A[u]);
-                ui nn_cnt=0;
-                for(ui v:br_C)
-                    if(non_A[u][v]) nn_cnt++;
-        cout<<nn_cnt<<endl;
+                ui nn_cnt = br_C.intersect(non_A[u]);
+                if(nn_cnt==0) continue;;
                 double cost = min(support(u), nn_cnt);
                 double dise = nn_cnt / cost;
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
