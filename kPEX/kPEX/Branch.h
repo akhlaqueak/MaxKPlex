@@ -132,9 +132,7 @@ public:
 #else
         // partition based branching
         auto br_C = branching_set_part(S, C);
-        for (int u : br_C)
-            cout<<peel_seq[u]<<" ";
-        cout<<endl;
+        
         for (int u : br_C)
         {
             auto newS = S, newC=C;
