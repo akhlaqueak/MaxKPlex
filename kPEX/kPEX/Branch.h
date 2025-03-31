@@ -1148,13 +1148,15 @@ public:
             if (beta-- > 0)
                 br_C.reset(u);
             else
-                C.reset(u);
+                break;
         }
 
         vector<ui> br;
         br.reserve(br_C.size());
-        for(auto u: br_C)
+        for(auto u: br_C){
+            C.reset(u);
             br.push_back(u);
+        }
         
         sort(br.begin(), br.end(), [&](ui a, ui b){return peel_seq[a]>peel_seq[b];});
         return br;
