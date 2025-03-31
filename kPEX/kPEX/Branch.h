@@ -135,7 +135,7 @@ public:
         ui sz = C.size();
 
         auto br_C = branching_set_part(S, C);
-        if(br_C.size()+C.size()!=sz) cout<<br_C.size()<<" d";
+        cout<<C.size()<<" "<<br_C.size()<<".";
         for (int u : br_C)
         {
             auto newS = S, newC=C;
