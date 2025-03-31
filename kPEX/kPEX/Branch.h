@@ -1130,7 +1130,7 @@ public:
                 if (loss_cnt[u] == paramK)
                     continue; // boundary vertex does not have any non-neigh in C
                 ui nn_cnt = br_C.intersect(non_A[u]);
-                if(nn_cnt==0) continue;;
+                if(nn_cnt==0) continue;
                 double cost = min(support(u), nn_cnt);
                 double dise = nn_cnt / cost;
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
@@ -1145,13 +1145,13 @@ public:
                 break;
         }
 
-        for (auto u : br_C)
-        {
-            if (beta-- > 0)
-                br_C.reset(u);
-            else
-                break;
-        }
+        // for (auto u : br_C)
+        // {
+        //     if (beta-- > 0)
+        //         br_C.reset(u);
+        //     else
+        //         break;
+        // }
 
         vector<ui> br;
         br.reserve(br_C.size());
@@ -1161,7 +1161,7 @@ public:
             br.push_back(u);
         }
         sort(br.begin(), br.end(), [&](ui a, ui b)
-             { return peel_seq[a] > peel_seq[b]; });
+             {return peel_seq[a] > peel_seq[b]; });
         return br;
     }
     /**
