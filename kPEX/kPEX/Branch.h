@@ -9,8 +9,8 @@
 #include "2th-Reduction.h"
 #endif
 // #define BIN_BRANCHING
-#define PIVOT_BRANCHING
-// #define S_BRANCHING
+// #define PIVOT_BRANCHING
+#define S_BRANCHING
 class Branch
 {
     vector<int> B;
