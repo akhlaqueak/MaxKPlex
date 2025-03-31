@@ -135,11 +135,11 @@ public:
         auto br_C = branching_set_part(S, C);
         for (int u : br_C)
         {
-            S.set(u);
+            auto newS = S, newC=C;
+            newS.set(u);
             v_just_add = u;
-            bnb(S, C);
+            bnb(newS, newC);
 
-            S.reset(u);
             C.set(u);
         }
 
@@ -1132,7 +1132,6 @@ public:
                 ui nn_cnt = br_C.intersect(non_A[u]);
                 if(nn_cnt==0) continue;
                 double cost = min(support(u), nn_cnt);
-                Pi_u=u; cost_u=cost; break;
                 double dise = nn_cnt / cost;
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
                     dise_u = dise, Pi_u = u, cost_u = cost;
