@@ -1145,13 +1145,13 @@ public:
                 break;
         }
 
-        // for (auto u : br_C)
-        // {
-        //     if (beta-- > 0)
-        //         br_C.reset(u);
-        //     else
-        //         break;
-        // }
+        for (auto u : br_C)
+        {
+            if (beta-- > 0)
+                br_C.reset(u);
+            else
+                break;
+        }
 
         vector<ui> br;
         br.reserve(br_C.size());
@@ -1160,6 +1160,7 @@ public:
             C.reset(u);
             br.push_back(u);
         }
+        cout<<br.size()<<" ";
         sort(br.begin(), br.end(), [&](ui a, ui b)
              {return peel_seq[a] > peel_seq[b]; });
         return br;
