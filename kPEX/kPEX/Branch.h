@@ -132,8 +132,10 @@ public:
         generate_sub_branches_add_first(S, C, pivot);
 #else
         // partition based branching
+        ui sz = C.size();
+
         auto br_C = branching_set_part(S, C);
-        // cout<<br_C.size()<<" ";
+        if(br_C.size()+C.size()!=sz) cout<<br_C.size()<<" d";
         for (int u : br_C)
         {
             auto newS = S, newC=C;
@@ -1158,13 +1160,12 @@ public:
 
         vector<ui> br;
         br.reserve(br_C.size());
-        ui sz = br_C.size();
         for (auto u : br_C)
         {
             C.reset(u);
             br.push_back(u);
         }
-        if(br.size()!=sz) cout<<"Eroor";
+
         sort(br.begin(), br.end(), [&](ui a, ui b)
              {return peel_seq[a] > peel_seq[b]; });
         return br;
