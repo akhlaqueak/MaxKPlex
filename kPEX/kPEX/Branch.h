@@ -133,7 +133,7 @@ public:
 #else
         // partition based branching
         auto br_C = branching_set_part(S, C);
-        cout<<br_C.size()<<" ";
+        // cout<<br_C.size()<<" ";
         for (int u : br_C)
         {
             auto newS = S, newC=C;
