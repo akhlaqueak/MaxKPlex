@@ -1119,7 +1119,6 @@ public:
     {
         Timer part_timer;
         // auto &loss = deg;
-        auto &Pi_max = array_n;
         auto br_C = C;
         ui beta = lb - S.size();
 
@@ -1139,7 +1138,10 @@ public:
             }
             if (Pi_u == -1 or cost_u > beta)
                 break;
-            br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
+            for(int u: br_C)
+                if(non_A[Pi_u][u]) br_C.clear(u);
+            
+            // br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
             beta -= cost_u;
 
             if (beta == 0)
