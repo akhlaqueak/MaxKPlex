@@ -1124,6 +1124,7 @@ public:
 
         while (true)
         {
+        cout<<br_C.size()<<endl;
             ui Pi_u = -1, cost_u, dise_u;
             for (int u : S)
             {
@@ -1159,7 +1160,6 @@ public:
             C.reset(u);
             br.push_back(u);
         }
-        cout<<br.size()<<endl;
         sort(br.begin(), br.end(), [&](ui a, ui b)
              { return peel_seq[a] > peel_seq[b]; });
         return br;
