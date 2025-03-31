@@ -1124,7 +1124,6 @@ public:
 
         while (true)
         {
-        cout<<beta<<endl;
             ui Pi_u = -1, cost_u, dise_u;
             for (int u : S)
             {
@@ -1136,6 +1135,7 @@ public:
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
                     dise_u = dise, Pi_u = u, cost_u = cost;
             }
+        cout<<cost_u<<endl;
             if (Pi_u == -1 or cost_u > beta)
                 break;
             br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
