@@ -1124,11 +1124,12 @@ public:
 
         while (true)
         {
-            ui Pi_u = -1, cost_u, dise_u;
+            ui Pi_u = -1, cost_u;
+            double dise_u;
             for (int u : S)
             {
                 if (loss_cnt[u] == paramK)
-                    continue; // boundary vertex does not have any non-neigh in C
+                    continue; // boundary vertex does not have nn_cnt=0
                 ui nn_cnt = br_C.intersect(non_A[u]);
                 if(nn_cnt==0) continue;
                 double cost = min(support(u), nn_cnt);
