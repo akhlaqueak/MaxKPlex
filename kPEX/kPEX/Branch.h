@@ -1121,7 +1121,7 @@ public:
         // auto &loss = deg;
         auto br_C = C;
         ui beta = lb - S.size();
-
+        cout<<beta<<" ";
         while (true)
         {
             ui Pi_u = -1, cost_u, dise_u;
@@ -1141,7 +1141,6 @@ public:
             for(int u: br_C)
                 if(non_A[Pi_u][u]) br_C.reset(u);
             
-            // br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
             beta -= cost_u;
 
             if (beta == 0)
