@@ -74,7 +74,6 @@ public:
     void bnb(Set &S, Set &C)
     {
         dfs_cnt++;
-
         // reduction rules
         Timer start_fast_reduce;
         bool S_is_plex, g_is_plex;
@@ -132,11 +131,10 @@ public:
         generate_sub_branches_add_first(S, C, pivot);
 #else
         // partition based branching
-        ui sz = C.size();
-        if(S.size()+C.size()<=lb) return;
-
         auto br_C = branching_set_part(S, C);
-        cout<<S.size()+C.size()<<" "<<br_C.size()<<".";
+        for (int u : br_C)
+            cout<<peel_seq[u]<<" ";
+        cout<<endl;
         for (int u : br_C)
         {
             auto newS = S, newC=C;
