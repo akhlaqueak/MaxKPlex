@@ -1130,12 +1130,12 @@ public:
                 if (loss_cnt[u] == paramK)
                     continue; // boundary vertex does not have any non-neigh in C
                 ui nn_cnt = br_C.intersect(non_A[u]);
+        cout<<nn_cnt<<endl;
                 double cost = min(support(u), nn_cnt);
                 double dise = nn_cnt / cost;
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
                     dise_u = dise, Pi_u = u, cost_u = cost;
             }
-        cout<<dise_u<<endl;
             if (Pi_u == -1 or cost_u > beta)
                 break;
             br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
