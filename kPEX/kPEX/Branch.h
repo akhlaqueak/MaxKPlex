@@ -936,7 +936,7 @@ public:
         ui seq = 0;
         auto &deg = array_n; // we reuse the array to decrease time cost
         for (int u : P)
-            deg[u] = A[u].intersect(P);
+            deg[u] = A[u].size();
         while (!P.empty())
         {
             int min_u = -1;
