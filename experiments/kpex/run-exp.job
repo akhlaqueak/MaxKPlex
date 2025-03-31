@@ -19,12 +19,12 @@ run_jobs() {
             for k in $krange; do
                 outfile=$fn-$sol-$k.out
 
+                        srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol ~/graphs/kPEX/$fn.bin $k >>$outfile 2>&1 &
                         # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
-                        if [[ $sol =~ "UMKP" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
-                            srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol ~/graphs/kPEX/$fn.bin $k $2 >>$outfile 2>&1 &
-                        else
-                            srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g ~/graphs/kPEX/$fn.bin -a exact -k $k -c 3 >>$outfile 2>&1 &
-                        fi
+                        # if [[ $sol =~ "UMKP" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
+                        # else
+                        #     srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g ~/graphs/kPEX/$fn.bin -a exact -k $k -c 3 >>$outfile 2>&1 &
+                        # fi
 
             done
         done
@@ -207,7 +207,8 @@ wikipedia-link-en13
 wikipedia-link-en
 '
 
-solutions='UMKP UMKP-kPEX Maple-kPEX'
+# solutions='UMKP UMKP-kPEX Maple-kPEX'
+solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
 krange='2 3 4 5 10 15 20'
 run_jobs 01:00:00
 get_results
