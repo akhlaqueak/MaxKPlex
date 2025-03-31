@@ -430,8 +430,8 @@ public:
         {
             if (non_A[root_u][u] and(
                     loss_cnt[u]+1 == paramK or
-                    loss_cnt[root_u]+1==paramK or
-                    deg[u]+paramK<=lb+1 
+                    loss_cnt[root_u]+1 == paramK or
+                    deg[u]+paramK <= lb+1 
                 )
             ) 
             {
@@ -444,11 +444,11 @@ public:
         auto bset= C;
         bset &= non_A[sel];
         for(int u:bset){
-            if(u!=sel) B.push_back(u);
+            B.push_back(u);
         }
 		auto comp=[&](int a,int b){return deg[a]>deg[b];};
         sort(B.begin(), B.end(), comp);
-        B.push_back(sel);
+        // B.push_back(sel);
     }
 
 
