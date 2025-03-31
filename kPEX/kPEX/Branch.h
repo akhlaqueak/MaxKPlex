@@ -1121,7 +1121,7 @@ public:
         // auto &loss = deg;
         auto br_C = C;
         ui beta = lb - S.size();
-        cout<<beta<<" ";
+
         while (true)
         {
             ui Pi_u = -1, cost_u, dise_u;
@@ -1164,7 +1164,7 @@ public:
         }
 
         sort(br.begin(), br.end(), [&](ui a, ui b)
-             {return peel_seq[a] > peel_seq[b]; });
+             {return deg[a] > deg[b]; });
         return br;
     }
     /**
