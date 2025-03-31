@@ -1163,7 +1163,7 @@ public:
         }
 
         sort(br.begin(), br.end(), [&](ui a, ui b)
-             {return peel_seq[a] < peel_seq[b]; });
+             {return peel_seq[a] > peel_seq[b]; });
         return br;
     }
     /**
