@@ -131,9 +131,10 @@ public:
         B.pop_back();
         generate_sub_branches_add_first(S, C, pivot);
 #else
-// partition based branching
+        // partition based branching
         auto br_C = branching_set_part(S, C);
-        for(int u: br_C){
+        for (int u : br_C)
+        {
             S.set(u);
             v_just_add = u;
             bnb(S, C);
@@ -937,17 +938,18 @@ public:
             deg[u] = A[u].intersect(P);
         while (!P.empty())
         {
-            int min_u=-1;
+            int min_u = -1;
             for (int u : P)
             {
-                if(min_u==-1 or deg[u]<deg[min_u])
-                    min_u=u;
+                if (min_u == -1 or deg[u] < deg[min_u])
+                    min_u = u;
             }
-            for(int v:P){
-                if(A[min_u][v])
+            for (int v : P)
+            {
+                if (A[min_u][v])
                     deg[v]--;
             }
-            peel_seq[min_u]=seq++;
+            peel_seq[min_u] = seq++;
             P.reset(min_u);
         }
     }
@@ -1117,12 +1119,12 @@ public:
         Timer part_timer;
         // auto &loss = deg;
         auto &Pi_max = array_n;
-        ui Pi_u = -1, cost_u, dise_u;
         auto br_C = C;
         ui beta = lb - S.size();
 
         while (true)
         {
+            ui Pi_u = -1, cost_u, dise_u;
             for (int u : S)
             {
                 if (loss_cnt[u] == paramK)
@@ -1152,13 +1154,14 @@ public:
 
         vector<ui> br;
         br.reserve(br_C.size());
-        for(auto u: br_C){
+        for (auto u : br_C)
+        {
             C.reset(u);
             br.push_back(u);
         }
-        
-        printf("%u, ", br.size());
-        sort(br.begin(), br.end(), [&](ui a, ui b){return peel_seq[a]>peel_seq[b];});
+
+        sort(br.begin(), br.end(), [&](ui a, ui b)
+             { return peel_seq[a] > peel_seq[b]; });
         return br;
     }
     /**
