@@ -73,7 +73,6 @@ public:
      */
     void bnb(Set &S, Set &C)
     {
-        if(S.size()+C.size()<=lb) return;
         dfs_cnt++;
 
         // reduction rules
@@ -134,6 +133,7 @@ public:
 #else
         // partition based branching
         ui sz = C.size();
+        if(S.size()+C.size()<=lb) return;
 
         auto br_C = branching_set_part(S, C);
         cout<<S.szie()+C.size()<<" "<<br_C.size()<<".";
