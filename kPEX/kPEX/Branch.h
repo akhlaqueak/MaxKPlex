@@ -5,7 +5,7 @@
 
 #ifdef enable_CTCP // the existing heuristic method Degen uses CTCP
 #include "2th-Reduction-CTCP.h"
-#else// use CF-CTCP
+#else // use CF-CTCP
 #include "2th-Reduction.h"
 #endif
 
@@ -13,12 +13,13 @@ class Branch
 {
     vector<int> B;
     int root_u;
-    bool add_first=false;
+    bool add_first = false;
+    vector<int> peel_seq;
+
 private:
     using Set = MyBitset;
     Graph_reduced &G_input;
     int lb;
-
 
     // info of the search tree
     int v_just_add;       // the pivot vertex that we just added into S
@@ -113,21 +114,35 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-#define BIN_BRANCHING 
+// #define BIN_BRANCHING
+// #define PIVOT_BRANCHING
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
             return;
         generate_sub_branches(S, C, pivot);
-#else
-        if(C.empty()) return;
-        if(B.empty() or S.test(B.back()) or (not C.test(B.back())))
-            select_branching_set(C);
+#elif defined(PIVOT_BRANCHING)
+        if (C.empty())
+            return;
+        if (B.empty() or S.test(B.back()) or (not C.test(B.back())))
+            branching_set_pivot(C);
 
         pivot = B.back();
         B.pop_back();
         generate_sub_branches_add_first(S, C, pivot);
-#endif   
+#else
+// partition based branching
+        auto br_C = branching_set_part(S, C);
+        for(int u: br_C){
+            S.set(u);
+            v_just_add = u;
+            bnb(S, C);
+            
+            S.reset(u);
+            C.set(u);
+        }
+
+#endif
     }
 
     /**
@@ -250,7 +265,6 @@ public:
         }
         part_PI_time += part_timer.get_time();
 
-
         // now copy_C = Pi_0
         auto &Pi_0 = copy_C;
 #ifndef SeqRB
@@ -281,7 +295,7 @@ public:
                 }
             }
         }
-// #endif
+        // #endif
         // while (copy_S.size())
         // {
         //     int sel = -1, size = 0, allow = 0;
@@ -313,7 +327,7 @@ public:
         // ret = ub + Pi_0.size();
         // if (ret <= lb)
         //     return ret;
-// #ifndef SeqRB
+        // #ifndef SeqRB
         // RR1
         // lookahead: for u in C, if UB(S+u, C-u) <= lb, then remove u
         {
@@ -396,9 +410,9 @@ public:
     inline int get_UB(Set &S, Set &C)
     {
         AltRB_cnt++;
-        // int ub = bound_and_reduce(S, C); // AltRB
-        // if (ub <= lb)
-        //     return ub;
+        int ub = bound_and_reduce(S, C); // AltRB
+        if (ub <= lb)
+            return ub;
         return only_part_UB(S, C); // just bounding without AltRB
     }
 
@@ -418,39 +432,37 @@ public:
         return sel;
     }
 
-
     /**
      * @return the vertex with minimum degree
      */
-    void select_branching_set(Set &C)
+    void branching_set_pivot(Set &C)
     {
         B.clear();
         int sel = -1;
         for (int u : C)
         {
-            if (non_A[root_u][u] and(
-                    loss_cnt[u]+1 == paramK or
-                    loss_cnt[root_u]+1 == paramK or
-                    deg[u]+paramK <= lb+1 
-                )
-            ) 
+            if (non_A[root_u][u] and (loss_cnt[u] + 1 == paramK or
+                                      loss_cnt[root_u] + 1 == paramK or
+                                      deg[u] + paramK <= lb + 1))
             {
-                B.push_back(u); return;
+                B.push_back(u);
+                return;
             }
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
         }
 
-        auto bset= C;
+        auto bset = C;
         bset &= non_A[sel];
-        for(int u:bset){
+        for (int u : bset)
+        {
             B.push_back(u);
         }
-		auto comp=[&](int a,int b){return deg[a]>deg[b];};
+        auto comp = [&](int a, int b)
+        { return deg[a] > deg[b]; };
         sort(B.begin(), B.end(), comp);
         // B.push_back(sel);
     }
-
 
     /**
      * @brief print some logs
@@ -503,6 +515,8 @@ public:
         one_loss_vertices_in_C = Set(g.size());
         one_loss_non_neighbor_cnt.resize(g.size());
         que.resize(g.size());
+        peel_seq.resize(g.size());
+        compute_peel_sequence(g.size());
     }
     /**
      * @return the index of v in the subgraph
@@ -874,7 +888,7 @@ public:
      */
     void generate_sub_branches(Set &S, Set &C, int pivot)
     {
-        add_first=false;
+        add_first = false;
         {
             auto new_S = S, new_C = C;
             // branch 1: remove pivot
@@ -892,31 +906,50 @@ public:
         }
     }
 
-
-        /**
+    /**
      * @brief generate two sub-branches: one includes pivot and the other excludes pivot
      */
     void generate_sub_branches_add_first(Set &S, Set &C, int pivot)
     {
-        add_first=true;
+        add_first = true;
         // branch 2: include pivot
         auto new_S = S, new_C = C;
         new_S.set(pivot);
         new_C.reset(pivot);
         v_just_add = pivot;
         bnb(new_S, new_C);
-    
+
         B.clear();
-    
+
         // branch 1: remove pivot
         C.reset(pivot);
         v_just_add = -1;
         bnb(S, C);
-        
     }
 
-
-
+    void compute_peel_sequence(ui sz)
+    {
+        Set P(sz);
+        P.flip();
+        auto &deg = array_n; // we reuse the array to decrease time cost
+        for (int u : P)
+            deg[u] = A[u].intersect(P);
+        while (!P.empty())
+        {
+            int min_u=-1;
+            for (int u : P)
+            {
+                if(min_u==-1 or deg[u]<deg[min_u])
+                    min_u=u;
+            }
+            for(int v:P){
+                if(A[min_u][v])
+                    deg[v]--;
+            }
+            peel_seq[min_u]=cnt++;
+            P.reset(min_u);
+        }
+    }
     /**
      * @brief reduce P to (cnt-k)-core, namely P need to provide at least cnt vertices
      */
@@ -1070,6 +1103,59 @@ public:
                 return;
             }
         }
+    }
+    ui support(ui u)
+    {
+        return paramK - loss_cnt[u];
+    }
+    /**
+     * @brief partition-based branching set
+     */
+    Set branching_set_part(Set &S, Set &C)
+    {
+        Timer part_timer;
+        // auto &loss = deg;
+        auto &Pi_max = array_n;
+        ui Pi_u = -1, cost_u, dise_u;
+        auto br_C = C;
+        ui beta = lb - S.size();
+
+        while (true)
+        {
+            for (int u : S)
+            {
+                if (loss_cnt[u] == paramK)
+                    continue; // boundary vertex does not have any non-neigh in C
+                ui nn_cnt = br_C.intersect(non_A[u]);
+                double cost = min(support(u), nn_cnt);
+                double dise = nn_cnt / cost;
+                if (Pi_u == -1 || (dise > dise_u and cost <= beta))
+                    dise_u = dise, Pi_u = u, cost_u = cost;
+            }
+            if (Pi_u == -1 or cost_u > beta)
+                break;
+            br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
+            beta -= cost_u;
+
+            if (beta == 0)
+                break;
+        }
+
+        for (auto u : br_C)
+        {
+            if (beta-- > 0)
+                br_C.reset(u);
+            else
+                C.reset(u);
+        }
+
+        vector<ui> br;
+        br.reserve(br_C.size());
+        for(auto u: br_C)
+            br.push_back(u);
+        
+        sort(br.begin(), br.end(), [&](ui a, ui b){return peel_sq[a]>peel_seq[b];});
+        return br;
     }
     /**
      * @brief partition ub without reduction rules
