@@ -1159,7 +1159,7 @@ public:
             C.reset(u);
             br.push_back(u);
         }
-
+        cout<<br.size()<<endl;
         sort(br.begin(), br.end(), [&](ui a, ui b)
              { return peel_seq[a] > peel_seq[b]; });
         return br;
