@@ -1132,6 +1132,7 @@ public:
                 ui nn_cnt = br_C.intersect(non_A[u]);
                 if(nn_cnt==0) continue;
                 double cost = min(support(u), nn_cnt);
+                Pi_u=u; cost_u=cost; break;
                 double dise = nn_cnt / cost;
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
                     dise_u = dise, Pi_u = u, cost_u = cost;
@@ -1160,7 +1161,7 @@ public:
             C.reset(u);
             br.push_back(u);
         }
-        cout<<br.size()<<" ";
+
         sort(br.begin(), br.end(), [&](ui a, ui b)
              {return peel_seq[a] > peel_seq[b]; });
         return br;
