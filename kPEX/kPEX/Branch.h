@@ -8,7 +8,9 @@
 #else // use CF-CTCP
 #include "2th-Reduction.h"
 #endif
-
+#define BIN_BRANCHING
+// #define PIVOT_BRANCHING
+// #define S_BRANCHING
 class Branch
 {
     vector<int> B;
@@ -113,8 +115,7 @@ public:
 
         // select pivot to generate 2 branches
         int pivot = -1;
-// #define BIN_BRANCHING
-// #define PIVOT_BRANCHING
+
 #ifdef BIN_BRANCHING
         pivot = select_pivot_vertex_with_min_degree(C);
         if (pivot == -1)
@@ -129,7 +130,7 @@ public:
         pivot = B.back();
         B.pop_back();
         generate_sub_branches_add_first(S, C, pivot);
-#else
+#elif defined(S_BRANCHING)
         // partition based branching
         auto br_C = branching_set_part(S, C);
         
@@ -142,7 +143,6 @@ public:
 
             C.set(u);
         }
-
 #endif
     }
 
