@@ -73,6 +73,7 @@ public:
      */
     void bnb(Set &S, Set &C)
     {
+        if(S.size()+C.size()<=lb) return;
         dfs_cnt++;
 
         // reduction rules
