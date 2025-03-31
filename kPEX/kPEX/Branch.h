@@ -1135,7 +1135,7 @@ public:
                 if (Pi_u == -1 || (dise > dise_u and cost <= beta))
                     dise_u = dise, Pi_u = u, cost_u = cost;
             }
-        cout<<cost_u<<endl;
+        cout<<dise_u<<endl;
             if (Pi_u == -1 or cost_u > beta)
                 break;
             br_C &= A[Pi_u]; // remove non-neighbor of Pi_u from C
