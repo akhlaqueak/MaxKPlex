@@ -1164,7 +1164,7 @@ public:
         }
 
         sort(br.begin(), br.end(), [&](ui a, ui b)
-             {return deg[a] < deg[b]; });
+             {return peel_seq[a] > peel_seq[b]; });
         return br;
     }
     /**
