@@ -133,6 +133,7 @@ public:
 #else
 // partition based branching
         auto br_C = branching_set_part(S, C);
+        printf("%u, ", br_C.size());
         for(int u: br_C){
             S.set(u);
             v_just_add = u;
