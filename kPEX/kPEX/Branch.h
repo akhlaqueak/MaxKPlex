@@ -97,7 +97,7 @@ public:
             return;
         }
 
-        // if (paramK > 15)
+        if (paramK > 15)
         {
             if (core_reduction_for_g(S, C))
             {
