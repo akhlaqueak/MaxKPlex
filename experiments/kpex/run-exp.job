@@ -37,7 +37,7 @@ run_jobs() {
         echo -en "," >>$result
         WORD_COUNT=$(echo "$solutions" | wc -w)
         for k in $krange; do
-            echo -en "**k=$k**," >>$result
+            echo -en "*k=$k*," >>$result
             for ((i = 1; i < $WORD_COUNT; i++)); do
                 echo -en "," >>$result
             done

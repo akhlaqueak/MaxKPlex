@@ -446,20 +446,19 @@ public:
                                       loss_cnt[root_u] + 1 == paramK or
                                       deg[u] + paramK <= lb + 1))
             {
-                // B.push_back(u);
-                // return;
+                B.push_back(u);
+                return;
             }
-            if (sel == -1 || deg[u] < deg[sel])
+            if (sel == -1 || deg[u] < deg[sel] or (deg[u]==deg[sel] and loss_cnt[u]>loss_cnt[sel]))
                 sel = u;
         }
 
         auto bset = C;
         bset &= non_A[sel];
+        bset.reset(sel);
         for (int u : bset)
-        {
-            if(u!=sel)
             B.push_back(u);
-        }
+
         auto comp = [&](int a, int b)
         { return deg[a] > deg[b]; };
         sort(B.begin(), B.end(), comp);
