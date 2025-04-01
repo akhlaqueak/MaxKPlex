@@ -11,6 +11,7 @@
 // #define BIN_BRANCHING
 #define PIVOT_BRANCHING
 // #define S_BRANCHING
+
 class Branch
 {
     vector<int> B;
@@ -627,6 +628,7 @@ public:
             assert(solution.size() == lb);
             printf("Find a larger plex : %d\n", sz);
             fflush(stdout);
+            after_maxkp_time = get_system_time_microsecond();
         }
     }
     /**

@@ -11,6 +11,7 @@ string file_path;
 Graph g;
 set<ui> solution;
 double algorithm_start_time, total_heuris_time;
+double after_maxkp_time;
 double FastHeuris_time;
 double StrongHeuris_time;
 double strong_reduce_time;
@@ -39,6 +40,8 @@ void print_solution()
 void print_heuris_log()
 {
     puts("*************Heuristic result*************");
+    after_maxkp_time = get_system_time_microsecond();
+
     total_heuris_time = get_system_time_microsecond() - algorithm_start_time;
     printf("list triangles time: %.4lf s, strong reduce time: %.4lf s\n", list_triangle_time / 1e6, strong_reduce_time / 1e6);
     printf("total-heuristic-time= %.4lf s, FastHeuris-time= %.4lf s, StrongHeuris-time= %.4lf s\n",
@@ -52,7 +55,7 @@ void print_heuris_log()
         printf("The heuristic solution is the ground truth!\n");
         print_solution();
         puts("------------------{whole procedure: kPEX}---------------------");
-        printf("\n>>Heursitic MaxKPlex_Size: %u t_time: %.4lf null null null null\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+        printf("\n>>Heursitic MaxKPlex_Size: %u t_time: %.4lf after_maxkp_time: %.4lf null null\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6, (get_system_time_microsecond() - after_maxkp_time) / 1e6);
         // printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
         exit(0);
     }
@@ -244,7 +247,7 @@ int main(int argc, char *argv[])
 
     puts("------------------{whole procedure: kPEX}---------------------");
     // printf("ground truth= %u , kPEX time: %.4lf s\n\n", solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
-    printf("\n>>%s MaxKPlex_Size: %u t_time: %.4lf null null null null\n", argv[1], solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6);
+    printf("\n>>%s MaxKPlex_Size: %u t_time: %.4lf after_maxkp_time: %.4lf null null\n", argv[1], solution.size(), (get_system_time_microsecond() - algorithm_start_time) / 1e6, (get_system_time_microsecond() - after_maxkp_time) / 1e6);
 
     return 0;
 }

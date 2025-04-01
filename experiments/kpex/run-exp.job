@@ -174,7 +174,7 @@ p-hat700-1
 
 solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
 solutions='Maple-kPEX UMKP-AltRB UMKP'
-krange='7'
+krange='2 3 4 5'
 run_jobs 00:30:00
 get_results
 
