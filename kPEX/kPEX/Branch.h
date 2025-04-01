@@ -446,8 +446,8 @@ public:
                                       loss_cnt[root_u] + 1 == paramK or
                                       deg[u] + paramK <= lb + 1))
             {
-                B.push_back(u);
-                return;
+                // B.push_back(u);
+                // return;
             }
             if (sel == -1 || deg[u] < deg[sel])
                 sel = u;
