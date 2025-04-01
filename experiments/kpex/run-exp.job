@@ -41,7 +41,7 @@ run_jobs() {
             for ((i = 1; i < $WORD_COUNT; i++)); do
                 echo -en "," >>$result
             done
-            # echo -en "|," >>$result
+            echo -en "|," >>$result
         done
         echo >>$result
 
@@ -50,7 +50,7 @@ run_jobs() {
             for sol in $solutions; do
                 echo -en "${sol#*-}," >>$result
             done
-            # echo -en "|," >>$result
+            echo -en "|," >>$result
         done
         echo >>$result
 
@@ -84,7 +84,7 @@ run_jobs() {
                         echo $i | bc -l | xargs printf "%.1f," >>$result
                     fi
                 done
-                # echo -en "|," >>$result
+                echo -en "|," >>$result
             done
             echo >>$result
         done
@@ -103,7 +103,7 @@ run_jobs() {
             for ((i = 1; i < $WORD_COUNT; i++)); do
                 echo -en "," >>$result
             done
-            # echo -en "|," >>$result
+            echo -en "|," >>$result
         done
         echo >>$result
 
@@ -112,7 +112,7 @@ run_jobs() {
             for sol in $solutions; do
                 echo -en "${sol#*-}," >>$result
             done
-            # echo -en "|," >>$result
+            echo -en "|," >>$result
         done
         echo >>$result
 
@@ -142,7 +142,7 @@ run_jobs() {
                         echo $i | bc -l | xargs printf "%d," >>$result
                     fi
                 done
-                # echo -en "|," >>$result
+                echo -en "|," >>$result
             done
             echo >>$result
         done
@@ -207,7 +207,7 @@ wikipedia-link-en13
 wikipedia-link-en
 '
 
-# solutions='UMKP UMKP-kPEX Maple-kPEX'
+solutions='UMKP UMKP-kPEX Maple-kPEX'
 solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
 krange='2 3 4 5 10 15 20'
 run_jobs 01:00:00

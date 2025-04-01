@@ -9,8 +9,8 @@
 #include "2th-Reduction.h"
 #endif
 // #define BIN_BRANCHING
-// #define PIVOT_BRANCHING
-#define S_BRANCHING
+#define PIVOT_BRANCHING
+// #define S_BRANCHING
 class Branch
 {
     vector<int> B;
@@ -457,12 +457,13 @@ public:
         bset &= non_A[sel];
         for (int u : bset)
         {
+            if(u!=sel)
             B.push_back(u);
         }
         auto comp = [&](int a, int b)
         { return deg[a] > deg[b]; };
         sort(B.begin(), B.end(), comp);
-        // B.push_back(sel);
+        B.push_back(sel);
     }
 
     /**
