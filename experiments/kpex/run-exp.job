@@ -207,8 +207,8 @@ wikipedia-link-en13
 wikipedia-link-en
 '
 
-solutions='UMKP UMKP-AltRB Maple-kPEX'
-# solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
+solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
+solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
 krange='7'
 run_jobs 00:30:00
 get_results
