@@ -77,7 +77,7 @@ get_results() {
                 if [ "$i" == '9999999999' ]; then
                     echo -en '×,' >>$result
                 elif [ "$i" == "$m" ]; then
-                    if (($(echo "$i <= 2 * $secm" | bc -l))); then
+                    if (($(echo "$i <= 0.5 * $secm" | bc -l))); then
                         echo $i | bc -l | xargs printf "**%.1f," >>$result
                     else
                         echo $i | bc -l | xargs printf "*%.1f," >>$result
@@ -155,8 +155,6 @@ get_kpsize() {
 get_kpsize
 
 datasets='
-
-datasets
 tech-ip
 trackers
 web-ClueWeb09
@@ -175,9 +173,8 @@ p-hat700-1
 '
 
 solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
-solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
+solutions='Maple-kPEX UMKP-AltRB UMKP'
 krange='7'
-# krange='2 3 4 5 7 10 15 20'
 run_jobs 00:30:00
 get_results
 
