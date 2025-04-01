@@ -207,10 +207,10 @@ wikipedia-link-en13
 wikipedia-link-en
 '
 
-solutions='UMKP UMKP-kPEX Maple-kPEX'
-solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
-krange='2 3 4 5 10 15 20'
-run_jobs 01:00:00
+solutions='UMKP UMKP-AltRB Maple-kPEX'
+# solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
+krange='7'
+run_jobs 00:30:00
 get_results
 
 # get_cost
