@@ -11,7 +11,6 @@ string file_path;
 Graph g;
 set<ui> solution;
 double algorithm_start_time, total_heuris_time;
-double after_maxkp_time;
 double FastHeuris_time;
 double StrongHeuris_time;
 double strong_reduce_time;
