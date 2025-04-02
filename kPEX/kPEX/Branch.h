@@ -19,6 +19,7 @@ class Branch
     int root_u;
     bool add_first = false;
     vector<int> peel_seq;
+    vector<pii> vertices_in_C;
 
 private:
     using Set = MyBitset;
@@ -93,7 +94,7 @@ public:
         }
 
         // reducing methods from kPlexT
-        // reduce_kPlexT(S, C);
+        reduce_kPlexT(S, C);
 
         // AltRB: bounding & stronger reduction (our novel method)
         int ub = get_UB(S, C);
@@ -846,7 +847,7 @@ public:
         for (int u : S2)
             sup_S2 += paramK - loss_cnt[u];
         auto &non_neighbor_in_S2 = array_n;
-        vector<pii> vertices_in_C;
+        vertices_in_C.clear();
         vertices_in_C.reserve(C.size());
         for (int v : C)
         {
