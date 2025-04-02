@@ -175,8 +175,8 @@ p-hat700-1
 solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
 solutions='Maple-kPEX UMKP-AltRB UMKP'
 solutions='kPEX-after-maxkp'
-krange='2 3 4 5'
-run_jobs 00:10:00
+krange='2 3 4 5 7 10 15 20'
+run_jobs 00:30:00
 get_results
 
 # get_cost
@@ -212,13 +212,15 @@ done
 for ds in $datasets; do
     echo -en "$ds,"
     for k in $krange; do
-        op=$(grep $ds Ours-counts-$k.out)
+        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out)
         op=($op)
         if [ -z "${op}" ]; then
             echo -en ",,"
         else
-            echo -en "${op[6]},${op[8]},"
+            echo -en "${op[-1]},"
+            echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f," 
         fi
+        echo -en "|,"
     done
     echo
 done
