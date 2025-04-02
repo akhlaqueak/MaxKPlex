@@ -155,24 +155,24 @@ get_kpsize() {
 get_kpsize
 
 datasets='
-tech-ip
-trackers
-web-ClueWeb09
-web-wikipedia_link_it
-wikipedia-link-en13
-wikipedia-link-en
-soc-sinaweibo
-soc-themarker
-soc-orkut
-dbpedia-link
-ia-wiki-Talk-dir
 johnson8-4-4
 keller4
 p-hat500-1
 p-hat700-1
+soc-themarker
+tech-ip
+ia-wiki-Talk-dir
+web-wikipedia_link_it
+soc-orkut
+wikipedia-link-en
+dbpedia-link
+wikipedia-link-en13
+trackers
+soc-sinaweibo
+web-ClueWeb09
 '
 
-solutions='kPEX-Binary_Br kPEX-Pivot_Br kPEX-S_Br'
+solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
 solutions='Maple-kPEX UMKP-AltRB UMKP'
 solutions='kPEX-after-maxkp'
 krange='2 3 4 5 7 10 15 20'
@@ -195,6 +195,9 @@ for ds in $datasets; do
     echo
 done
 
+
+
+
 for ds in $datasets; do
     echo -en "$ds,"
     for k in $krange; do
@@ -209,18 +212,23 @@ for ds in $datasets; do
     echo
 done
 
+
+echo -en ","
+for k in $krange; do
+    echo -en "$k,"
+done
 for ds in $datasets; do
     echo -en "$ds,"
     for k in $krange; do
-        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out)
+        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out|tail -n1)
         op=($op)
         if [ -z "${op}" ]; then
-            echo -en ",,"
+            echo -en "×,"
         else
-            echo -en "${op[-1]},"
-            echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f," 
+            echo -en "${op[-7]},"
+            # echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f," 
         fi
-        echo -en "|,"
+        # echo -en "|,"
     done
     echo
 done
