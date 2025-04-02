@@ -103,14 +103,14 @@ public:
             return;
         }
 
-        if (paramK > 15)
+        // if (paramK > 15)
         {
             if (core_reduction_for_g(S, C))
             {
                 return;
             }
         }
-        if (paramK > 5)
+        // if (paramK > 5)
         {
             // look ahead: if UB(S+u, C-u)<=lb, then remove u; we select the vertex with min ub as pivot
             lookahead_vertex(S, C);
