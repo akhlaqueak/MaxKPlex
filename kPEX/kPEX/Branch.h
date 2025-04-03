@@ -94,7 +94,8 @@ public:
         }
 
         // reducing methods from kPlexT
-        reduce_kPlexT(S, C);
+        // if (paramK > 10)
+            reduce_kPlexT(S, C);
 
         // AltRB: bounding & stronger reduction (our novel method)
         int ub = get_UB(S, C);
@@ -829,8 +830,7 @@ public:
      */
     void reduce_kPlexT(Set &S, Set &C)
     {
-        if (paramK <= 10)
-            return;
+        
         if (S.size() <= 1)
             return;
         Timer t;
