@@ -426,6 +426,8 @@ public:
      */
     int select_pivot_vertex_with_min_degree(Set &C)
     {
+        for (int u: C)
+            deg[u] = S.size()-loss_cnt[u]+A[u].intersect(C);
         int sel = -1;
         for (int u : C)
         {
