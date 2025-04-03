@@ -9,8 +9,8 @@
 #include "2th-Reduction.h"
 #endif
 // #define BIN_BRANCHING
-// #define PIVOT_BRANCHING
-#define S_BRANCHING
+#define PIVOT_BRANCHING
+// #define S_BRANCHING
 double after_maxkp_time;
 
 class Branch
@@ -129,7 +129,7 @@ public:
         if (C.empty())
             return;
         if (B.empty() or S.test(B.back()) or (not C.test(B.back())))
-            branching_set_pivot(C);
+            branching_set_pivot(C, S);
 
         pivot = B.back();
         B.pop_back();
@@ -442,8 +442,11 @@ public:
      */
     void branching_set_pivot(Set &C)
     {
+        for (int u: C)
+            deg[u] = S.size()-loss_cnt[u]+A[u].intersect(C);
         B.clear();
         int sel = -1;
+
         for (int u : C)
         {
             if (non_A[root_u][u] and (loss_cnt[u] + 1 == paramK or
@@ -910,6 +913,7 @@ public:
             bnb(S, C);
         }
     }
+
 
     /**
      * @brief generate two sub-branches: one includes pivot and the other excludes pivot
