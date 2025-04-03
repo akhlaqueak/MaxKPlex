@@ -440,7 +440,7 @@ public:
     /**
      * @return the vertex with minimum degree
      */
-    void branching_set_pivot(Set &C)
+    void branching_set_pivot(Set &C, Set& S)
     {
         for (int u: C)
             deg[u] = S.size()-loss_cnt[u]+A[u].intersect(C);
