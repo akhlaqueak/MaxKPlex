@@ -1123,13 +1123,17 @@ public:
         Timer part_timer;
         // auto &loss = deg;
         auto br_C = C;
+        auto copy_S=S;
         ui beta = lb - S.size();
+
+        // for(int u:S)
+        //     loss_cnt[u] = non_A[u].intersect(S);
 
         while (true)
         {
             ui Pi_u = -1, cost_u;
             double dise_u;
-            for (int u : S)
+            for (int u : copy_S)
             {
                 if (loss_cnt[u] == paramK)
                     continue; // boundary vertex does not have nn_cnt=0
@@ -1144,7 +1148,7 @@ public:
                 break;
             for(int u: br_C)
                 if(non_A[Pi_u][u]) br_C.reset(u);
-            
+            copy_S.reset(Pi_u);
             beta -= cost_u;
 
             if (beta == 0)
