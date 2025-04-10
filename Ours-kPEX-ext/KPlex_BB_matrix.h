@@ -1159,7 +1159,7 @@ private:
 							if (!can_move_to_S(S_end, R_end, SR[i]))
 								Qv.push(SR[i]);
 
-						cout << UB_r() << "-" << std::flush;
+						cout << UB_r << "-" << std::flush;
 						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
 						break;
 					}
