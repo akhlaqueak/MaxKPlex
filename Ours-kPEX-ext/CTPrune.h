@@ -243,9 +243,9 @@ namespace CTPrune {
 				}
 
 				for(ui i = pstart[u];i < pend[u];i ++) exists[edges[i]] = 0;
+			}
 			truss_peeling(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
 			Qe_n = 0;
-			}
 		}
 	}
 
