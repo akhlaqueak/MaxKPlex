@@ -67,7 +67,7 @@ get_results() {
                     line+=('9999999999')
                 else
                     op=($op)
-                    line+=(${op[-5]})
+                    line+=(${op[-1]})
                 fi
             done
             m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
@@ -133,12 +133,12 @@ get_kpsize() {
                     line+=('9999999999')
                 else
                     op=($op)
-                    line+=(${op[-7]})
+                    line+=(${op[-3]})
                 fi
             done
             m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
             secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
-            echo ${line[@]}
+
             for i in "${line[@]}"; do
                 if [ $i == '9999999999' ]; then
                     echo -en '×,' >>$result
@@ -155,26 +155,55 @@ get_kpsize() {
 get_kpsize
 
 datasets='
+brock200-2
+dbpedia-link
+delicious-ui
+dimacs9-CTR
+dimacs9-USA
+hamming6-2
+ia-wiki-Talk
+ia-wiki-Talk-dir
 johnson8-4-4
 keller4
+MANN-a45
+MANN-a81
 p-hat500-1
 p-hat700-1
-soc-themarker
-tech-ip
-ia-wiki-Talk-dir
-web-wikipedia_link_it
+readme.html
+rec-epinions-user-ratings
+san200-0-9-1
+san200-0-9-2
+sc-ldoor
+sc-msdoor
+soc-bitcoin
+soc-buzznet
+soc-digg
+socfb-A-anon
+socfb-B-anon
+socfb-Duke14
+soc-gowalla
+soc-lastfm
+soc-livejournal-user-groups
+soc-LiveMocha
 soc-orkut
-wikipedia-link-en
-dbpedia-link
-wikipedia-link-en13
-trackers
+soc-pokec
 soc-sinaweibo
+soc-sinaweibo.mtx
+soc-themarker
+soc-youtube
+soc-youtube-snap
+sx-stackoverflow
+tech-ip
+trackers
 web-ClueWeb09
+web-wikipedia_link_it
+wikipedia-link-en13
+wikipedia-link-en
 '
 
 solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
 solutions='Maple-kPEX UMKP-AltRB UMKP-AltRB-RR2'
-solutions='UMKP UMKP-AltRB kPEX kPEX-Pivot_Br kPEX-S_Br'
+solutions='UMKP UMKP-AltRB kPEX-orig kPEX kPEX-Pivot_Br kPEX-S_Br'
 krange='2 3 4 5 7 10 15 20'
 # krange='2 3 4 5'
 run_jobs 00:30:00
