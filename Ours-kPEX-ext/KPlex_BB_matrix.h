@@ -1049,41 +1049,46 @@ private:
 		if (support(S_end, u) == 0)
 			return false;
 		char *t_matrix = matrix + u * n;
-		for (ui i = 0; i < R_end; i++)
+		for (ui i = 0; i < S_end; i++)
 		{
-			if (t_matrix[SR[i]])
-			{
-				if (increment_deg_in_S)
-					degree_in_S[SR[i]]++;
-				if (!degree_in_S[SR[i]] <= S_end)
-					cout << "Err";
-			}
-			else if (i < S_end && support(S_end, SR[i]) == 0)
+			if (!t_matrix[SR[i]] && support(S_end, SR[i]) == 0)
 				return false; // SR[i] is non-neighbor of u in S and it's saturated
 		}
 		return true;
 	}
-	bool RR2(ui &S_end, ui R_l, ui R_end, Partition side)
+
+	void move_to_S(ui &S_end, ui R_end, ui u)
 	{
+		char *t_matrix = matrix + u * n;
+		for (ui i = 0; i < R_end; i++)
+		{
+			if (t_matrix[SR[i]])
+				degree_in_S[SR[i]]++;
+		}
+		swap_pos(SR_rid[u], S_end++);
+	}
+	bool RR2(ui &S_end, ui R_l, ui &R_end, ui level, Partition side)
+	{
+		ui old_S_end = S_end;
+		bool ret = true;
+		ui Ra, Rb;
 		if (side == left)
-		{
-			for (ui i = S_end; i < R_l; i++)
-			{
-				S_end++;
-				if (!can_move_to_S(S_end, R_end, SR[i], true))
-					return false;
-			}
-		}
+			Ra = S_end, Rb = R_l;
 		else
+			Ra = R_l, Rb = R_end;
+		for (ui i = Ra; i < Rb; i++)
 		{
-			for (ui i = R_l; i < R_end; i++)
+			if (!can_move_to_S(S_end, R_end, SR[i]))
 			{
-				swap_pos(i, S_end++);
-				if (!can_move_to_S(S_end, R_end, SR[i], true))
-					return false;
+				ret = false;
+				break;
 			}
+			move_to_S(S_end, R_end, SR[i]);
 		}
-		return true;
+
+		if (ret)
+			ret = prune_R(S_end, R_end, level);
+		return ret;
 	}
 
 	bool prune_R(ui S_end, ui &R_end, ui level)
@@ -1141,17 +1146,13 @@ private:
 				// RR2 on C_l
 				if (UB_l == R_l - S_end)
 				{
-					ret = RR2(S_end, R_l, R_end, left);
-					if (ret)
-						ret = prune_R(S_end, R_end, level);
+					ret = RR2(S_end, R_l, R_end, level, left);
 					break;
 				}
 				// RR2 on C_r
 				else if (UB_r == R_end - R_l)
 				{
 					ret = RR2(S_end, R_l, R_end, right);
-					if (ret)
-						ret = prune_R(S_end, R_end, level);
 					break;
 				}
 			}
