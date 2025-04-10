@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -875,10 +875,10 @@ else{ // pivot based branching
 
 			if(UB_r+UB_l+S_end == best_solution_size+1){
 				// RR2 on C_l
-				if(UB_l==R_l-S_end){
-					ret=RR2(S_end, R_l, R_end, left);
-					break;
-				}
+				// if(UB_l==R_l-S_end){
+				// 	ret=RR2(S_end, R_l, R_end, left);
+				// 	break;
+				// }
 				// RR2 on C_r
 				else if (UB_r==R_end - R_l){
 					ret=RR2(S_end, R_l, R_end, right);
