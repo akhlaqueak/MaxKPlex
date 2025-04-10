@@ -319,7 +319,7 @@ namespace CTPrune {
 			printf("!!! Degree_threshold <= triangle_threshold + 1, please invoke truss_pruning\n");
 			return ;
 		}
-
+		Timer t;
 		ui *pend = new ui[n+1];
 		orient_graph(n, m, peel_sequence, pstart, pend, edges, rid);
 		ui *tri_cnt = new ui[m];
@@ -370,7 +370,7 @@ namespace CTPrune {
 		delete[] pend;
 		delete[] tri_cnt;
 
-		if(output) printf("*** After core_truss_copruning: n = %u, m = %lu (undirected)\n", n, m/2);
+		if(output) printf("*** After core_truss_copruning: n = %u, m = %lu (undirected), Time: %s (microseconds)\n", n, m/2, Utility::integer_to_string(t.elapsed()).c_str());
 	}
 
 	void check_core_pruning(ui n, ui m, ui degree_threshold, ui* pstart, ui *edges) {
