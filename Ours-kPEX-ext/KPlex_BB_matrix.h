@@ -1097,7 +1097,7 @@ private:
 			Qv.pop();
 		// prune vertices in remaining R
 		for (ui i = S_end; i < R_end; i++)
-			if (!can_move_to_S(S_end, R_end, SR[i], false))
+			if (!can_move_to_S(S_end, R_end, SR[i]))
 				Qv.push(SR[i]);
 		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
 	}
