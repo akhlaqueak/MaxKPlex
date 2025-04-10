@@ -875,16 +875,16 @@ else{ // pivot based branching
 
 			if(UB_r+UB_l+S_end == best_solution_size+1){
 				// RR2 on C_l
-					cout<<"."<<endl;
+					cout<<"."<< std::flush;;
 				if(UB_l==R_l-S_end){
 					ret=RR2(S_end, R_l, R_end, left);
-					cout<<"*"<<endl;
+					cout<<"*"<< std::flush;;
 					break;
 				}
 				else 
 				// RR2 on C_r
 				if (UB_r==R_end - R_l){
-					cout<<"^"<<endl;
+					cout<<UB_r<< std::flush;;
 					ret=RR2(S_end, R_l, R_end, right);
 					break;
 				}
