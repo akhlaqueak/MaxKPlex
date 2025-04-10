@@ -1143,7 +1143,7 @@ private:
 				{
 					ret = RR2(S_end, R_l, R_end, left);
 					if (ret)
-						ret = prune_R(S_end, R_end);
+						ret = prune_R(S_end, R_end, level);
 					break;
 				}
 				// RR2 on C_r
@@ -1151,7 +1151,7 @@ private:
 				{
 					ret = RR2(S_end, R_l, R_end, right);
 					if (ret)
-						ret = prune_R(S_end, R_end);
+						ret = prune_R(S_end, R_end, level);
 					break;
 				}
 			}
