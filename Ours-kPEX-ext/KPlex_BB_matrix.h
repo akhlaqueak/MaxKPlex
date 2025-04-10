@@ -1146,6 +1146,7 @@ private:
 								Qv.push(SR[i]);
 
 						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+						break; 
 					}
 			}
 		}
