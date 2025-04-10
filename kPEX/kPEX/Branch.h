@@ -8,9 +8,9 @@
 #else // use CF-CTCP
 #include "2th-Reduction.h"
 #endif
-// #define BIN_BRANCHING
+#define BIN_BRANCHING
 // #define PIVOT_BRANCHING
-#define S_BRANCHING
+// #define S_BRANCHING
 double after_maxkp_time;
 
 class Branch
@@ -94,7 +94,7 @@ public:
         }
 
         // reducing methods from kPlexT
-        // if (paramK > 10)
+        if (paramK > 10)
             reduce_kPlexT(S, C);
 
         // AltRB: bounding & stronger reduction (our novel method)
