@@ -1109,46 +1109,46 @@ private:
 				break;
 			}
 
-			if (UB_r + UB_l + S_end == best_solution_size + 1)
-			{
-				// RR2 on C_l
-				if (UB_l == R_l - S_end)
-				{
-					ret = RR2(S_end, R_l, R_end, left);
-					if (!ret)
-						break;
-					while (!Qv.empty())
-						Qv.pop();
-					// prune vertices in remaining R
-					for (ui i = S_end; i < R_end; i++)
-					{
-						if (!can_move_to_S(S_end, R_end, SR[i]))
-							Qv.push(SR[i]);
-					}
+			// if (UB_r + UB_l + S_end == best_solution_size + 1)
+			// {
+			// 	// RR2 on C_l
+			// 	if (UB_l == R_l - S_end)
+			// 	{
+			// 		ret = RR2(S_end, R_l, R_end, left);
+			// 		if (!ret)
+			// 			break;
+			// 		while (!Qv.empty())
+			// 			Qv.pop();
+			// 		// prune vertices in remaining R
+			// 		for (ui i = S_end; i < R_end; i++)
+			// 		{
+			// 			if (!can_move_to_S(S_end, R_end, SR[i]))
+			// 				Qv.push(SR[i]);
+			// 		}
 
-					ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+			// 		ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
 
-					break;
-				}
-				else
-					// RR2 on C_r
-					if (UB_r == R_end - R_l)
-					{
-						ret = RR2(S_end, R_l, R_end, right);
-						if (!ret)
-							break;
-						while (!Qv.empty())
-							Qv.pop();
-						// prune vertices in remaining R
-						for (ui i = S_end; i < R_end; i++)
-							if (!can_move_to_S(S_end, R_end, SR[i]))
-								Qv.push(SR[i]);
+			// 		break;
+			// 	}
+			// 	else
+			// 		// RR2 on C_r
+			// 		if (UB_r == R_end - R_l)
+			// 		{
+			// 			ret = RR2(S_end, R_l, R_end, right);
+			// 			if (!ret)
+			// 				break;
+			// 			while (!Qv.empty())
+			// 				Qv.pop();
+			// 			// prune vertices in remaining R
+			// 			for (ui i = S_end; i < R_end; i++)
+			// 				if (!can_move_to_S(S_end, R_end, SR[i]))
+			// 					Qv.push(SR[i]);
 
-						cout << Qv.size() << "-" << std::flush;
-						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
-						break; 
-					}
-			}
+			// 			cout << Qv.size() << "-" << std::flush;
+			// 			ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
+			// 			break; 
+			// 		}
+			// }
 		}
 		// restoring S
 		for (ui i = 0; i < old_S_end; i++)
