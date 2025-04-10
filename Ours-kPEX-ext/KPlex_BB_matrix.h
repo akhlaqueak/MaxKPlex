@@ -465,6 +465,21 @@ private:
 			else
 				n_edges += degree_in_S[SR[i]];
 		}
+
+		for (ui i = 0; i < best_solution_size; i++)
+		{
+			if (forward_sol)
+			{
+				if (degree[SR[i]] + K < best_solution_size)
+					std::cout << degree[SR[i]] + K << " E: ";
+			}
+			else
+			{
+				if (degree_in_S[SR[i]] + K < best_solution_size)
+					std::cout << degree_in_S[SR[i]] + K << " E: ";
+			}
+		}
+
 		forward_sol = false;
 		nmkp++;
 		printf("!!! BB_Search found a kplex of size: %u, n_edges: %u \n", size, n_edges);
@@ -485,9 +500,6 @@ private:
 			for (ui i = 0; i < best_solution_size; i++)
 				best_solution[i] = SR[i];
 			best_n_edges = n_edges;
-		}
-		for(ui i = 0;i < best_solution_size;i ++) {
-			if(degree_in_S[SR[i]]+K<best_solution_size) std::cout<<degree_in_S[SR[i]]+K<<" E: ";
 		}
 	}
 
@@ -1146,7 +1158,7 @@ private:
 
 			// 			cout << Qv.size() << "-" << std::flush;
 			// 			ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
-			// 			break; 
+			// 			break;
 			// 		}
 			// }
 		}
