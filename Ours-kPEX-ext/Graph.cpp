@@ -394,7 +394,7 @@ void Graph::search() {
 				kplex[i] = out_mapping[kplex[i]];
 			}
 		}
-	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f color: %f part: %d\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6, bounding.ticktock(), 0);
+	printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f\n", dir.substr(dir.find_last_of("/")+1).c_str(), kplex.size(), t.elapsed()/1e6);
 
 		delete kplex_solver;
 		delete linear_heap;
