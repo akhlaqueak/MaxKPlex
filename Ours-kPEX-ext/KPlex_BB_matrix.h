@@ -1137,7 +1137,7 @@ private:
 					// prune vertices in remaining R
 					for (ui i = S_end; i < R_end; i++)
 					{
-						if (!can_move_to_S(S_end, R_end, SR[i]))
+						if (!can_move_to_S(S_end, R_end, SR[i], false))
 							Qv.push(SR[i]);
 					}
 
@@ -1156,11 +1156,11 @@ private:
 							Qv.pop();
 						// prune vertices in remaining R
 						for (ui i = S_end; i < R_end; i++)
-							if (!can_move_to_S(S_end, R_end, SR[i]))
+							if (!can_move_to_S(S_end, R_end, SR[i], false))
 								Qv.push(SR[i]);
 
 						cout << UB_r << "-" << std::flush;
-						remove_vertices_and_edges_with_prune(S_end, R_end, level);
+						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
 						break;
 					}
 			}
