@@ -467,19 +467,19 @@ private:
 		}
 
 		// verification of kplex
-		for (ui i = 0; i < best_solution_size; i++)
-		{
-			if (forward_sol)
-			{
-				if (degree[SR[i]] + K < best_solution_size)
-					std::cout << degree[SR[i]] + K << " E: ";
-			}
-			else
-			{
-				if (degree_in_S[SR[i]] + K < best_solution_size)
-					std::cout << degree_in_S[SR[i]] + K << " E: ";
-			}
-		}
+		// for (ui i = 0; i < best_solution_size; i++)
+		// {
+		// 	if (forward_sol)
+		// 	{
+		// 		if (degree[SR[i]] + K < best_solution_size)
+		// 			std::cout << degree[SR[i]] + K << " E: ";
+		// 	}
+		// 	else
+		// 	{
+		// 		if (degree_in_S[SR[i]] + K < best_solution_size)
+		// 			std::cout << degree_in_S[SR[i]] + K << " E: ";
+		// 	}
+		// }
 
 		forward_sol = false;
 		nmkp++;
@@ -1044,15 +1044,17 @@ private:
 		}
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
-	bool can_move_to_S(ui S_end, ui R_end, ui u)
+	bool can_move_to_S(ui S_end, ui R_end, ui u, bool increment_deg_in_S=false)
 	{
 		if (support(S_end, u) == 0)
 			return false;
 		char *t_matrix = matrix + u * n;
 		for (ui i = 0; i < R_end; i++)
 		{
-			if (t_matrix[SR[i]])
+			if (t_matrix[SR[i]]){
+				if(increment_deg_in_S)
 				degree_in_S[SR[i]]++;
+			}
 			else if (i < S_end && support(S_end, SR[i]) == 0)
 				return false; // SR[i] is non-neighbor of u in S and it's saturated
 		}
@@ -1064,7 +1066,7 @@ private:
 		{
 			for (ui i = S_end; i < R_l; i++)
 			{
-				if (can_move_to_S(S_end, R_end, SR[i]))
+				if (can_move_to_S(S_end, R_end, SR[i], true))
 					S_end++;
 				else
 					return false;
@@ -1074,7 +1076,7 @@ private:
 		{
 			for (ui i = R_l; i < R_end; i++)
 			{
-				if (can_move_to_S(S_end, R_end, SR[i]))
+				if (can_move_to_S(S_end, R_end, SR[i], true))
 					swap_pos(i, S_end++);
 				else
 					return false;
