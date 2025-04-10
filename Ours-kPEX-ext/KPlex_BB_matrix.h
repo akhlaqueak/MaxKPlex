@@ -375,7 +375,7 @@ private:
 	}
 
 	void store_solution(ui size) {
-
+		if(!is_kplex(size)) return;
 		if(size <= best_solution_size) {
 			printf("!!! the solution to store is no larger than the current best solution!");
 			return ;
@@ -875,7 +875,6 @@ else{ // pivot based branching
 
 			if(UB_r+UB_l+S_end == best_solution_size+1){
 				// RR2 on C_l
-					cout<<"."<< std::flush;;
 				if(UB_l==R_l-S_end){
 					ret=RR2(S_end, R_l, R_end, left);
 					cout<<UB_l<<"*"<< std::flush;;
