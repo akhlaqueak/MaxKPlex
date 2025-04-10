@@ -879,8 +879,9 @@ else{ // pivot based branching
 				// 	ret=RR2(S_end, R_l, R_end, left);
 				// 	break;
 				// }
+				// else 
 				// RR2 on C_r
-				else if (UB_r==R_end - R_l){
+				if (UB_r==R_end - R_l){
 					ret=RR2(S_end, R_l, R_end, right);
 					break;
 				}
