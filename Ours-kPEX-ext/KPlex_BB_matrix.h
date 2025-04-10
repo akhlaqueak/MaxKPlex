@@ -232,7 +232,7 @@ public:
 		ui S_end=0;
 		if(must_include_0)
 			move_to_S(S_end, R_end, 0);
-		for(ui i=n-1; i>=0; i--){
+		for(ui i=n-1; i>0; i--){
 			ui u=peel_sequence[i];
 			if(SR_rid[u]>=n or u==0) continue;
 			if(can_move_to_S(S_end, R_end, u))
