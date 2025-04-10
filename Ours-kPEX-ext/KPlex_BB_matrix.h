@@ -239,6 +239,7 @@ public:
 			if(can_move_to_S(S_end, R_end, u))
 			move_to_S(S_end, R_end, u);
 		}
+		cout<<"S_end"<<" ";
 		if(S_end > best_solution_size) store_solution(S_end);
 		return S_end;
 	}
