@@ -230,6 +230,7 @@ public:
 	}
 	ui create_initial_kplex(ui R_end, bool must_include_0){
 		ui S_end=0;
+		fill(degree_in_S, degree_in_S+n, 0);
 		if(must_include_0)
 			move_to_S(S_end, R_end, 0);
 		for(ui i=n-1; i>0; i--){
