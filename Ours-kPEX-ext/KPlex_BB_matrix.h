@@ -878,7 +878,7 @@ else{ // pivot based branching
 					cout<<"."<< std::flush;;
 				if(UB_l==R_l-S_end){
 					ret=RR2(S_end, R_l, R_end, left);
-					cout<<"*"<< std::flush;;
+					cout<<UB_l<< std::flush;;
 					break;
 				}
 				else 
