@@ -113,7 +113,7 @@ void Graph::read() {
 	fread(edges, sizeof(int), m, f);
 
 	pstart[0] = 0;
-	partial_sum(degree, degree+n, pstart+1);
+	std::partial_sum(degree, degree+n, pstart+1);
 	// for(ui i = 0;i < n;i ++) {
 		// if(degree[i] > 0) {
 		// 	fread(edges+pstart[i], sizeof(int), degree[i], f);
