@@ -826,7 +826,7 @@ else{ // pivot based branching
 				char *t_matrix = matrix + u*n;
 				for(ui i = 0;i < R_end;i ++) {
 					if(t_matrix[SR[i]]) degree_in_S[SR[i]]++;
-					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u and it's saturated
+					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u in S and it's saturated
 				}
 				S_end++;
 			}
@@ -838,7 +838,7 @@ else{ // pivot based branching
 				char *t_matrix = matrix + u*n;
 				for(ui i = 0;i < R_end;i ++) {
 					if(t_matrix[SR[i]]) degree_in_S[SR[i]]++;
-					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u and it's saturated
+					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u in S and it's saturated
 				}
 				swap_pos(i, S_end);
 				S_end++;
@@ -879,12 +879,12 @@ else{ // pivot based branching
 					ret=RR2(S_end, R_l, R_end, left);
 					break;
 				}
-				// else 
+				else 
 				// RR2 on C_r
-				// if (UB_r==R_end - R_l){
-				// 	ret=RR2(S_end, R_l, R_end, right);
-				// 	break;
-				// }
+				if (UB_r==R_end - R_l){
+					ret=RR2(S_end, R_l, R_end, right);
+					break;
+				}
 			}
 
 		}
