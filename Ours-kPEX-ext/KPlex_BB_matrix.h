@@ -1905,11 +1905,11 @@ else{ // pivot based branching
             for (ui i = S_l; i < S_end; i++)
             {
                 ui u = SR[i];
-                if (psz[u] == 0)
+                if (psz[u] == 0 or support(S_end, u)==0)
                     continue;
                 // double cost = min(support(S_end, u), psz[u]);
                 // double dise = psz[u] / min(support(S_end, u), psz[u]);
-                double dise = psz[u] / support(S_end, u);
+                double dise = (double) psz[u] / support(S_end, u);
                 if (dise > maxdise)
                     maxpi = u, maxdise = dise;
             }
