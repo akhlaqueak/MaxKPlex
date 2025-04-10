@@ -1044,16 +1044,17 @@ private:
 		}
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
-	bool can_move_to_S(ui S_end, ui R_end, ui u, bool increment_deg_in_S=false)
+	bool can_move_to_S(ui S_end, ui R_end, ui u, bool increment_deg_in_S = false)
 	{
 		if (support(S_end, u) == 0)
 			return false;
 		char *t_matrix = matrix + u * n;
 		for (ui i = 0; i < R_end; i++)
 		{
-			if (t_matrix[SR[i]]){
-				if(increment_deg_in_S)
-				degree_in_S[SR[i]]++;
+			if (t_matrix[SR[i]])
+			{
+				if (increment_deg_in_S)
+					degree_in_S[SR[i]]++;
 			}
 			else if (i < S_end && support(S_end, SR[i]) == 0)
 				return false; // SR[i] is non-neighbor of u in S and it's saturated
@@ -1083,6 +1084,17 @@ private:
 			}
 		}
 		return true;
+	}
+
+	bool prune_R(ui S_end, ui &R_end, ui level)
+	{
+		while (!Qv.empty())
+			Qv.pop();
+		// prune vertices in remaining R
+		for (ui i = S_end; i < R_end; i++)
+			if (!can_move_to_S(S_end, R_end, SR[i], false))
+				Qv.push(SR[i]);
+		return remove_vertices_and_edges_with_prune(S_end, R_end, level);
 	}
 
 	bool alt_RB(ui &S_end, ui &R_end, ui level)
@@ -1130,39 +1142,18 @@ private:
 				if (UB_l == R_l - S_end)
 				{
 					ret = RR2(S_end, R_l, R_end, left);
-					if (!ret)
-						break;
-					while (!Qv.empty())
-						Qv.pop();
-					// prune vertices in remaining R
-					for (ui i = S_end; i < R_end; i++)
-					{
-						if (!can_move_to_S(S_end, R_end, SR[i], false))
-							Qv.push(SR[i]);
-					}
-
-					ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
-
+					if (ret)
+						ret = prune_R(S_end, R_end);
 					break;
 				}
-				else
-					// RR2 on C_r
-					if (UB_r == R_end - R_l)
-					{
-						ret = RR2(S_end, R_l, R_end, right);
-						if (!ret)
-							break;
-						while (!Qv.empty())
-							Qv.pop();
-						// prune vertices in remaining R
-						for (ui i = S_end; i < R_end; i++)
-							if (!can_move_to_S(S_end, R_end, SR[i], false))
-								Qv.push(SR[i]);
-
-						cout << UB_r << "-" << std::flush;
-						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
-						break;
-					}
+				// RR2 on C_r
+				else if (UB_r == R_end - R_l)
+				{
+					ret = RR2(S_end, R_l, R_end, right);
+					if (ret)
+						ret = prune_R(S_end, R_end);
+					break;
+				}
 			}
 		}
 		// restoring S
