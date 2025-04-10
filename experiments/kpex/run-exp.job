@@ -174,9 +174,9 @@ web-ClueWeb09
 
 solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
 solutions='Maple-kPEX UMKP-AltRB UMKP'
-solutions='kPEX-after-maxkp'
+solutions='Maple-AltRB-RR2'
 krange='2 3 4 5 7 10 15 20'
-krange='2 3 4 5'
+# krange='2 3 4 5'
 run_jobs 00:30:00
 get_results
 
