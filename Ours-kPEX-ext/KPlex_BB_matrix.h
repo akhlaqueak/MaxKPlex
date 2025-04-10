@@ -1134,7 +1134,6 @@ private:
 					// RR2 on C_r
 					if (UB_r == R_end - R_l)
 					{
-						cout << UB_r << "-" << std::flush;
 						ret = RR2(S_end, R_l, R_end, right);
 						if (!ret)
 							break;
@@ -1145,6 +1144,7 @@ private:
 							if (!can_move_to_S(S_end, R_end, SR[i]))
 								Qv.push(SR[i]);
 
+						cout << Qv.size() << "-" << std::flush;
 						ret = remove_vertices_and_edges_with_prune(S_end, R_end, level);
 						break; 
 					}
