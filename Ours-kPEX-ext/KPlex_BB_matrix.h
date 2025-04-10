@@ -226,7 +226,19 @@ public:
 		// for(ui i = 0;i < vp.size();i ++) printf("%d %d\n", vp[i].first, vp[i].second);
 #endif
 	}
-
+	ui create_initial_kplex(ui R_end, bool must_include_0){
+		ui S_end=0;
+		if(must_include_0)
+			move_to_S(S_end, R_end, 0);
+		for(ui i=n-1; i>=0; i--){
+			ui u=peel_sequence[i];
+			if(SR_rid[u]>=n or u==0) continue;
+			if(can_move_to_S(S_end, R_end, u))
+			move_to_S(S_end, R_end, u);
+		}
+		if(S_end > best_solution_size) store_solution(S_end);
+		return S_end;
+	}
 	void kPlex(ui K_, ui UB_, std::vector<ui> &kplex, bool must_include_0)
 	{
 		K = K_;
@@ -240,8 +252,11 @@ public:
 		ui n_edges = best_n_edges;
 		ui R_end;
 		initialization(R_end, must_include_0);
+
+		ui S_end = create_initial_kplex(R_end, must_include_0);
+
 		if (R_end && best_solution_size < _UB_)
-			BB_search(0, R_end, 1, must_include_0);
+			BB_search(S_end, R_end, false, false);
 		if (dense_search && best_n_edges > n_edges)
 		{
 			kplex.clear();
