@@ -880,12 +880,12 @@ else{ // pivot based branching
 					cout<<"**";
 					break;
 				}
-				// else 
-				// // RR2 on C_r
-				// if (UB_r==R_end - R_l){
-				// 	ret=RR2(S_end, R_l, R_end, right);
-				// 	break;
-				// }
+				else 
+				// RR2 on C_r
+				if (UB_r==R_end - R_l){
+					ret=RR2(S_end, R_l, R_end, right);
+					break;
+				}
 			}
 
 		}
