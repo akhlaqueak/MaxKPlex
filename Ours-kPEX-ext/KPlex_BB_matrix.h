@@ -36,6 +36,7 @@ private:
 
 	ui *degree;
 	ui *degree_in_S;
+		ui *peel_sequence;
 
 	ui K;
 	ui *best_solution;
@@ -171,6 +172,7 @@ public:
 		SR_rid = new ui[n];
 		neighbors = new ui[n];
 		nonneighbors = new ui[n];
+		peel_sequence = new ui[n];
 		S2 = new ui[n];
 		level_id = new ui[n];
 		B.reserve(n);
@@ -361,7 +363,6 @@ private:
 	void initialization(ui &R_end, bool must_include_0)
 	{
 		// the following computes a degeneracy ordering and a heuristic solution
-		ui *peel_sequence = neighbors;
 		ui *core = nonneighbors;
 		ui *vis = SR;
 		memset(vis, 0, sizeof(ui) * n);
