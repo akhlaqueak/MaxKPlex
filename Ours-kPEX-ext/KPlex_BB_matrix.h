@@ -877,6 +877,7 @@ else{ // pivot based branching
 				// RR2 on C_l
 				if(UB_l==R_l-S_end){
 					ret=RR2(S_end, R_l, R_end, left);
+					cout<<"**";
 					break;
 				}
 				// else 
