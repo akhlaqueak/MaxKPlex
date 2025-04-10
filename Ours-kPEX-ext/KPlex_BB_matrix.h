@@ -1055,7 +1055,8 @@ private:
 			{
 				if (increment_deg_in_S)
 					degree_in_S[SR[i]]++;
-				if(!degree_in_S[SR[i]]<=S_end) cout<<"Err";
+				if (!degree_in_S[SR[i]] <= S_end)
+					cout << "Err";
 			}
 			else if (i < S_end && support(S_end, SR[i]) == 0)
 				return false; // SR[i] is non-neighbor of u in S and it's saturated
@@ -1068,9 +1069,8 @@ private:
 		{
 			for (ui i = S_end; i < R_l; i++)
 			{
-				if (can_move_to_S(S_end, R_end, SR[i], true))
-					S_end++;
-				else
+				S_end++;
+				if (!can_move_to_S(S_end, R_end, SR[i], true))
 					return false;
 			}
 		}
@@ -1078,9 +1078,8 @@ private:
 		{
 			for (ui i = R_l; i < R_end; i++)
 			{
-				if (can_move_to_S(S_end, R_end, SR[i], true))
-					swap_pos(i, S_end++);
-				else
+				swap_pos(i, S_end++);
+				if (!can_move_to_S(S_end, R_end, SR[i], true))
 					return false;
 			}
 		}
