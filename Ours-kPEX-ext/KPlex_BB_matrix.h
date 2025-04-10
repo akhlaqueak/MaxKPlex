@@ -1055,7 +1055,7 @@ private:
 			{
 				if (increment_deg_in_S)
 					degree_in_S[SR[i]]++;
-				if(!degree_in_S[SR[i]]<S_end) cout<<"Err";
+				if(!degree_in_S[SR[i]]<=S_end) cout<<"Err";
 			}
 			else if (i < S_end && support(S_end, SR[i]) == 0)
 				return false; // SR[i] is non-neighbor of u in S and it's saturated
