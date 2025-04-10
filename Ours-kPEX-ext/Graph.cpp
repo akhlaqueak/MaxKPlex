@@ -110,28 +110,28 @@ void Graph::read() {
 	fread(degree, sizeof(int), n, f);
 	if(pstart == nullptr) pstart = new ept[n+1];
 	if(edges == nullptr) edges = new ui[m];
-	// fread(edges, sizeof(int), m, f);
+	fread(edges, sizeof(int), m, f);
 
 	pstart[0] = 0;
-	// std::partial_sum(degree, degree+n, pstart+1);
-	for(ui i = 0;i < n;i ++) {
-		if(degree[i] > 0) {
-			fread(edges+pstart[i], sizeof(int), degree[i], f);
+	std::partial_sum(degree, degree+n, pstart+1);
+	// for(ui i = 0;i < n;i ++) {
+		// if(degree[i] > 0) {
+		// 	fread(edges+pstart[i], sizeof(int), degree[i], f);
 
-			// remove self loops and parallel edges
-			ui *buff = edges+pstart[i];
-			sort(buff, buff+degree[i]);
-			ui idx = 0;
-			for(ui j = 0;j < degree[i];j ++) {
-				if(buff[j] >= n) printf("vertex id %u wrong\n", buff[j]);
-				if(buff[j] == i||(j > 0&&buff[j] == buff[j-1])) continue;
-				buff[idx ++] = buff[j];
-			}
-			degree[i] = idx;
-		}
+		// 	// remove self loops and parallel edges
+		// 	ui *buff = edges+pstart[i];
+		// 	sort(buff, buff+degree[i]);
+		// 	ui idx = 0;
+		// 	for(ui j = 0;j < degree[i];j ++) {
+		// 		if(buff[j] >= n) printf("vertex id %u wrong\n", buff[j]);
+		// 		if(buff[j] == i||(j > 0&&buff[j] == buff[j-1])) continue;
+		// 		buff[idx ++] = buff[j];
+		// 	}
+		// 	degree[i] = idx;
+		// }
 
-		pstart[i+1] = pstart[i] + degree[i];
-	}
+		// pstart[i+1] = pstart[i] + degree[i];
+	// }
 
 	fclose(f);
 	delete[] degree;
@@ -199,7 +199,7 @@ void Graph::search() {
 	for(ui i = 0;i < n;i ++) {
 		if(pstart[i+1]-pstart[i] > max_degree) max_degree = pstart[i+1]-pstart[i];
 	}
-	// heuristic_kplex_max_degree(10);
+	heuristic_kplex_max_degree(10);
 	ui oldn=n;
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
