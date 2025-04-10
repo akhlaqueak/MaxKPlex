@@ -720,7 +720,7 @@ else{ // pivot based branching
 			else ids[new_n++] = ids[i];
 		}
 	}
-	int support(ui S_end, ui u)
+	ui support(ui S_end, ui u)
     {
         return K - (S_end - degree_in_S[u]);
     }
