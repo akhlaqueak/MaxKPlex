@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed... 
@@ -720,7 +720,7 @@ else{ // pivot based branching
 			else ids[new_n++] = ids[i];
 		}
 	}
-	ui support(ui S_end, ui u)
+	int support(ui S_end, ui u)
     {
         return K - (S_end - degree_in_S[u]);
     }
@@ -818,35 +818,40 @@ else{ // pivot based branching
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
 	
-	void store_solution(ui S_end, ui R_l, ui &R_end, Partition side){
+	bool RR2(ui &S_end, ui R_l, ui R_end, Partition side){
 		if(side==left){
-			for(ui i=R_l; i<R_end; i++){
-				ui u = SR[i];
+			for(ui i=S_end; i<R_l; i++){
+				ui u = SR[i]; 
+				if(support(S_end, u)==0) return false;
 				char *t_matrix = matrix + u*n;
-				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
+				for(ui i = 0;i < R_end;i ++) {
+					if(t_matrix[SR[i]]) degree_in_S[SR[i]]++;
+					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u and it's saturated
+				}
+				S_end++;
 			}
-			R_end = R_l;
-			if(R_end>best_solution_size and is_kplex(R_end))
-				store_solution(R_end);
 		}
 		else{
-			// first remove the left set vertices
-			for(ui i=S_end, j=0; i<R_l; i++){
+			for(ui i=R_l; i<R_end; i++){
 				ui u = SR[i]; 
-				swap_pos(i, R_end - ++j);
+				if(support(S_end, u)==0) return false;
 				char *t_matrix = matrix + u*n;
-				for(ui i = 0;i < R_end;i ++) if(t_matrix[SR[i]]) degree[SR[i]]--;
-			}
-			R_end -= (R_l-S_end); 
-			if(R_end>best_solution_size and is_kplex(R_end))
-				store_solution(R_end);	
+				for(ui i = 0;i < R_end;i ++) {
+					if(t_matrix[SR[i]]) degree_in_S[SR[i]]++;
+					else if(i<S_end && support(S_end, SR[i])==0) return false; //SR[i] is non-neighbor of u and it's saturated
+				}
+				swap_pos(i, S_end);
+				S_end++;
+			}	
 		}
+		return true;
 	}
 
-	bool alt_RB(ui S_end, ui &R_end, ui level){
+	bool alt_RB(ui &S_end, ui &R_end, ui level){
 
+		ui old_S_end=S_end;
 		// Saving S, as it should be recovered with same location when returning from this function.
-		for(ui i=0;i<S_end; i++) S2[i] = SR[i];
+		for(ui i=0;i<old_S_end; i++) S2[i] = SR[i];
 
 		auto SR_left = partition_left_right(S_end, R_end);
 		bool ret = true;
@@ -868,22 +873,22 @@ else{ // pivot based branching
 			//  RR1 on C_l
 			if(!alt_reduction_rules(S_end, R_end, R_l, LB_l, LB_r, left, level)) {ret = false; break;}
 
-			// if(UB_r+UB_l+S_end == best_solution_size+1){
-			// 	// RR2 on C_l
-			// 	if(UB_l==R_l-S_end){
-			// 		store_solution(S_end, R_l, R_end, left);
-			// 		ret = false; break;
-			// 	}
-			// 	// RR2 on C_r
-			// 	else if (UB_r==R_end - R_l){
-			// 		store_solution(S_end, R_l, R_end, right);
-			// 		ret = false; break;
-			// 	}
-			// }
+			if(UB_r+UB_l+S_end == best_solution_size+1){
+				// RR2 on C_l
+				if(UB_l==R_l-S_end){
+					ret=RR2(S_end, R_l, R_end, left);
+					break;
+				}
+				// RR2 on C_r
+				else if (UB_r==R_end - R_l){
+					ret=RR2(S_end, R_l, R_end, right);
+					break;
+				}
+			}
 
 		}
 		// restoring S
-		for(ui i=0;i<S_end; i++) SR[i]=S2[i], SR_rid[S2[i]]=i;
+		for(ui i=0;i<old_S_end; i++) SR[i]=S2[i], SR_rid[S2[i]]=i;
 		return ret;
 	}
 	bool greedily_add_vertices_to_S(ui &S_end, ui &R_end, ui level) {

@@ -129,7 +129,7 @@ public:
         if (C.empty())
             return;
         if (B.empty() or S.test(B.back()) or (not C.test(B.back())))
-            branching_set_pivot(C, S);
+            branching_set_pivot(S, C);
 
         pivot = B.back();
         B.pop_back();
@@ -442,7 +442,7 @@ public:
     /**
      * @return the vertex with minimum degree
      */
-    void branching_set_pivot(Set &C, Set& S)
+    void branching_set_pivot(Set& S, Set &C)
     {
         for (int u: C)
             deg[u] = S.size()-loss_cnt[u]+A[u].intersect(C);
