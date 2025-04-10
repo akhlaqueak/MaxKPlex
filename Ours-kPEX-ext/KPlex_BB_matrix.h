@@ -257,10 +257,11 @@ public:
 		ui R_end;
 		initialization(R_end, must_include_0);
 
-		ui S_end = create_initial_kplex(R_end, must_include_0);
+		// ui S_end = create_initial_kplex(R_end, must_include_0);
 
 		if (R_end && best_solution_size < _UB_)
-			BB_search(S_end, R_end, false, false);
+			BB_search(0, R_end, true, true);
+			
 		if (dense_search && best_n_edges > n_edges)
 		{
 			kplex.clear();
