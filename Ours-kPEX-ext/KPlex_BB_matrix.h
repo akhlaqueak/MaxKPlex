@@ -1044,7 +1044,7 @@ private:
 		}
 		return remove_vertices_and_edges_with_prune_left(S_end, R_end, R_l, level);
 	}
-	bool can_move_to_S(ui S_end, ui R_end, ui u, bool increment_deg_in_S = false)
+	bool can_move_to_S(ui S_end, ui R_end, ui u)
 	{
 		if (support(S_end, u) == 0)
 			return false;
