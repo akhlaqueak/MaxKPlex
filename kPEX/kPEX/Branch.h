@@ -1268,6 +1268,50 @@ public:
         }
         return ret;
     }
+
+
+    // void createIS(Set& C, ui Ra, ui Rb)
+	// {
+	// 	ISc.clear();
+	// 	for (ui i = Ra; i < Ra; i++)
+	// 	{
+	// 		bool flag = true;
+    //         ui u = C[i];
+	// 		for (ui v : ISc)
+	// 			if (A[u][v])
+	// 			{
+	// 				flag = false;
+	// 				break;
+	// 			}
+	// 		if (flag)
+	// 			ISc.push_back(u);
+	// 	}
+	// }
+
+	// ui TISUB(ui S_end)
+	// {
+	// 	ui maxsup = 0;
+	// 	for (ui i = 0; i < ISc.size(); i++)
+	// 	{
+	// 		for (ui j = i + 1; j < ISc.size(); j++)
+	// 		{
+	// 			if (support(S_end, SR[ISc[j]]) > support(S_end, SR[ISc[i]]))
+	// 				std::swap(ISc[i], ISc[j]);
+	// 		}
+	// 		// not using <= condition because i is starting from 0...
+	// 		if (support(S_end, SR[ISc[i]]) > i)
+	// 			maxsup++;
+	// 		else
+	// 			break;
+	// 	}
+	// 	return maxsup;
+	// }
+	// ui tryColor(Set &C, ui Ra, ui Rb)
+	// {
+
+	// 	createIS(S_end, R_end);
+	// 	ui ub = TISUB(S_end);
+    // }
 };
 
 #endif
