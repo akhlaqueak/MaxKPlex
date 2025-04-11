@@ -7,7 +7,7 @@
 
 // pruning switches
 #define S2RULE
-// #define ALTRB
+#define ALTRB
 // SR_BRANCHING can take values S_branching, R_branching, SR_branching
 #define SR_BRANCHING S_branching
 // if PART_BRANCH is false, then pivot branch gets executed...
@@ -261,7 +261,7 @@ public:
 
 		if (R_end && best_solution_size < _UB_)
 			BB_search(0, R_end, true, true);
-			
+
 		if (dense_search && best_n_edges > n_edges)
 		{
 			kplex.clear();
