@@ -1258,8 +1258,6 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 	}
 	assert(queue_n + new_size == n);
-	printf("*** Degeneracy k-plex size:Time: %s (microseconds)\n", Utility::integer_to_string(t.elapsed()).c_str());
-
 	if (new_size != 0)
 	{
 		heap->init(new_size, new_size - 1, peel_sequence + queue_n, degree);
