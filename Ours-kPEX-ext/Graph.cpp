@@ -1258,7 +1258,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 	}
 	assert(queue_n + new_size == n);
-			printf("*** Degeneracy k-plex size:Time: %s (microseconds)\n", Utility::integer_to_string(t.elapsed()).c_str());
+	printf("*** Degeneracy k-plex size:Time: %s (microseconds)\n", Utility::integer_to_string(t.elapsed()).c_str());
 
 	if (new_size != 0)
 	{
@@ -1270,6 +1270,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		{
 			ui u, key;
 			heap->pop_min(u, key);
+			if(key+K>=heap->sz) break;
 			if (key > max_core)
 				max_core = key;
 			core[u] = max_core;
@@ -1286,10 +1287,8 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			vis[u] = 1;
 
 			for (ept j = pstart[u]; j < pstart[u + 1]; j++)
-				if (vis[edges[j]] == 0)
-				{
+				if (!vis[edges[j]])
 					heap->decrement(edges[j], 1);
-				}
 		}
 
 		if (output)
@@ -1629,7 +1628,7 @@ ept Graph::peeling(ui critical_vertex, ListLinearHeap *linear_heap, ui *Qv, ui &
 			// printf("here\n");
 
 			if (degree[u] > degree[v] * 2)
-			{	// binary search
+			{ // binary search
 				// if(false) {
 				ept v_n = pstart[v], start = pstart[u];
 				for (ept k = pstart[v]; k < pend[v]; k++)
