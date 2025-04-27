@@ -1049,11 +1049,11 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 				printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
-	cout<<"kcore_size"<<kcore_sizes.size()<<endl;
+	cout<<"kcore_size: "<<kcore_sizes.size()<<" : ";
 	while(kcore_sizes.size()<20)
 		kcore_sizes.insert(kcore_sizes.begin(), kcore_sizes[0]);
-	for(ui sz:kcore_sizes)
-		cout<<sz<<" ";
+	for(ui i=kcore_sizes.size()-20; i<kcore_sizes.size(); i++)
+		cout<<kcore_sizes[i]<<" ";
 	return UB;
 }
 
