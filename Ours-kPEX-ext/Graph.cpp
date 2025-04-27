@@ -1049,6 +1049,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 				printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
+	cout<<"kcore_size"<<kcore_sizes.size()<<endl;
 	for(ui sz:kcore_sizes)
 		cout<<sz<<" "<<endl;
 	return UB;
