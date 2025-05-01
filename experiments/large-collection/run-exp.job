@@ -13,16 +13,16 @@
 loc=/home/akhlaque.ak@gmail.com/graphs/large-collection/
 run_jobs() {
     # for kplex in $solutions; do
-            for k in $krange; do
-    for fn in $datasets; do
+    for k in $krange; do
         for sol in $solutions; do
+            for fn in $datasets; do
                 outfile=$fn-$sol-$k.out
 
-                srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >>$outfile 2>&1 &
+                srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >$outfile 2>&1 &
 
             done
+            wait
         done
-    wait
     done
 }
 get_results() {
@@ -172,9 +172,6 @@ for ds in $datasets; do
     echo
 done
 
-
-
-
 for ds in $datasets; do
     echo -en "$ds,"
     for k in $krange; do
@@ -189,7 +186,6 @@ for ds in $datasets; do
     echo
 done
 
-
 echo -en ","
 for k in $krange; do
     echo -en "$k,"
@@ -197,13 +193,13 @@ done
 for ds in $datasets; do
     echo -en "$ds,"
     for k in $krange; do
-        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out|tail -n1)
+        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out | tail -n1)
         op=($op)
         if [ -z "${op}" ]; then
             echo -en "×,"
         else
             echo -en "${op[-7]},"
-            # echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f," 
+            # echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f,"
         fi
         # echo -en "|,"
     done
