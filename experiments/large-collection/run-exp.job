@@ -1,0 +1,216 @@
+#!/bin/bash
+
+#SBATCH --job-name=serial             ### Name of the job
+#SBATCH --ntasks=196                    ### Number of Tasks
+#SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
+#SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
+#SBATCH --partition=short             ### Cheaha Partition
+#SBATCH --time=10:00:00                 ### Estimated Time of Completion, 1 hour
+#SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
+#SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
+#SBATCH --mail-type=END
+#SBATCH --mail-user=akhlaque.ak@gmail.com
+loc=/home/akhlaque.ak@gmail.com/graphs/large-collection/
+run_jobs() {
+    # for kplex in $solutions; do
+    for fn in $datasets; do
+        for sol in $solutions; do
+            for k in $krange; do
+                outfile=$fn-$sol-$k.out
+
+                srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >>$outfile 2>&1 &
+                # echo "computing --time=$1 --exclusive $sol $fn $k >>$sol-$k.out.... "
+                # if [[ $sol =~ "UMKP" ]] || [[ $sol =~ "Maple" ]] || [ $sol == 'KpLeX' ] || [ $sol == 'DiseMKP' ]; then
+                # else
+                #     srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol -b -g ~/graphs/kPEX/$fn.bin -a exact -k $k -c 3 >>$outfile 2>&1 &
+                # fi
+
+            done
+        done
+    done
+    wait
+}
+get_results() {
+    result=results.out
+    rm $result
+    echo -en "," >>$result
+    WORD_COUNT=$(echo "$solutions" | wc -w)
+    for k in $krange; do
+        echo -en "*k=$k*," >>$result
+        for ((i = 1; i < $WORD_COUNT; i++)); do
+            echo -en "," >>$result
+        done
+        echo -en "|," >>$result
+    done
+    echo >>$result
+
+    echo -en "datasets," >>$result
+    for k in $krange; do
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+        echo -en "|," >>$result
+    done
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn," >>$result
+        for k in $krange; do
+
+            line=()
+            outfile=''
+            for sol in $solutions; do
+                outfile=$fn-$sol-$k.out
+                op=$(grep ">>" $outfile | head -1)
+                if [ -z "${op}" ]; then
+                    line+=('9999999999')
+                else
+                    op=($op)
+                    line+=(${op[-1]})
+                fi
+            done
+            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
+            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
+
+            for i in "${line[@]}"; do
+                if [ "$i" == '9999999999' ]; then
+                    echo -en '×,' >>$result
+                elif [ "$i" == "$m" ]; then
+                    if (($(echo "$i <= 0.5 * $secm" | bc -l))); then
+                        echo $i | bc -l | xargs printf "**%.1f," >>$result
+                    else
+                        echo $i | bc -l | xargs printf "*%.1f," >>$result
+                    fi
+                elif [ "$i" == "$secm" ]; then
+                    echo $i | bc -l | xargs printf "^%.1f," >>$result
+                else
+                    echo $i | bc -l | xargs printf "%.1f," >>$result
+                fi
+
+            done
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+get_results
+
+get_kpsize() {
+    result=kpsize.out
+    rm $result
+    echo -en "," >>$result
+    WORD_COUNT=$(echo "$solutions" | wc -w)
+    for k in $krange; do
+        echo -en "**k=$k**," >>$result
+        for ((i = 1; i < $WORD_COUNT; i++)); do
+            echo -en "," >>$result
+        done
+        echo -en "|," >>$result
+    done
+    echo >>$result
+
+    echo -en "datasets," >>$result
+    for k in $krange; do
+        for sol in $solutions; do
+            echo -en "${sol#*-}," >>$result
+        done
+        echo -en "|," >>$result
+    done
+    echo >>$result
+
+    for fn in $datasets; do
+        echo -en "$fn," >>$result
+        for k in $krange; do
+
+            line=()
+            outfile=''
+            for sol in $solutions; do
+                outfile=$fn-$sol-$k.out
+                op=$(grep ">>" $outfile | tail -1)
+                if [ -z "${op}" ]; then
+                    line+=('9999999999')
+                else
+                    op=($op)
+                    line+=(${op[-3]})
+                fi
+            done
+            m=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n1)
+            secm=$(printf "%s\n" "${line[@]}" | sort -rn | tail -n2 | head -n1)
+
+            for i in "${line[@]}"; do
+                if [ $i == '9999999999' ]; then
+                    echo -en '×,' >>$result
+                else
+                    echo $i | bc -l | xargs printf "%d," >>$result
+                fi
+            done
+            echo -en "|," >>$result
+        done
+        echo >>$result
+    done
+    cat $result
+}
+get_kpsize
+
+# lists only file names without paths and .bin
+datasets=$(find $loc -maxdepth 1 -name "*.bin" -exec basename {} .bin \;)
+
+solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Pivot_Br kPEX-S_Br UMKP-kcore'
+krange='2 3 4 5 6 7 8 9 10 15 20'
+run_jobs 00:10:00
+get_results
+
+# get_cost
+
+for ds in $datasets; do
+    echo -en "$ds,"
+    for k in $krange; do
+        op=$(grep $ds-dense Ours-dense-$k.out)
+        op=($op)
+        if [ -z "${op}" ]; then
+            echo -en ",,,,"
+        else
+            echo -en "${op[4]},${op[6]},${op[8]},${op[10]},"
+        fi
+    done
+    echo
+done
+
+
+
+
+for ds in $datasets; do
+    echo -en "$ds,"
+    for k in $krange; do
+        op=$(grep $ds Ours-$k.out)
+        op=($op)
+        if [ -z "${op}" ]; then
+            echo -en ","
+        else
+            echo -en "${op[2]},"
+        fi
+    done
+    echo
+done
+
+
+echo -en ","
+for k in $krange; do
+    echo -en "$k,"
+done
+for ds in $datasets; do
+    echo -en "$ds,"
+    for k in $krange; do
+        op=$(grep ">>" $ds-kPEX-after-maxkp-$k.out|tail -n1)
+        op=($op)
+        if [ -z "${op}" ]; then
+            echo -en "×,"
+        else
+            echo -en "${op[-7]},"
+            # echo  "${op[-3]} * 100" | bc -l | xargs printf "%.1f," 
+        fi
+        # echo -en "|,"
+    done
+    echo
+done
