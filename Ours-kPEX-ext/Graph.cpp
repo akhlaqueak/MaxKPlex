@@ -263,7 +263,7 @@ void Graph::search()
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
 		ui *edgelist_pointer = new ui[m];
-
+		cout<<"n="<<n;
 		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
 
