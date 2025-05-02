@@ -265,7 +265,7 @@ void Graph::search()
 		ui *edgelist_pointer = new ui[m];
 
 		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
-
+		cout<<"shrinked"<<endl;
 		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
 
 		if (kplex.size() > old_size)
