@@ -821,8 +821,8 @@ hollywood-2009
 ia-dbpedia-team-bi
 ia-enron-email-dynamic
 '
-solutions='UMKP UMKP-AltRB Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
-krange='2 3 4 5 6 7'
+solutions='Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
+krange='2 3 4 5 6 7 8 9 10 15 20'
 run_jobs 00:10:00
 get_results
 
