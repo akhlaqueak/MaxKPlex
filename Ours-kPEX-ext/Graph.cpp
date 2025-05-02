@@ -263,7 +263,7 @@ void Graph::search()
 		ui *out_mapping = new ui[n];
 		ui *rid = new ui[n];
 		ui *edgelist_pointer = new ui[m];
-		cout<<"n="<<n;
+
 		shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 		ego_degen(n, m, peel_sequence, pstart, edges, degree, rid, vis, heap, edgelist_pointer, true);
 
@@ -290,8 +290,7 @@ void Graph::search()
 			printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f\n", dir.substr(dir.find_last_of("/") + 1).c_str(), kplex.size(), t.elapsed() / 1000000.0);
 			return;
 		}
-		cout<<"shrinked"<<endl;
-
+		
 		ui *degree = new ui[n];
 		for (ui i = 0; i < n; i++)
 			degree[i] = pstart[i + 1] - pstart[i];
@@ -1297,8 +1296,8 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			kplex.clear();
 			for (ui i = idx; i < new_size; i++)
 				kplex.pb(peel_sequence[queue_n + i]);
-			if (output)
-				printf("Find a k-plex of size: %u\n", new_size - idx);
+			// if (output)
+			// 	printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
 	return UB;
