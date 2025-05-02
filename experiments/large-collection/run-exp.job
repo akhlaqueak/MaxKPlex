@@ -165,9 +165,9 @@ get_kpsize
 
 datasets=$(find $loc/*.bin -maxdepth 1 -type f -exec basename {} .bin \;)
 
-solutions='UMKP Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
+solutions='UMKP UMKP-kPEX Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
 krange='2 3 4 5 6 7 8 9 10 15 20'
-run_jobs 00:05:00
+run_jobs 00:30:00
 get_results
 
 # get_cost
