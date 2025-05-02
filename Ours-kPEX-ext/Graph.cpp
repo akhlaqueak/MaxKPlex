@@ -236,7 +236,7 @@ void Graph::search()
 		if (pstart[i + 1] - pstart[i] > max_degree)
 			max_degree = pstart[i + 1] - pstart[i];
 	}
-	// heuristic_kplex_max_degree(10);
+	heuristic_kplex_max_degree(10);
 	ui oldn = n;
 	ui *peel_sequence = new ui[n];
 	ui *core = new ui[n];
