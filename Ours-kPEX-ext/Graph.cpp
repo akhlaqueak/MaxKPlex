@@ -1257,7 +1257,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			core[i] = 0;
 		}
 	}
-	cout<<new_size<<" "<<n<<endl;
+
 	assert(queue_n + new_size == n);
 	if (new_size != 0)
 	{
