@@ -228,6 +228,7 @@ void Graph::verify_kplex()
 
 void Graph::search()
 {
+	cout<<"graph_size: "<< n<<" "<<m<<endl;
 	Timer t;
 	kplex.resize(1); // screen out trivial cases
 	ui max_degree = 0;
