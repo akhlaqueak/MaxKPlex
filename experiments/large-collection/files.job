@@ -12,11 +12,23 @@
 #SBATCH --mail-user=akhlaque.ak@gmail.com
 loc=/home/akhlaque.ak@gmail.com/graphs/large-collection/
 
+cd $loc
 datasets='actor-movie amazon-ratings bibsonomy-2ti bookcrossing_full-rating citeseer citeulike-ti com-amazon com-dblp cont11_l dblp-author dblp_coauthor dbpedia-all dbpedia-country dbpedia-genre dbpedia-location dbpedia-occupation dbpedia-recordlabel dbpedia-team dbpedia-writer delicious-ti discogs_affiliation discogs_genre discogs_lgenre discogs_lstyle discogs_style edit-enwiki edit-frwiki edit-itwiki epinions flickr-groupmemberships flickr-growth friendster libimseti livejournal-groupmemberships livejournal-links loc-gowalla_edges orkut-links patentcite petster-carnivore petster-friendships-cat petster-friendships-dog soc-pokec-relationships stackexchange-stackoverflow tech-as-skitter trec-wt10g twitter_mpi wiki-en-cat wikipedia-growth wikipedia_link_en wikipedia_link_it wikipedia_link_ja wikipedia_link_pl wikipedia_link_pt wikipedia_link_ru wiki-Talk zhishi-baidu-internallink zhishi-baidu-relatedpages zhishi-hudong-internallink zhishi-hudong-relatedpages zhishi-zhwiki-internallink'
 
-for d in $datasets; do
+myfunc() {
+    sed -i 's/,/ /g' $1.edges
+    sed -i 's/,/ /g' $1.mtx
+    ./toBin $1.edges
+    ./toBin $1.mtx
+}
+export -f myfunc
 
+for d in $datasets; do
+    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --exclusive bash -c myfunc "$d" &
 done
+wait
+cd /home/akhlaque.ak@gmail.com/MaxKPlex/experiments/large-collection
+
 run_jobs() {
     step_count=0
     max_steps=10000
@@ -165,7 +177,6 @@ get_kpsize() {
     cat $result
 }
 get_kpsize
-
 
 solutions='Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
 krange='2 3 4 5 6 7 8 9 10 15 20'
