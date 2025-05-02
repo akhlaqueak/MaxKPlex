@@ -15,7 +15,7 @@ loc=/home/akhlaque.ak@gmail.com/graphs/all_toBin_graphs/
 
 run_jobs() {
     step_count=0
-    max_steps=10000
+    max_steps=1000
 
     for k in $krange; do
         for sol in $solutions; do
