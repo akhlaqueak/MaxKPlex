@@ -1269,6 +1269,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		{
 			ui u, key;
 			heap->pop_min(u, key);
+
 			if (key > max_core)
 				max_core = key;
 			core[u] = max_core;
