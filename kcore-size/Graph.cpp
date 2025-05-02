@@ -237,6 +237,8 @@ void Graph::search()
 		if (pstart[i + 1] - pstart[i] > max_degree)
 			max_degree = pstart[i + 1] - pstart[i];
 	}
+
+	cout<<"initial_max_degree: "<<max_degree<<endl;
 	// heuristic_kplex_max_degree(10);
 	ui oldn = n;
 	ui *peel_sequence = new ui[n];
@@ -274,7 +276,7 @@ void Graph::search()
 		ui max_degree = 0;
 		for(ui i=0;i<n;i++)
 			max_degree = max(max_degree, pstart[i+1]-pstart[i]);
-		cout<<"max_degree "<<max_degree<<endl;
+		cout<<"residual_max_degree "<<max_degree<<endl;
 	}
 	
 }
