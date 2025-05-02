@@ -271,7 +271,7 @@ void Graph::search()
 			CTPrune::core_truss_copruning(n, m, kplex.size() + 1 - K, kplex.size() + 1 - 2 * K, peel_sequence, out_mapping, rid, pstart, edges, degree, true);
 		// else
 		// 	shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
-		ui max_degree = 0
+		ui max_degree = 0;
 		for(ui i=0;i<n;i++)
 			max_degree = max(max_degree, pstart[i+1]-pstart[i]);
 		cout<<"max_degree "<<max_degree<<endl;
