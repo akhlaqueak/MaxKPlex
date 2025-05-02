@@ -290,6 +290,7 @@ void Graph::search()
 			printf(">>%s \tMaxKPlex_Size: %lu t_Total: %f\n", dir.substr(dir.find_last_of("/") + 1).c_str(), kplex.size(), t.elapsed() / 1000000.0);
 			return;
 		}
+		cout<<"shrinked"<<endl;
 
 		ui *degree = new ui[n];
 		for (ui i = 0; i < n; i++)
