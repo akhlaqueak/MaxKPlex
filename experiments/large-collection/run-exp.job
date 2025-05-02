@@ -23,7 +23,7 @@ run_jobs() {
                 outfile=$fn-$sol-$k.out
                 grep -q ">>" $outfile || {
 
-                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >$outfile 2>&1 &
+                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >>$outfile 2>&1 &
 
                     ((step_count++))
 
@@ -166,8 +166,8 @@ get_kpsize
 datasets=$(find $loc/*.bin -maxdepth 1 -type f -exec basename {} .bin \;)
 
 solutions='UMKP UMKP-kPEX Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
-krange='2 3 4 5 6 7 8 9 10 15 20'
-run_jobs 00:5:00
+krange='2 3 4 5 6 7'
+run_jobs 00:30:00
 get_results
 
 # get_cost

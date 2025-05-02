@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=serial             ### Name of the job
-#SBATCH --ntasks=200                    ### Number of Tasks
+#SBATCH --job-name=medium             ### Name of the job
+#SBATCH --ntasks=192                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
-#SBATCH --partition=short             ### Cheaha Partition
+#SBATCH --partition=medium             ### Cheaha Partition
 #SBATCH --time=10:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
@@ -15,7 +15,7 @@ loc=/home/akhlaque.ak@gmail.com/graphs/all_toBin_graphs/
 
 run_jobs() {
     step_count=0
-    max_steps=1000
+    max_steps=2000
 
     for k in $krange; do
         for sol in $solutions; do
@@ -23,7 +23,7 @@ run_jobs() {
                 outfile=$fn-$sol-$k.out
                 grep -q ">>" $outfile || {
 
-                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >$outfile 2>&1 &
+                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >> $outfile 2>&1 &
 
                     ((step_count++))
 
