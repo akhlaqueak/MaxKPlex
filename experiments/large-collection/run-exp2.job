@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=medium             ### Name of the job
-#SBATCH --ntasks=192                    ### Number of Tasks
+#SBATCH --ntasks=8                    ### Number of Tasks
 #SBATCH --cpus-per-task=1              ### Number of Tasks per CPU
 #SBATCH --mem-per-cpu=10000                        ### Memory required, 4 gigabyte
-#SBATCH --partition=medium             ### Cheaha Partition
+#SBATCH --partition=short             ### Cheaha Partition
 #SBATCH --time=10:00:00                 ### Estimated Time of Completion, 1 hour
 #SBATCH --output=%x.out              ### Slurm Output file, %x is job name, %j is job id
 #SBATCH --error=%x.err               ### Slurm Error file, %x is job name, %j is job id
@@ -165,9 +165,9 @@ get_kpsize
 
 datasets=$(find $loc/*.bin -maxdepth 1 -type f -exec basename {} .bin \;)
 
-solutions='UMKP UMKP-kPEX Maple-kPEX kPEX-Pivot_Br kPEX-S_Br'
-krange='8 9 10 15 20'
-run_jobs 00:30:00
+solutions='degree_check'
+krange='2 3 4 5 6 7 8 9 10 15 20'
+run_jobs 00:10:00
 get_results
 
 # get_cost
