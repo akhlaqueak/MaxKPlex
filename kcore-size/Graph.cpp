@@ -1053,7 +1053,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 	cout<<"kcore_size: ";
 	while(kcore_sizes.size()<21)
 		kcore_sizes.insert(kcore_sizes.begin(), kcore_sizes[0]);
-	for(ui i=kcore_sizes.size()-20; i<kcore_sizes.size(); i++)
+	for(ui i=kcore_sizes.size()-21; i<kcore_sizes.size(); i++)
 		cout<<kcore_sizes[i]<<" ";
 	cout<<endl;
 	return UB;
