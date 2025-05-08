@@ -1079,18 +1079,19 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			if (output)
 				printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
+		printf("*** max_core: %u, UB: %u\n", max_core, UB);
 		if (output)
 		{
-			printf("*** max_core: %u, UB: %u\n", max_core, UB);
 			cout << "kcore_size: ";
-	
+
 			for (ui i : kcore_sizes)
 				cout << i << " ";
 			cout << endl;
 		}
 	}
-	else{
-		cout << "kcore_size: "<<0<<endl;
+	else
+	{
+		cout << "kcore_size: " << 0 << endl;
 	}
 	return UB;
 }
