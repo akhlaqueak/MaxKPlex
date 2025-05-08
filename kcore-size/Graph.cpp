@@ -1073,7 +1073,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 
 		if (output)
-			printf("*** max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size - idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
+			printf("*** max_core: %u, UB: %u\n", new_size - idx, max_core, UB);
 
 		if (!dense_search && new_size - idx > kplex.size())
 		{
