@@ -52,7 +52,7 @@ public:
 		if(pre_s == nullptr) pre_s = new ui[n];
 		if(next_s == nullptr) next_s = new ui[n];
 		if(head_s == nullptr) head_s = new ui[key_cap+1];
-		sz=n;
+		sz=_n;
 		//assert(_key_cap <= key_cap);
 		min_key = max_key = _key_cap;
 		for(ui i = 0;i <= _key_cap;i ++) head_s[i] = n;
