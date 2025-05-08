@@ -274,7 +274,7 @@ void Graph::search()
 		// else
 		// 	shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 		ui max_degree = 0;
-		cout<<"after shrinking: "<<n<endl;
+		cout<<"after shrinking: "<<n<<endl;
 		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
 		for(ui i=0;i<n;i++)
