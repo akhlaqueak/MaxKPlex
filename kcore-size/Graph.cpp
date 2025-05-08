@@ -1081,7 +1081,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 		if (output)
 		{
-			printf("*** max_core: %u, UB: %u\n", new_size - idx, max_core, UB);
+			printf("*** max_core: %u, UB: %u\n", max_core, UB);
 			cout << "kcore_size: ";
 	
 			for (ui i : kcore_sizes)
