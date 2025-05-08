@@ -248,7 +248,7 @@ void Graph::search()
 
 	ListLinearHeap *heap = new ListLinearHeap(n, n - 1);
 
-	const ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+	const ui UB = degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, false);
 	if (kplex.size() < UB)
 	{
 		ui old_size = kplex.size();
@@ -1002,7 +1002,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 	Timer t;
 
 	ui threshold = (kplex.size() + 1 > K ? kplex.size() + 1 - K : 0);
-	cout<<"thershold: "<<threshold<<endl;
+
 
 	for (ui i = 0; i < n; i++)
 		degree[i] = pstart[i + 1] - pstart[i];
@@ -1073,7 +1073,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 
 		if (output)
-			printf("*** Degeneracy k-plex size: %u, max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size - idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
+			printf("*** max_core: %u, UB: %u, Time: %s (microseconds)\n", new_size - idx, max_core, UB, Utility::integer_to_string(t.elapsed()).c_str());
 
 		if (!dense_search && new_size - idx > kplex.size())
 		{
@@ -1085,10 +1085,9 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 		}
 	}
 	cout<<"kcore_size: ";
-	while(kcore_sizes.size()<21)
-		kcore_sizes.insert(kcore_sizes.begin(), kcore_sizes[0]);
-	for(ui i=kcore_sizes.size()-21; i<kcore_sizes.size(); i++)
-		cout<<kcore_sizes[i]<<" ";
+
+	for(ui i: kcore_sizes)
+		cout<<i<<" ";
 	cout<<endl;
 	return UB;
 }
