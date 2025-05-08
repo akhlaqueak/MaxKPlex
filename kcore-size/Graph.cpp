@@ -274,6 +274,9 @@ void Graph::search()
 		// else
 		// 	shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 		ui max_degree = 0;
+
+		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
+
 		for(ui i=0;i<n;i++)
 			max_degree = max(max_degree, pstart[i+1]-pstart[i]);
 		cout<<"residual_max_degree: "<<max_degree<<endl;

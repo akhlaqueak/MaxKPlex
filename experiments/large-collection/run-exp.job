@@ -105,7 +105,6 @@ get_results() {
 }
 get_results
 
-
 get_kpsize() {
     result=kpsize.out
     rm $result
@@ -219,3 +218,16 @@ for ds in $datasets; do
     done
     echo
 done
+
+for d in $datasets; do
+    for k in $krange; do
+    # sed -i 's/core shrink/core_shrink/g' $d-degree_check-$k.out
+        (grep truss $d-degree_check-$k.out || grep core_shrink $d-degree_check-$k.out || echo "*** After core_truss_copruning: n = 0, m = 0") | awk '{printf "%s %s ", $6, $9}'
+        (grep residual $d-degree_check-$k.out || echo "residual 0") | awk '{printf "%s ", $NF}'
+    done
+    echo
+done
+
+        (grep truss inf-asia_osm-degree_check-20.out  || grep cores_shrink inf-asia_osm-degree_check-20.out  || echo "*** After core_truss_copruning: n = 0, m = 0") | awk '{printf "%s %s ", $6, $9}'
+
+inf-asia_osm-degree_check-20.out 
