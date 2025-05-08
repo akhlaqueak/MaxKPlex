@@ -228,7 +228,7 @@ void Graph::verify_kplex()
 
 void Graph::search()
 {
-	cout<<"graph_size: "<< n<<" "<<m<<endl;
+	cout << "graph_size: " << n << " " << m << endl;
 	Timer t;
 	kplex.resize(1); // screen out trivial cases
 	ui max_degree = 0;
@@ -238,7 +238,7 @@ void Graph::search()
 			max_degree = pstart[i + 1] - pstart[i];
 	}
 
-	cout<<"initial_max_degree: "<<max_degree<<endl;
+	cout << "initial_max_degree: " << max_degree << endl;
 	// heuristic_kplex_max_degree(10);
 	ui oldn = n;
 	ui *peel_sequence = new ui[n];
@@ -274,14 +274,13 @@ void Graph::search()
 		// else
 		// 	shrink_graph(n, m, peel_sequence, core, out_mapping, nullptr, rid, pstart, edges, true);
 		ui max_degree = 0;
-		cout<<"after shrinking: "<<n<<endl;
+		cout << "after shrinking: " << n << endl;
 		degen(n, peel_sequence, core, pstart, edges, degree, vis, heap, true);
 
-		for(ui i=0;i<n;i++)
-			max_degree = max(max_degree, pstart[i+1]-pstart[i]);
-		cout<<"residual_max_degree: "<<max_degree<<endl;
+		for (ui i = 0; i < n; i++)
+			max_degree = max(max_degree, pstart[i + 1] - pstart[i]);
+		cout << "residual_max_degree: " << max_degree << endl;
 	}
-	
 }
 
 void Graph::search_dense()
@@ -1003,7 +1002,6 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 
 	ui threshold = (kplex.size() + 1 > K ? kplex.size() + 1 - K : 0);
 
-
 	for (ui i = 0; i < n; i++)
 		degree[i] = pstart[i + 1] - pstart[i];
 
@@ -1050,7 +1048,8 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 			ui u, key;
 			heap->pop_min(u, key);
 
-			if (key > max_core){
+			if (key > max_core)
+			{
 				max_core = key;
 				kcore_sizes.push_back(heap->sz);
 			}
@@ -1072,9 +1071,6 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 					heap->decrement(edges[j], 1);
 		}
 
-		if (output)
-			printf("*** max_core: %u, UB: %u\n", new_size - idx, max_core, UB);
-
 		if (!dense_search && new_size - idx > kplex.size())
 		{
 			kplex.clear();
@@ -1084,11 +1080,15 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 				printf("Find a k-plex of size: %u\n", new_size - idx);
 		}
 	}
-	cout<<"kcore_size: ";
+	if (output)
+	{
+		printf("*** max_core: %u, UB: %u\n", new_size - idx, max_core, UB);
+		cout << "kcore_size: ";
 
-	for(ui i: kcore_sizes)
-		cout<<i<<" ";
-	cout<<endl;
+		for (ui i : kcore_sizes)
+			cout << i << " ";
+		cout << endl;
+	}
 	return UB;
 }
 
