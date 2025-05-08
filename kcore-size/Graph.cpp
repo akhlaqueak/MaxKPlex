@@ -1002,6 +1002,7 @@ ui Graph::degen(ui n, ui *peel_sequence, ui *core, ept *pstart, ui *edges, ui *d
 	Timer t;
 
 	ui threshold = (kplex.size() + 1 > K ? kplex.size() + 1 - K : 0);
+	cout<<"thershold: "<<thresh
 
 	for (ui i = 0; i < n; i++)
 		degree[i] = pstart[i + 1] - pstart[i];
