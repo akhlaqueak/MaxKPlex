@@ -2395,7 +2395,7 @@ private:
 	ui compute_UB(ui S_end, ui R_end, ui S_l, ui R_l, Partition side)
 	{
 		// when computing for left side
-		// if(side==right) return color_ub_partial_C(R_l, R_end);
+		if(side==right) return color_ub_partial_C(R_l, R_end);
 		ui Sa, Sb, Ra, Rb;
 		if (side == left)
 			Sa = 0, Sb = S_l, Ra = S_end, Rb = R_l;
