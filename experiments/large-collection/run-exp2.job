@@ -278,7 +278,7 @@ hugetrace-00000
 hugetrace-00020
 hugetrace-00010'
 
-solutions='degree_check'
+solutions='kpex-color-bound'
 krange='2 3 4 5 6 7 8 9 10 15 20'
 run_jobs 00:30:00
 get_results
