@@ -23,7 +23,7 @@ run_jobs() {
                 outfile=$fn-$sol-$k.out
                 grep -q ">>" $outfile || {
 
-                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >> $outfile 2>&1 &
+                    srun --unbuffered --nodes=1 --ntasks=1 -c 1 --time=$1 --exclusive ./$sol $loc/$fn.bin $k >>$outfile 2>&1 &
 
                     ((step_count++))
 
@@ -105,7 +105,6 @@ get_results() {
 }
 get_results
 
-
 get_kpsize() {
     result=kpsize.out
     rm $result
@@ -172,11 +171,8 @@ wikipedia_link_sr
 wikipedia_link_fr
 scc_reality
 web-wikipedia_link_en13-all
-wikipedia-link-en13
-wikipedia-link-en
 wikipedia_link_en
 MANN-a45
-dimacs10-uk-2002
 uk-2002
 wikipedia_link_it
 web-wikipedia_link_it
@@ -194,7 +190,6 @@ link-dynamic-itwiki
 zhishi-all
 link-dynamic-dewiki
 orkut-links
-soc-orkut-dir
 tech-ip
 soc-digg
 soc-orkut
@@ -205,7 +200,6 @@ sx-stackoverflow
 soc-sinaweibo
 delicious-ui
 web-ClueWeb09
-web-ClueWeb09-50m
 delicious-ti
 edit-nlwiki
 wikipedia_link_es
@@ -338,3 +332,43 @@ for ds in $datasets; do
     done
     echo
 done
+
+k=2
+get_param() {
+
+    for d in $datasets; do
+        fn="$d-degree_check-$k.out"
+
+        ln=$(grep core_truss_copruning "$fn")
+        [ -z "$ln" ] && printf '0 0 0' || {
+            # echo "$ln" | awk '{printf " " $6 " " $9}'
+            # echo "$ln" | awk '{ sub(/,$/, "", $6); printf " %s %s %.4f", $6, $9, $9 / $6 }'
+            echo "$ln" | awk '{
+            sub(/,$/, "", $6)
+            if ($6 == 0)
+                printf " %s %s 0", $6, $9
+            else
+                printf " %s %s %.4f", $6, $9, $9 / $6
+        }'
+        }
+
+        ln=$(grep residual_max_degree "$fn")
+        [ -z "$ln" ] && printf " 0 " || {
+            echo "$ln" | awk '{printf " " $NF}'
+        }
+
+        ln=$(grep max_core_residual "$fn")
+        [ -z "$ln" ] && printf " 0 " || {
+            echo "$ln" | awk '{printf " " $NF " "}'
+        }
+
+        ln=$(grep kcore_size "$fn")
+        [ -z "$ln" ] && echo " 0" || {
+            kcore=$(echo "$ln" | awk -F': ' '{gsub(/ /, ",", $2); print $2}')
+            kcore="${kcore%,}"
+            # output=$(echo "$ln" | sed -E 's/^kcore_size: *//; s/ +/,/g')
+            echo "$kcore"
+        }
+    done
+
+}

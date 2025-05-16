@@ -45,7 +45,7 @@ get_results() {
     done
     echo >>$result
 
-    echo -en "datasets," >>$result
+    # echo -en "datasets," >>$result
     for k in $krange; do
         for sol in $solutions; do
             echo -en "${sol#*-}," >>$result
@@ -55,7 +55,7 @@ get_results() {
     echo >>$result
 
     for fn in $datasets; do
-        echo -en "$fn," >>$result
+        # echo -en "$fn," >>$result
         for k in $krange; do
 
             line=()
