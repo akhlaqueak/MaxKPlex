@@ -153,6 +153,65 @@ namespace CTPrune {
 		}
 		pend[u] = end;
 	}
+	void peel_edge(ui degree_threshold, ui *Qv, ui &Qv_n, ui triangle_threshold, ui *Qe, ui Qe_n, ui *tri_cnt, ui *edges_pointer, char *deleted, ui *degree, ui *pstart, ui *pend, ui *edges) {
+		// for(ui j = 0;j < Qe_n;j += 2) 
+		if(Qe_n==0) return;
+		ui j=Qe_n-1;
+		{
+			ui u = Qe[j], v = Qe[j+1], idx;
+			find(v, pstart[u], pend[u], deleted, idx, edges);
+
+			ui tri_n = tri_cnt[idx];
+			deleted[idx] = deleted[edges_pointer[idx]] = 1;
+			if(Qv != nullptr) {
+				if(degree[u] == degree_threshold) Qv[Qv_n++] = u;
+				if(degree[v] == degree_threshold) Qv[Qv_n++] = v;
+			}
+			-- degree[u]; -- degree[v];
+			if(pend[u]-pstart[u] > degree[u]*2) compact_neighbors(u, tri_cnt, edges_pointer, deleted, pstart, pend, edges);
+			if(pend[v]-pstart[v] > degree[v]*2) compact_neighbors(v, tri_cnt, edges_pointer, deleted, pstart, pend, edges);
+			if(pend[u]-pstart[u] < pend[v]-pstart[v]) std::swap(u,v);
+
+			if(pend[u]-pstart[u] > (pend[v]-pstart[v])*2) { // binary search
+				for(ui k = pstart[v];k < pend[v];k ++) if(!deleted[k]) {
+					if(tri_n&&find(edges[k], pstart[u], pend[u], deleted, idx, edges)) {
+						-- tri_n;
+						-- tri_cnt[edges_pointer[idx]];
+						if( (tri_cnt[idx]--) == triangle_threshold) {
+							Qe[Qe_n++] = u; Qe[Qe_n++] = edges[idx];
+						}
+						-- tri_cnt[edges_pointer[k]];
+						if( (tri_cnt[k]--) == triangle_threshold) {
+							Qe[Qe_n++] = v; Qe[Qe_n++] = edges[k];
+						}
+					}
+				}
+			}
+			else { // sorted_merge
+				ui ii = pstart[u], jj = pstart[v];
+				while(ii < pend[u]&&jj < pend[v]) {
+					if(edges[ii] == edges[jj]) {
+						if(!deleted[ii]&&!deleted[jj]) {
+							-- tri_n;
+							-- tri_cnt[edges_pointer[ii]];
+							if( (tri_cnt[ii]--) == triangle_threshold) {
+								Qe[Qe_n++] = u; Qe[Qe_n++] = edges[ii];
+							}
+							-- tri_cnt[edges_pointer[jj]];
+							if( (tri_cnt[jj]--) == triangle_threshold) {
+								Qe[Qe_n++] = v; Qe[Qe_n++] = edges[jj];
+							}
+						}
+
+						++ ii;
+						++ jj;
+					}
+					else if(edges[ii] < edges[jj]) ++ ii;
+					else ++ jj;
+				}
+			}
+		}
+	}
 
 	void truss_peeling(ui degree_threshold, ui *Qv, ui &Qv_n, ui triangle_threshold, ui *Qe, ui Qe_n, ui *tri_cnt, ui *edges_pointer, char *deleted, ui *degree, ui *pstart, ui *pend, ui *edges) {
 		for(ui j = 0;j < Qe_n;j += 2) {
@@ -244,8 +303,12 @@ namespace CTPrune {
 
 				for(ui i = pstart[u];i < pend[u];i ++) exists[edges[i]] = 0;
 			}
-			truss_peeling(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
-			Qe_n = 0;
+			// truss_peeling(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
+			// Qe_n = 0;
+			if(Qe_n>0){
+				peel_edge(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
+				Qe_n-=2;
+			}
 		}
 	}
 

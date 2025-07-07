@@ -2525,7 +2525,6 @@ private:
 				}
 			}
 		}
-
 		return {S_l, R_l};
 	}
 	ui S_bound(ui S_end, ui R_end, ui level)
