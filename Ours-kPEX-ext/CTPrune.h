@@ -155,7 +155,7 @@ namespace CTPrune {
 	}
 	void peel_edge(ui degree_threshold, ui *Qv, ui &Qv_n, ui triangle_threshold, ui *Qe, ui Qe_n, ui *tri_cnt, ui *edges_pointer, char *deleted, ui *degree, ui *pstart, ui *pend, ui *edges) {
 
-		ui j=Qe_n-2;
+		ui j=Qe_n;
 		{
 			ui u = Qe[j], v = Qe[j+1], idx;
 			find(v, pstart[u], pend[u], deleted, idx, edges);
@@ -306,8 +306,8 @@ namespace CTPrune {
 			// truss_peeling(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
 			// Qe_n = 0;
 			if(Qe_n>0){
-				peel_edge(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
 				Qe_n-=2;
+				peel_edge(degree_threshold, Qv, Qv_n, triangle_threshold, Qe, Qe_n, tri_cnt, edges_pointer, deleted, degree, pstart, pend, edges);
 			}
 
 		}
