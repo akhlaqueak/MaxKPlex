@@ -277,7 +277,8 @@ namespace CTPrune {
 		ui Qv_n = 0;
 		for(ui i = 0;i < n;i ++) if(degree[i] < degree_threshold) Qv[Qv_n++] = i;
 		while(Qe_n || Qv_n) {
-			while(Qe_n == 0&&Qv_n != 0) {
+			while(Qv_n != 0) {
+				// while(Qe_n == 0&&Qv_n != 0) {
 				ui u = Qv[-- Qv_n]; // delete u from the graph due to have a degree < degree_threshold
 				if(degree[u] == 0) continue;
 
