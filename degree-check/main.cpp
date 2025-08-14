@@ -1,7 +1,7 @@
 #include "Utility.h"
 
 int main(int argc, char *argv[]) {
-		FILE *f = Utility::open_file(dir.c_str(), "rb");
+		FILE *f = Utility::open_file(argv[1], "rb");
 	
 		ui tt, n, m, max_degree=0;
 		fread(&tt, sizeof(int), 1, f);
